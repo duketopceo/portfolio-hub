@@ -24,20 +24,33 @@ export type ProjectCategory =
   | "apps"
   | "data";
 
-export type ProjectType = "app" | "library" | "infra" | "experiment" | "platform";
+export type ProjectType =
+  | "app"
+  | "library"
+  | "infra"
+  | "experiment"
+  | "platform";
 
 export interface ProjectConfig {
   slug: string;
   repoName: string;
   displayName: string;
   tagline: string;
+  description: string;
   category: ProjectCategory;
   type: ProjectType;
   featured: boolean;
   liveUrl?: string;
+  /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
+  demoUrl?: string;
+  /** If true, liveUrl can be iframed on the detail page */
+  embeddable?: boolean;
   subdomain?: string;
   techStack: string[];
   private: boolean;
+  highlights: string[];
+  /** Optional screenshots or preview image URLs */
+  previewImages?: string[];
 }
 
 export interface EnrichedProject extends ProjectConfig {

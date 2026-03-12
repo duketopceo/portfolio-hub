@@ -3,6 +3,10 @@ import { getEnrichedProjects } from "@/lib/github";
 
 export const revalidate = 3600;
 
+/**
+ * Public API endpoint for project data.
+ * SECURITY: Strips sensitive fields — no repo URLs, no private flags, no owner info.
+ */
 export async function GET() {
   try {
     const projects = await getEnrichedProjects();
@@ -18,11 +22,8 @@ export async function GET() {
         language: p.language,
         techStack: p.techStack,
         stars: p.stars,
-        forks: p.forks,
         lastUpdated: p.lastUpdated,
         liveUrl: p.liveUrl || null,
-        subdomain: p.subdomain || null,
-        private: p.private,
       })),
     });
   } catch (error) {

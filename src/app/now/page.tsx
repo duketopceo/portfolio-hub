@@ -5,57 +5,94 @@ import { formatDate } from "@/lib/utils";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Now — Luke Kimball",
-  description: "What I'm currently working on — most recently active projects.",
+  title: "Activity — Engineering Portfolio",
+  description:
+    "Most recently active projects, updated automatically from commit history.",
 };
 
 export default async function NowPage() {
   const recent = await getRecentProjects(5);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12">
-      <div className="max-w-3xl mb-10">
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-          What I&apos;m Working On
+    <div className="mx-auto max-w-5xl px-5 sm:px-6 py-10">
+      <div className="max-w-xl mb-8">
+        <h1
+          style={{
+            fontSize: "var(--text-2xl)",
+            fontWeight: 700,
+            color: "var(--color-text)",
+            letterSpacing: "-0.02em",
+            marginBottom: "0.25rem",
+          }}
+        >
+          Recent Activity
         </h1>
-        <p className="text-zinc-600 dark:text-zinc-400">
-          The projects with the most recent activity. Updated automatically from
-          GitHub commit history.
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "var(--text-xs)",
+            color: "var(--color-text-faint)",
+          }}
+        >
+          Projects with the most recent commits. Updated from GitHub.
         </p>
       </div>
 
       {/* Timeline */}
-      <div className="space-y-6">
+      <div className="space-y-0">
         {recent.map((project, i) => (
           <div
             key={project.slug}
-            className="flex gap-4 animate-fade-up"
-            style={{ animationDelay: `${i * 100}ms` }}
+            className="flex gap-3 animate-fade-up"
+            style={{ animationDelay: `${i * 80}ms` }}
           >
-            {/* Timeline dot */}
-            <div className="flex flex-col items-center pt-2">
+            {/* Timeline line + dot */}
+            <div className="flex flex-col items-center pt-3 flex-shrink-0">
               <div
-                className={`w-3 h-3 rounded-full border-2 ${
-                  i === 0
-                    ? "bg-teal-500 border-teal-500"
-                    : "bg-zinc-200 dark:bg-zinc-700 border-zinc-300 dark:border-zinc-600"
-                }`}
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background:
+                    i === 0 ? "var(--color-accent)" : "var(--color-surface-3)",
+                  border:
+                    i === 0
+                      ? "2px solid var(--color-accent)"
+                      : "2px solid var(--color-border)",
+                }}
               />
               {i < recent.length - 1 && (
-                <div className="w-px flex-1 bg-zinc-200 dark:bg-zinc-800 mt-2" />
+                <div
+                  className="w-px flex-1 mt-1.5"
+                  style={{ background: "var(--color-divider)" }}
+                />
               )}
             </div>
 
             {/* Content */}
-            <div className="flex-1 pb-6">
-              <div className="text-xs text-zinc-500 mb-2">
+            <div className="flex-1 pb-4">
+              <div
+                className="flex items-center gap-2 mb-1.5"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-xs)",
+                  color: "var(--color-text-faint)",
+                }}
+              >
                 {project.lastUpdated
                   ? formatDate(project.lastUpdated)
-                  : "Unknown"}
+                  : "—"}
                 {i === 0 && (
-                  <span className="ml-2 inline-flex items-center gap-1 text-teal-600 dark:text-teal-400 font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                    Most recent
+                  <span
+                    className="flex items-center gap-1 px-1.5 py-0.5 rounded-md"
+                    style={{
+                      color: "var(--color-accent)",
+                      background: "var(--color-accent-subtle)",
+                    }}
+                  >
+                    <span
+                      className="w-1 h-1 rounded-full animate-pulse"
+                      style={{ background: "var(--color-live)" }}
+                    />
+                    latest
                   </span>
                 )}
               </div>

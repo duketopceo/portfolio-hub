@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,17 +7,29 @@ import Footer from "@/components/Footer";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Luke Kimball — Developer & Entrepreneur",
+  title: "Portfolio — Systems Engineer & Builder",
   description:
-    "Portfolio hub showcasing projects in AI, trading systems, OSINT intelligence, and infrastructure. Built with Next.js.",
+    "Engineering portfolio showcasing projects across AI, trading systems, OSINT platforms, and production infrastructure.",
   openGraph: {
-    title: "Luke Kimball — Developer & Entrepreneur",
+    title: "Portfolio — Systems Engineer & Builder",
     description:
       "Projects spanning AI automation, algorithmic trading, OSINT platforms, and Docker Swarm infrastructure.",
     type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
 };
 
@@ -28,9 +40,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased`}>
+      <body
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+      >
+        {/* Blueprint grid background — CSS-only, decorative */}
+        <div className="grid-bg" aria-hidden="true" />
+
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 relative">{children}</main>
         <Footer />
       </body>
     </html>

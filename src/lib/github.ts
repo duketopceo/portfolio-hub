@@ -2,13 +2,11 @@ import { GitHubRepo, EnrichedProject } from "./types";
 import { projectConfigs } from "@/data/projects";
 
 const GITHUB_API = "https://api.github.com";
-const GITHUB_USER = "duketopceo";
+const GITHUB_USER = process.env.GITHUB_USER || "duketopceo";
 const TOKEN = process.env.GITHUB_TOKEN;
 
 /**
  * Headers for GitHub API requests.
- * Token is optional — public repos work without it,
- * but private repos and higher rate limits require it.
  */
 function headers(): HeadersInit {
   const h: HeadersInit = {
@@ -23,7 +21,6 @@ function headers(): HeadersInit {
 
 /**
  * Fetch all repos for the configured GitHub user.
- * Handles pagination (up to 300 repos).
  */
 export async function fetchAllRepos(): Promise<GitHubRepo[]> {
   const allRepos: GitHubRepo[] = [];
@@ -36,7 +33,7 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
 
     const res = await fetch(url, {
       headers: headers(),
-      next: { revalidate: 3600 }, // ISR: revalidate every hour
+      next: { revalidate: 3600 },
     });
 
     if (!res.ok) {
@@ -56,21 +53,8 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
 }
 
 /**
- * Fetch a single repo by name.
- */
-export async function fetchRepo(repoName: string): Promise<GitHubRepo | null> {
-  const url = `${GITHUB_API}/repos/${GITHUB_USER}/${repoName}`;
-  const res = await fetch(url, {
-    headers: headers(),
-    next: { revalidate: 3600 },
-  });
-
-  if (!res.ok) return null;
-  return res.json();
-}
-
-/**
- * Fetch the README content for a repo (rendered as HTML).
+ * Fetch the README content for a public repo (rendered as HTML).
+ * Only fetched for public repos — private repos use curated descriptions.
  */
 export async function fetchReadme(repoName: string): Promise<string | null> {
   const url = `${GITHUB_API}/repos/${GITHUB_USER}/${repoName}/readme`;
@@ -88,7 +72,7 @@ export async function fetchReadme(repoName: string): Promise<string | null> {
 
 /**
  * Enrich project configs with live GitHub data.
- * Merges the curated project list with real-time repo metadata.
+ * SECURITY: Strips sensitive fields before returning.
  */
 export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   const allRepos = await fetchAllRepos();
@@ -101,7 +85,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
     const repo = repoMap.get(config.repoName) || null;
     return {
       ...config,
-      repo,
+      repo: null, // Never expose raw repo data to client
       lastUpdated: repo?.pushed_at || "",
       language: repo?.language || null,
       stars: repo?.stargazers_count || 0,
@@ -111,7 +95,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
 }
 
 /**
- * Get featured projects (for the landing page).
+ * Get featured projects.
  */
 export async function getFeaturedProjects(): Promise<EnrichedProject[]> {
   const all = await getEnrichedProjects();
@@ -119,7 +103,7 @@ export async function getFeaturedProjects(): Promise<EnrichedProject[]> {
 }
 
 /**
- * Get the N most recently active projects (for /now page).
+ * Get the N most recently active projects.
  */
 export async function getRecentProjects(n = 5): Promise<EnrichedProject[]> {
   const all = await getEnrichedProjects();

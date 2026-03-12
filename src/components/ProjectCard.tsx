@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
-import { formatDate, languageColors, categoryColors, categoryColorsLight } from "@/lib/utils";
+import { formatDate, languageColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
+import { LockIcon } from "./Icons";
+import DemoLink from "./DemoLink";
 
 interface ProjectCardProps {
   project: EnrichedProject;
@@ -13,102 +15,139 @@ export default function ProjectCard({
   featured = false,
 }: ProjectCardProps) {
   const meta = categoryMeta[project.category];
+  const hasDemo = !!(project.liveUrl || project.demoUrl);
+  const demoUrl = project.liveUrl || project.demoUrl;
+  const langColor = project.language
+    ? languageColors[project.language] || "#6B7280"
+    : null;
 
   return (
-    <Link
-      href={`/projects/${project.slug}`}
-      className={`group block rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 transition-all hover:border-teal-300 dark:hover:border-teal-700 hover:shadow-md dark:hover:shadow-teal-500/5 ${
-        featured ? "sm:p-6" : ""
-      }`}
+    <div
+      className="glass-card lang-border-top group relative"
+      style={
+        langColor
+          ? ({ "--lang-color": langColor } as React.CSSProperties)
+          : undefined
+      }
     >
-      {/* Category + Type */}
-      <div className="flex items-center gap-2 mb-3">
-        <span
-          className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full border ${categoryColorsLight[project.category]} dark:${categoryColors[project.category]}`}
-        >
-          {meta?.label || project.category}
-        </span>
-        {project.private && (
-          <span className="inline-flex items-center px-1.5 py-0.5 text-xs text-zinc-400 dark:text-zinc-500">
-            <svg
-              className="w-3 h-3 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+      <Link
+        href={`/projects/${project.slug}`}
+        className="block p-4"
+        style={{ textDecoration: "none" }}
+      >
+        {/* Top row: category + date */}
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2">
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--color-text-faint)",
+                letterSpacing: "0.02em",
+              }}
             >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0110 0v4" />
-            </svg>
-            Private
+              {meta?.label || project.category}
+            </span>
+            {project.private && (
+              <LockIcon className="w-3 h-3" />
+            )}
+          </div>
+          {project.lastUpdated && (
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--color-text-faint)",
+              }}
+            >
+              {formatDate(project.lastUpdated)}
+            </span>
+          )}
+        </div>
+
+        {/* Title */}
+        <h3
+          className="mb-1"
+          style={{
+            fontSize: "var(--text-base)",
+            fontWeight: 600,
+            color: "var(--color-text)",
+            lineHeight: 1.3,
+          }}
+        >
+          <span className="group-hover:text-[var(--color-accent)] transition-colors duration-150">
+            {project.displayName}
           </span>
-        )}
-      </div>
+        </h3>
 
-      {/* Title */}
-      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors mb-1">
-        {project.displayName}
-      </h3>
+        {/* Description — one line */}
+        <p
+          className="mb-3 line-clamp-1"
+          style={{
+            fontSize: "var(--text-sm)",
+            color: "var(--color-text-muted)",
+            lineHeight: 1.5,
+          }}
+        >
+          {project.tagline}
+        </p>
 
-      {/* Tagline */}
-      <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 line-clamp-2">
-        {project.tagline}
-      </p>
-
-      {/* Tech stack */}
-      <div className="flex flex-wrap gap-1.5 mb-4">
-        {project.techStack.slice(0, 4).map((tech) => (
-          <span
-            key={tech}
-            className="inline-flex items-center px-2 py-0.5 text-xs rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
-
-      {/* Footer metadata */}
-      <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-500">
+        {/* Bottom row: language + stars */}
         <div className="flex items-center gap-3">
           {project.language && (
-            <span className="flex items-center gap-1">
+            <span
+              className="flex items-center gap-1.5"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--color-text-faint)",
+              }}
+            >
               <span
-                className="w-2.5 h-2.5 rounded-full"
+                className="w-2 h-2 rounded-full"
                 style={{
-                  backgroundColor:
-                    languageColors[project.language] || "#6B7280",
+                  backgroundColor: langColor || "#6B7280",
                 }}
               />
               {project.language}
             </span>
           )}
           {project.stars > 0 && (
-            <span className="flex items-center gap-0.5">
-              <svg
-                className="w-3.5 h-3.5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            <span
+              className="flex items-center gap-1"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--color-text-faint)",
+              }}
+            >
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 1l2.47 5.01L18 6.86l-4 3.9.94 5.5L10 13.47l-4.94 2.79.94-5.5-4-3.9 5.53-.85L10 1z" />
               </svg>
               {project.stars}
             </span>
           )}
+          {hasDemo && (
+            <span
+              className="flex items-center gap-1 ml-auto"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--color-live)",
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full animate-pulse"
+                style={{ background: "var(--color-live)" }}
+              />
+              live
+            </span>
+          )}
         </div>
-        {project.lastUpdated && (
-          <span>{formatDate(project.lastUpdated)}</span>
-        )}
-      </div>
+      </Link>
 
-      {/* Live URL indicator */}
-      {project.liveUrl && (
-        <div className="mt-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
-          <span className="inline-flex items-center gap-1 text-xs text-teal-600 dark:text-teal-400 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            Live Demo
-          </span>
-        </div>
-      )}
-    </Link>
+      {/* Demo link — separate client component */}
+      {hasDemo && demoUrl && <DemoLink url={demoUrl} />}
+    </div>
   );
 }
