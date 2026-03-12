@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Base reset ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Prose (README rendering) ────────────────────────────────── */
+.prose-readme {
+  color: var(--color-zinc-700);
+  line-height: 1.7;
+}
+.dark .prose-readme {
+  color: var(--color-zinc-300);
+}
+.prose-readme h1,
+.prose-readme h2,
+.prose-readme h3,
+.prose-readme h4 {
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--color-zinc-900);
+}
+.dark .prose-readme h1,
+.dark .prose-readme h2,
+.dark .prose-readme h3,
+.dark .prose-readme h4 {
+  color: var(--color-zinc-100);
+}
+.prose-readme h1 { font-size: 1.5rem; }
+.prose-readme h2 { font-size: 1.25rem; border-bottom: 1px solid var(--color-zinc-200); padding-bottom: 0.25em; }
+.dark .prose-readme h2 { border-color: var(--color-zinc-800); }
+.prose-readme h3 { font-size: 1.125rem; }
+.prose-readme p { margin-bottom: 1em; }
+.prose-readme a { color: var(--color-teal-600); text-decoration: underline; }
+.dark .prose-readme a { color: var(--color-teal-400); }
+.prose-readme code {
+  font-size: 0.875em;
+  padding: 0.125em 0.375em;
+  background: var(--color-zinc-100);
+  border-radius: 0.25rem;
+}
+.dark .prose-readme code {
+  background: var(--color-zinc-800);
+}
+.prose-readme pre {
+  background: var(--color-zinc-100);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+.dark .prose-readme pre {
+  background: var(--color-zinc-800);
+}
+.prose-readme pre code {
+  background: none;
+  padding: 0;
+}
+.prose-readme ul,
+.prose-readme ol {
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+.prose-readme li {
+  margin-bottom: 0.25em;
+}
+.prose-readme img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+}
+.prose-readme blockquote {
+  border-left: 3px solid var(--color-teal-500);
+  padding-left: 1em;
+  color: var(--color-zinc-500);
+  margin-bottom: 1em;
+}
+.prose-readme table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+.prose-readme th,
+.prose-readme td {
+  border: 1px solid var(--color-zinc-200);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.dark .prose-readme th,
+.dark .prose-readme td {
+  border-color: var(--color-zinc-700);
+}
+.prose-readme th {
+  background: var(--color-zinc-50);
+  font-weight: 600;
+}
+.dark .prose-readme th {
+  background: var(--color-zinc-800);
+}
+
+/* ── Animations ──────────────────────────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+}

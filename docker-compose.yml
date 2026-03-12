@@ -1,0 +1,50 @@
+# Docker Compose for local dev + Swarm deployment
+# Usage:
+#   Local:  docker compose up --build
+#   Swarm:  docker stack deploy -c docker-compose.yml portfolio
+version: "3.8"
+
+services:
+  portfolio:
+    build:
+      context: .
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    image: ghcr.io/duketopceo/portfolio-hub:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - NODE_ENV=production
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      labels:
+        # ── Traefik routing ──────────────────────────────────
+        - "traefik.enable=true"
+        - "traefik.http.routers.portfolio.rule=Host(`portfolio.yourdomain.com`)"
+        - "traefik.http.routers.portfolio.entrypoints=websecure"
+        - "traefik.http.routers.portfolio.tls.certresolver=cloudflare"
+        - "traefik.http.services.portfolio.loadbalancer.server.port=3000"
+        # Health check
+        - "traefik.http.services.portfolio.loadbalancer.healthcheck.path=/api/repos"
+        - "traefik.http.services.portfolio.loadbalancer.healthcheck.interval=30s"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/repos"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true
