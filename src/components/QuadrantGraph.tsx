@@ -28,6 +28,7 @@ const catColors: Record<string, string> = {
 export default function QuadrantGraph({ projects }: QuadrantGraphProps) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [hasEntered, setHasEntered] = useState(false);
   const graphRef = useRef<HTMLDivElement>(null);
 
   const positioned = useMemo(() => {
@@ -41,10 +42,21 @@ export default function QuadrantGraph({ projects }: QuadrantGraphProps) {
     ? positioned.filter((p) => p.category === activeCategory)
     : positioned;
 
+  const filteredSlugs = useMemo(
+    () => new Set(filtered.map((p) => p.slug)),
+    [filtered]
+  );
+
   const categories = useMemo(() => {
     const cats = new Set(projects.map((p) => p.category));
     return Array.from(cats).sort();
   }, [projects]);
+
+  // Trigger staggered entrance after mount
+  useEffect(() => {
+    const timer = setTimeout(() => setHasEntered(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="q-root">
@@ -103,7 +115,7 @@ export default function QuadrantGraph({ projects }: QuadrantGraphProps) {
         <span className="q-zone q-zone--br">{quadrantLabels.bottomRight}</span>
 
         {/* ── Project nodes ─────────────────────── */}
-        {filtered.map((project) => {
+        {positioned.map((project, index) => {
           // Convert -1..1 to percentage with padding (10% margin)
           const pad = 10;
           const range = 100 - 2 * pad;
@@ -113,19 +125,24 @@ export default function QuadrantGraph({ projects }: QuadrantGraphProps) {
           const dotColor = catColors[project.category] || "#2dd4bf";
           const IconComponent = projectIconMap[project.slug];
           const hasDemo = !!(project.liveUrl || project.demoUrl);
+          const isVisible = filteredSlugs.has(project.slug);
 
           return (
             <Link
               key={project.slug}
               href={`/projects/${project.slug}`}
-              className={`q-node ${isHovered ? "q-node--hover" : ""} ${
+              className={`q-node q-node-fade ${
+                !isVisible ? "q-node-fade-out" : ""
+              } ${isHovered ? "q-node--hover" : ""} ${
                 project.featured ? "q-node--feat" : ""
-              }`}
+              } ${hasEntered ? "q-node-enter" : ""}`}
               style={
                 {
                   left: `${leftPct}%`,
                   top: `${topPct}%`,
                   "--node-color": dotColor,
+                  animationDelay: hasEntered ? `${index * 40}ms` : "0ms",
+                  pointerEvents: isVisible ? "auto" : "none",
                 } as React.CSSProperties
               }
               onMouseEnter={() => setHoveredSlug(project.slug)}

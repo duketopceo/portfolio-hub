@@ -10,7 +10,13 @@ export default async function Home() {
   return (
     <div>
       {/* ── Hero — tight, centered, purposeful ──────── */}
-      <section className="mx-auto max-w-5xl px-5 sm:px-6 pt-14 sm:pt-20 pb-6 sm:pb-8 text-center">
+      <section
+        className="mx-auto max-w-5xl px-5 sm:px-6 text-center"
+        style={{
+          paddingTop: "clamp(2rem, 4vw, 3.5rem)",
+          paddingBottom: "clamp(1rem, 2vw, 1.5rem)",
+        }}
+      >
         <p
           style={{
             fontFamily: "var(--font-body)",
@@ -27,8 +33,8 @@ export default async function Home() {
         <p
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "11px",
-            letterSpacing: "0.04em",
+            fontSize: "13px",
+            letterSpacing: "0.03em",
             color: "var(--color-text-faint)",
             maxWidth: "520px",
             margin: "0 auto",
@@ -42,7 +48,11 @@ export default async function Home() {
       </section>
 
       {/* ── Quadrant Graph ───────────────────────────── */}
-      <section className="pb-16 sm:pb-24">
+      <section
+        style={{
+          paddingBottom: "clamp(2.5rem, 5vw, 4rem)",
+        }}
+      >
         <QuadrantGraph projects={all} />
       </section>
     </div>

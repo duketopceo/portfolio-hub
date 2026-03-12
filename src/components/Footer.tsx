@@ -3,8 +3,8 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer
-      className="mt-auto py-6"
-      style={{ borderTop: "1px solid var(--color-divider)" }}
+      className="mt-auto"
+      style={{ padding: "clamp(1.25rem, 2.5vw, 2rem) 0", borderTop: "1px solid var(--color-divider)" }}
     >
       <div className="mx-auto max-w-5xl px-5 sm:px-6">
         <div
