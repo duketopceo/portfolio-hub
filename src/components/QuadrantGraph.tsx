@@ -116,8 +116,8 @@ export default function QuadrantGraph({ projects }: QuadrantGraphProps) {
 
         {/* ── Project nodes ─────────────────────── */}
         {positioned.map((project, index) => {
-          // Convert -1..1 to percentage with padding (10% margin)
-          const pad = 10;
+          // Convert -1..1 to percentage with padding (8% margin)
+          const pad = 8;
           const range = 100 - 2 * pad;
           const leftPct = pad + ((project.qx + 1) / 2) * range;
           const topPct = pad + ((1 - project.qy) / 2) * range;

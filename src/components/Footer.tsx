@@ -6,7 +6,7 @@ export default function Footer() {
     <footer
       className="mt-auto"
       style={{
-        padding: "clamp(2rem, 4vw, 3rem) 0",
+        padding: "clamp(1.5rem, 3vw, 2rem) 0",
         borderTop: "1px solid var(--color-divider)",
       }}
     >
