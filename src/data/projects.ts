@@ -13,7 +13,7 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Algorithmic trading system with ML-driven signal generation and automated execution",
     description:
-      "End-to-end trading pipeline that ingests real-time market data, generates signals through machine learning models, and executes trades automatically via brokerage APIs. Features backtesting framework, risk management guardrails, and performance analytics dashboard.",
+      "End-to-end algorithmic trading pipeline that ingests real-time market data from multiple brokerage APIs, generates buy/sell signals through ensemble machine learning models, and executes trades automatically with configurable risk parameters. The backtesting framework processes years of historical data to validate strategies before live deployment. Includes a performance analytics dashboard showing P&L curves, Sharpe ratios, and drawdown analysis. Implements position sizing algorithms and stop-loss guardrails for risk management.",
     category: "finance",
     type: "platform",
     featured: true,
@@ -24,6 +24,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Real-time market data ingestion pipeline",
       "Automated risk management and position sizing",
     ],
+    architecture:
+      "Data ingestion layer → ML signal engine → Risk management → Execution engine → Analytics dashboard",
   },
   {
     slug: "alphahedge",
@@ -32,7 +34,7 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Full-stack hedge fund simulation platform with realistic market dynamics",
     description:
-      "Interactive simulation platform that models hedge fund operations — portfolio construction, risk allocation, market scenarios, and P&L tracking. Built as a full-stack web application with real-time charts and financial data integration.",
+      "Interactive hedge fund simulation platform where users construct portfolios, allocate capital across sectors, and respond to realistic market scenarios. The simulation engine models market dynamics including volatility clustering, correlation breakdowns, and liquidity events. Features real-time portfolio valuation with interactive Chart.js visualizations, sector exposure analysis, and risk-adjusted return metrics. Built as a full-stack Next.js application with server-side rendering.",
     category: "finance",
     type: "app",
     featured: true,
@@ -43,6 +45,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Portfolio construction and risk allocation engine",
       "Real-time P&L tracking with interactive charts",
     ],
+    architecture:
+      "Next.js SSR → Simulation engine → Financial APIs → Chart.js visualizations → Portfolio analytics",
   },
   {
     slug: "ikbr-dashboard",
@@ -51,7 +55,7 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Interactive Brokers portfolio dashboard with real-time data visualization",
     description:
-      "Custom dashboard that connects to the Interactive Brokers API for real-time portfolio monitoring. Features account analytics, position tracking, historical performance charts, and trade execution monitoring.",
+      "Custom portfolio monitoring dashboard that connects to Interactive Brokers' Client Portal API for real-time account data. Displays position-level P&L, sector allocation pie charts, historical equity curves, and trade execution logs using interactive Plotly visualizations. Built as a Python application with automatic data refresh and configurable alert thresholds for position size limits and drawdown warnings.",
     category: "finance",
     type: "app",
     featured: false,
@@ -92,7 +96,7 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Intelligent roofing assistant — permit coordination, document analysis, customer comms",
     description:
-      "AI-powered platform for the roofing industry that automates permit coordination, analyzes construction documents with LLMs, and manages customer communications. Integrates Google Cloud services with a FastAPI backend and Gradio interface for rapid prototyping.",
+      "AI-powered platform purpose-built for roofing contractors that automates the permit coordination workflow — from initial application through approval tracking. The document analysis pipeline uses Google's Gemini models to extract key information from construction plans, municipal codes, and insurance documents. Customer communication management handles scheduling, follow-ups, and status updates across channels. Backend runs on FastAPI with a Gradio interface for rapid internal prototyping.",
     category: "ai",
     type: "platform",
     featured: true,
@@ -103,6 +107,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Automated permit coordination workflow",
       "Multi-channel customer communications",
     ],
+    architecture:
+      "FastAPI backend → Gemini LLM pipeline → Document processor → Gradio interface → Google Cloud services",
   },
   {
     slug: "quiz-the-best",
@@ -165,6 +171,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Real-time data aggregation pipelines",
       "Geographic visualization with GIS",
     ],
+    architecture:
+      "Firebase hosting → Python data pipelines → GIS visualization layer → Interactive election maps",
   },
   {
     slug: "military-hardware-db",
@@ -173,10 +181,13 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Comprehensive open-source weapons systems database — air, land, sea, munitions",
     description:
-      "Open-source intelligence database cataloging military hardware across all domains. Structured data covering specifications, capabilities, operators, and deployment history for weapons systems worldwide. Designed for researchers and analysts.",
+      "Open-source intelligence database cataloging 183 military hardware platforms across air, land, sea, munitions, and software domains. Features a FastAPI REST API with filtering, pagination, and comparison endpoints. The React frontend provides an intelligence console with platform explorer, analytics dashboard, and side-by-side comparison tools. Includes SIPRI military expenditure data, 675 source citations, and role classification for every platform.",
     category: "osint",
     type: "library",
     featured: true,
+    liveUrl: "https://mildb.luke-the-duke.com",
+    demoUrl: "https://mildb.luke-the-duke.com",
+    embeddable: true,
     techStack: ["Data", "OSINT", "JSON", "Documentation"],
     private: false,
     highlights: [
@@ -184,6 +195,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Structured data for research and analysis",
       "Open-source intelligence methodology",
     ],
+    architecture:
+      "SQLite database → FastAPI REST API → React intelligence console → Docker container → Swarm deployment",
   },
   {
     slug: "etl-pipeline",
@@ -213,7 +226,7 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Docker Swarm infrastructure — multi-node cluster with Traefik, monitoring, and CI/CD",
     description:
-      "Production infrastructure running on a multi-node Docker Swarm cluster. Features automated deployments via CI/CD pipelines, Traefik reverse proxy with automatic TLS, Cloudflare tunnel networking, and Tailscale mesh for secure inter-node communication.",
+      "Multi-node Docker Swarm infrastructure running on Apple Silicon Mac Minis in a home lab configuration. Features automated container deployments via GitHub webhooks, Traefik reverse proxy handling TLS termination and routing for multiple subdomains, Cloudflare Tunnel for secure public access without port forwarding, and Tailscale mesh VPN for encrypted inter-node communication. Currently hosts the portfolio site, military hardware database, and several internal tools.",
     category: "infra",
     type: "infra",
     featured: true,
@@ -224,6 +237,8 @@ export const projectConfigs: ProjectConfig[] = [
       "CI/CD with automatic container deployments",
       "Zero-trust networking with Tailscale mesh",
     ],
+    architecture:
+      "GitHub webhooks → Docker Swarm → Traefik routing → Cloudflare Tunnel → Public subdomains",
   },
 
   // ── Apps & Web ───────────────────────────────────────────────────
@@ -287,7 +302,7 @@ export const projectConfigs: ProjectConfig[] = [
     displayName: "Technical Blog",
     tagline: "Personal blog and writing platform",
     description:
-      "Custom-built blog platform with CMS integration, markdown rendering, and SEO optimization. Features a clean reading experience with dark mode, code syntax highlighting, and RSS feed generation.",
+      "Custom-built blogging platform with a headless CMS backend, server-side rendered with Next.js for SEO optimization. Features a clean reading experience with automatic dark mode, code syntax highlighting with language detection, and RSS feed generation. The editing interface supports markdown with live preview and image optimization.",
     category: "apps",
     type: "app",
     featured: false,

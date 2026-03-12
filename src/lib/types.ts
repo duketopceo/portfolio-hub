@@ -51,6 +51,8 @@ export interface ProjectConfig {
   highlights: string[];
   /** Optional screenshots or preview image URLs */
   previewImages?: string[];
+  /** High-level architecture description */
+  architecture?: string;
 }
 
 export interface EnrichedProject extends ProjectConfig {
