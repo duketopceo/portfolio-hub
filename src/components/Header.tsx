@@ -54,8 +54,8 @@ export default function Header() {
       }}
     >
       <div className="mx-auto max-w-5xl px-5 sm:px-6">
-        <div className="flex h-12 items-center justify-between">
-          {/* Logo — minimal terminal prompt */}
+        <div className="flex items-center justify-between" style={{ height: "44px" }}>
+          {/* Logo */}
           <Link
             href="/"
             className="flex items-center gap-2 group"
@@ -74,15 +74,15 @@ export default function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="relative px-3 py-1.5 rounded-md transition-colors duration-150"
+                className="relative px-2.5 py-1 rounded-md transition-colors duration-150"
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
+                  fontSize: "11px",
                   color: isActive(item.href)
                     ? "var(--color-accent)"
                     : "var(--color-text-faint)",
@@ -95,7 +95,7 @@ export default function Header() {
                   <span
                     className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px rounded-full"
                     style={{
-                      width: "16px",
+                      width: "14px",
                       background: "var(--color-accent)",
                     }}
                   />
@@ -105,10 +105,10 @@ export default function Header() {
           </nav>
 
           {/* Right side */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-md transition-colors duration-150"
+              className="p-1.5 rounded-md transition-colors duration-150"
               style={{ color: "var(--color-text-faint)" }}
               aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             >
@@ -117,7 +117,7 @@ export default function Header() {
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 rounded-md"
+              className="md:hidden p-1.5 rounded-md"
               style={{ color: "var(--color-text-faint)" }}
               aria-label="Toggle menu"
             >
@@ -129,7 +129,7 @@ export default function Header() {
         {/* Mobile Nav */}
         {menuOpen && (
           <nav
-            className="md:hidden pb-3 pt-1 animate-fade-in"
+            className="md:hidden pb-2 pt-1 animate-fade-in"
             style={{ borderTop: "1px solid var(--color-divider)" }}
           >
             {navItems.map((item) => (
@@ -137,10 +137,10 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="block px-3 py-2 rounded-md"
+                className="block px-3 py-1.5 rounded-md"
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
+                  fontSize: "11px",
                   color: isActive(item.href)
                     ? "var(--color-accent)"
                     : "var(--color-text-faint)",

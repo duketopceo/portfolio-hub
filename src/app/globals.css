@@ -2,14 +2,14 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Design System: Zinc-950 base, teal-400 accent ─────────── */
+/* ── Design System: Cyber-Technical Aesthetic ─────────── */
 
 :root {
-  /* Zinc surfaces — dark intelligence-workstation */
-  --color-bg: #09090b;
-  --color-surface: #18181b;
-  --color-surface-2: #1f1f23;
-  --color-surface-3: #27272a;
+  /* Near-black base with warm undertone */
+  --color-bg: #0a0a0c;
+  --color-surface: #141416;
+  --color-surface-2: #1a1a1e;
+  --color-surface-3: #222226;
   --color-border: rgba(255, 255, 255, 0.06);
   --color-border-glass: rgba(255, 255, 255, 0.10);
   --color-divider: rgba(255, 255, 255, 0.04);
@@ -19,7 +19,7 @@
   --color-text-muted: #a1a1aa;
   --color-text-faint: #52525b;
 
-  /* Single teal accent — teal-400 */
+  /* Teal accent */
   --color-accent: #2dd4bf;
   --color-accent-muted: rgba(45, 212, 191, 0.12);
   --color-accent-subtle: rgba(45, 212, 191, 0.06);
@@ -27,22 +27,22 @@
   /* Status */
   --color-live: #34d399;
 
-  /* Glass — applied sparingly */
-  --glass-bg: rgba(255, 255, 255, 0.04);
-  --glass-bg-hover: rgba(255, 255, 255, 0.07);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hover: rgba(255, 255, 255, 0.15);
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-bg-hover: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-border-hover: rgba(255, 255, 255, 0.14);
   --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   --glass-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.06);
   --glass-blur: 12px;
 
-  /* Type scale — 4 sizes only */
-  --text-xs: 0.75rem;     /* 12px — labels, tags, meta */
-  --text-sm: 0.875rem;    /* 14px — body secondary */
-  --text-base: 1rem;      /* 16px — body primary */
-  --text-2xl: 2rem;       /* 32px — headings */
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-2xl: 2rem;
 
-  /* Mono for code, numbers, tags */
+  /* Fonts */
   --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: var(--font-mono, 'JetBrains Mono'), 'IBM Plex Mono', 'SF Mono', monospace;
 
@@ -54,7 +54,7 @@
   /* Transition */
   --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* ── Dynamic spacing system ───────────────────────── */
+  /* Spacing */
   --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
   --space-sm: clamp(0.5rem, 1vw, 0.75rem);
   --space-md: clamp(0.75rem, 1.5vw, 1.25rem);
@@ -63,7 +63,7 @@
   --space-2xl: clamp(3rem, 6vw, 5rem);
 }
 
-/* ── Light mode — zinc-100 base ──────────────────────────── */
+/* ── Light mode ────────────────────────────────────────── */
 :root:not(.dark) {
   --color-bg: #f4f4f5;
   --color-surface: #ffffff;
@@ -91,7 +91,7 @@
   --glass-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* ── Reset ───────────────────────────────────────────────── */
+/* ── Reset ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
@@ -99,7 +99,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
-  scroll-padding-top: 4rem;
+  scroll-padding-top: 3rem;
 }
 
 body {
@@ -113,22 +113,29 @@ body {
   font-size: var(--text-sm);
 }
 
-/* ── Blueprint grid background ──────────────────────────── */
+/* ── Scan-line overlay ─────────────────────────────────── */
 .grid-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.015) 2px,
+      rgba(255, 255, 255, 0.015) 4px
+    ),
     linear-gradient(var(--color-border) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
-  background-size: 60px 60px;
-  opacity: 0.35;
+  background-size: 100% 4px, 60px 60px, 60px 60px;
+  opacity: 0.4;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 0%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 0%, transparent 100%);
 }
 
-/* ── Glass utilities — nav, cards, category chips, stats only ── */
+/* ── Glass utilities ───────────────────────────────────── */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur)) saturate(150%);
@@ -142,7 +149,7 @@ body {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition: border-color var(--transition),
               box-shadow var(--transition),
               background var(--transition);
@@ -150,11 +157,11 @@ body {
 
 .glass-card:hover {
   border-color: var(--glass-border-hover);
-  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   background: var(--glass-bg-hover);
 }
 
-/* ── Animations ─────────────────────────────────────────── */
+/* ── Animations ────────────────────────────────────────── */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
@@ -173,7 +180,7 @@ body {
   animation: fade-in 0.4s ease both;
 }
 
-/* ── Staggered node entrance animation ──────────────────── */
+/* ── Staggered node entrance ───────────────────────────── */
 @keyframes node-enter {
   from {
     opacity: 0;
@@ -189,7 +196,7 @@ body {
   animation: node-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* ── Node filter transition ─────────────────────────────── */
+/* ── Node filter transition ────────────────────────────── */
 .q-node-fade {
   transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -206,26 +213,26 @@ body {
   .q-node-fade { transition: none; }
 }
 
-/* ── Scrollbar ──────────────────────────────────────────── */
+/* ── Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-text-faint); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
-/* ── Selection ──────────────────────────────────────────── */
+/* ── Selection ─────────────────────────────────────────── */
 ::selection {
   background: var(--color-accent-muted);
   color: var(--color-text);
 }
 
-/* ── Focus ──────────────────────────────────────────────── */
+/* ── Focus ─────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
 
-/* ── Prose (README) ─────────────────────────────────────── */
+/* ── Prose (README) ────────────────────────────────────── */
 .prose-readme {
   color: var(--color-text-muted);
   line-height: 1.7;
@@ -293,10 +300,10 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════
-   QUADRANT GRAPH v2 — Full UI System
+   QUADRANT GRAPH v2
    ══════════════════════════════════════════════════════════ */
 
-/* ── Root container ─────────────────────────────────────── */
+/* ── Root container ────────────────────────────────────── */
 .q-root {
   width: 100%;
   max-width: 1080px;
@@ -304,23 +311,23 @@ body {
   padding: 0 var(--space-md);
 }
 
-/* ── Filter pills ───────────────────────────────────────── */
+/* ── Filter pills ──────────────────────────────────────── */
 .q-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .q-pill {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 9999px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.02em;
   color: var(--color-text-faint);
   background: transparent;
@@ -345,19 +352,19 @@ body {
 }
 
 .q-pill__dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--pill-color, var(--color-accent));
   flex-shrink: 0;
 }
 
 .q-pill__count {
-  font-size: 10px;
+  font-size: 9px;
   opacity: 0.5;
 }
 
-/* ── Graph container ────────────────────────────────────── */
+/* ── Graph container ───────────────────────────────────── */
 .q-graph-outer {
   position: relative;
   width: 100%;
@@ -369,25 +376,25 @@ body {
   inset: 0;
   border-radius: 16px;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(45, 212, 191, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(45, 212, 191, 0.03) 0%, transparent 70%),
     var(--glass-bg);
   border: 1px solid var(--glass-border);
   overflow: visible;
 }
 
-/* ── Subtle subdivision grid ────────────────────────────── */
+/* ── Subtle subdivision grid ───────────────────────────── */
 .q-gridlines { position: absolute; inset: 0; pointer-events: none; }
 
 .q-gridline {
   position: absolute;
   background: var(--color-border);
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .q-gridline--h { left: 0; right: 0; height: 1px; }
 .q-gridline--v { top: 0; bottom: 0; width: 1px; }
 
-/* ── Main axes ──────────────────────────────────────────── */
+/* ── Main axes ─────────────────────────────────────────── */
 .q-axis {
   position: absolute;
   pointer-events: none;
@@ -405,7 +412,7 @@ body {
     var(--color-text-faint) 85%,
     transparent 100%
   );
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .q-axis--y {
@@ -420,45 +427,45 @@ body {
     var(--color-text-faint) 85%,
     transparent 100%
   );
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
-/* ── Axis labels ────────────────────────────────────────── */
+/* ── Axis labels ───────────────────────────────────────── */
 .q-axlabel {
   position: absolute;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-text-faint);
   pointer-events: none;
   white-space: nowrap;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
-.q-axlabel--l { top: 50%; left: 12px; transform: translateY(-50%); }
-.q-axlabel--r { top: 50%; right: 12px; transform: translateY(-50%); }
-.q-axlabel--t { top: 10px; left: 50%; transform: translateX(-50%); }
-.q-axlabel--b { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.q-axlabel--l { top: 50%; left: 10px; transform: translateY(-50%); }
+.q-axlabel--r { top: 50%; right: 10px; transform: translateY(-50%); }
+.q-axlabel--t { top: 8px; left: 50%; transform: translateX(-50%); }
+.q-axlabel--b { bottom: 8px; left: 50%; transform: translateX(-50%); }
 
-/* ── Quadrant zone labels ───────────────────────────────── */
+/* ── Quadrant zone labels ──────────────────────────────── */
 .q-zone {
   position: absolute;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.04em;
   color: var(--color-text-faint);
-  opacity: 0.3;
+  opacity: 0.25;
   pointer-events: none;
 }
 
-.q-zone--tl { top: 30px; left: 16px; }
-.q-zone--tr { top: 30px; right: 16px; }
-.q-zone--bl { bottom: 30px; left: 16px; }
-.q-zone--br { bottom: 30px; right: 16px; }
+.q-zone--tl { top: 26px; left: 14px; }
+.q-zone--tr { top: 26px; right: 14px; }
+.q-zone--bl { bottom: 26px; left: 14px; }
+.q-zone--br { bottom: 26px; right: 14px; }
 
 /* ═══════════════════════════════════════════════════════
-   PROJECT NODES — Icon circles with labels
+   PROJECT NODES
    ═══════════════════════════════════════════════════════ */
 .q-node {
   position: absolute;
@@ -478,7 +485,7 @@ body {
   z-index: 40;
 }
 
-/* Icon circle — the main visual element */
+/* Icon circle */
 .q-node__icon {
   width: 36px;
   height: 36px;
@@ -522,7 +529,7 @@ body {
   background: currentColor;
 }
 
-/* Live badge — small green dot on top-right of icon */
+/* Live badge */
 .q-node__live {
   position: absolute;
   top: -2px;
@@ -566,15 +573,15 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
-   HOVER CARD — Rich tooltip
+   HOVER CARD
    ═══════════════════════════════════════════════════════ */
 .q-card {
   position: absolute;
   top: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%);
-  width: 280px;
-  padding: 16px;
+  width: 260px;
+  padding: 14px;
   background: var(--color-surface);
   border: 1px solid var(--glass-border-hover);
   border-radius: 12px;
@@ -582,7 +589,7 @@ body {
     0 12px 40px rgba(0, 0, 0, 0.45),
     0 4px 12px rgba(0, 0, 0, 0.2),
     0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
   pointer-events: none;
   z-index: 50;
   animation: q-card-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -596,14 +603,14 @@ body {
 .q-card__head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .q-card__icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
   display: grid;
   place-items: center;
   background: var(--glass-bg);
@@ -622,16 +629,16 @@ body {
 
 .q-card__cat {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--color-text-faint);
   margin-top: 1px;
 }
 
 .q-card__desc {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-muted);
   line-height: 1.5;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -641,15 +648,15 @@ body {
 .q-card__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: 3px;
+  margin-bottom: 6px;
 }
 
 .q-card__chip {
   font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 6px;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
   background: var(--glass-bg);
   border: 1px solid var(--color-border);
   color: var(--color-text-faint);
@@ -658,44 +665,204 @@ body {
 .q-card__demo {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--color-live);
   font-weight: 500;
 }
 
 .q-card__pulse {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--color-live);
   animation: q-pulse 2.5s ease-in-out infinite;
 }
 
-/* ── Legend ──────────────────────────────────────────────── */
+/* ── Legend ─────────────────────────────────────────────── */
 .q-legend {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 8px;
   padding: 0 4px;
 }
 
 .q-legend__count {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-muted);
 }
 
 .q-legend__hint {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-faint);
 }
 
 /* ═══════════════════════════════════════════════════════
-   RESPONSIVE — Mobile
+   PROJECT DETAIL PAGE
+   ═══════════════════════════════════════════════════════ */
+
+/* Section headings — terminal-style */
+.detail-section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  margin-bottom: 0.5rem;
+}
+
+/* Category badge */
+.detail-cat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--badge-color, var(--color-border));
+  color: var(--badge-color, var(--color-text-faint));
+  background: color-mix(in srgb, var(--badge-color, var(--color-accent)) 8%, transparent);
+}
+
+.detail-cat-badge__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--badge-color, var(--color-accent));
+}
+
+/* Tech chip */
+.detail-tech-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+}
+
+/* Feature card */
+.detail-feature-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  transition: border-color var(--transition);
+}
+
+.detail-feature-card:hover {
+  border-color: var(--glass-border-hover);
+}
+
+/* Architecture flow */
+.detail-arch-step {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+}
+
+.detail-arch-arrow {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+/* CTA button */
+.detail-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-bg);
+  background: var(--color-accent);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: all 150ms;
+  border: none;
+  cursor: pointer;
+}
+
+.detail-cta:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.25);
+}
+
+.detail-cta__pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+  animation: q-pulse 2.5s ease-in-out infinite;
+}
+
+/* Metadata row */
+.detail-meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-meta-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+/* Project nav (prev/next) */
+.detail-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-faint);
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  transition: all var(--transition);
+}
+
+.detail-nav-link:hover {
+  color: var(--color-text-muted);
+  border-color: var(--glass-border-hover);
+  background: var(--glass-bg);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
   .q-graph-outer {
@@ -734,7 +901,7 @@ body {
   }
 
   .q-pill {
-    font-size: 10px;
-    padding: 4px 10px;
+    font-size: 9px;
+    padding: 3px 8px;
   }
 }

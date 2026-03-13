@@ -6,33 +6,34 @@ export default function Footer() {
     <footer
       className="mt-auto"
       style={{
-        padding: "clamp(1.5rem, 3vw, 2rem) 0",
+        padding: "clamp(1rem, 2vw, 1.5rem) 0",
         borderTop: "1px solid var(--color-divider)",
       }}
     >
       <div className="mx-auto max-w-5xl px-5 sm:px-6">
-        {/* ── Link columns ──────────────────────────── */}
+        {/* ── Link columns ──────────────────────── */}
         <div
-          className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-5"
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
+            fontSize: "11px",
           }}
         >
           {/* Navigation */}
           <div>
             <h3
-              className="mb-3"
+              className="mb-2"
               style={{
                 fontWeight: 500,
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
+                fontSize: "10px",
               }}
             >
               Navigation
             </h3>
-            <ul className="space-y-1.5">
+            <ul className="space-y-1">
               <li>
                 <Link
                   href="/"
@@ -57,17 +58,18 @@ export default function Footer() {
           {/* Live Projects */}
           <div>
             <h3
-              className="mb-3"
+              className="mb-2"
               style={{
                 fontWeight: 500,
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
+                fontSize: "10px",
               }}
             >
               Live Projects
             </h3>
-            <ul className="space-y-1.5">
+            <ul className="space-y-1">
               <li>
                 <a
                   href="https://republic-atlas.web.app/elections?state=IL"
@@ -98,17 +100,18 @@ export default function Footer() {
           {/* Credits */}
           <div>
             <h3
-              className="mb-3"
+              className="mb-2"
               style={{
                 fontWeight: 500,
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
+                fontSize: "10px",
               }}
             >
               Credits
             </h3>
-            <ul className="space-y-1.5">
+            <ul className="space-y-1">
               <li>
                 <a
                   href="https://www.perplexity.ai/computer"
@@ -127,38 +130,35 @@ export default function Footer() {
           {/* Stack */}
           <div>
             <h3
-              className="mb-3"
+              className="mb-2"
               style={{
                 fontWeight: 500,
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
+                fontSize: "10px",
               }}
             >
               Stack
             </h3>
-            <ul className="space-y-1.5">
-              <li
-                style={{ color: "var(--color-text-faint)" }}
-              >
+            <ul className="space-y-1">
+              <li style={{ color: "var(--color-text-faint)" }}>
                 Built with Next.js
               </li>
-              <li
-                style={{ color: "var(--color-text-faint)" }}
-              >
+              <li style={{ color: "var(--color-text-faint)" }}>
                 Deployed on Docker Swarm
               </li>
             </ul>
           </div>
         </div>
 
-        {/* ── Bottom bar ────────────────────────────── */}
+        {/* ── Bottom bar ──────────────────────────── */}
         <div
-          className="pt-4"
+          className="pt-3"
           style={{
             borderTop: "1px solid var(--color-divider)",
             fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
+            fontSize: "10px",
             color: "var(--color-text-faint)",
             textAlign: "center" as const,
           }}

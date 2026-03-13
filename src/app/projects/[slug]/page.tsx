@@ -3,19 +3,31 @@ import Link from "next/link";
 import {
   getProjectBySlug,
   getAllSlugs,
+  getEnrichedProjects,
   fetchReadme,
 } from "@/lib/github";
 import { formatDate, languageColors } from "@/lib/utils";
-import { categoryMeta } from "@/data/projects";
+import { categoryMeta, projectConfigs } from "@/data/projects";
 import {
   LockIcon,
   ExternalIcon,
   ChevronIcon,
   CheckIcon,
+  getCategoryIcon,
 } from "@/components/Icons";
 import DemoEmbed from "@/components/DemoEmbed";
 
 export const revalidate = 3600;
+
+/** Category → accent color (mirrors QuadrantGraph) */
+const catColors: Record<string, string> = {
+  finance: "#2dd4bf",
+  ai: "#a78bfa",
+  osint: "#f59e0b",
+  data: "#38bdf8",
+  infra: "#f472b6",
+  apps: "#34d399",
+};
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -41,13 +53,20 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
-  if (!project) notFound();
+  const allProjects = await getEnrichedProjects();
+  const projectIndex = allProjects.findIndex((p) => p.slug === slug);
+  if (projectIndex === -1) notFound();
 
-  const readme =
-    !project.private
-      ? await fetchReadme(project.repoName).catch(() => null)
+  const project = allProjects[projectIndex];
+  const prevProject = projectIndex > 0 ? allProjects[projectIndex - 1] : null;
+  const nextProject =
+    projectIndex < allProjects.length - 1
+      ? allProjects[projectIndex + 1]
       : null;
+
+  const readme = !project.private
+    ? await fetchReadme(project.repoName).catch(() => null)
+    : null;
 
   const meta = categoryMeta[project.category];
   const hasDemo = !!(project.liveUrl || project.demoUrl);
@@ -55,530 +74,482 @@ export default async function ProjectDetailPage({
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"
     : null;
-  const liveDisplayUrl = project.liveUrl
-    ? project.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
-    : null;
+  const accentColor = catColors[project.category] || "#2dd4bf";
+
+  const relatedProjects = allProjects
+    .filter((p) => p.category === project.category && p.slug !== project.slug)
+    .slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-5xl px-5 sm:px-6 py-10">
-      {/* Breadcrumb */}
-      <nav
-        className="flex items-center gap-1.5 mb-6"
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "var(--text-xs)",
-          color: "var(--color-text-faint)",
-        }}
+    <div className="animate-fade-up">
+      {/* ── Breadcrumb ──────────────────────────────── */}
+      <div
+        className="mx-auto max-w-5xl px-5 sm:px-6"
+        style={{ paddingTop: "0.75rem", paddingBottom: "0.75rem" }}
       >
-        <Link
-          href="/projects"
-          className="transition-colors hover:text-[var(--color-text-muted)]"
-          style={{ textDecoration: "none" }}
-        >
-          Projects
-        </Link>
-        <ChevronIcon className="w-3 h-3" />
-        <span style={{ color: "var(--color-text-muted)" }}>
-          {project.displayName}
-        </span>
-      </nav>
-
-      {/* ── Hero Section ─────────────────────────────── */}
-      <div className="mb-8 animate-fade-up">
-        {/* Tags row */}
-        <div className="flex items-center flex-wrap gap-2 mb-3">
-          <span
-            className="px-2 py-0.5 rounded-md"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              color: "var(--color-text-faint)",
-              background: "var(--color-surface-3)",
-            }}
-          >
-            {meta?.label || project.category}
-          </span>
-          <span
-            className="px-2 py-0.5 rounded-md capitalize"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              color: "var(--color-text-faint)",
-              background: "var(--color-surface-3)",
-            }}
-          >
-            {project.type}
-          </span>
-          {project.private && (
-            <span
-              className="flex items-center gap-1 px-2 py-0.5 rounded-md"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-text-faint)",
-                background: "var(--color-surface-3)",
-              }}
-            >
-              <LockIcon className="w-3 h-3" />
-              Private
-            </span>
-          )}
-          {hasDemo && (
-            <span
-              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-live)",
-                background: "rgba(52, 211, 153, 0.06)",
-              }}
-            >
-              <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse"
-                style={{ background: "var(--color-live)" }}
-              />
-              live
-            </span>
-          )}
-        </div>
-
-        <h1
-          className="mb-3"
+        <nav
+          className="flex items-center gap-1.5"
           style={{
-            fontSize: "var(--text-2xl)",
-            fontWeight: 700,
-            color: "var(--color-text)",
-            letterSpacing: "-0.02em",
+            fontFamily: "var(--font-mono)",
+            fontSize: "11px",
+            color: "var(--color-text-faint)",
           }}
         >
-          {project.displayName}
-        </h1>
-
-        <p
-          className="mb-5"
-          style={{
-            fontSize: "var(--text-sm)",
-            color: "var(--color-text-muted)",
-            lineHeight: 1.6,
-            maxWidth: "640px",
-          }}
-        >
-          {project.tagline}
-        </p>
-
-        {/* Primary CTA — large demo button + visible URL */}
-        {hasDemo && (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <a
-              href={project.liveUrl || project.demoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-lg transition-all duration-150 group"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-sm)",
-                fontWeight: 600,
-                color: "var(--color-bg)",
-                background: "var(--color-accent)",
-                textDecoration: "none",
-                letterSpacing: "0.01em",
-              }}
-            >
-              <span
-                className="w-2 h-2 rounded-full animate-pulse"
-                style={{ background: "currentColor", opacity: 0.7 }}
-              />
-              View Live Application
-              <ExternalIcon className="w-3.5 h-3.5 opacity-80" />
-            </a>
-            {liveDisplayUrl && (
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  color: "var(--color-text-faint)",
-                }}
-              >
-                {liveDisplayUrl}
-              </span>
-            )}
-          </div>
-        )}
+          <Link
+            href="/projects"
+            className="transition-colors hover:text-[var(--color-text-muted)]"
+            style={{ textDecoration: "none", color: "var(--color-text-faint)" }}
+          >
+            ← Projects
+          </Link>
+          <ChevronIcon className="w-3 h-3" />
+          <span style={{ color: "var(--color-text-muted)" }}>
+            {project.displayName}
+          </span>
+        </nav>
       </div>
 
-      {/* ── Demo Embed ─────────────────────────────── */}
+      {/* ── Top Band — Project Hero ─────────────────── */}
+      <section
+        style={{
+          background: "var(--color-surface)",
+          borderTop: "1px solid var(--color-border)",
+          borderBottom: "1px solid var(--color-border)",
+          padding: "clamp(1.25rem, 3vw, 2rem) 0",
+        }}
+      >
+        <div className="mx-auto max-w-5xl px-5 sm:px-6">
+          <div className="flex items-start gap-4 sm:gap-5">
+            {/* Project icon — 64px colored circle */}
+            <div
+              className="flex-shrink-0 rounded-xl flex items-center justify-center"
+              style={{
+                width: "56px",
+                height: "56px",
+                background: `color-mix(in srgb, ${accentColor} 12%, transparent)`,
+                border: `1.5px solid ${accentColor}40`,
+                color: accentColor,
+              }}
+            >
+              {getCategoryIcon(meta?.icon || "globe", "w-6 h-6")}
+            </div>
+
+            <div className="min-w-0 flex-1">
+              {/* Name + badges row */}
+              <div className="flex items-center flex-wrap gap-2 mb-1.5">
+                <h1
+                  style={{
+                    fontSize: "clamp(1.25rem, 2.5vw, 1.5rem)",
+                    fontWeight: 700,
+                    color: "var(--color-text)",
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {project.displayName}
+                </h1>
+
+                {/* Category badge */}
+                <span
+                  className="detail-cat-badge"
+                  style={{ "--badge-color": accentColor } as React.CSSProperties}
+                >
+                  <span className="detail-cat-badge__dot" />
+                  {meta?.label || project.category}
+                </span>
+
+                {project.private && (
+                  <span
+                    className="inline-flex items-center gap-1"
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "10px",
+                      color: "var(--color-text-faint)",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      background: "var(--color-surface-3)",
+                    }}
+                  >
+                    <LockIcon className="w-3 h-3" />
+                    Private
+                  </span>
+                )}
+
+                {hasDemo && (
+                  <span
+                    className="inline-flex items-center gap-1.5"
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "10px",
+                      color: "var(--color-live)",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      background: "rgba(52, 211, 153, 0.06)",
+                    }}
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full animate-pulse"
+                      style={{ background: "var(--color-live)" }}
+                    />
+                    live
+                  </span>
+                )}
+              </div>
+
+              {/* Tagline */}
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  color: "var(--color-text-muted)",
+                  lineHeight: 1.5,
+                  marginBottom: "0.75rem",
+                  maxWidth: "600px",
+                }}
+              >
+                {project.tagline}
+              </p>
+
+              {/* Tech chips */}
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {project.techStack.map((tech) => (
+                  <span key={tech} className="detail-tech-chip">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA buttons */}
+              <div className="flex items-center flex-wrap gap-2">
+                {hasDemo && (
+                  <a
+                    href={project.liveUrl || project.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="detail-cta"
+                  >
+                    <span className="detail-cta__pulse" />
+                    Launch Demo
+                    <ExternalIcon className="w-3 h-3 opacity-80" />
+                  </a>
+                )}
+                {project.private && (
+                  <span
+                    className="inline-flex items-center gap-1.5"
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "11px",
+                      color: "var(--color-text-faint)",
+                      padding: "6px 14px",
+                      borderRadius: "var(--radius-md)",
+                      border: "1px solid var(--color-border)",
+                    }}
+                  >
+                    <LockIcon className="w-3.5 h-3.5" />
+                    Private Repository
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Demo Embed (full-width) ─────────────────── */}
       {hasDemo && embedUrl && (
-        <div
-          className="mb-8 animate-fade-up"
-          style={{ animationDelay: "60ms" }}
+        <section
+          className="mx-auto max-w-5xl px-5 sm:px-6"
+          style={{ paddingTop: "clamp(1rem, 2vw, 1.5rem)" }}
         >
           <DemoEmbed
             url={embedUrl}
             title={project.displayName}
             embeddable={project.embeddable}
           />
-        </div>
+        </section>
       )}
 
-      {/* ── Two-column: content + sidebar ──────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-5">
-          {/* What It Does */}
-          <div
-            className="glass-card p-5 sm:p-6 animate-fade-up"
-            style={{ animationDelay: "80ms" }}
-          >
-            <h2
-              className="mb-3"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                fontWeight: 500,
-                textTransform: "uppercase" as const,
-                letterSpacing: "0.08em",
-                color: "var(--color-text-faint)",
-              }}
-            >
-              What It Does
-            </h2>
-            <p
-              style={{
-                fontSize: "var(--text-sm)",
-                lineHeight: 1.8,
-                color: "var(--color-text-muted)",
-              }}
-            >
-              {project.description}
-            </p>
+      {/* ── Two-column layout ───────────────────────── */}
+      <div
+        className="mx-auto max-w-5xl px-5 sm:px-6"
+        style={{ paddingTop: "clamp(1rem, 2vw, 1.5rem)", paddingBottom: "clamp(1rem, 2vw, 1.5rem)" }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+          {/* ── Left Column (60%) ─────────────────── */}
+          <div className="lg:col-span-3 space-y-4">
+            {/* About */}
+            <div className="glass-card p-4 sm:p-5">
+              <h2 className="detail-section-label">About This Project</h2>
+              <p
+                style={{
+                  fontSize: "var(--text-sm)",
+                  lineHeight: 1.7,
+                  color: "var(--color-text-muted)",
+                }}
+              >
+                {project.description}
+              </p>
+            </div>
+
+            {/* Key Features */}
+            {project.highlights && project.highlights.length > 0 && (
+              <div>
+                <h2 className="detail-section-label">Key Features</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {project.highlights.map((h, i) => (
+                    <div key={i} className="detail-feature-card">
+                      <span
+                        className="mt-0.5 flex-shrink-0"
+                        style={{ color: accentColor }}
+                      >
+                        <CheckIcon className="w-3.5 h-3.5" />
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "var(--text-xs)",
+                          color: "var(--color-text-muted)",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {h}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Architecture */}
+            {project.architecture && (
+              <div className="glass-card p-4 sm:p-5">
+                <h2 className="detail-section-label">Architecture</h2>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {project.architecture.split(" → ").map((step, i, arr) => (
+                    <span key={i} className="flex items-center gap-1.5">
+                      <span className="detail-arch-step">{step}</span>
+                      {i < arr.length - 1 && (
+                        <span className="detail-arch-arrow">→</span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* README */}
+            {readme && (
+              <div className="glass-card p-4 sm:p-5">
+                <h2 className="detail-section-label">Documentation</h2>
+                <div
+                  className="prose-readme"
+                  dangerouslySetInnerHTML={{ __html: readme }}
+                />
+              </div>
+            )}
           </div>
 
-          {/* Key Features — styled as a grid */}
-          {project.highlights && project.highlights.length > 0 && (
-            <div
-              className="animate-fade-up"
-              style={{ animationDelay: "120ms" }}
-            >
-              <h2
-                className="mb-3"
+          {/* ── Right Column (40%) ────────────────── */}
+          <div className="lg:col-span-2 space-y-3">
+            {/* Live URL card */}
+            {hasDemo && project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card p-3.5 block transition-colors group"
                 style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: 500,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-text-faint)",
+                  textDecoration: "none",
+                  border: "1px solid var(--color-accent-subtle)",
                 }}
               >
-                Key Features
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {project.highlights.map((h, i) => (
-                  <div
-                    key={i}
-                    className="glass-card p-4 flex items-start gap-2.5"
-                  >
-                    <span
-                      className="mt-0.5 flex-shrink-0"
-                      style={{ color: "var(--color-accent)" }}
-                    >
-                      <CheckIcon className="w-3.5 h-3.5" />
-                    </span>
-                    <span
-                      style={{
-                        fontSize: "var(--text-xs)",
-                        color: "var(--color-text-muted)",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {h}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                <div
+                  className="flex items-center gap-2 mb-1"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    fontWeight: 500,
+                    textTransform: "uppercase" as const,
+                    letterSpacing: "0.08em",
+                    color: "var(--color-live)",
+                  }}
+                >
+                  <span
+                    className="w-1.5 h-1.5 rounded-full animate-pulse"
+                    style={{ background: "var(--color-live)" }}
+                  />
+                  Live Application
+                </div>
+                <div
+                  className="flex items-center gap-1.5 group-hover:text-[var(--color-accent)]"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-sm)",
+                    color: "var(--color-text)",
+                    transition: "color 150ms",
+                  }}
+                >
+                  {project.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                  <ExternalIcon className="w-3 h-3 opacity-50" />
+                </div>
+              </a>
+            )}
 
-          {/* Architecture */}
-          {project.architecture && (
-            <div
-              className="glass-card p-5 sm:p-6 animate-fade-up"
-              style={{ animationDelay: "160ms" }}
-            >
-              <h2
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: 500,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-text-faint)",
-                }}
-              >
-                Architecture
-              </h2>
-              <div
-                className="flex flex-wrap items-center gap-2"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                }}
-              >
-                {project.architecture.split(" → ").map((step, i, arr) => (
-                  <span key={i} className="flex items-center gap-2">
-                    <span
-                      className="px-2.5 py-1 rounded-md"
-                      style={{
-                        color: "var(--color-text-muted)",
-                        background: "var(--color-surface-3)",
-                        border: "1px solid var(--color-border)",
-                      }}
-                    >
-                      {step}
-                    </span>
-                    {i < arr.length - 1 && (
-                      <span style={{ color: "var(--color-text-faint)" }}>
-                        <ChevronIcon className="w-3 h-3" />
-                      </span>
-                    )}
+            {/* Tech Stack */}
+            <div className="glass-card p-3.5">
+              <h2 className="detail-section-label">Tech Stack</h2>
+              <div className="flex flex-wrap gap-1.5">
+                {project.techStack.map((tech) => (
+                  <span key={tech} className="detail-tech-chip">
+                    {tech}
                   </span>
                 ))}
               </div>
             </div>
-          )}
 
-          {/* README */}
-          {readme && (
-            <div
-              className="glass-card p-5 sm:p-6 animate-fade-up"
-              style={{ animationDelay: "200ms" }}
-            >
-              <h2
-                className="mb-3"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: 500,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-text-faint)",
-                }}
-              >
-                Documentation
-              </h2>
-              <div
-                className="prose-readme"
-                dangerouslySetInnerHTML={{ __html: readme }}
-              />
+            {/* Metadata */}
+            <div className="glass-card p-3.5 space-y-2.5">
+              {project.language && (
+                <div className="detail-meta-row">
+                  <div className="detail-meta-label">Language</div>
+                  <div className="detail-meta-value flex items-center gap-1.5">
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: langColor || "#6B7280" }}
+                    />
+                    {project.language}
+                  </div>
+                </div>
+              )}
+              {project.lastUpdated && (
+                <div className="detail-meta-row">
+                  <div className="detail-meta-label">Updated</div>
+                  <div className="detail-meta-value">
+                    {formatDate(project.lastUpdated)}
+                  </div>
+                </div>
+              )}
+              {project.stars > 0 && (
+                <div className="detail-meta-row">
+                  <div className="detail-meta-label">Stars</div>
+                  <div
+                    className="detail-meta-value"
+                    style={{ color: "var(--color-accent)" }}
+                  >
+                    {project.stars}
+                  </div>
+                </div>
+              )}
+              <div className="detail-meta-row">
+                <div className="detail-meta-label">Type</div>
+                <div className="detail-meta-value capitalize">
+                  {project.type}
+                </div>
+              </div>
             </div>
-          )}
+
+            {/* Private repo notice */}
+            {project.private && (
+              <div className="glass-card p-3.5">
+                <div
+                  className="flex items-center gap-2 mb-1.5"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    fontWeight: 500,
+                    textTransform: "uppercase" as const,
+                    letterSpacing: "0.08em",
+                    color: "var(--color-text-faint)",
+                  }}
+                >
+                  <LockIcon className="w-3.5 h-3.5" />
+                  Private Repository
+                </div>
+                <p
+                  style={{
+                    fontSize: "var(--text-xs)",
+                    color: "var(--color-text-faint)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Source code is available upon request for interviews and
+                  technical discussions.
+                </p>
+              </div>
+            )}
+
+            {/* Related Projects */}
+            {relatedProjects.length > 0 && (
+              <div className="glass-card p-3.5">
+                <h2 className="detail-section-label">Related Projects</h2>
+                <div className="space-y-1.5">
+                  {relatedProjects.map((rp) => (
+                    <Link
+                      key={rp.slug}
+                      href={`/projects/${rp.slug}`}
+                      className="flex items-center gap-2 py-1.5 px-2 -mx-1 rounded-md transition-colors hover:bg-[var(--glass-bg)]"
+                      style={{
+                        textDecoration: "none",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "11px",
+                      }}
+                    >
+                      <span
+                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                        style={{ background: accentColor }}
+                      />
+                      <span style={{ color: "var(--color-text-muted)" }}>
+                        {rp.displayName}
+                      </span>
+                      {(rp.liveUrl || rp.demoUrl) && (
+                        <span
+                          className="ml-auto"
+                          style={{
+                            fontSize: "9px",
+                            color: "var(--color-live)",
+                            opacity: 0.7,
+                          }}
+                        >
+                          live
+                        </span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+      </div>
 
-        {/* Sidebar */}
-        <div className="space-y-3">
-          {/* Live URL card */}
-          {hasDemo && liveDisplayUrl && (
-            <a
-              href={project.liveUrl || project.demoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-card p-4 block transition-colors animate-fade-up group"
-              style={{
-                animationDelay: "100ms",
-                textDecoration: "none",
-                border: "1px solid var(--color-accent-subtle)",
-              }}
+      {/* ── Prev / Next Navigation ──────────────────── */}
+      <div
+        style={{
+          borderTop: "1px solid var(--color-border)",
+          padding: "clamp(0.75rem, 2vw, 1.25rem) 0",
+        }}
+      >
+        <div className="mx-auto max-w-5xl px-5 sm:px-6 flex items-center justify-between">
+          {prevProject ? (
+            <Link
+              href={`/projects/${prevProject.slug}`}
+              className="detail-nav-link"
             >
-              <div
-                className="flex items-center gap-2 mb-1.5"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: 500,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-live)",
-                }}
-              >
-                <span
-                  className="w-1.5 h-1.5 rounded-full animate-pulse"
-                  style={{ background: "var(--color-live)" }}
-                />
-                Live Application
-              </div>
-              <div
-                className="flex items-center gap-1.5 group-hover:text-[var(--color-accent)]"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-text)",
-                  transition: "color 150ms",
-                }}
-              >
-                {liveDisplayUrl}
-                <ExternalIcon className="w-3 h-3 opacity-50" />
-              </div>
-            </a>
+              <span style={{ fontSize: "13px" }}>←</span>
+              {prevProject.displayName}
+            </Link>
+          ) : (
+            <div />
           )}
-
-          {/* Tech Stack */}
-          <div
-            className="glass-card p-4 animate-fade-up"
-            style={{ animationDelay: "120ms" }}
-          >
-            <h2
-              className="mb-2.5"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                fontWeight: 500,
-                textTransform: "uppercase" as const,
-                letterSpacing: "0.08em",
-                color: "var(--color-text-faint)",
-              }}
+          {nextProject ? (
+            <Link
+              href={`/projects/${nextProject.slug}`}
+              className="detail-nav-link"
             >
-              Tech Stack
-            </h2>
-            <div className="flex flex-wrap gap-1.5">
-              {project.techStack.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-2 py-0.5 rounded-md"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
-                    color: "var(--color-text-muted)",
-                    background: "var(--color-surface-3)",
-                    border: "1px solid var(--color-border)",
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Metadata */}
-          <div
-            className="glass-card p-4 space-y-2.5 animate-fade-up"
-            style={{ animationDelay: "160ms" }}
-          >
-            {project.language && (
-              <div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
-                    color: "var(--color-text-faint)",
-                    marginBottom: "2px",
-                    textTransform: "uppercase" as const,
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  Language
-                </div>
-                <div
-                  className="flex items-center gap-1.5"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-sm)",
-                    color: "var(--color-text)",
-                  }}
-                >
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{
-                      backgroundColor: langColor || "#6B7280",
-                    }}
-                  />
-                  {project.language}
-                </div>
-              </div>
-            )}
-            {project.lastUpdated && (
-              <div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
-                    color: "var(--color-text-faint)",
-                    marginBottom: "2px",
-                    textTransform: "uppercase" as const,
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  Updated
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-sm)",
-                    color: "var(--color-text)",
-                  }}
-                >
-                  {formatDate(project.lastUpdated)}
-                </div>
-              </div>
-            )}
-            {project.stars > 0 && (
-              <div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
-                    color: "var(--color-text-faint)",
-                    marginBottom: "2px",
-                    textTransform: "uppercase" as const,
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  Stars
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-sm)",
-                    color: "var(--color-accent)",
-                  }}
-                >
-                  {project.stars}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Private repo notice — professional */}
-          {project.private && (
-            <div
-              className="glass-card p-4 animate-fade-up"
-              style={{ animationDelay: "200ms" }}
-            >
-              <div
-                className="flex items-center gap-2 mb-2"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: 500,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-text-faint)",
-                }}
-              >
-                <LockIcon className="w-3.5 h-3.5" />
-                Private Repository
-              </div>
-              <p
-                style={{
-                  fontSize: "var(--text-xs)",
-                  color: "var(--color-text-faint)",
-                  lineHeight: 1.6,
-                }}
-              >
-                Source code is available upon request for interviews and
-                technical discussions.
-              </p>
-            </div>
+              {nextProject.displayName}
+              <span style={{ fontSize: "13px" }}>→</span>
+            </Link>
+          ) : (
+            <div />
           )}
         </div>
       </div>
