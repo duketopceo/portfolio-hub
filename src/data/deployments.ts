@@ -26,52 +26,73 @@ export interface DeploymentConfig {
 export const deployments: DeploymentConfig[] = [
   {
     slug: "republic-atlas",
-    url: "https://republic-atlas.web.app/elections?state=IL",
-    subdomain: "atlas",
-    host: "firebase",
+    url: "https://republicatlas.com",
+    host: "other",
     role: "Political data platform — election analytics and civic mapping",
     healthCheck: "/",
   },
-  // ── Add your Swarm deployments below ─────────────────────
-  // {
-  //   slug: "bartlett-bot",
-  //   url: "https://skyguard.yourdomain.com",
-  //   subdomain: "skyguard",
-  //   host: "swarm",
-  //   role: "SkyGuard AI — Bartlett roofing assistant",
-  //   healthCheck: "/health",
-  // },
-  // {
-  //   slug: "military-hardware-db",
-  //   url: "https://osint.yourdomain.com",
-  //   subdomain: "osint",
-  //   host: "swarm",
-  //   role: "Open military hardware database and search",
-  //   healthCheck: "/api/health",
-  // },
-  // {
-  //   slug: "trading-bot",
-  //   url: "https://trading.yourdomain.com",
-  //   subdomain: "trading",
-  //   host: "swarm",
-  //   role: "Trading bot dashboard and monitoring",
-  //   healthCheck: "/health",
-  // },
+  {
+    slug: "military-hardware-db",
+    url: "https://mildb.luke-the-duke.com",
+    subdomain: "mildb",
+    host: "swarm",
+    role: "Open military hardware database — 183 platforms across air, land, sea, and munitions",
+    healthCheck: "/api/health",
+  },
+  {
+    slug: "alphahedge",
+    url: "https://alphahedge.luke-the-duke.com",
+    subdomain: "alphahedge",
+    host: "swarm",
+    role: "Hedge fund simulation with real-time market dynamics and portfolio analytics",
+    healthCheck: "/",
+  },
+  {
+    slug: "dixi",
+    url: "https://dixi.luke-the-duke.com",
+    subdomain: "dixi",
+    host: "swarm",
+    role: "AI projection system — computer vision, gesture recognition, real-time AI canvas",
+    healthCheck: "/",
+  },
+  {
+    slug: "quiz-the-best",
+    url: "https://quiz.luke-the-duke.com",
+    subdomain: "quiz",
+    host: "swarm",
+    role: "AI-powered study companion — flashcards, quizzes, and summaries",
+    healthCheck: "/",
+  },
+  {
+    slug: "personal-blog",
+    url: "https://blog.luke-the-duke.com",
+    subdomain: "blog",
+    host: "swarm",
+    role: "Personal blog platform with AI-assisted content and dark mode",
+    healthCheck: "/",
+  },
+  {
+    slug: "collaborative-essay",
+    url: "https://essay.luke-the-duke.com",
+    subdomain: "essay",
+    host: "swarm",
+    role: "Collaborative writing platform with PR-based editing and AI assistance",
+    healthCheck: "/",
+  },
+  {
+    slug: "ikbr-dashboard",
+    url: "https://ibkr.luke-the-duke.com",
+    subdomain: "ibkr",
+    host: "swarm",
+    role: "Interactive Brokers portfolio dashboard with real-time charts",
+    healthCheck: "/",
+  },
+  {
+    slug: "skyguard-ai",
+    url: "https://skyguard.luke-the-duke.com",
+    subdomain: "skyguard",
+    host: "swarm",
+    role: "SkyGuard AI — roofing operations assistant powered by Gemini",
+    healthCheck: "/",
+  },
 ];
-
-/**
- * DNS records you'd need in Cloudflare for the subdomain plan:
- *
- * Type  | Name             | Content              | Proxy
- * ──────┼──────────────────┼──────────────────────┼───────
- * A     | portfolio        | <swarm-ip>           | Yes
- * A     | atlas            | <swarm-ip>           | Yes
- * A     | osint            | <swarm-ip>           | Yes
- * A     | skyguard         | <swarm-ip>           | Yes
- * A     | trading          | <swarm-ip>           | Yes
- * A     | apps             | <swarm-ip>           | Yes
- * CNAME | *.yourdomain.com | <swarm-ip>           | Yes  (wildcard, optional)
- *
- * Each service in Docker Swarm gets a Traefik label:
- *   traefik.http.routers.<service>.rule=Host(`<subdomain>.yourdomain.com`)
- */
