@@ -169,6 +169,26 @@ body {
   100% { opacity: 1; }
 }
 
+/* ── Page container utility ────────────────────────────── */
+.page-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 64rem; /* max-w-5xl */
+  padding-left: 1.25rem;
+  padding-right: 2rem;
+  padding-top: 4rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 640px) {
+  .page-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
 /* ── Glass utilities ───────────────────────────────────── */
 .glass {
   background: var(--glass-bg);
@@ -191,8 +211,13 @@ body {
 
 .glass-card:hover {
   border-color: var(--glass-border-hover);
-  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   background: var(--glass-bg-hover);
+}
+
+.dark .glass-card:hover {
+  background: rgba(12, 18, 30, 0.92);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(45, 212, 191, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* ── Animations ────────────────────────────────────────── */
@@ -750,12 +775,12 @@ body {
 /* Section headings — terminal-style */
 .detail-section-label {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text-faint);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 /* Category badge */
@@ -766,7 +791,7 @@ body {
   padding: 3px 10px;
   border-radius: 9999px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.02em;
   border: 1px solid var(--badge-color, var(--color-border));
   color: var(--badge-color, var(--color-text-faint));
@@ -783,8 +808,8 @@ body {
 /* Tech chip */
 .detail-tech-chip {
   font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 2px 8px;
+  font-size: 11px;
+  padding: 3px 9px;
   border-radius: 4px;
   color: var(--color-text-muted);
   background: var(--color-surface-3);

@@ -32,7 +32,7 @@ export default function ProjectCard({
     >
       <Link
         href={`/projects/${project.slug}`}
-        className="block p-4"
+        className="block p-5"
         style={{ textDecoration: "none" }}
       >
         {/* Top row: category + date */}
@@ -69,6 +69,7 @@ export default function ProjectCard({
         <h3
           className="mb-1"
           style={{
+            fontFamily: "var(--font-display)",
             fontSize: "var(--text-base)",
             fontWeight: 600,
             color: "var(--color-text)",
@@ -82,7 +83,7 @@ export default function ProjectCard({
 
         {/* Description — one line */}
         <p
-          className="mb-3 line-clamp-1"
+          className="mb-3 line-clamp-2"
           style={{
             fontSize: "var(--text-sm)",
             color: "var(--color-text-muted)",
@@ -93,7 +94,7 @@ export default function ProjectCard({
         </p>
 
         {/* Bottom row: language + stars */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {project.language && (
             <span
               className="flex items-center gap-1.5"

@@ -18,11 +18,12 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    setIsDark(prefersDark);
-    document.documentElement.classList.toggle("dark", prefersDark);
+    const stored = localStorage.getItem('theme');
+    if (stored === 'light') {
+      setIsDark(false);
+      document.documentElement.classList.remove('dark');
+    }
+    // Default stays dark — don't check prefers-color-scheme for default
   }, []);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function Header() {
     setIsDark((prev) => {
       const next = !prev;
       document.documentElement.classList.toggle("dark", next);
+      localStorage.setItem('theme', next ? 'dark' : 'light');
       return next;
     });
   }
