@@ -59,7 +59,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
                 className="px-2.5 py-1 rounded-md transition-all duration-150"
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-xs)",
+                  fontSize: "13px",
                   color: active
                     ? "var(--color-accent)"
                     : "var(--color-text-faint)",
@@ -87,10 +87,11 @@ export default function FilterBar({ projects }: FilterBarProps) {
           className="rounded-md px-2.5 py-1"
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
+            fontSize: "13px",
             color: "var(--color-text-faint)",
-            background: "var(--color-surface-2)",
-            border: "1px solid var(--color-border)",
+            background: "var(--glass-bg)",
+            border: "1px solid var(--glass-border)",
+            backdropFilter: "blur(var(--glass-blur))",
             outline: "none",
           }}
         >
@@ -115,7 +116,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
       </p>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((project, i) => (
           <div
             key={project.slug}

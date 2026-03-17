@@ -85,13 +85,13 @@ export default async function ProjectDetailPage({
       {/* ── Breadcrumb ──────────────────────────────── */}
       <div
         className="mx-auto max-w-5xl px-5 sm:px-6"
-        style={{ paddingTop: "0.75rem", paddingBottom: "0.75rem" }}
+        style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
       >
         <nav
           className="flex items-center gap-1.5"
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "11px",
+            fontSize: "12px",
             color: "var(--color-text-faint)",
           }}
         >
@@ -113,9 +113,9 @@ export default async function ProjectDetailPage({
       <section
         style={{
           background: "var(--color-surface)",
-          borderTop: "1px solid var(--color-border)",
+          borderTop: `2px solid ${accentColor}30`,
           borderBottom: "1px solid var(--color-border)",
-          padding: "clamp(1.25rem, 3vw, 2rem) 0",
+          padding: "clamp(1.5rem, 3vw, 2.5rem) 0",
         }}
       >
         <div className="mx-auto max-w-5xl px-5 sm:px-6">
@@ -139,7 +139,8 @@ export default async function ProjectDetailPage({
               <div className="flex items-center flex-wrap gap-2 mb-1.5">
                 <h1
                   style={{
-                    fontSize: "clamp(1.25rem, 2.5vw, 1.5rem)",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(1.5rem, 3vw, 2rem)",
                     fontWeight: 700,
                     color: "var(--color-text)",
                     letterSpacing: "-0.02em",
@@ -200,7 +201,7 @@ export default async function ProjectDetailPage({
               <p
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "12px",
+                  fontSize: "var(--text-sm)",
                   color: "var(--color-text-muted)",
                   lineHeight: 1.5,
                   marginBottom: "0.75rem",
@@ -272,13 +273,13 @@ export default async function ProjectDetailPage({
       {/* ── Two-column layout ───────────────────────── */}
       <div
         className="mx-auto max-w-5xl px-5 sm:px-6"
-        style={{ paddingTop: "clamp(1rem, 2vw, 1.5rem)", paddingBottom: "clamp(1rem, 2vw, 1.5rem)" }}
+        style={{ paddingTop: "clamp(1.25rem, 2vw, 2rem)", paddingBottom: "clamp(1.25rem, 2vw, 2rem)" }}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
           {/* ── Left Column (60%) ─────────────────── */}
           <div className="lg:col-span-3 space-y-4">
             {/* About */}
-            <div className="glass-card p-4 sm:p-5">
+            <div className="glass-card p-5 sm:p-6">
               <h2 className="detail-section-label">About This Project</h2>
               <p
                 style={{
@@ -321,7 +322,7 @@ export default async function ProjectDetailPage({
 
             {/* Architecture */}
             {project.architecture && (
-              <div className="glass-card p-4 sm:p-5">
+              <div className="glass-card p-5 sm:p-6">
                 <h2 className="detail-section-label">Architecture</h2>
                 <div className="flex flex-wrap items-center gap-1.5">
                   {project.architecture.split(" → ").map((step, i, arr) => (
@@ -338,7 +339,7 @@ export default async function ProjectDetailPage({
 
             {/* README */}
             {readme && (
-              <div className="glass-card p-4 sm:p-5">
+              <div className="glass-card p-5 sm:p-6">
                 <h2 className="detail-section-label">Documentation</h2>
                 <div
                   className="prose-readme"
@@ -349,7 +350,7 @@ export default async function ProjectDetailPage({
           </div>
 
           {/* ── Right Column (40%) ────────────────── */}
-          <div className="lg:col-span-2 space-y-3">
+          <div className="lg:col-span-2 space-y-4">
             {/* Live URL card */}
             {hasDemo && project.liveUrl && (
               <a
@@ -407,7 +408,7 @@ export default async function ProjectDetailPage({
             </div>
 
             {/* Metadata */}
-            <div className="glass-card p-3.5 space-y-2.5">
+            <div className="glass-card p-3.5 space-y-3">
               {project.language && (
                 <div className="detail-meta-row">
                   <div className="detail-meta-label">Language</div>

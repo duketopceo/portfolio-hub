@@ -7,7 +7,8 @@ export default function Footer() {
       className="mt-auto"
       style={{
         padding: "clamp(1rem, 2vw, 1.5rem) 0",
-        borderTop: "1px solid var(--color-divider)",
+        borderTop: "1px solid var(--color-accent-subtle)",
+        background: "radial-gradient(ellipse 60% 50% at 50% 0%, var(--color-accent-subtle) 0%, transparent 70%)",
       }}
     >
       <div className="mx-auto max-w-5xl px-5 sm:px-6">
@@ -28,7 +29,7 @@ export default function Footer() {
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
-                fontSize: "10px",
+                fontSize: "11px",
               }}
             >
               Navigation
@@ -64,7 +65,7 @@ export default function Footer() {
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
-                fontSize: "10px",
+                fontSize: "11px",
               }}
             >
               Live Projects
@@ -106,7 +107,7 @@ export default function Footer() {
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
-                fontSize: "10px",
+                fontSize: "11px",
               }}
             >
               Credits
@@ -136,7 +137,7 @@ export default function Footer() {
                 textTransform: "uppercase" as const,
                 letterSpacing: "0.08em",
                 color: "var(--color-text-faint)",
-                fontSize: "10px",
+                fontSize: "11px",
               }}
             >
               Stack

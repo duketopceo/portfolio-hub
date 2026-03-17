@@ -14,15 +14,16 @@ export default async function NowPage() {
   const recent = await getRecentProjects(5);
 
   return (
-    <div className="mx-auto max-w-5xl px-5 sm:px-6 py-10">
-      <div className="max-w-xl mb-8">
+    <div className="mx-auto max-w-5xl px-5 sm:px-8 py-16 sm:py-20">
+      <div className="max-w-xl mb-10">
         <h1
           style={{
-            fontSize: "var(--text-2xl)",
+            fontFamily: "var(--font-display)",
+            fontSize: "var(--text-3xl)",
             fontWeight: 700,
             color: "var(--color-text)",
             letterSpacing: "-0.02em",
-            marginBottom: "0.25rem",
+            marginBottom: "0.5rem",
           }}
         >
           Recent Activity
@@ -30,7 +31,7 @@ export default async function NowPage() {
         <p
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
+            fontSize: "var(--text-sm)",
             color: "var(--color-text-faint)",
           }}
         >
@@ -49,7 +50,7 @@ export default async function NowPage() {
             {/* Timeline line + dot */}
             <div className="flex flex-col items-center pt-3 flex-shrink-0">
               <div
-                className="w-2 h-2 rounded-full"
+                className="w-2.5 h-2.5 rounded-full"
                 style={{
                   background:
                     i === 0 ? "var(--color-accent)" : "var(--color-surface-3)",
@@ -57,12 +58,16 @@ export default async function NowPage() {
                     i === 0
                       ? "2px solid var(--color-accent)"
                       : "2px solid var(--color-border)",
+                  boxShadow:
+                    i === 0
+                      ? "0 0 8px var(--color-accent-glow)"
+                      : "none",
                 }}
               />
               {i < recent.length - 1 && (
                 <div
                   className="w-px flex-1 mt-1.5"
-                  style={{ background: "var(--color-divider)" }}
+                  style={{ background: "linear-gradient(to bottom, var(--color-accent-muted), var(--color-divider))" }}
                 />
               )}
             </div>

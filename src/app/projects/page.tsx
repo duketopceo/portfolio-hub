@@ -13,15 +13,16 @@ export default async function ProjectsPage() {
   const projects = await getEnrichedProjects();
 
   return (
-    <div className="mx-auto max-w-5xl px-5 sm:px-6 py-10">
-      <div className="mb-6">
+    <div className="mx-auto max-w-5xl px-5 sm:px-8 py-16 sm:py-20">
+      <div className="mb-10">
         <h1
           style={{
-            fontSize: "var(--text-2xl)",
+            fontFamily: "var(--font-display)",
+            fontSize: "var(--text-3xl)",
             fontWeight: 700,
             color: "var(--color-text)",
             letterSpacing: "-0.02em",
-            marginBottom: "0.25rem",
+            marginBottom: "0.5rem",
           }}
         >
           All Projects
@@ -29,7 +30,7 @@ export default async function ProjectsPage() {
         <p
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "var(--text-xs)",
+            fontSize: "var(--text-sm)",
             color: "var(--color-text-faint)",
           }}
         >
