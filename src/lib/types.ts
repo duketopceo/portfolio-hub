@@ -53,6 +53,12 @@ export interface ProjectConfig {
   previewImages?: string[];
   /** High-level architecture description */
   architecture?: string;
+  /** Private project dossier — 2–4 sentences: problem, users, real-world impact */
+  businessContext?: string;
+  /** Private project dossier — 1–3 sentences: volume, accounts, throughput, reach */
+  scopeAndScale?: string;
+  /** Private project dossier — "Decision — Rationale" strings */
+  engineeringDecisions?: string[];
 }
 
 export interface EnrichedProject extends ProjectConfig {

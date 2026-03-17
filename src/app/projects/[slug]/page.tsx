@@ -42,7 +42,7 @@ export async function generateMetadata({
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "Project Not Found" };
   return {
-    title: `${project.displayName} — Engineering Portfolio`,
+    title: `${project.displayName} — Cosmic Intelligence`,
     description: project.tagline,
   };
 }
@@ -112,11 +112,12 @@ export default async function ProjectDetailPage({
       {/* ── Top Band — Project Hero ─────────────────── */}
       <section
         style={{
+          "--project-accent": accentColor,
           background: "var(--color-surface)",
           borderTop: `2px solid ${accentColor}30`,
           borderBottom: "1px solid var(--color-border)",
           padding: "clamp(1.5rem, 3vw, 2.5rem) 0",
-        }}
+        } as React.CSSProperties}
       >
         <div className="mx-auto max-w-5xl px-5 sm:px-6">
           <div className="flex items-start gap-4 sm:gap-5">
@@ -256,17 +257,32 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
-      {/* ── Demo Embed (full-width) ─────────────────── */}
-      {hasDemo && embedUrl && (
+      {/* ── Demo Embed (full-width, public repos only) ── */}
+      {hasDemo && embedUrl && !project.private && (
         <section
           className="mx-auto max-w-5xl px-5 sm:px-6"
           style={{ paddingTop: "clamp(1rem, 2vw, 1.5rem)" }}
         >
-          <DemoEmbed
-            url={embedUrl}
-            title={project.displayName}
-            embeddable={project.embeddable}
-          />
+          <div className="demo-frame">
+            <div className="demo-frame__header">
+              <span className="demo-frame__url">
+                {embedUrl.replace(/^https?:\/\//, "")}
+              </span>
+              <a
+                href={embedUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="demo-frame__open"
+              >
+                open ↗
+              </a>
+            </div>
+            <DemoEmbed
+              url={embedUrl}
+              title={project.displayName}
+              embeddable={project.embeddable}
+            />
+          </div>
         </section>
       )}
 
@@ -278,6 +294,59 @@ export default async function ProjectDetailPage({
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
           {/* ── Left Column (60%) ─────────────────── */}
           <div className="lg:col-span-3 space-y-4">
+            {/* ── Classified Dossier (private repos) ── */}
+            {project.private && (
+              <div>
+                <div className="dossier-classified-banner">
+                  <LockIcon className="w-3 h-3" />
+                  ████ CLASSIFIED ████
+                </div>
+
+                {project.businessContext && (
+                  <div className="dossier-section">
+                    <div className="dossier-section__label">Business Context</div>
+                    <p className="dossier-section__body">{project.businessContext}</p>
+                  </div>
+                )}
+
+                {project.scopeAndScale && (
+                  <div className="dossier-section">
+                    <div className="dossier-section__label">Scope & Scale</div>
+                    <p className="dossier-section__body">{project.scopeAndScale}</p>
+                  </div>
+                )}
+
+                {project.engineeringDecisions && project.engineeringDecisions.length > 0 && (
+                  <div className="dossier-section">
+                    <div className="dossier-section__label">Engineering Decisions</div>
+                    {project.engineeringDecisions.map((d, i) => {
+                      const dashIdx = d.indexOf(" — ");
+                      const decision = dashIdx !== -1 ? d.slice(0, dashIdx) : d;
+                      const rationale = dashIdx !== -1 ? d.slice(dashIdx + 3) : null;
+                      return (
+                        <div key={i} className="dossier-eng-decision">
+                          <span className="dossier-eng-decision__bullet" />
+                          <span>
+                            <strong style={{ color: "var(--color-text)", fontWeight: 500 }}>
+                              {decision}
+                            </strong>
+                            {rationale && ` — ${rationale}`}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="dossier-section">
+                  <div className="dossier-section__label">Availability</div>
+                  <p className="dossier-section__body">
+                    Source code is available upon request for interviews and technical discussions.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* About */}
             <div className="glass-card p-5 sm:p-6">
               <h2 className="detail-section-label">About This Project</h2>
@@ -448,35 +517,6 @@ export default async function ProjectDetailPage({
               </div>
             </div>
 
-            {/* Private repo notice */}
-            {project.private && (
-              <div className="glass-card p-3.5">
-                <div
-                  className="flex items-center gap-2 mb-1.5"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
-                    fontWeight: 500,
-                    textTransform: "uppercase" as const,
-                    letterSpacing: "0.08em",
-                    color: "var(--color-text-faint)",
-                  }}
-                >
-                  <LockIcon className="w-3.5 h-3.5" />
-                  Private Repository
-                </div>
-                <p
-                  style={{
-                    fontSize: "var(--text-xs)",
-                    color: "var(--color-text-faint)",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Source code is available upon request for interviews and
-                  technical discussions.
-                </p>
-              </div>
-            )}
 
             {/* Related Projects */}
             {relatedProjects.length > 0 && (

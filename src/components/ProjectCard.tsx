@@ -2,13 +2,22 @@ import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
 import { formatDate, languageColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
-import { LockIcon } from "./Icons";
+import { LockIcon, getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
 
 interface ProjectCardProps {
   project: EnrichedProject;
   featured?: boolean;
 }
+
+const catColors: Record<string, string> = {
+  finance: "#2DD4BF",
+  ai: "#A78BFA",
+  osint: "#FBBF24",
+  data: "#38BDF8",
+  infra: "#F472B6",
+  apps: "#34D399",
+};
 
 export default function ProjectCard({
   project,
@@ -20,95 +29,55 @@ export default function ProjectCard({
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"
     : null;
+  const accentColor = catColors[project.category] || "#2DD4BF";
 
   return (
     <div
-      className="glass-card lang-border-top group relative"
-      style={
-        langColor
-          ? ({ "--lang-color": langColor } as React.CSSProperties)
-          : undefined
-      }
+      className="cosmic-project-card group relative"
+      style={{ "--card-accent": accentColor } as React.CSSProperties}
     >
       <Link
         href={`/projects/${project.slug}`}
-        className="block p-5"
+        className="block p-5 flex flex-col h-full"
         style={{ textDecoration: "none" }}
       >
-        {/* Top row: category + date */}
-        <div className="flex items-center justify-between mb-2.5">
+        {/* Top row: icon + category + date */}
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-text-faint)",
-                letterSpacing: "0.02em",
-              }}
-            >
+            <div className="cosmic-card-icon">
+              {getCategoryIcon(meta?.icon || "globe", "w-3.5 h-3.5")}
+            </div>
+            <span className="cosmic-card-category">
               {meta?.label || project.category}
             </span>
             {project.private && (
-              <LockIcon className="w-3 h-3" />
+              <LockIcon className="w-3 h-3 opacity-40" />
             )}
           </div>
           {project.lastUpdated && (
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-text-faint)",
-              }}
-            >
+            <span className="cosmic-card-date">
               {formatDate(project.lastUpdated)}
             </span>
           )}
         </div>
 
         {/* Title */}
-        <h3
-          className="mb-1"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "var(--text-base)",
-            fontWeight: 600,
-            color: "var(--color-text)",
-            lineHeight: 1.3,
-          }}
-        >
-          <span className="group-hover:text-[var(--color-accent)] transition-colors duration-150">
-            {project.displayName}
-          </span>
+        <h3 className="cosmic-card-title group-hover:text-[var(--color-accent)] transition-colors duration-150">
+          {project.displayName}
         </h3>
 
-        {/* Description — one line */}
-        <p
-          className="mb-3 line-clamp-2"
-          style={{
-            fontSize: "var(--text-sm)",
-            color: "var(--color-text-muted)",
-            lineHeight: 1.5,
-          }}
-        >
+        {/* Description — two lines */}
+        <p className="cosmic-card-desc line-clamp-2">
           {project.tagline}
         </p>
 
-        {/* Bottom row: language + stars */}
-        <div className="flex items-center gap-4">
+        {/* Footer row */}
+        <div className="flex items-center gap-3">
           {project.language && (
-            <span
-              className="flex items-center gap-1.5"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-text-faint)",
-              }}
-            >
+            <span className="cosmic-card-lang">
               <span
-                className="w-2 h-2 rounded-full"
-                style={{
-                  backgroundColor: langColor || "#6B7280",
-                }}
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: langColor || "#6B7280" }}
               />
               {project.language}
             </span>
@@ -118,7 +87,7 @@ export default function ProjectCard({
               className="flex items-center gap-1"
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
+                fontSize: "11px",
                 color: "var(--color-text-faint)",
               }}
             >
@@ -129,21 +98,17 @@ export default function ProjectCard({
             </span>
           )}
           {hasDemo && (
-            <span
-              className="flex items-center gap-1 ml-auto"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-live)",
-              }}
-            >
+            <span className="cosmic-card-live">
               <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse"
+                className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
                 style={{ background: "var(--color-live)" }}
               />
               live
             </span>
           )}
+          <span className="cosmic-card-arrow opacity-0 group-hover:opacity-100 transition-opacity">
+            →
+          </span>
         </div>
       </Link>
 
