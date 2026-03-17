@@ -2,6 +2,32 @@
 
 > This document contains everything Cursor needs to implement the "Cosmic Intelligence" rebrand of the portfolio site at `luke-the-duke.com`. Generated brand assets are in `/cosmic-brand-assets/` at the project root (copy them into `public/` before starting).
 
+---
+
+## Status Tracker
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Brand assets in `public/brand/` | ✅ Done |
+| 2 | Design system tokens (globals.css) | ⬜ Pending |
+| 3 | Cosmic background (replace grid-bg) | ⬜ Pending |
+| 4 | Font — add Space Grotesk (layout.tsx) | ⬜ Pending |
+| 5 | Metadata & favicons (layout.tsx) | ⬜ Pending |
+| 6 | Homepage hero + ConstellationNav | ⬜ Pending |
+| 7 | Header — SVG logo + "COSMIC INTELLIGENCE" | ⬜ Pending |
+| 8 | Footer — "Cosmic Intelligence" text | ⬜ Pending |
+| 9 | Hover card cosmic glow | ⬜ Pending |
+| 10 | Project detail pages cosmic treatment | ⬜ Pending |
+| 11 | Animations (twinkle, orbital float) | ⬜ Pending |
+| 12 | Shared cosmic-theme.css for subdomains | ⬜ Pending |
+| 16 | **Projects list page — full rework** | ⬜ Pending |
+| 17 | **Project card — cosmic card redesign** | ⬜ Pending |
+| 18 | **Project detail — public: observatory + demo frame; private: classified dossier** | ⬜ Pending |
+| 19 | **Activity (/now) page — cosmic timeline** | ⬜ Pending |
+| 20 | **`projects.ts` data — add businessContext, scopeAndScale, engineeringDecisions per private repo** | ⬜ Pending |
+
+---
+
 ## Reference Image
 
 The design direction comes from the [Perplexity Comet "Cosmic Intelligence" art print](https://www.perplexity.ai). Key visual elements:
@@ -14,7 +40,7 @@ The design direction comes from the [Perplexity Comet "Cosmic Intelligence" art 
 
 ---
 
-## 1. Brand Assets (Already Generated)
+## 1. Brand Assets (Already Generated) ✅ DONE
 
 Copy these from `../cosmic-brand-assets/` into `public/brand/`:
 
@@ -698,7 +724,7 @@ This gives them the color palette and glass utilities without requiring any buil
 
 | File | Action | What Changes |
 |------|--------|-------------|
-| `public/brand/*` | ADD | All brand assets (favicon, OG, hero-bg, apple-touch-icon) |
+| `public/brand/*` | ✅ DONE | All brand assets (favicon, OG, hero-bg, apple-touch-icon) |
 | `src/app/globals.css` | MODIFY | New design tokens, cosmic-bg, updated component styles |
 | `src/app/layout.tsx` | MODIFY | Space Grotesk font, metadata, favicon, cosmic-bg div |
 | `src/app/page.tsx` | MODIFY | New hero section, cosmic layout |
@@ -706,6 +732,12 @@ This gives them the color palette and glass utilities without requiring any buil
 | `src/components/Footer.tsx` | MODIFY | "Cosmic Intelligence" bottom text |
 | `src/components/QuadrantGraph.tsx` | MODIFY → rename to ConstellationNav.tsx | Constellation edges, cosmic node glow, transparent bg |
 | `public/cosmic-theme.css` | ADD | Shared design tokens for subdomain projects |
+| `src/app/projects/page.tsx` | MODIFY | Full page rework — see Section 16 |
+| `src/components/FilterBar.tsx` | MODIFY | Cosmic filter pills, 2-col layout — see Section 17 |
+| `src/components/ProjectCard.tsx` | MODIFY | Cosmic card redesign — see Section 17 |
+| `src/app/projects/[slug]/page.tsx` | MODIFY | Full rework — public demo + private deep-dive — see Section 18 |
+| `src/app/now/page.tsx` | MODIFY | Cosmic timeline rework — see Section 19 |
+| `src/data/projects.ts` | MODIFY | Add `businessContext`, `scale`, `scope` fields — see Section 18 |
 
 ---
 
@@ -725,3 +757,662 @@ This gives them the color palette and glass utilities without requiring any buil
 | Category: data | `#38BDF8` | — | Blue |
 | Category: infra | `#F472B6` | — | Pink |
 | Category: apps | `#34D399` | — | Green |
+
+---
+
+## 16. Projects List Page — Full Rework (`src/app/projects/page.tsx` + `FilterBar.tsx`)
+
+**Problem:** Current page is cramped — 3-col grid with tiny cards, no breathing room, no cosmic typography, generic feel.
+
+**Goal:** An observatory catalog. Each card should feel like a star system entry — spacious, deliberate, with the category accent glowing through the design.
+
+### Layout Changes
+
+- **2-column grid on desktop** (was 3). Cards are larger and breathe. Each card gets more vertical height.
+- **Full-width page header** with a large Space Grotesk heading, mono subtitle, and a faint orbital SVG decoration in the top-right corner (decorative, aria-hidden).
+- **Filter bar** redesigned as a horizontal scrollable row of glowing pills — each pill shows the category color accent on active state, not just generic teal.
+- **Sort control** becomes a styled segmented control (Recent / Name / Stars) instead of a `<select>` dropdown.
+- **Section dividers** between category groups (optional: group by category with a faint mono label as separator).
+
+### Page Header Spec
+
+```tsx
+<header className="projects-page-header">
+  {/* Decorative orbital — top right, aria-hidden */}
+  <div className="projects-page-header__orbit" aria-hidden="true">
+    <svg viewBox="0 0 200 200" fill="none" ...>
+      <ellipse cx="100" cy="100" rx="90" ry="45" stroke="var(--color-accent)" strokeWidth="0.5" opacity="0.08" transform="rotate(-20 100 100)"/>
+      <ellipse cx="100" cy="100" rx="65" ry="30" stroke="var(--color-accent)" strokeWidth="0.5" opacity="0.12" transform="rotate(15 100 100)"/>
+      <circle cx="100" cy="100" r="4" fill="var(--color-accent)" opacity="0.2"/>
+    </svg>
+  </div>
+
+  <p className="projects-page-header__eyebrow">CATALOG</p>
+  <h1 className="projects-page-header__title">All Projects</h1>
+  <p className="projects-page-header__sub">
+    {count} repositories across finance, AI, OSINT, infrastructure, and web.
+  </p>
+</header>
+```
+
+```css
+.projects-page-header {
+  position: relative;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+  overflow: hidden;
+}
+
+.projects-page-header__orbit {
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 220px;
+  height: 220px;
+  pointer-events: none;
+}
+
+.projects-page-header__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+}
+
+.projects-page-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.projects-page-header__sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-faint);
+}
+```
+
+### Filter Pill Redesign
+
+Each category pill gets its **own accent color** (not just teal for all) when active:
+
+```tsx
+const catPillColors: Record<string, string> = {
+  all:     "#2DD4BF",
+  finance: "#2DD4BF",
+  ai:      "#A78BFA",
+  osint:   "#FBBF24",
+  data:    "#38BDF8",
+  infra:   "#F472B6",
+  apps:    "#34D399",
+};
+
+// Active pill style:
+{
+  color: catPillColors[cat.key],
+  background: `${catPillColors[cat.key]}12`,
+  border: `1px solid ${catPillColors[cat.key]}30`,
+  boxShadow: `0 0 8px ${catPillColors[cat.key]}20`,
+}
+```
+
+### Grid Change
+
+```tsx
+// Change from:
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+
+// Change to:
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+```
+
+---
+
+## 17. ProjectCard — Cosmic Card Redesign (`src/components/ProjectCard.tsx`)
+
+**Problem:** Cards are visually flat, cramped, hard to scan. No cosmic identity. All look identical.
+
+**Goal:** Each card = a star system entry. The category accent color glows through the left border and icon. More vertical padding, larger title, two-line description allowed.
+
+### Key Visual Changes
+
+1. **Left accent border** — 2px solid with the category color (replaces the top language-color bar)
+2. **Category icon** — small 28×28 circle with category icon inside, accent color bg tint — shown top-left of card body
+3. **Title** — Space Grotesk, `font-size: var(--text-lg)`, weight 600
+4. **Description** — allow 2 lines (`line-clamp-2` instead of `line-clamp-1`), larger `--text-sm`
+5. **Bottom row** — language dot + live badge stay; add a subtle `→` arrow on hover (right side)
+6. **Hover state** — left border brightens, subtle nebula glow behind card
+
+### Card Structure
+
+```tsx
+<div
+  className="cosmic-project-card group"
+  style={{ "--card-accent": accentColor } as React.CSSProperties}
+>
+  <Link href={`/projects/${project.slug}`} className="block p-5" style={{ textDecoration: "none" }}>
+
+    {/* Top row: icon + category + date */}
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-2.5">
+        {/* Category icon circle */}
+        <div className="cosmic-card-icon">
+          {getCategoryIcon(meta?.icon || "globe", "w-3.5 h-3.5")}
+        </div>
+        <span className="cosmic-card-category">{meta?.label || project.category}</span>
+        {project.private && <LockIcon className="w-3 h-3 opacity-40" />}
+      </div>
+      <span className="cosmic-card-date">{formatDate(project.lastUpdated)}</span>
+    </div>
+
+    {/* Title */}
+    <h3 className="cosmic-card-title group-hover:text-[var(--color-accent)] transition-colors">
+      {project.displayName}
+    </h3>
+
+    {/* Description — 2 lines */}
+    <p className="cosmic-card-desc line-clamp-2">{project.tagline}</p>
+
+    {/* Footer row */}
+    <div className="flex items-center gap-3 mt-auto">
+      {project.language && (
+        <span className="cosmic-card-lang">
+          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: langColor || "#6B7280" }} />
+          {project.language}
+        </span>
+      )}
+      {hasDemo && (
+        <span className="cosmic-card-live ml-auto">
+          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--color-live)" }} />
+          live
+        </span>
+      )}
+      {/* Hover arrow */}
+      <span className="cosmic-card-arrow opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+    </div>
+  </Link>
+</div>
+```
+
+### Card CSS
+
+```css
+.cosmic-project-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 2px solid color-mix(in srgb, var(--card-accent, var(--color-accent)) 40%, transparent);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+}
+
+.cosmic-project-card:hover {
+  border-color: var(--color-border-glass);
+  border-left-color: var(--card-accent, var(--color-accent));
+  background: var(--color-surface-2);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--card-accent, var(--color-accent)) 10%, transparent),
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px color-mix(in srgb, var(--card-accent, var(--color-accent)) 6%, transparent);
+  transform: translateY(-1px);
+}
+
+.cosmic-card-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--card-accent, var(--color-accent)) 12%, transparent);
+  color: var(--card-accent, var(--color-accent));
+  border: 1px solid color-mix(in srgb, var(--card-accent, var(--color-accent)) 25%, transparent);
+}
+
+.cosmic-card-category {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.cosmic-card-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+}
+
+.cosmic-card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+
+.cosmic-card-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.cosmic-card-lang {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-faint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cosmic-card-live {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-live);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cosmic-card-arrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent);
+  margin-left: auto;
+}
+```
+
+---
+
+## 18. Project Detail Page — Full Rework (`src/app/projects/[slug]/page.tsx`)
+
+**Problem:** Current detail page is dense and generic. The "top band" has no cosmic character. Public/private projects are treated almost identically. Spacing is tight. Font is wrong.
+
+**Goal:** Two completely different experiences depending on repo visibility:
+
+---
+
+### 18A. Public Repos — "Observatory View"
+
+Public repos get the full showcase treatment. The page becomes an immersive project observatory.
+
+#### Layout Structure
+
+```
+┌─────────────────────────────────────────────────────┐
+│ BREADCRUMB                                          │
+├─────────────────────────────────────────────────────┤
+│ PROJECT HERO (large, full-width, accent bg wash)    │
+│  - Big Space Grotesk title                          │
+│  - Category badge + live badge                      │
+│  - Tagline in body font (larger, more breathing)    │
+│  - Tech stack chips                                 │
+│  - "Launch Demo →" CTA button (prominent)           │
+├─────────────────────────────────────────────────────┤
+│ DEMO EMBED (full-width, 600px tall, cosmic frame)   │
+├─────────────────────────────────────────────────────┤
+│ TWO-COLUMN BODY                                     │
+│  Left (60%): About / Features / Architecture / README│
+│  Right (40%): Live URL / Tech Stack / Meta / Related│
+└─────────────────────────────────────────────────────┘
+```
+
+#### Hero Spec
+
+```css
+.project-hero {
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 50%, color-mix(in srgb, var(--project-accent) 8%, transparent) 0%, transparent 70%),
+    var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: clamp(2rem, 4vw, 3.5rem) 0;
+}
+
+.project-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+.project-hero__tagline {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  max-width: 580px;
+  margin-bottom: 1.25rem;
+}
+```
+
+#### Demo Embed Frame
+
+Wrap `DemoEmbed` in a cosmic frame — corner brackets + a mono URL label above:
+
+```tsx
+<div className="demo-frame">
+  <div className="demo-frame__header">
+    <span className="demo-frame__bracket demo-frame__bracket--tl" />
+    <span className="demo-frame__bracket demo-frame__bracket--tr" />
+    <span className="demo-frame__url">{embedUrl.replace(/^https?:\/\//, '')}</span>
+    <a href={embedUrl} target="_blank" rel="noopener noreferrer" className="demo-frame__open">
+      open ↗
+    </a>
+  </div>
+  <DemoEmbed url={embedUrl} title={project.displayName} embeddable={project.embeddable} />
+</div>
+```
+
+```css
+.demo-frame {
+  position: relative;
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.demo-frame__header {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-faint);
+  gap: 8px;
+}
+
+.demo-frame__url { flex: 1; opacity: 0.7; }
+
+.demo-frame__open {
+  color: var(--color-accent);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 150ms;
+}
+.demo-frame__open:hover { opacity: 1; }
+```
+
+---
+
+### 18B. Private Repos — "Classified Dossier View"
+
+Private repos get NO demo embed. Instead, replace the entire demo section with a rich **Project Dossier** — a series of cosmic-styled panels that tell the full story of the project.
+
+#### Layout Structure
+
+```
+┌─────────────────────────────────────────────────────┐
+│ BREADCRUMB                                          │
+├─────────────────────────────────────────────────────┤
+│ PROJECT HERO (same as public but with 🔒 CLASSIFIED │
+│  badge instead of live badge)                       │
+├─────────────────────────────────────────────────────┤
+│ ████████  CLASSIFIED DOSSIER  ████████              │
+│                                                     │
+│  ┌── BUSINESS CONTEXT ──────────────────────────┐  │
+│  │  What problem this solves. Who uses it.      │  │
+│  │  Real-world impact. Dollar value if any.     │  │
+│  └──────────────────────────────────────────────┘  │
+│                                                     │
+│  ┌── SCOPE & SCALE ─────────────────────────────┐  │
+│  │  Users / data volume / request throughput /  │  │
+│  │  geographic reach / integrations count, etc  │  │
+│  └──────────────────────────────────────────────┘  │
+│                                                     │
+│  ┌── TECHNICAL ARCHITECTURE ────────────────────┐  │
+│  │  Full stack breakdown. System design.        │  │
+│  │  Architecture flow (existing component).     │  │
+│  │  Key engineering decisions + why.            │  │
+│  └──────────────────────────────────────────────┘  │
+│                                                     │
+│  ┌── KEY FEATURES ──────────────────────────────┐  │
+│  │  Existing highlights component (kept)        │  │
+│  └──────────────────────────────────────────────┘  │
+│                                                     │
+│  ┌── AVAILABILITY ──────────────────────────────┐  │
+│  │  "Source available on request for interviews │  │
+│  │   and technical discussions."                │  │
+│  └──────────────────────────────────────────────┘  │
+├─────────────────────────────────────────────────────┤
+│ RIGHT SIDEBAR: Tech Stack / Meta / Related          │
+└─────────────────────────────────────────────────────┘
+```
+
+#### Data Model Addition (`src/data/projects.ts`)
+
+Add these optional fields to the project config type and per-project data:
+
+```ts
+interface ProjectConfig {
+  // ...existing fields...
+
+  // Private project dossier fields
+  businessContext?: string;      // 2–4 sentences: problem, users, real-world impact
+  scopeAndScale?: string;        // 1–3 sentences: users, data volume, throughput, reach
+  engineeringDecisions?: string[]; // Array of "Decision: Rationale" strings
+  // architectureFlow already exists as project.architecture
+  // highlights already exists for key features
+}
+```
+
+Example data for a private project:
+```ts
+{
+  slug: "tradingbot",
+  businessContext: "Automates IBKR order execution and portfolio rebalancing based on quantitative signals. Eliminates emotional trading decisions and enables systematic strategies across multiple account types including Roth IRA, traditional IRA, and taxable brokerage.",
+  scopeAndScale: "Manages 4 IBKR accounts with real-money capital. Processes live market data at 1-minute resolution. Monitors 50+ instruments across equities, ETFs, and options.",
+  engineeringDecisions: [
+    "IBKR TWS API over Alpaca — required for IRA account access and options trading",
+    "Docker on home cluster over cloud — zero latency to broker, no egress costs",
+    "Python asyncio event loop — handles concurrent market data streams without threading overhead",
+  ],
+}
+```
+
+#### Dossier Panel CSS
+
+```css
+.dossier-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  margin-bottom: 1rem;
+}
+
+.dossier-section__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dossier-section__label::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.4;
+}
+
+.dossier-section__body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.dossier-classified-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: rgba(71, 85, 105, 0.08);
+  border: 1px solid rgba(71, 85, 105, 0.15);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--color-text-faint);
+}
+
+.dossier-eng-decision {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-divider);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.dossier-eng-decision:last-child { border-bottom: none; }
+
+.dossier-eng-decision__bullet {
+  flex-shrink: 0;
+  margin-top: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.5;
+}
+
+.dossier-eng-decision strong {
+  color: var(--color-text);
+  font-weight: 500;
+}
+```
+
+#### Classified Badge (for hero)
+
+```tsx
+{project.private && (
+  <span className="dossier-classified-badge">
+    <LockIcon className="w-3 h-3" />
+    CLASSIFIED
+  </span>
+)}
+```
+
+```css
+.dossier-classified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--color-text-faint);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-3);
+}
+```
+
+---
+
+## 19. Activity Page — Cosmic Timeline (`src/app/now/page.tsx`)
+
+**Problem:** Generic spaced list. The timeline connector is barely visible. No cosmic treatment.
+
+**Goal:** A mission log — monochrome orbital timeline with glowing accent on the latest entry.
+
+### Key Changes
+
+1. **Page header** — same eyebrow + large Space Grotesk title treatment as Section 16
+2. **Timeline line** — `2px` wide, gradient from accent (top) to transparent (bottom), not a flat divider
+3. **Timeline dots** — larger (`10px`), first one glows with accent pulse animation, rest are dimmed circles
+4. **Each entry** uses the `cosmic-project-card` component (from Section 17) instead of `ProjectCard`
+5. **Date labels** — `font-mono`, larger (`13px`), with a faint horizontal rule extending right from the date
+6. **"latest" badge** — cosmic accent pill, same glow treatment as other accent elements
+
+### Timeline CSS Changes
+
+```css
+.cosmic-timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.cosmic-timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 0%,
+    rgba(45, 212, 191, 0.3) 30%,
+    transparent 100%
+  );
+}
+
+.cosmic-timeline-dot {
+  position: absolute;
+  left: -24px;
+  top: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-3);
+}
+
+.cosmic-timeline-dot--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(45, 212, 191, 0.4), 0 0 20px rgba(45, 212, 191, 0.15);
+  animation: star-twinkle 2s ease-in-out infinite;
+}
+```
+
+---
+
+## 20. Updated Implementation Order
+
+1. ~~Copy brand assets into `public/brand/`~~ ✅ Done
+2. Update `globals.css` — tokens, cosmic-bg, new component classes (Sections 2, 3, 17, 18, 19)
+3. Update `layout.tsx` — Space Grotesk, metadata, favicons, cosmic-bg div (Sections 4, 5)
+4. Update `Header.tsx` — SVG logo (Section 7)
+5. Update `Footer.tsx` — "Cosmic Intelligence" (Section 8)
+6. Update `page.tsx` (homepage) — hero section (Section 6)
+7. Create/update `ConstellationNav.tsx` (Section 6)
+8. **Update `projects/page.tsx`** — new header, 2-col layout (Section 16)
+9. **Update `FilterBar.tsx`** — per-category colored pills, segmented sort (Section 16)
+10. **Update `ProjectCard.tsx`** — cosmic card redesign (Section 17)
+11. **Update `projects/[slug]/page.tsx`** — public observatory view + private dossier view (Section 18)
+12. **Update `src/data/projects.ts`** — add `businessContext`, `scopeAndScale`, `engineeringDecisions` for private repos (Section 18)
+13. **Update `now/page.tsx`** — cosmic timeline (Section 19)
+14. Add animations — twinkle, orbital float (Section 11)
+15. Extract `cosmic-theme.css` for subdomains (Section 13)
+16. Test dark/light mode
+17. `npm run build` — verify clean build
