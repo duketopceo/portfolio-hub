@@ -163,7 +163,7 @@ export default function Footer() {
             textAlign: "center" as const,
           }}
         >
-          Engineering Portfolio
+          Cosmic Intelligence
         </div>
       </div>
     </footer>

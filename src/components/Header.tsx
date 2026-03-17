@@ -48,6 +48,7 @@ export default function Header() {
         scrolled ? "glass" : "bg-transparent"
       }`}
       style={{
+        borderTop: "1px solid var(--color-accent-subtle)",
         borderBottom: scrolled
           ? "1px solid var(--glass-border)"
           : "1px solid transparent",
@@ -61,15 +62,40 @@ export default function Header() {
             className="flex items-center gap-2 group"
             style={{ textDecoration: "none" }}
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              fill="none"
+              width="28"
+              height="28"
+              aria-hidden="true"
+              style={{ color: "var(--color-accent)", flexShrink: 0 }}
+            >
+              <ellipse cx="24" cy="24" rx="20" ry="10" stroke="currentColor" strokeWidth="1" opacity="0.3" transform="rotate(-25 24 24)"/>
+              <ellipse cx="24" cy="24" rx="14" ry="7" stroke="currentColor" strokeWidth="1" opacity="0.5" transform="rotate(15 24 24)"/>
+              <ellipse cx="24" cy="24" rx="18" ry="5" stroke="currentColor" strokeWidth="0.75" opacity="0.25" transform="rotate(-60 24 24)"/>
+              <line x1="24" y1="4" x2="24" y2="44" stroke="currentColor" strokeWidth="0.5" opacity="0.15"/>
+              <line x1="4" y1="24" x2="44" y2="24" stroke="currentColor" strokeWidth="0.5" opacity="0.15"/>
+              <circle cx="24" cy="24" r="3.5" fill="currentColor" opacity="0.9"/>
+              <circle cx="24" cy="24" r="5" stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+              <circle cx="38" cy="19" r="1.5" fill="currentColor" opacity="0.6"/>
+              <circle cx="12" cy="30" r="1.2" fill="currentColor" opacity="0.4"/>
+              <circle cx="30" cy="32" r="1" fill="currentColor" opacity="0.35"/>
+              <path d="M4 8 L4 4 L8 4" stroke="currentColor" strokeWidth="0.75" opacity="0.2" fill="none"/>
+              <path d="M40 4 L44 4 L44 8" stroke="currentColor" strokeWidth="0.75" opacity="0.2" fill="none"/>
+              <path d="M4 40 L4 44 L8 44" stroke="currentColor" strokeWidth="0.75" opacity="0.2" fill="none"/>
+              <path d="M40 44 L44 44 L44 40" stroke="currentColor" strokeWidth="0.75" opacity="0.2" fill="none"/>
+            </svg>
             <span
               style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-xs)",
-                color: "var(--color-accent)",
-                letterSpacing: "0.05em",
+                fontFamily: "var(--font-display)",
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "var(--color-text)",
+                letterSpacing: "0.08em",
               }}
             >
-              ~/portfolio
+              COSMIC INTELLIGENCE
             </span>
           </Link>
 
