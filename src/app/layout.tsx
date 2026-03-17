@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,19 +19,28 @@ const inter = Inter({
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio — Systems Engineer & Builder",
+  title: "Cosmic Intelligence — Engineering Portfolio",
   description:
-    "Engineering portfolio showcasing projects across AI, trading systems, OSINT platforms, and production infrastructure.",
+    "Systems that compound. Engineering portfolio showcasing AI, trading systems, OSINT platforms, and production infrastructure.",
+  icons: {
+    icon: [
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    shortcut: "/brand/favicon.ico",
+    apple: "/brand/apple-touch-icon.png",
+  },
   openGraph: {
-    title: "Portfolio — Systems Engineer & Builder",
+    title: "Cosmic Intelligence — Engineering Portfolio",
     description:
-      "Projects spanning AI automation, algorithmic trading, OSINT platforms, and Docker Swarm infrastructure.",
+      "Systems that compound. Projects spanning AI automation, algorithmic trading, OSINT platforms, and Docker Swarm infrastructure.",
     type: "website",
+    images: [{ url: "/brand/og-image.png", width: 1200, height: 630 }],
   },
   robots: {
     index: true,
@@ -41,10 +57,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        {/* Blueprint grid background — CSS-only, decorative */}
-        <div className="grid-bg" aria-hidden="true" />
+        <div className="cosmic-bg" aria-hidden="true" />
 
         <Header />
         <main className="flex-1 relative">{children}</main>

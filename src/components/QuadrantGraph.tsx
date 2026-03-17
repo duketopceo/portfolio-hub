@@ -15,14 +15,13 @@ interface QuadrantGraphProps {
   projects: EnrichedProject[];
 }
 
-/** Category → accent color */
 const catColors: Record<string, string> = {
-  finance: "#2dd4bf", // teal
-  ai: "#a78bfa", // purple
-  osint: "#f59e0b", // amber
-  data: "#38bdf8", // sky
-  infra: "#f472b6", // pink
-  apps: "#34d399", // emerald
+  finance: "#2DD4BF",
+  ai: "#A78BFA",
+  osint: "#FBBF24",
+  data: "#38BDF8",
+  infra: "#F472B6",
+  apps: "#34D399",
 };
 
 export default function QuadrantGraph({ projects }: QuadrantGraphProps) {

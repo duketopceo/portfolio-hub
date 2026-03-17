@@ -1,5 +1,5 @@
 import { getEnrichedProjects } from "@/lib/github";
-import QuadrantGraph from "@/components/QuadrantGraph";
+import ConstellationNav from "@/components/ConstellationNav";
 
 export const revalidate = 3600;
 
@@ -10,40 +10,36 @@ export default async function Home() {
 
   return (
     <div>
-      {/* ── Hero — compact tagline + stats ──────── */}
-      <section
-        className="mx-auto max-w-5xl px-5 sm:px-6 text-center"
-        style={{ paddingTop: "1rem", paddingBottom: "0.5rem" }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)",
-            fontWeight: 700,
-            color: "var(--color-text)",
-            lineHeight: 1.2,
-            marginBottom: "0.35rem",
-          }}
-        >
-          Systems that{" "}
-          <span style={{ color: "var(--color-accent)" }}>compound.</span>
-        </p>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "11px",
-            letterSpacing: "0.04em",
-            color: "var(--color-text-faint)",
-          }}
-        >
-          {all.length} projects &middot; {categories.size} categories &middot;{" "}
-          {liveCount} live demos
-        </p>
+      {/* ── Hero Section ─────────────────────────── */}
+      <section className="cosmic-hero">
+        <div className="cosmic-hero__inner">
+          <div className="cosmic-hero__orbits" aria-hidden="true">
+            <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", color: "var(--color-accent)" }}>
+              <ellipse cx="200" cy="200" rx="180" ry="90" stroke="currentColor" strokeWidth="1"/>
+              <ellipse cx="200" cy="200" rx="140" ry="60" stroke="currentColor" strokeWidth="0.75"/>
+              <ellipse cx="200" cy="200" rx="100" ry="140" stroke="currentColor" strokeWidth="0.5"/>
+            </svg>
+          </div>
+
+          <h1 className="cosmic-hero__title">
+            Cosmic<br />Intelligence
+          </h1>
+          <p className="cosmic-hero__tagline">
+            Systems that <span className="cosmic-hero__accent">compound.</span>
+          </p>
+          <div className="cosmic-hero__stats">
+            <span>{all.length} projects</span>
+            <span className="cosmic-hero__dot">·</span>
+            <span>{categories.size} domains</span>
+            <span className="cosmic-hero__dot">·</span>
+            <span>{liveCount} live</span>
+          </div>
+        </div>
       </section>
 
-      {/* ── Quadrant Graph ───────────────────────── */}
+      {/* ── Constellation Navigation ─────────────── */}
       <section style={{ paddingBottom: "clamp(1rem, 2vw, 1.5rem)" }}>
-        <QuadrantGraph projects={all} />
+        <ConstellationNav projects={all} />
       </section>
     </div>
   );
