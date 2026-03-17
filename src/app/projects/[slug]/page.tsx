@@ -293,7 +293,7 @@ export default async function ProjectDetailPage({
       >
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
           {/* ── Left Column (60%) ─────────────────── */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-5">
             {/* ── Classified Dossier (private repos) ── */}
             {project.private && (
               <div>
@@ -348,7 +348,7 @@ export default async function ProjectDetailPage({
             )}
 
             {/* About */}
-            <div className="glass-card p-5 sm:p-6">
+            <div className="glass-card p-6 sm:p-7">
               <h2 className="detail-section-label">About This Project</h2>
               <p
                 style={{
@@ -391,7 +391,7 @@ export default async function ProjectDetailPage({
 
             {/* Architecture */}
             {project.architecture && (
-              <div className="glass-card p-5 sm:p-6">
+              <div className="glass-card p-6 sm:p-7">
                 <h2 className="detail-section-label">Architecture</h2>
                 <div className="flex flex-wrap items-center gap-1.5">
                   {project.architecture.split(" → ").map((step, i, arr) => (
@@ -408,7 +408,7 @@ export default async function ProjectDetailPage({
 
             {/* README */}
             {readme && (
-              <div className="glass-card p-5 sm:p-6">
+              <div className="glass-card p-6 sm:p-7">
                 <h2 className="detail-section-label">Documentation</h2>
                 <div
                   className="prose-readme"
@@ -419,14 +419,14 @@ export default async function ProjectDetailPage({
           </div>
 
           {/* ── Right Column (40%) ────────────────── */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-5">
             {/* Live URL card */}
             {hasDemo && project.liveUrl && (
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-card p-3.5 block transition-colors group"
+                className="glass-card p-4 block transition-colors group"
                 style={{
                   textDecoration: "none",
                   border: "1px solid var(--color-accent-subtle)",
@@ -465,7 +465,7 @@ export default async function ProjectDetailPage({
             )}
 
             {/* Tech Stack */}
-            <div className="glass-card p-3.5">
+            <div className="glass-card p-4">
               <h2 className="detail-section-label">Tech Stack</h2>
               <div className="flex flex-wrap gap-1.5">
                 {project.techStack.map((tech) => (
@@ -477,7 +477,7 @@ export default async function ProjectDetailPage({
             </div>
 
             {/* Metadata */}
-            <div className="glass-card p-3.5 space-y-3">
+            <div className="glass-card p-4 space-y-3">
               {project.language && (
                 <div className="detail-meta-row">
                   <div className="detail-meta-label">Language</div>
@@ -520,7 +520,7 @@ export default async function ProjectDetailPage({
 
             {/* Related Projects */}
             {relatedProjects.length > 0 && (
-              <div className="glass-card p-3.5">
+              <div className="glass-card p-4">
                 <h2 className="detail-section-label">Related Projects</h2>
                 <div className="space-y-1.5">
                   {relatedProjects.map((rp) => (

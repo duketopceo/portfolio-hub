@@ -1024,6 +1024,323 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
+   COSMIC PROJECT CARD
+   ═══════════════════════════════════════════════════════ */
+
+.cosmic-project-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 2px solid color-mix(in srgb, var(--card-accent, var(--color-accent)) 40%, transparent);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.cosmic-project-card:hover {
+  border-left-color: var(--card-accent, var(--color-accent));
+  background: var(--color-surface-2);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--card-accent, var(--color-accent)) 10%, transparent),
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px color-mix(in srgb, var(--card-accent, var(--color-accent)) 6%, transparent);
+  transform: translateY(-1px);
+}
+
+.cosmic-card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--card-accent, var(--color-accent)) 12%, transparent);
+  color: var(--card-accent, var(--color-accent));
+  border: 1px solid color-mix(in srgb, var(--card-accent, var(--color-accent)) 25%, transparent);
+  flex-shrink: 0;
+}
+
+.cosmic-card-category {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.cosmic-card-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+}
+
+.cosmic-card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+
+.cosmic-card-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  flex: 1;
+}
+
+.cosmic-card-lang {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-faint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cosmic-card-live {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-live);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cosmic-card-arrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent);
+  margin-left: auto;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROJECTS PAGE HEADER
+   ═══════════════════════════════════════════════════════ */
+
+.projects-page-header {
+  position: relative;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(2rem, 4vw, 3rem);
+  overflow: hidden;
+}
+
+.projects-page-header__orbit {
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 220px;
+  height: 220px;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.projects-page-header__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.projects-page-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.projects-page-header__sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-faint);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DEMO FRAME
+   ═══════════════════════════════════════════════════════ */
+
+.demo-frame {
+  position: relative;
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.demo-frame__header {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-faint);
+  gap: 8px;
+}
+
+.demo-frame__url {
+  flex: 1;
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-frame__open {
+  color: var(--color-accent);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 150ms;
+  white-space: nowrap;
+}
+
+.demo-frame__open:hover { opacity: 1; }
+
+/* ═══════════════════════════════════════════════════════
+   DOSSIER — PRIVATE PROJECT PANELS
+   ═══════════════════════════════════════════════════════ */
+
+.dossier-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  margin-bottom: 1.25rem;
+}
+
+.dossier-section__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dossier-section__label::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.4;
+}
+
+.dossier-section__body {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.dossier-classified-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(71, 85, 105, 0.08);
+  border: 1px solid rgba(71, 85, 105, 0.15);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--color-text-faint);
+  text-align: center;
+}
+
+.dossier-classified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--color-text-faint);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-3);
+}
+
+.dossier-eng-decision {
+  display: flex;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-divider);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.dossier-eng-decision:last-child { border-bottom: none; }
+
+.dossier-eng-decision__bullet {
+  flex-shrink: 0;
+  margin-top: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════
+   COSMIC TIMELINE
+   ═══════════════════════════════════════════════════════ */
+
+.cosmic-timeline {
+  position: relative;
+  padding-left: 32px;
+}
+
+.cosmic-timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 0%,
+    rgba(45, 212, 191, 0.3) 30%,
+    transparent 100%
+  );
+}
+
+.cosmic-timeline-dot {
+  position: absolute;
+  left: -27px;
+  top: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-3);
+}
+
+.cosmic-timeline-dot--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(45, 212, 191, 0.4), 0 0 20px rgba(45, 212, 191, 0.15);
+  animation: star-twinkle 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
@@ -1068,10 +1385,10 @@ body {
   }
 
   /* ── New classes — mobile ── */
-  .cosmic-project-card { min-height: 140px; }
+  .cosmic-project-card { min-height: 160px; }
   .cosmic-card-title { font-size: var(--text-base); }
 
-  .projects-page-header { padding: 2rem 0 1.25rem; }
+  .projects-page-header { padding: 2rem 0 1.5rem; }
   .projects-page-header__orbit { display: none; }
   .projects-page-header__title { font-size: 1.75rem; }
 
@@ -1081,8 +1398,8 @@ body {
   .dossier-section { padding: 1rem; }
   .dossier-classified-banner { font-size: 9px; padding: 8px 12px; }
 
-  .cosmic-timeline { padding-left: 20px; }
-  .cosmic-timeline-dot { left: -18px; }
+  .cosmic-timeline { padding-left: 24px; }
+  .cosmic-timeline-dot { left: -21px; }
 
   /* Touch targets */
   .q-pill, .detail-cta, .detail-nav-link { min-height: 44px; display: inline-flex; align-items: center; }
@@ -1096,320 +1413,4 @@ body {
     padding-bottom: 4px;
   }
   .filter-pills-row::-webkit-scrollbar { display: none; }
-}
-
-/* ═══════════════════════════════════════════════════════
-   COSMIC PROJECT CARD
-   ═══════════════════════════════════════════════════════ */
-
-.cosmic-project-card {
-  position: relative;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-left: 2px solid color-mix(in srgb, var(--card-accent, var(--color-accent)) 40%, transparent);
-  border-radius: var(--radius-lg);
-  transition: all var(--transition);
-  display: flex;
-  flex-direction: column;
-  min-height: 160px;
-}
-
-.cosmic-project-card:hover {
-  border-left-color: var(--card-accent, var(--color-accent));
-  background: var(--color-surface-2);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--card-accent, var(--color-accent)) 10%, transparent),
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    0 0 20px color-mix(in srgb, var(--card-accent, var(--color-accent)) 6%, transparent);
-  transform: translateY(-1px);
-}
-
-.cosmic-card-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--card-accent, var(--color-accent)) 12%, transparent);
-  color: var(--card-accent, var(--color-accent));
-  border: 1px solid color-mix(in srgb, var(--card-accent, var(--color-accent)) 25%, transparent);
-  flex-shrink: 0;
-}
-
-.cosmic-card-category {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-
-.cosmic-card-date {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--color-text-faint);
-}
-
-.cosmic-card-title {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--color-text);
-  letter-spacing: -0.01em;
-  line-height: 1.25;
-  margin-bottom: 0.5rem;
-}
-
-.cosmic-card-desc {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  line-height: 1.55;
-  margin-bottom: 1rem;
-  flex: 1;
-}
-
-.cosmic-card-lang {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--color-text-faint);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.cosmic-card-live {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--color-live);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.cosmic-card-arrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--color-accent);
-  margin-left: auto;
-}
-
-/* ═══════════════════════════════════════════════════════
-   PROJECTS PAGE HEADER
-   ═══════════════════════════════════════════════════════ */
-
-.projects-page-header {
-  position: relative;
-  padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(1.5rem, 3vw, 2.5rem);
-  overflow: hidden;
-}
-
-.projects-page-header__orbit {
-  position: absolute;
-  right: -40px;
-  top: -40px;
-  width: 220px;
-  height: 220px;
-  pointer-events: none;
-  opacity: 0.8;
-}
-
-.projects-page-header__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--color-accent);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.projects-page-header__title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-}
-
-.projects-page-header__sub {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--color-text-faint);
-}
-
-/* ═══════════════════════════════════════════════════════
-   DEMO FRAME
-   ═══════════════════════════════════════════════════════ */
-
-.demo-frame {
-  position: relative;
-  border: 1px solid var(--color-border-glass);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  background: var(--color-surface);
-}
-
-.demo-frame__header {
-  display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  background: var(--color-surface-2);
-  border-bottom: 1px solid var(--color-border);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--color-text-faint);
-  gap: 8px;
-}
-
-.demo-frame__url {
-  flex: 1;
-  opacity: 0.7;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.demo-frame__open {
-  color: var(--color-accent);
-  text-decoration: none;
-  opacity: 0.8;
-  transition: opacity 150ms;
-  white-space: nowrap;
-}
-
-.demo-frame__open:hover { opacity: 1; }
-
-/* ═══════════════════════════════════════════════════════
-   DOSSIER — PRIVATE PROJECT PANELS
-   ═══════════════════════════════════════════════════════ */
-
-.dossier-section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: clamp(1rem, 2.5vw, 1.75rem);
-  margin-bottom: 1rem;
-}
-
-.dossier-section__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.dossier-section__label::before {
-  content: '';
-  display: block;
-  width: 16px;
-  height: 1px;
-  background: var(--color-accent);
-  opacity: 0.4;
-}
-
-.dossier-section__body {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  line-height: 1.7;
-}
-
-.dossier-classified-banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 10px 16px;
-  background: rgba(71, 85, 105, 0.08);
-  border: 1px solid rgba(71, 85, 105, 0.15);
-  border-radius: var(--radius-md);
-  margin-bottom: 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  color: var(--color-text-faint);
-  text-align: center;
-}
-
-.dossier-classified-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  color: var(--color-text-faint);
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface-3);
-}
-
-.dossier-eng-decision {
-  display: flex;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--color-divider);
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  line-height: 1.5;
-}
-
-.dossier-eng-decision:last-child { border-bottom: none; }
-
-.dossier-eng-decision__bullet {
-  flex-shrink: 0;
-  margin-top: 6px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  opacity: 0.5;
-}
-
-/* ═══════════════════════════════════════════════════════
-   COSMIC TIMELINE
-   ═══════════════════════════════════════════════════════ */
-
-.cosmic-timeline {
-  position: relative;
-  padding-left: 28px;
-}
-
-.cosmic-timeline::before {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
-  background: linear-gradient(
-    to bottom,
-    var(--color-accent) 0%,
-    rgba(45, 212, 191, 0.3) 30%,
-    transparent 100%
-  );
-}
-
-.cosmic-timeline-dot {
-  position: absolute;
-  left: -24px;
-  top: 10px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 2px solid var(--color-border);
-  background: var(--color-surface-3);
-}
-
-.cosmic-timeline-dot--active {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
-  box-shadow: 0 0 10px rgba(45, 212, 191, 0.4), 0 0 20px rgba(45, 212, 191, 0.15);
-  animation: star-twinkle 2s ease-in-out infinite;
 }

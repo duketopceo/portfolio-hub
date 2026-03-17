@@ -15,7 +15,7 @@ export default async function NowPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-5 sm:px-8 py-16 sm:py-20">
-      <header className="projects-page-header max-w-xl mb-10">
+      <header className="projects-page-header max-w-xl mb-12">
         <p className="projects-page-header__eyebrow">MISSION LOG</p>
         <h1 className="projects-page-header__title">Recent Activity</h1>
         <p className="projects-page-header__sub">
@@ -37,7 +37,7 @@ export default async function NowPage() {
             />
 
             {/* Content */}
-            <div className="flex-1 pb-6">
+              <div className="flex-1 pb-8">
               <div
                 className="flex items-center gap-2 mb-1.5"
                 style={{

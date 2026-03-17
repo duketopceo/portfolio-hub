@@ -52,7 +52,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
   return (
     <div>
       {/* Filter controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-8">
         {/* Category pills — horizontally scrollable on mobile */}
         <div className="filter-pills-row flex gap-1.5">
           {categories.map((cat) => {
@@ -142,7 +142,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
       </p>
 
       {/* Grid — 3-col desktop, 2-col tablet, 1-col mobile */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filtered.map((project, i) => (
           <div
             key={project.slug}

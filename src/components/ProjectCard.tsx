@@ -38,7 +38,7 @@ export default function ProjectCard({
     >
       <Link
         href={`/projects/${project.slug}`}
-        className="block p-5 flex flex-col h-full"
+        className="flex flex-col flex-1 p-6"
         style={{ textDecoration: "none" }}
       >
         {/* Top row: icon + category + date */}
