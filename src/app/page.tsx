@@ -38,7 +38,10 @@ export default async function Home() {
       </section>
 
       {/* ── Constellation Navigation ─────────────── */}
-      <section style={{ paddingBottom: "clamp(1rem, 2vw, 1.5rem)" }}>
+      <section
+        className="cosmic-page"
+        style={{ paddingBottom: "clamp(1rem, 2vw, 1.5rem)" }}
+      >
         <ConstellationNav projects={all} />
       </section>
     </div>

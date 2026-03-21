@@ -11,7 +11,7 @@ export default function Footer() {
         background: "radial-gradient(ellipse 60% 50% at 50% 0%, var(--color-accent-subtle) 0%, transparent 70%)",
       }}
     >
-      <div className="mx-auto max-w-5xl px-5 sm:px-6">
+      <div className="cosmic-page">
         {/* ── Link columns ──────────────────────── */}
         <div
           className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-5"

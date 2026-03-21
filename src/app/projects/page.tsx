@@ -13,7 +13,7 @@ export default async function ProjectsPage() {
   const projects = await getEnrichedProjects();
 
   return (
-    <div className="mx-auto max-w-5xl px-5 sm:px-8 py-16 sm:py-20">
+    <div className="cosmic-page py-16 sm:py-20">
       <header className="projects-page-header mb-10">
         <div className="projects-page-header__orbit" aria-hidden="true">
           <svg viewBox="0 0 200 200" fill="none" width="220" height="220">

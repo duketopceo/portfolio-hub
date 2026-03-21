@@ -60,8 +60,8 @@
   /* ── Radius ────────────────────────────── */
   --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
 
   /* ── Transition ────────────────────────── */
   --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -74,6 +74,12 @@
   --space-lg: clamp(1.25rem, 2.5vw, 2rem);
   --space-xl: clamp(2rem, 4vw, 3rem);
   --space-2xl: clamp(3rem, 6vw, 5rem);
+
+  /* ── Page rail (fluid width + horizontal inset) ─────── */
+  /* Wider than legacy 64rem (5xl); caps on ultra-wide; padding scales with viewport */
+  --cosmic-page-pad-x: clamp(1rem, 4vw, 3rem);
+  --cosmic-page-pad-y: clamp(2.5rem, 5vw, 5rem);
+  --cosmic-page-max: min(90rem, 100%);
 }
 
 /* ── Light mode ────────────────────────────────────────── */
@@ -169,24 +175,40 @@ body {
   100% { opacity: 1; }
 }
 
-/* ── Page container utility ────────────────────────────── */
+/* ── Content rail: same max-width + padding as Header/Footer ── */
+.cosmic-page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--cosmic-page-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--cosmic-page-pad-x);
+  padding-right: var(--cosmic-page-pad-x);
+}
+
+/* Long-form copy: comfortable measure on ultra-wide */
+.cosmic-readable {
+  max-width: min(65ch, 100%);
+  line-height: 1.65;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --text-sm: 0.9375rem;
+  }
+}
+
+/* ── Page container utility (legacy; uses rail tokens) ─ */
 .page-container {
   margin-left: auto;
   margin-right: auto;
-  max-width: 64rem; /* max-w-5xl */
-  padding-left: 1.25rem;
-  padding-right: 2rem;
-  padding-top: 4rem;
-  padding-bottom: 5rem;
-}
-
-@media (min-width: 640px) {
-  .page-container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-  }
+  max-width: var(--cosmic-page-max);
+  padding-left: var(--cosmic-page-pad-x);
+  padding-right: var(--cosmic-page-pad-x);
+  padding-top: var(--cosmic-page-pad-y);
+  padding-bottom: var(--cosmic-page-pad-y);
 }
 
 /* ── Glass utilities ───────────────────────────────────── */
@@ -293,8 +315,10 @@ body {
 
 /* ── Prose (README) ────────────────────────────────────── */
 .prose-readme {
+  max-width: min(65ch, 100%);
+  overflow-x: auto;
   color: var(--color-text-muted);
-  line-height: 1.7;
+  line-height: 1.65;
   font-size: var(--text-sm);
 }
 
@@ -365,7 +389,7 @@ body {
 /* ── Root container ────────────────────────────────────── */
 .q-root {
   width: 100%;
-  max-width: 1080px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 var(--space-md);
 }
@@ -772,15 +796,15 @@ body {
    PROJECT DETAIL PAGE
    ═══════════════════════════════════════════════════════ */
 
-/* Section headings — terminal-style */
+/* Section headings — display + wide tracking */
 .detail-section-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: var(--color-text-faint);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.875rem;
 }
 
 /* Category badge */
@@ -1240,9 +1264,10 @@ body {
 }
 
 .dossier-section__body {
+  max-width: min(65ch, 100%);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 .dossier-classified-banner {

@@ -14,7 +14,7 @@ export default async function NowPage() {
   const recent = await getRecentProjects(5);
 
   return (
-    <div className="mx-auto max-w-5xl px-5 sm:px-8 py-16 sm:py-20">
+    <div className="cosmic-page py-16 sm:py-20">
       <header className="projects-page-header max-w-xl mb-12">
         <p className="projects-page-header__eyebrow">MISSION LOG</p>
         <h1 className="projects-page-header__title">Recent Activity</h1>

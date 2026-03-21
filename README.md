@@ -31,6 +31,18 @@ portfolio-hub/
 └── .github/workflows/deploy.yml # CI/CD pipeline
 ```
 
+## Layout (content rail)
+
+Header, footer, and main pages share the **`.cosmic-page`** rail from `src/app/globals.css`:
+
+| CSS variable | Purpose |
+| --- | --- |
+| `--cosmic-page-max` | `min(90rem, 100%)` — wider than legacy 64rem, capped on ultra-wide |
+| `--cosmic-page-pad-x` | `clamp(1rem, 4vw, 3rem)` — fluid horizontal inset |
+| `--cosmic-page-pad-y` | `clamp(2.5rem, 5vw, 5rem)` — optional vertical rhythm |
+
+Long copy uses **`.cosmic-readable`** or measured **`.prose-readme`** (`max-width: min(65ch, 100%)`).
+
 ## How Repo Discovery Works
 
 1. **Curated, not automatic.** Only repos listed in `src/data/projects.ts` appear on the site. This keeps the portfolio clean — no empty repos or experiments.

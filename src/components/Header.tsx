@@ -56,7 +56,7 @@ export default function Header() {
           : "1px solid transparent",
       }}
     >
-      <div className="mx-auto max-w-5xl px-5 sm:px-6">
+      <div className="cosmic-page">
         <div className="flex items-center justify-between" style={{ height: "44px" }}>
           {/* Logo */}
           <Link

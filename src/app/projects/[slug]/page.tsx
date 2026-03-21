@@ -84,7 +84,7 @@ export default async function ProjectDetailPage({
     <div className="animate-fade-up">
       {/* ── Breadcrumb ──────────────────────────────── */}
       <div
-        className="mx-auto max-w-5xl px-5 sm:px-6"
+        className="cosmic-page"
         style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
       >
         <nav
@@ -119,7 +119,7 @@ export default async function ProjectDetailPage({
           padding: "clamp(1.5rem, 3vw, 2.5rem) 0",
         } as React.CSSProperties}
       >
-        <div className="mx-auto max-w-5xl px-5 sm:px-6">
+        <div className="cosmic-page">
           <div className="flex items-start gap-4 sm:gap-5">
             {/* Project icon — 64px colored circle */}
             <div
@@ -260,7 +260,7 @@ export default async function ProjectDetailPage({
       {/* ── Demo Embed (full-width, public repos only) ── */}
       {hasDemo && embedUrl && !project.private && (
         <section
-          className="mx-auto max-w-5xl px-5 sm:px-6"
+          className="cosmic-page"
           style={{ paddingTop: "clamp(1rem, 2vw, 1.5rem)" }}
         >
           <div className="demo-frame">
@@ -288,7 +288,7 @@ export default async function ProjectDetailPage({
 
       {/* ── Two-column layout ───────────────────────── */}
       <div
-        className="mx-auto max-w-5xl px-5 sm:px-6"
+        className="cosmic-page"
         style={{ paddingTop: "clamp(1.25rem, 2vw, 2rem)", paddingBottom: "clamp(1.25rem, 2vw, 2rem)" }}
       >
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
@@ -350,15 +350,7 @@ export default async function ProjectDetailPage({
             {/* About */}
             <div className="glass-card p-6 sm:p-7">
               <h2 className="detail-section-label">About This Project</h2>
-              <p
-                style={{
-                  fontSize: "var(--text-sm)",
-                  lineHeight: 1.7,
-                  color: "var(--color-text-muted)",
-                }}
-              >
-                {project.description}
-              </p>
+              <p className="cosmic-readable">{project.description}</p>
             </div>
 
             {/* Key Features */}
@@ -569,7 +561,7 @@ export default async function ProjectDetailPage({
           padding: "clamp(0.75rem, 2vw, 1.25rem) 0",
         }}
       >
-        <div className="mx-auto max-w-5xl px-5 sm:px-6 flex items-center justify-between">
+        <div className="cosmic-page flex items-center justify-between">
           {prevProject ? (
             <Link
               href={`/projects/${prevProject.slug}`}
