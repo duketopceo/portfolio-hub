@@ -13,11 +13,11 @@ import { categoryMeta } from "@/data/projects";
 
 /** Ellipse radii (rem) — wide orbit, perspective-ish; mobile tightened via hook */
 function useOrbitRadiiRem() {
-  const [radii, setRadii] = useState({ rx: 12.5, ry: 6.25 });
+  const [radii, setRadii] = useState({ rx: 23, ry: 11.5 });
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
     const apply = () =>
-      setRadii(mq.matches ? { rx: 9.25, ry: 4.6 } : { rx: 12.5, ry: 6.25 });
+      setRadii(mq.matches ? { rx: 13.5, ry: 6.75 } : { rx: 23, ry: 11.5 });
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
@@ -40,6 +40,8 @@ const catColors: Record<string, string> = {
 
 export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
   const [focusIndex, setFocusIndex] = useState(0);
+  /** +1 = next (card enters from right), -1 = prev (from left) — drives 3D snap */
+  const [flipDir, setFlipDir] = useState(1);
   const n = projects.length;
   const { rx, ry } = useOrbitRadiiRem();
 
@@ -63,7 +65,22 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
   const go = useCallback(
     (delta: number) => {
       if (n === 0) return;
+      setFlipDir(delta > 0 ? 1 : -1);
       setFocusIndex((i) => (i + delta + n) % n);
+    },
+    [n]
+  );
+
+  /** Orbit hover / keyboard: pick shortest path for card flip direction */
+  const moveFocusTo = useCallback(
+    (i: number) => {
+      setFocusIndex((prev) => {
+        if (i === prev) return prev;
+        const forward = (i - prev + n) % n;
+        const backward = (prev - i + n) % n;
+        setFlipDir(forward <= backward ? 1 : -1);
+        return i;
+      });
     },
     [n]
   );
@@ -95,23 +112,22 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
 
   return (
     <section
-      className="cosmic-page solar-section solar-system"
+      className="solar-system solar-section home-solar"
       tabIndex={0}
       onKeyDown={onKeyDown}
       aria-labelledby="solar-system-heading"
     >
-      <h2 id="solar-system-heading" className="solar-system__heading">
-        Mission systems
-      </h2>
-      <p className="solar-system__hint">
-        Use arrow keys or buttons to cycle. Click a node or the card to open the
-        project.
-      </p>
+      <div className="cosmic-page solar-system__intro">
+        <h2 id="solar-system-heading" className="solar-system__heading">
+          Mission systems
+        </h2>
+        <p className="solar-system__hint">
+          Arrow keys or ‹ › to cycle. Click a planet or the dossier card to open a
+          project.
+        </p>
+      </div>
 
-      <div className="solar-system__stage">
-        <div className="solar-nebula" aria-hidden />
-        <div className="solar-nebula solar-nebula--accent" aria-hidden />
-
+      <div className="solar-system__stage solar-system__stage--universe">
         <div className="solar-orbit-decor" aria-hidden>
           <svg
             className="solar-orbit-decor__svg"
@@ -164,8 +180,8 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
                   href={`/projects/${p.slug}`}
                   className={`solar-planet${isFocused ? " solar-planet--focused" : ""}`}
                   style={{ "--planet-accent": c } as React.CSSProperties}
-                  onMouseEnter={() => setFocusIndex(i)}
-                  onFocus={() => setFocusIndex(i)}
+                  onMouseEnter={() => moveFocusTo(i)}
+                  onFocus={() => moveFocusTo(i)}
                 >
                   <span className="solar-planet__dot" aria-hidden />
                   <span className="solar-planet__label">{p.displayName}</span>
@@ -175,7 +191,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
           })}
         </div>
 
-        <div className="solar-center">
+        <div className="solar-center solar-center--deck">
           <button
             type="button"
             className="solar-nav-btn solar-nav-btn--prev"
@@ -185,18 +201,24 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
             ‹
           </button>
 
-          <Link
-            href={`/projects/${focused.slug}`}
-            className="solar-focus-card"
-            style={{ "--focus-accent": accent } as React.CSSProperties}
+          <div
+            key={focused.slug}
+            className="solar-focus-card-rotator"
+            style={{ "--solar-flip-dir": flipDir } as React.CSSProperties}
           >
-            <span className="solar-focus-card__eyebrow">
-              {meta?.label ?? focused.category}
-            </span>
-            <span className="solar-focus-card__title">{focused.displayName}</span>
-            <span className="solar-focus-card__tagline">{focused.tagline}</span>
-            <span className="solar-focus-card__cta">View dossier →</span>
-          </Link>
+            <Link
+              href={`/projects/${focused.slug}`}
+              className="solar-focus-card"
+              style={{ "--focus-accent": accent } as React.CSSProperties}
+            >
+              <span className="solar-focus-card__eyebrow">
+                {meta?.label ?? focused.category}
+              </span>
+              <span className="solar-focus-card__title">{focused.displayName}</span>
+              <span className="solar-focus-card__tagline">{focused.tagline}</span>
+              <span className="solar-focus-card__cta">View dossier →</span>
+            </Link>
+          </div>
 
           <button
             type="button"

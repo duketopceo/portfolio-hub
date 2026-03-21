@@ -13,8 +13,9 @@ export default async function Home() {
 
   return (
     <div>
-      {/* ── Hero Section ─────────────────────────── */}
-      <section className="cosmic-hero">
+      {/* ── Home: compact hero + full-viewport solar universe ── */}
+      <div className="home-universe">
+      <section className="cosmic-hero cosmic-hero--compact">
         <div className="cosmic-hero__inner">
           <div className="cosmic-hero__orbits" aria-hidden="true">
             <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", color: "var(--color-accent)" }}>
@@ -40,12 +41,12 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Solar orbit (completeness order) ───── */}
       <SolarSystemNav projects={ordered} />
+      </div>
 
-      {/* ── Constellation Navigation ─────────────── */}
+      {/* ── Constellation (secondary map) ───────── */}
       <section
-        className="cosmic-page"
+        className="cosmic-page home-constellation"
         style={{ paddingBottom: "clamp(1rem, 2vw, 1.5rem)" }}
         aria-labelledby="explore-domain-heading"
       >

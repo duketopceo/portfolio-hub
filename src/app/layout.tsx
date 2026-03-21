@@ -62,7 +62,10 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <div className="cosmic-bg" aria-hidden="true" />
+        <div className="cosmic-bg" aria-hidden="true">
+          <div className="cosmic-bg__nebula" />
+          <div className="cosmic-bg__nebula cosmic-bg__nebula--accent" />
+        </div>
 
         <Header />
         <main className="flex-1 relative">{children}</main>
