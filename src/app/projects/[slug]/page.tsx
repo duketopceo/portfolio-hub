@@ -83,27 +83,11 @@ export default async function ProjectDetailPage({
   return (
     <div className="animate-fade-up">
       {/* ── Breadcrumb ──────────────────────────────── */}
-      <div
-        className="cosmic-page"
-        style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
-      >
-        <nav
-          className="flex items-center gap-1.5"
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            color: "var(--color-text-faint)",
-          }}
-        >
-          <Link
-            href="/projects"
-            className="transition-colors hover:text-[var(--color-text-muted)]"
-            style={{ textDecoration: "none", color: "var(--color-text-faint)" }}
-          >
-            ← Projects
-          </Link>
-          <ChevronIcon className="w-3 h-3" />
-          <span style={{ color: "var(--color-text-muted)" }}>
+      <div className="cosmic-page detail-breadcrumb">
+        <nav className="detail-breadcrumb__nav" aria-label="Breadcrumb">
+          <Link href="/projects">← Catalog</Link>
+          <ChevronIcon className="w-3 h-3 opacity-50 shrink-0" aria-hidden />
+          <span className="detail-breadcrumb__current truncate">
             {project.displayName}
           </span>
         </nav>

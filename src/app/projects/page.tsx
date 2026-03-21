@@ -14,7 +14,7 @@ export default async function ProjectsPage() {
 
   return (
     <div className="cosmic-page py-16 sm:py-20">
-      <header className="projects-page-header mb-10">
+      <header className="projects-page-header mb-12">
         <div className="projects-page-header__orbit" aria-hidden="true">
           <svg viewBox="0 0 200 200" fill="none" width="220" height="220">
             <ellipse
@@ -33,8 +33,8 @@ export default async function ProjectsPage() {
         <p className="projects-page-header__eyebrow">CATALOG</p>
         <h1 className="projects-page-header__title">All Projects</h1>
         <p className="projects-page-header__sub">
-          {projects.length} repositories across finance, AI, OSINT,
-          infrastructure, and web.
+          <span className="projects-page-header__stat">{projects.length}</span>{" "}
+          repositories across finance, AI, OSINT, infrastructure, and web.
         </p>
       </header>
 
