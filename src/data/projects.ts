@@ -253,6 +253,33 @@ export const projectConfigs: ProjectConfig[] = [
       "GitHub webhooks → Docker Swarm → Traefik routing → Cloudflare Tunnel → Public subdomains",
   },
 
+  // ── Education & Study ────────────────────────────────────────────
+  {
+    slug: "series65-study-app",
+    repoName: "series65-study-app",
+    displayName: "Series 65 Study Hub",
+    tagline:
+      "Multi-course study platform — Series 65 exam prep with adaptive quizzing and progress tracking",
+    description:
+      "Full-stack study platform built for the Series 65 (Uniform Investment Adviser Law Examination) with a multi-course architecture designed to expand into additional subjects. Features chapter-by-chapter quizzing, cumulative exams, progress tracking, and anti-cheating enforcement. The platform includes a hub dashboard with course cards, full CI/CD pipeline with GitHub Actions, Playwright end-to-end tests, and security hardening. Built with Next.js and deployed on Docker Swarm.",
+    category: "apps",
+    type: "app",
+    featured: true,
+    liveUrl: "https://study.luke-the-duke.com",
+    demoUrl: "https://study.luke-the-duke.com",
+    embeddable: true,
+    techStack: ["TypeScript", "Next.js", "Playwright", "Docker", "CI/CD"],
+    private: true,
+    highlights: [
+      "Multi-course architecture with extensible schema",
+      "Adaptive quizzing with anti-cheating enforcement",
+      "Full CI/CD with Playwright e2e test suite",
+      "Progress tracking and performance analytics",
+    ],
+    architecture:
+      "Next.js SSR → Course content engine → Quiz system → Progress tracker → Docker Swarm deployment",
+  },
+
   // ── Apps & Web ───────────────────────────────────────────────────
   {
     slug: "dixi",
@@ -333,6 +360,29 @@ export const projectConfigs: ProjectConfig[] = [
       "Custom CMS integration",
       "SEO optimization and RSS generation",
       "Syntax highlighting for code blocks",
+    ],
+  },
+  {
+    slug: "curious-storycard",
+    repoName: "curious-storycard",
+    displayName: "Curious",
+    tagline:
+      "Instagram for curiosity — swipeable knowledge cards with rich media storytelling",
+    description:
+      "Native iOS app that reimagines content consumption as swipeable story cards. Each card presents a bite-sized topic with rich media — images, key facts, and narrative text — in a format designed for casual learning. Features a card creation workflow, discovery feed, and personal library. Built with Swift and SwiftUI, with a Docker-hosted backend API and PostgreSQL database.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    liveUrl: "https://curious.luke-the-duke.com",
+    demoUrl: "https://curious.luke-the-duke.com",
+    embeddable: true,
+    techStack: ["Swift", "SwiftUI", "Docker", "PostgreSQL", "REST API"],
+    private: true,
+    highlights: [
+      "Native iOS with SwiftUI interface",
+      "Swipeable card-based content experience",
+      "Docker-hosted backend with PostgreSQL",
+      "36 passing backend tests with CI pipeline",
     ],
   },
 ];
