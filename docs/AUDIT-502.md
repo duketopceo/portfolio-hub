@@ -31,14 +31,22 @@ Browser → **Cloudflare edge** → **your origin** (public IP / tunnel) → **T
 
 **Mitigation:** `traefik.docker.network=traefik-public` (in `docker-compose.yml`).
 
-**Verify (on a Swarm manager):**
+**Verify (on a Swarm manager):** Swarm overlay networks are usually **not** `attachable`, so `docker run --network traefik-public` fails with *network not manually attachable*. Use one of these instead:
 
 ```bash
-docker run --rm --network traefik-public curlimages/curl:latest -sS -o /dev/null -w "%{http_code}\n" \
+# 1) App responds inside a portfolio task (localhost — no overlay attach needed)
+CID=$(docker ps -q -f name=portfolio_portfolio | head -1)
+[ -n "$CID" ] && docker exec "$CID" wget -qO- --timeout=3 http://127.0.0.1:3000/api/health
+```
+
+```bash
+# 2) Same DNS path Traefik uses: reuse Traefik’s network namespace, then curl the service VIP
+TID=$(docker ps -q -f name=traefik | head -1)
+[ -n "$TID" ] && docker run --rm --network "container:$TID" curlimages/curl:latest -sS \
   http://portfolio_portfolio:3000/api/health
 ```
 
-Expect `200`. If this fails, Traefik will typically 502.
+Expect HTTP **200** body or JSON. If **(2)** fails but **(1)** works, Traefik’s routing/network is still wrong.
 
 ---
 
@@ -52,7 +60,7 @@ Expect `200`. If this fails, Traefik will typically 502.
 
 ### C. Traefik load balancer healthcheck marks all servers down
 
-**Cause:** `traefik.http.services.portfolio.loadbalancer.healthcheck.path=/api/repos` — if every check fails (timeout, 500, connection reset), Traefik has no healthy backend → **502**.
+**Cause:** Traefik LB healthcheck path fails for every replica (timeout, 500, connection reset) → no healthy backend → **502**.
 
 **Risk:** `/api/repos` runs `getEnrichedProjects()` (GitHub fetch). Slow or failing upstream GitHub calls can delay or error responses during checks.
 
@@ -108,13 +116,23 @@ docker service ps portfolio_portfolio --no-trunc
 # App logs
 docker service logs portfolio_portfolio --tail 100
 
-# Overlay reachability (from manager)
-docker run --rm --network traefik-public curlimages/curl:latest -sS -i http://portfolio_portfolio:3000/api/health | head -20
+# Liveness inside a task (works when traefik-public is not attachable)
+docker exec "$(docker ps -q -f name=portfolio_portfolio | head -1)" wget -qO- http://127.0.0.1:3000/api/health
+
+# Traefik’s view of the service (optional — needs curl image + Traefik container name matching *traefik*)
+TID=$(docker ps -q -f name=traefik | head -1)
+docker run --rm --network "container:$TID" curlimages/curl:latest -sS -i http://portfolio_portfolio:3000/api/health | head -20
 ```
 
 ---
 
-## 5. Repo items outside this repository
+## 5. Optional: attachable overlay (advanced)
+
+If you really want `docker run --network traefik-public`, the network must be created with **`--attachable`** (often done when the network is first created). Recreating a production network affects every service using it — not recommended without a maintenance window. Prefer **`docker exec`** / **`--network container:$TID`** (Traefik container) above.
+
+---
+
+## 6. Repo items outside this repository
 
 - **Traefik** dynamic/static YAML (entrypoints, providers, networks).
 - **Cloudflare** DNS records, SSL mode, tunnel config.
@@ -122,7 +140,7 @@ docker run --rm --network traefik-public curlimages/curl:latest -sS -i http://po
 
 ---
 
-## 6. Summary checklist
+## 7. Summary checklist
 
 - [ ] `traefik.docker.network=traefik-public` deployed.
 - [ ] `curl` to `portfolio_portfolio:3000` on `traefik-public` returns **200** for `/api/health`.

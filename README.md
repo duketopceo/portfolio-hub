@@ -115,9 +115,11 @@ Usually Traefik can’t reach the app container (wrong Docker network, unhealthy
 1. **`traefik.docker.network=traefik-public`** — required in `docker-compose.yml` when the service joins `traefik-public`. Without it, Traefik often routes to the wrong interface → **502**. Redeploy after pulling latest: `./scripts/cluster-deploy.sh`.
 2. **Traefik `Host()` rule** must match the browser hostname (`luke-the-duke.com` / `www`).
 3. **Tasks running:** `docker service ps portfolio_portfolio --no-trunc` — want **Running**, not **Rejected**.
-4. **Reachability on `traefik-public`:** from any container on that network, the app should answer on port 3000:
-   `docker run --rm --network traefik-public curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" http://portfolio_portfolio:3000/api/health`  
-   Expect **200**. If this fails, Traefik will 502.
+4. **Reachability:** Swarm overlays are often **not attachable**, so `docker run --network traefik-public` may fail. Prefer **`docker exec` into a portfolio task:**  
+   `docker exec "$(docker ps -q -f name=portfolio_portfolio | head -1)" wget -qO- http://127.0.0.1:3000/api/health`  
+   Or test from Traefik’s network stack:  
+   `docker run --rm --network container:$(docker ps -q -f name=traefik | head -1) curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" http://portfolio_portfolio:3000/api/health`  
+   Expect **200**. See **[docs/AUDIT-502.md](docs/AUDIT-502.md)**.
 5. **Logs:** `docker service logs portfolio_portfolio --tail 80` and Traefik logs.
 6. **Cloudflare SSL/TLS:** **Full** or **Full (strict)** toward origin; try **DNS only** (grey cloud) briefly to see if the issue is Cloudflare-specific.
 7. If Traefik marks backends unhealthy, temporarily remove the **`traefik.http.services.portfolio.loadbalancer.healthcheck.*`** labels and redeploy to see if 502 clears (then re-add with a longer timeout).
