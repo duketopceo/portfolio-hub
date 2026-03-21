@@ -1,3 +1,4 @@
+# Build context — keep secrets out of image layers (token comes from build-arg / runtime env only)
 node_modules
 .next
 .git

@@ -80,6 +80,8 @@ npm run dev
 # → http://localhost:3000
 ```
 
+**Secrets:** `GITHUB_TOKEN` is server-only (never `NEXT_PUBLIC_*`). Do not commit `.env` / `.env.local` — they stay gitignored. See **[docs/SECURITY-ENV.md](docs/SECURITY-ENV.md)** for Docker and token handling.
+
 ## Deployment
 
 ### Option A: Docker Swarm (Recommended)

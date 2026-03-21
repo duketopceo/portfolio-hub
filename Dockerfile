@@ -18,6 +18,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # ── Stage 3: Production ─────────────────────────────────────
+# GITHUB_TOKEN is not stored in this image — pass at runtime (Compose/K8s) for live API + ISR.
 FROM node:20-alpine AS runner
 WORKDIR /app
 
