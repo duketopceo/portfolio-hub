@@ -102,13 +102,21 @@ docker stack deploy -c docker-compose.yml portfolio
 The `docker-compose.yml` includes:
 - 2 replicas with rolling updates
 - **No published host ports** — Traefik talks to the container on `traefik-public` (port 3000 internal only). Avoids Swarm errors like `port '3000' is already in use`.
-- Traefik routing labels for `portfolio.yourdomain.com`
-- Health check on `/api/repos`
+- Traefik routing for **`luke-the-duke.com`** and **`www.luke-the-duke.com`** (edit `docker-compose.yml` if you use another hostname)
+- Health check on `/api/repos` (image includes `wget` so Swarm healthchecks work on Alpine)
 - Connection to `traefik-public` overlay network
 
 **Local Docker with a host port:** `docker compose -f docker-compose.yml -f docker-compose.local.yml up --build` → http://localhost:3000
 
-**Edit the Traefik Host rule** in `docker-compose.yml` to match your actual domain.
+### Cloudflare shows **502 Bad Gateway**
+
+Usually origin (Traefik → app) isn’t healthy or the **Host** header doesn’t match Traefik’s rule.
+
+1. **Traefik `Host()` rule** must match what users type (e.g. apex vs `www`). Update labels and redeploy: `docker stack deploy -c docker-compose.yml portfolio`.
+2. **Service health:** `docker service ps portfolio_portfolio --no-trunc` — failed tasks often mean the container healthcheck failed (fixed in Dockerfile by installing `wget`).
+3. **Logs:** `docker service logs portfolio_portfolio --tail 100`
+4. **Cloudflare SSL/TLS:** origin must use a valid cert Traefik presents — mode **Full (strict)** if Let’s Encrypt on the server is working.
+5. **DNS** should point to the Swarm/Traefik IP (orange cloud proxied or grey “DNS only” for debugging).
 
 **Cluster / Docker:** put a `.env` next to `docker-compose.yml` (e.g. `~/portfolio-hub/.env`) with at least:
 

@@ -24,9 +24,9 @@ services:
         delay: 5s
         max_attempts: 3
       labels:
-        # ── Traefik routing ──────────────────────────────────
+        # ── Traefik routing (Host must match the browser hostname or you get 502/404)
         - "traefik.enable=true"
-        - "traefik.http.routers.portfolio.rule=Host(`portfolio.yourdomain.com`)"
+        - "traefik.http.routers.portfolio.rule=Host(`luke-the-duke.com`) || Host(`www.luke-the-duke.com`)"
         - "traefik.http.routers.portfolio.entrypoints=websecure"
         - "traefik.http.routers.portfolio.tls.certresolver=cloudflare"
         - "traefik.http.services.portfolio.loadbalancer.server.port=3000"

@@ -28,6 +28,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
+# Healthcheck uses wget (not in minimal alpine by default)
+RUN apk add --no-cache wget
+
 # Copy built output
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
