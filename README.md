@@ -110,13 +110,19 @@ The `docker-compose.yml` includes:
 
 ### Cloudflare shows **502 Bad Gateway**
 
-Usually origin (Traefik → app) isn’t healthy or the **Host** header doesn’t match Traefik’s rule.
+Usually Traefik can’t reach the app container (wrong Docker network, unhealthy LB, or **Host** mismatch).
 
-1. **Traefik `Host()` rule** must match what users type (e.g. apex vs `www`). Update labels and redeploy: `docker stack deploy -c docker-compose.yml portfolio`.
-2. **Service health:** `docker service ps portfolio_portfolio --no-trunc` — failed tasks often mean the container healthcheck failed (fixed in Dockerfile by installing `wget`).
-3. **Logs:** `docker service logs portfolio_portfolio --tail 100`
-4. **Cloudflare SSL/TLS:** origin must use a valid cert Traefik presents — mode **Full (strict)** if Let’s Encrypt on the server is working.
-5. **DNS** should point to the Swarm/Traefik IP (orange cloud proxied or grey “DNS only” for debugging).
+1. **`traefik.docker.network=traefik-public`** — required in `docker-compose.yml` when the service joins `traefik-public`. Without it, Traefik often routes to the wrong interface → **502**. Redeploy after pulling latest: `./scripts/cluster-deploy.sh`.
+2. **Traefik `Host()` rule** must match the browser hostname (`luke-the-duke.com` / `www`).
+3. **Tasks running:** `docker service ps portfolio_portfolio --no-trunc` — want **Running**, not **Rejected**.
+4. **Reachability on `traefik-public`:** from any container on that network, the app should answer on port 3000:
+   `docker run --rm --network traefik-public curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" http://portfolio_portfolio:3000/api/repos`  
+   Expect **200**. If this fails, Traefik will 502.
+5. **Logs:** `docker service logs portfolio_portfolio --tail 80` and Traefik logs.
+6. **Cloudflare SSL/TLS:** **Full** or **Full (strict)** toward origin; try **DNS only** (grey cloud) briefly to see if the issue is Cloudflare-specific.
+7. If Traefik marks backends unhealthy, temporarily remove the **`traefik.http.services.portfolio.loadbalancer.healthcheck.*`** labels and redeploy to see if 502 clears (then re-add with a longer timeout).
+
+**Git on the server:** use `git pull --rebase origin main` or `git config pull.rebase true` once so pulls don’t ask how to reconcile branches.
 
 **Cluster / Docker:** put a `.env` next to `docker-compose.yml` (e.g. `~/portfolio-hub/.env`) with at least:
 
