@@ -1,7 +1,8 @@
-# Docker Compose for local dev + Swarm deployment
+# Docker Compose for Swarm + local dev
 # Usage:
-#   Local:  docker compose up --build
 #   Swarm:  docker stack deploy -c docker-compose.yml portfolio
+#           (No host ports — Traefik reaches the app on traefik-public:3000.)
+#   Local:  docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
 services:
   portfolio:
     build:
@@ -9,8 +10,6 @@ services:
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
     image: ghcr.io/duketopceo/portfolio-hub:latest
-    ports:
-      - "3000:3000"
     environment:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - NODE_ENV=production

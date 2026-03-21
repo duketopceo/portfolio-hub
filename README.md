@@ -101,9 +101,12 @@ docker stack deploy -c docker-compose.yml portfolio
 
 The `docker-compose.yml` includes:
 - 2 replicas with rolling updates
+- **No published host ports** — Traefik talks to the container on `traefik-public` (port 3000 internal only). Avoids Swarm errors like `port '3000' is already in use`.
 - Traefik routing labels for `portfolio.yourdomain.com`
 - Health check on `/api/repos`
 - Connection to `traefik-public` overlay network
+
+**Local Docker with a host port:** `docker compose -f docker-compose.yml -f docker-compose.local.yml up --build` → http://localhost:3000
 
 **Edit the Traefik Host rule** in `docker-compose.yml` to match your actual domain.
 
@@ -116,7 +119,7 @@ GITHUB_TOKEN=ghp_...   # fine-grained or classic PAT; enables private repos + st
 `docker compose` passes it into the build and runtime (see `docker-compose.yml`). Without it, the site still builds, but **`/now` may show no commit dates** and enrichment falls back to public API limits. Rebuild after changing `.env`:
 
 ```bash
-docker compose build portfolio && docker service update --force --image ghcr.io/duketopceo/portfolio-hub:latest portfolio
+docker compose build portfolio && docker service update --force --image ghcr.io/duketopceo/portfolio-hub:latest portfolio_portfolio
 ```
 
 ### One-command deploy on the Swarm manager
@@ -128,7 +131,9 @@ chmod +x scripts/cluster-deploy.sh   # once
 ./scripts/cluster-deploy.sh
 ```
 
-This **fetch + `reset --hard origin/main`** (no stray server-side commits), **`docker compose build`**, **`docker stack deploy`** (so **`GITHUB_TOKEN`** is applied to the service), then **`docker service update --force`** to roll the new image. Override **`STACK_NAME`** / **`SERVICE_NAME`** if your stack differs.
+This **fetch + `reset --hard origin/main`** (no stray server-side commits), **`docker compose build`**, **`docker stack deploy`** (so **`GITHUB_TOKEN`** is applied to the service), then **`docker service update --force`** on **`portfolio_portfolio`**. Override **`STACK_NAME`** / **`SERVICE_NAME`** if your stack differs.
+
+**If `docker stack deploy` fails with “port 3000 already in use”:** an old service (often named `portfolio`) is still publishing that port. List: `docker service ls`. Remove the stale one after confirming it’s safe: `docker service rm portfolio`, then run `./scripts/cluster-deploy.sh` again. With the current `docker-compose.yml` (no host `ports`), new deploys won’t grab `:3000` on the host.
 
 ### Option B: Vercel
 

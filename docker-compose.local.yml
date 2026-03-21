@@ -1,0 +1,6 @@
+# Optional: merge for local dev with host port (not used by Swarm).
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+services:
+  portfolio:
+    ports:
+      - "3000:3000"

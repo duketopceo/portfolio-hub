@@ -19,7 +19,8 @@ cd "$ROOT"
 
 STACK_NAME="${STACK_NAME:-portfolio}"
 IMAGE="${IMAGE:-ghcr.io/duketopceo/portfolio-hub:latest}"
-SERVICE_NAME="${SERVICE_NAME:-}"
+# Compose service is "portfolio" → Swarm name is "<stack>_portfolio"
+SERVICE_NAME="${SERVICE_NAME:-${STACK_NAME}_portfolio}"
 
 echo "==> portfolio-hub cluster deploy"
 echo "    ROOT=$ROOT"
@@ -41,14 +42,6 @@ docker compose build portfolio
 echo "==> stack deploy (injects GITHUB_TOKEN from .env into service spec)"
 docker stack deploy -c docker-compose.yml "$STACK_NAME"
 
-if [[ -z "$SERVICE_NAME" ]]; then
-  SERVICE_NAME=$(docker stack services "$STACK_NAME" --format '{{.Name}}' 2>/dev/null | head -1 || true)
-fi
-if [[ -z "$SERVICE_NAME" ]]; then
-  echo "error: could not discover Swarm service name for stack '$STACK_NAME'. Set SERVICE_NAME= manually." >&2
-  echo "    Try: docker stack services $STACK_NAME" >&2
-  exit 1
-fi
 echo "    SERVICE_NAME=$SERVICE_NAME"
 
 echo "==> force rolling update to local :latest image"
