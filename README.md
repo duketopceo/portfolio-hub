@@ -117,8 +117,8 @@ Usually Traefik can’t reach the app container (wrong Docker network, unhealthy
 3. **Tasks running:** `docker service ps portfolio_portfolio --no-trunc` — want **Running**, not **Rejected**.
 4. **Reachability:** Swarm overlays are often **not attachable**, so `docker run --network traefik-public` may fail. Prefer **`docker exec` into a portfolio task:**  
    `docker exec "$(docker ps -q -f name=portfolio_portfolio | head -1)" wget -qO- http://127.0.0.1:3000/api/health`  
-   Or test from Traefik’s network stack (hostname is compose service **`portfolio`**, not `portfolio_portfolio`):  
-   `docker run --rm --network container:$(docker ps -q -f name=traefik | head -1) curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" http://portfolio:3000/api/health`  
+   Optional: from Traefik’s network namespace, curl the service **VIP** (not the hostname — Traefik often can’t resolve Swarm DNS):  
+   `VIP=$(docker service inspect portfolio_portfolio --format '{{(index .Endpoint.VirtualIPs 0).Addr}}' | cut -d/ -f1); docker run --rm --network container:$(docker ps -q -f name=traefik | head -1) curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" "http://${VIP}:3000/api/health"`  
    Expect **200**. See **[docs/AUDIT-502.md](docs/AUDIT-502.md)**.
 5. **Logs:** `docker service logs portfolio_portfolio --tail 80` and Traefik logs.
 6. **Cloudflare SSL/TLS:** **Full** or **Full (strict)** toward origin; try **DNS only** (grey cloud) briefly to see if the issue is Cloudflare-specific.

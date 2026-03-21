@@ -31,24 +31,29 @@ Browser → **Cloudflare edge** → **your origin** (public IP / tunnel) → **T
 
 **Mitigation:** `traefik.docker.network=traefik-public` (in `docker-compose.yml`).
 
-**Verify (on a Swarm manager):** Swarm overlay networks are usually **not** `attachable`, so `docker run --network traefik-public` fails with *network not manually attachable*. Use one of these instead:
+**Verify (on a Swarm manager):** Swarm overlay networks are usually **not** `attachable`, so `docker run --network traefik-public` fails with *network not manually attachable*. Use the commands below.
 
-**DNS note:** `docker service ls` shows **`portfolio_portfolio`** (stack + service). Swarm’s embedded DNS name for the service is the **compose service key** — here **`portfolio`** (see `services:` in `docker-compose.yml`). Use **`http://portfolio:3000`** from another container on the same overlay, not `http://portfolio_portfolio:3000` (that hostname often does not resolve → `Could not resolve host`).
+**Why not `curl http://portfolio:3000` from Traefik’s network namespace?**  
+`docker run --network container:<traefik>` shares Traefik’s **DNS** (`/etc/resolv.conf`). Many Traefik setups use **host networking** or a resolver that **does not** expose Swarm embedded DNS, so **`portfolio` / `portfolio_portfolio` often won’t resolve** (`Could not resolve host`) even when the app is healthy. Traefik itself usually learns backends via the **Docker/Swarm API**, not that hostname.
 
 ```bash
-# 1) App responds inside a portfolio task (localhost — no overlay attach needed)
+# 1) App responds inside a portfolio task (primary — always use this first)
 CID=$(docker ps -q -f name=portfolio_portfolio | head -1)
 [ -n "$CID" ] && docker exec "$CID" wget -qO- --timeout=3 http://127.0.0.1:3000/api/health
 ```
 
 ```bash
-# 2) Same DNS path Traefik uses: reuse Traefik’s network namespace, then curl by Swarm DNS name
+# 2) Optional: hit the service VIP from Traefik’s network stack (no Swarm DNS required)
+#    Uses the overlay VIP from the manager; works when (1) is OK but hostname curl fails.
+VIP=$(docker service inspect portfolio_portfolio --format '{{(index .Endpoint.VirtualIPs 0).Addr}}' | cut -d/ -f1)
 TID=$(docker ps -q -f name=traefik | head -1)
-[ -n "$TID" ] && docker run --rm --network "container:$TID" curlimages/curl:latest -sS \
-  http://portfolio:3000/api/health
+[ -n "$VIP" ] && [ -n "$TID" ] && docker run --rm --network "container:$TID" curlimages/curl:latest -sS \
+  "http://${VIP}:3000/api/health"
 ```
 
-Expect HTTP **200** body or JSON. If **(2)** fails but **(1)** works, Traefik’s routing/network is still wrong.
+If the service is attached to **several** overlays, `VirtualIPs` may list more than one address — pick the VIP for **`traefik-public`** via `docker service inspect portfolio_portfolio --format '{{json .Endpoint.VirtualIPs}}'`.
+
+Expect HTTP **200** body or JSON. If **(1)** works but **(2)** fails, check Traefik ↔ overlay routing; if **(2)** works but the public URL 502s, suspect Cloudflare/TLS/router **Host**, not the app container.
 
 ---
 
@@ -121,17 +126,17 @@ docker service logs portfolio_portfolio --tail 100
 # Liveness inside a task (works when traefik-public is not attachable)
 docker exec "$(docker ps -q -f name=portfolio_portfolio | head -1)" wget -qO- http://127.0.0.1:3000/api/health
 
-# Traefik’s view of the service (optional — curl image + Traefik container name matching *traefik*)
-# Hostname is the compose service name "portfolio", not "portfolio_portfolio"
+# Optional: Traefik’s network stack → service VIP (see §2.A — avoid hostname-only curl from Traefik)
+VIP=$(docker service inspect portfolio_portfolio --format '{{(index .Endpoint.VirtualIPs 0).Addr}}' | cut -d/ -f1)
 TID=$(docker ps -q -f name=traefik | head -1)
-docker run --rm --network "container:$TID" curlimages/curl:latest -sS -i http://portfolio:3000/api/health | head -20
+docker run --rm --network "container:$TID" curlimages/curl:latest -sS -i "http://${VIP}:3000/api/health" | head -20
 ```
 
 ---
 
 ## 5. Optional: attachable overlay (advanced)
 
-If you really want `docker run --network traefik-public`, the network must be created with **`--attachable`** (often done when the network is first created). Recreating a production network affects every service using it — not recommended without a maintenance window. Prefer **`docker exec`** / **`--network container:$TID`** (Traefik container) above.
+If you really want `docker run --network traefik-public`, the network must be created with **`--attachable`** (often done when the network is first created). Recreating a production network affects every service using it — not recommended without a maintenance window. Prefer **`docker exec`** into a task, or **`--network container:$TID`** with the **VIP** (§2.A), not Swarm hostnames from Traefik’s resolver.
 
 ---
 
@@ -146,7 +151,7 @@ If you really want `docker run --network traefik-public`, the network must be cr
 ## 7. Summary checklist
 
 - [ ] `traefik.docker.network=traefik-public` deployed.
-- [ ] From Traefik’s network (or `docker exec` into a task), `http://portfolio:3000/api/health` returns **200** (Swarm DNS name = compose service key `portfolio`).
+- [ ] `docker exec` into a task: `http://127.0.0.1:3000/api/health` returns **200**; optional VIP curl from Traefik’s ns (§2.A) also **200** if you need to mimic Traefik’s routing without Swarm DNS.
 - [ ] Traefik label names match **your** Traefik config.
 - [ ] LB healthcheck uses **`/api/health`**, not only `/api/repos`.
 - [ ] Cloudflare SSL mode and DNS point at the real origin path.
