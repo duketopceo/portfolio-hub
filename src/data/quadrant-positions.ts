@@ -25,6 +25,8 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "chronicle-weaver":  { x:  0.80, y:  0.00 },
   "collaborative-essay": { x: 0.30, y: -0.70 },
   "personal-blog":     { x:  0.80, y: -0.65 },
+  "series65-study-app": { x: 0.35, y:  0.70 },
+  "curious-storycard": { x:  0.75, y: -0.30 },
 };
 
 export const quadrantLabels = {
