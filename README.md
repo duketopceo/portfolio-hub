@@ -4,7 +4,7 @@ Meta-portfolio site that aggregates GitHub repos into a curated, categorized pro
 
 **Current release:** `v3.0.0` (see [CHANGELOG.md](CHANGELOG.md)). Docker: `ghcr.io/duketopceo/portfolio-hub:latest` and `:3.0.0` when the `v3.0.0` tag is pushed.
 
-**Browser tab titles** use **Luke the Duke** as the primary name (see `layout.tsx` `title.template`). **Cosmic Intelligence** remains the in-app product brand (header, footer, hero).
+**Browser tab titles** lead with **Cosmic Intelligence** (see `layout.tsx` `title` / `title.template`). The same name is the in-app product brand (header, footer, hero).
 
 ## Architecture
 
@@ -20,7 +20,7 @@ portfolio-hub/
 │   │   └── api/repos/route.ts  # /api/repos — JSON API
 │   ├── components/             # React components
 │   │   ├── dossier/            # Shared /projects/[slug] layout (hero, sections, footer nav)
-│   │   ├── Header.tsx          # Sticky nav + dark mode toggle
+│   │   ├── Header.tsx          # Sticky nav (Cosmic Intelligence — dark theme only)
 │   │   ├── Footer.tsx
 │   │   ├── ProjectCard.tsx     # Reusable project card
 │   │   └── FilterBar.tsx       # Category/sort filter controls

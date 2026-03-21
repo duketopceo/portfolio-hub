@@ -1,8 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* ── Design System: Cosmic Intelligence ─────────────── */
+/* ── Design System: Cosmic Intelligence (dark only) ─── */
 
 :root {
   /* ── Deep Space Background ─────────────── */
@@ -80,39 +78,11 @@
   --cosmic-page-pad-x: clamp(1rem, 4vw, 3rem);
   --cosmic-page-pad-y: clamp(2.5rem, 5vw, 5rem);
   --cosmic-page-max: min(90rem, 100%);
-}
 
-/* ── Light mode ────────────────────────────────────────── */
-:root:not(.dark) {
-  --color-bg: #F0F4F8;
-  --color-surface: #FFFFFF;
-  --color-surface-2: #F7FAFC;
-  --color-surface-3: #EDF2F7;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-glass: rgba(0, 0, 0, 0.06);
-  --color-divider: rgba(0, 0, 0, 0.04);
-
-  --color-text: #1A202C;
-  --color-text-muted: #4A5568;
-  --color-text-faint: #A0AEC0;
-
-  --color-accent: #0D9488;
-  --color-accent-muted: rgba(13, 148, 136, 0.10);
-  --color-accent-subtle: rgba(13, 148, 136, 0.05);
-  --color-accent-glow: rgba(13, 148, 136, 0.08);
-
-  --color-nebula-blue: rgba(30, 60, 120, 0.05);
-  --color-nebula-purple: rgba(60, 30, 90, 0.04);
-  --color-nebula-teal: rgba(20, 90, 85, 0.04);
-
-  --color-live: #059669;
-
-  --glass-bg: rgba(255, 255, 255, 0.70);
-  --glass-bg-hover: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --glass-border-hover: rgba(0, 0, 0, 0.12);
-  --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --glass-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* List/detail pages: vertical shell (replaces ad-hoc py-16) */
+  --cosmic-shell-pt: clamp(2.5rem, 6vw, 4rem);
+  --cosmic-shell-pb: clamp(2.5rem, 6vw, 4rem);
+  --cosmic-section-gap: clamp(1.5rem, 3vw, 2.5rem);
 }
 
 /* ── Reset ─────────────────────────────────────────────── */
@@ -259,6 +229,112 @@ body {
   padding-right: var(--cosmic-page-pad-x);
 }
 
+/* Standard vertical padding for /projects, /now, etc. */
+.cosmic-page--shell {
+  padding-top: var(--cosmic-shell-pt);
+  padding-bottom: var(--cosmic-shell-pb);
+}
+
+/* Spacing between stacked sections (e.g. filter + domain map) */
+.cosmic-page-section {
+  margin-top: var(--cosmic-section-gap);
+}
+
+.cosmic-page-section:first-child {
+  margin-top: 0;
+}
+
+/* Status / info banners (e.g. Activity when GitHub metadata missing) */
+.cosmic-callout {
+  max-width: min(42rem, 100%);
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.cosmic-callout strong,
+.cosmic-callout__strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.cosmic-callout code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-accent);
+}
+
+.cosmic-callout--warning {
+  border-color: color-mix(in srgb, var(--color-accent) 28%, var(--glass-border));
+  background: color-mix(in srgb, var(--color-accent-subtle) 65%, var(--glass-bg));
+}
+
+/* Site footer — matches cosmic rail + brand */
+.cosmic-footer {
+  margin-top: auto;
+  padding: clamp(1rem, 2vw, 1.5rem) 0;
+  border-top: 1px solid var(--color-accent-subtle);
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    var(--color-accent-subtle) 0%,
+    transparent 70%
+  );
+}
+
+.cosmic-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+@media (min-width: 640px) {
+  .cosmic-footer__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.cosmic-footer__heading {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  font-size: 11px;
+}
+
+.cosmic-footer__link {
+  color: var(--color-text-faint);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.cosmic-footer__link:hover {
+  color: var(--color-text-muted);
+}
+
+.cosmic-footer__text {
+  color: var(--color-text-faint);
+}
+
+.cosmic-footer__bottom {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-divider);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+  text-align: center;
+}
+
 /* Long-form copy: comfortable measure on ultra-wide */
 .cosmic-readable {
   max-width: min(65ch, 100%);
@@ -306,13 +382,11 @@ body {
 
 .glass-card:hover {
   border-color: var(--glass-border-hover);
-  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  background: var(--glass-bg-hover);
-}
-
-.dark .glass-card:hover {
   background: rgba(12, 18, 30, 0.92);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(45, 212, 191, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(45, 212, 191, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* ── Animations ────────────────────────────────────────── */
@@ -880,6 +954,16 @@ body {
   margin-bottom: 0.875rem;
 }
 
+/* Short subline under section labels (e.g. catalog domain map) */
+.cosmic-section-subline {
+  margin-top: -0.35rem;
+  margin-bottom: 1.25rem;
+  max-width: min(42rem, 100%);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
 /* Category badge */
 .detail-cat-badge {
   display: inline-flex;
@@ -1054,6 +1138,16 @@ body {
   max-width: 800px;
 }
 
+.cosmic-hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: 0.35rem;
+}
+
 .cosmic-hero__title {
   font-family: var(--font-display);
   font-size: var(--text-hero);
@@ -1120,14 +1214,18 @@ body {
   );
 }
 
-.home-constellation {
+/* Compact home hint → full catalog domain map (see /projects#domain-map) */
+.home-domain-hint {
   position: relative;
-  padding-top: clamp(1.75rem, 4vw, 3rem);
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(1rem, 3vw, 1.5rem);
+  padding-bottom: clamp(1.25rem, 3vw, 2rem);
   border-top: 1px solid rgba(45, 212, 191, 0.07);
   background: linear-gradient(
     180deg,
     rgba(8, 12, 20, 0.35) 0%,
-    transparent 12rem
+    transparent 8rem
   );
 }
 
@@ -1147,6 +1245,11 @@ body {
   margin-left: auto;
   margin-right: auto;
   max-width: min(52rem, 100%);
+}
+
+.cosmic-hero--compact .cosmic-hero__eyebrow {
+  font-size: 9px;
+  margin-bottom: 0.25rem;
 }
 
 .cosmic-hero--compact .cosmic-hero__title {
@@ -2216,41 +2319,93 @@ body {
 }
 
 .solar-sun--halo {
-  inset: -18%;
+  inset: -22%;
   background: radial-gradient(
-    circle at 40% 38%,
-    rgba(255, 140, 80, 0.35) 0%,
-    rgba(255, 90, 60, 0.12) 38%,
-    rgba(45, 212, 191, 0.08) 58%,
-    transparent 72%
+    circle at 38% 36%,
+    rgba(255, 248, 220, 0.22) 0%,
+    rgba(255, 160, 90, 0.38) 18%,
+    rgba(255, 95, 55, 0.14) 42%,
+    rgba(120, 180, 255, 0.1) 62%,
+    rgba(45, 212, 191, 0.09) 72%,
+    transparent 82%
   );
-  filter: blur(6px);
-  animation: solar-sun-pulse 10s ease-in-out infinite;
+  filter: blur(8px);
+  animation: solar-sun-halo-breathe 14s ease-in-out infinite;
 }
 
 .solar-sun--core {
   inset: 6%;
   background:
-    radial-gradient(circle at 32% 28%, rgba(255, 245, 230, 0.55) 0%, transparent 28%),
-    radial-gradient(circle at 42% 42%, rgba(255, 120, 70, 0.45) 0%, rgba(180, 35, 25, 0.25) 45%, transparent 68%),
-    radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.15) 0%, transparent 55%);
+    radial-gradient(circle at 30% 26%, rgba(255, 255, 250, 0.75) 0%, rgba(255, 230, 190, 0.35) 14%, transparent 32%),
+    radial-gradient(circle at 44% 44%, rgba(255, 130, 75, 0.52) 0%, rgba(200, 40, 28, 0.28) 48%, transparent 72%),
+    radial-gradient(circle at 62% 58%, rgba(90, 140, 220, 0.12) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.18) 0%, transparent 58%);
   box-shadow:
-    0 0 50px rgba(255, 120, 70, 0.25),
-    0 0 90px rgba(45, 212, 191, 0.12),
-    inset 0 0 40px rgba(255, 200, 140, 0.15);
-  animation: solar-sun-pulse 10s ease-in-out infinite;
-  animation-delay: -1.5s;
+    0 0 42px rgba(255, 140, 80, 0.32),
+    0 0 88px rgba(45, 212, 191, 0.16),
+    0 0 120px rgba(100, 160, 255, 0.08),
+    inset 0 0 36px rgba(255, 220, 160, 0.22),
+    inset 0 -12px 28px rgba(60, 90, 160, 0.12);
+  animation: solar-sun-core-breathe 12s ease-in-out infinite;
+  animation-delay: -2s;
 }
 
-@keyframes solar-sun-pulse {
+/* Corona flicker — opacity-only so reduced-motion can disable */
+.solar-sun--core::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    transparent 55%,
+    rgba(255, 200, 140, 0.12) 72%,
+    rgba(120, 180, 255, 0.14) 88%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.65;
+  animation: solar-sun-corona-flicker 9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes solar-sun-halo-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes solar-sun-core-breathe {
   0%,
   100% {
     transform: scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.04);
-    opacity: 0.94;
+    transform: scale(1.035);
+    opacity: 0.96;
+  }
+}
+
+@keyframes solar-sun-corona-flicker {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  33% {
+    opacity: 0.78;
+    transform: scale(1.02);
+  }
+  66% {
+    opacity: 0.55;
+    transform: scale(1.01);
   }
 }
 
@@ -2500,6 +2655,14 @@ body {
   .solar-sun--halo,
   .solar-sun--core {
     animation: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .solar-sun--core::before {
+    animation: none;
+    opacity: 0.6;
+    transform: none;
   }
 
   .solar-sun--core::after {

@@ -15,7 +15,7 @@ export default async function NowPage() {
   const hasGitHubDates = recent.some((p) => Boolean(p.lastUpdated?.trim()));
 
   return (
-    <div className="cosmic-page py-16 sm:py-20">
+    <div className="cosmic-page cosmic-page--shell">
       <header className="projects-page-header max-w-xl mb-12">
         <p className="projects-page-header__eyebrow">MISSION LOG</p>
         <h1 className="projects-page-header__title">Recent Activity</h1>
@@ -25,26 +25,14 @@ export default async function NowPage() {
       </header>
 
       {!hasGitHubDates && recent.length > 0 && (
-        <div
-          className="max-w-xl mb-8 rounded-lg border px-4 py-3 text-sm"
-          style={{
-            borderColor: "var(--glass-border)",
-            background: "var(--glass-bg)",
-            color: "var(--color-text-muted)",
-          }}
-          role="status"
-        >
-          <strong style={{ color: "var(--color-text)" }}>
+        <div className="cosmic-callout cosmic-callout--warning" role="status">
+          <strong className="cosmic-callout__strong">
             GitHub timeline unavailable.
           </strong>{" "}
           Showing curated projects in catalog order. For live commit dates on this
           page, set{" "}
-          <code className="text-xs" style={{ color: "var(--color-accent)" }}>
-            GITHUB_TOKEN
-          </code>{" "}
-          in the server environment (e.g.{" "}
-          <code className="text-xs">~/portfolio-hub/.env</code> on the cluster) and
-          rebuild the container.
+          <code>GITHUB_TOKEN</code> in the server environment (e.g.{" "}
+          <code>~/portfolio-hub/.env</code> on the cluster) and rebuild the container.
         </div>
       )}
 

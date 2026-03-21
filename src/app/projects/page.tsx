@@ -1,5 +1,6 @@
 import { getEnrichedProjects } from "@/lib/github";
 import FilterBar from "@/components/FilterBar";
+import ConstellationNav from "@/components/ConstellationNav";
 
 export const revalidate = 3600;
 
@@ -13,7 +14,7 @@ export default async function ProjectsPage() {
   const projects = await getEnrichedProjects();
 
   return (
-    <div className="cosmic-page py-16 sm:py-20">
+    <div className="cosmic-page cosmic-page--shell">
       <header className="projects-page-header mb-12">
         <div className="projects-page-header__orbit" aria-hidden="true">
           <svg viewBox="0 0 200 200" fill="none" width="220" height="220">
@@ -39,6 +40,21 @@ export default async function ProjectsPage() {
       </header>
 
       <FilterBar projects={projects} />
+
+      <section
+        id="domain-map"
+        className="cosmic-page-section"
+        aria-labelledby="domain-map-heading"
+      >
+        <h2 id="domain-map-heading" className="detail-section-label">
+          Explore by domain
+        </h2>
+        <p className="cosmic-section-subline">
+          A 2D quadrant map of how work clusters — distinct from the home solar
+          ordering by completeness.
+        </p>
+        <ConstellationNav projects={projects} />
+      </section>
     </div>
   );
 }

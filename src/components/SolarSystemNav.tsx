@@ -101,7 +101,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
   if (n === 0) {
     return (
       <p className="solar-empty" role="status">
-        No projects to display.
+        No repositories in orbit yet.
       </p>
     );
   }
@@ -119,11 +119,11 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
     >
       <div className="cosmic-page solar-system__intro">
         <h2 id="solar-system-heading" className="solar-system__heading">
-          Mission systems
+          Systems in orbit
         </h2>
         <p className="solar-system__hint">
-          Arrow keys or ‹ › to cycle. Click a planet or the dossier card to open a
-          project.
+          Arrow keys or ‹ › to cycle. Click a world or the dossier card to open the
+          full project dossier.
         </p>
       </div>
 
@@ -196,7 +196,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
             type="button"
             className="solar-nav-btn solar-nav-btn--prev"
             onClick={() => go(-1)}
-            aria-label="Previous project in completeness order"
+            aria-label="Previous project in orbit order"
           >
             ‹
           </button>
@@ -224,7 +224,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
             type="button"
             className="solar-nav-btn solar-nav-btn--next"
             onClick={() => go(1)}
-            aria-label="Next project in completeness order"
+            aria-label="Next project in orbit order"
           >
             ›
           </button>

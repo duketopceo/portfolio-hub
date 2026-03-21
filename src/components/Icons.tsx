@@ -92,23 +92,6 @@ export function ExternalIcon({ className = "w-3.5 h-3.5" }: IconProps) {
   );
 }
 
-export function SunIcon({ className = "w-5 h-5" }: IconProps) {
-  return (
-    <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="10" cy="10" r="3.5" />
-      <path d="M10 2v2M10 16v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M2 10h2M16 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4" />
-    </svg>
-  );
-}
-
-export function MoonIcon({ className = "w-5 h-5" }: IconProps) {
-  return (
-    <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 11.5A7 7 0 018.5 3 7.5 7.5 0 1017 11.5z" />
-    </svg>
-  );
-}
-
 export function MenuIcon({ className = "w-5 h-5" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">

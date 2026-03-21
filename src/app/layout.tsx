@@ -25,11 +25,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Luke the Duke — Portfolio",
-    template: "%s · Luke the Duke",
+    default: "Cosmic Intelligence · Luke Kimball",
+    template: "%s · Cosmic Intelligence",
   },
   description:
-    "Luke Kimball — engineering portfolio (Cosmic Intelligence). Systems that compound: AI, trading, OSINT, and production infrastructure.",
+    "Cosmic Intelligence — Luke Kimball’s engineering portfolio. Deep space meets clean engineering: systems that compound across AI, trading, OSINT, and production infrastructure.",
   icons: {
     icon: [
       { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
     apple: "/brand/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Luke the Duke — Portfolio · Cosmic Intelligence",
+    title: "Cosmic Intelligence · Luke Kimball",
     description:
-      "Luke Kimball — engineering portfolio. AI automation, trading systems, OSINT, and Docker Swarm infrastructure.",
+      "Engineering portfolio — systems that compound. AI automation, trading, OSINT, and Docker Swarm infrastructure.",
     type: "website",
     images: [{ url: "/brand/og-image.png", width: 1200, height: 630 }],
   },
@@ -58,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >

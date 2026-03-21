@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { SunIcon, MoonIcon, MenuIcon, CloseIcon } from "./Icons";
+import { MenuIcon, CloseIcon } from "./Icons";
 
 const navItems = [
   { href: "/", label: "Work" },
@@ -13,33 +13,14 @@ const navItems = [
 
 export default function Header() {
   const pathname = usePathname();
-  const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'light') {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    }
-    // Default stays dark — don't check prefers-color-scheme for default
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  function toggleTheme() {
-    setIsDark((prev) => {
-      const next = !prev;
-      document.documentElement.classList.toggle("dark", next);
-      localStorage.setItem('theme', next ? 'dark' : 'light');
-      return next;
-    });
-  }
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -132,20 +113,11 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Right side */}
-          <div className="flex items-center gap-0.5">
-            <button
-              onClick={toggleTheme}
-              className="p-1.5 rounded-md transition-colors duration-150"
-              style={{ color: "var(--color-text-faint)" }}
-              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-            >
-              {isDark ? <SunIcon /> : <MoonIcon />}
-            </button>
-
+          {/* Mobile menu */}
+          <div className="flex items-center md:hidden">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-1.5 rounded-md"
+              className="p-1.5 rounded-md"
               style={{ color: "var(--color-text-faint)" }}
               aria-label="Toggle menu"
             >
