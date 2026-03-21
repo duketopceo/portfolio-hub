@@ -131,6 +131,21 @@ It prints **zone status**, **DNS records** (apex + subdomains under your zone), 
 
 **Interpretation:** **502** with Cloudflare orange-cloud often means the **origin IP** is wrong, Traefik is down, or **TLS** between Cloudflare and origin fails (e.g. SSL mode **Full (strict)** without a valid cert on Traefik). **DNS-only** (grey cloud) bypasses the proxy for testing.
 
+### Full stack terminal bundle (Swarm + Traefik + curls)
+
+On the **Swarm manager** (or any host with `docker` pointed at the cluster), run the lengthy diagnostic:
+
+```bash
+cd ~/portfolio-hub && git pull
+chmod +x scripts/diagnose-502.sh
+./scripts/diagnose-502.sh 2>&1 | tee /tmp/502-diagnostic.log
+# Optional env:
+# DOMAIN=example.com PUBLIC_URL=https://example.com/api/health ./scripts/diagnose-502.sh
+# export CLOUDFLARE_API_TOKEN=...   # also runs scripts/audit-cloudflare.sh in section 19
+```
+
+It walks **Docker/Swarm**, **`traefik-public`**, **service tasks**, **in-container `/api/health`**, **VIP curl via Traefik netns**, **logs**, **public HTTPS**, **DNS**, **disk**, and optional **Cloudflare API**.
+
 ---
 
 ## 5. Commands (copy-paste)

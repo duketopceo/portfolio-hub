@@ -114,6 +114,8 @@ Usually Traefik can’t reach the app container (wrong Docker network, unhealthy
 
 **Cloudflare audit (API + optional tunnel):** with a read-only API token, run **`./scripts/audit-cloudflare.sh`** (see [docs/AUDIT-502.md §4](docs/AUDIT-502.md)) — DNS, SSL mode, paused zone, `cloudflared tunnel list` if installed.
 
+**Full Swarm + Traefik + origin probe:** on the manager, **`./scripts/diagnose-502.sh`** (save output: `tee /tmp/502-diagnostic.log`) — see [docs/AUDIT-502.md](docs/AUDIT-502.md) “Full stack terminal bundle”.
+
 1. **`traefik.docker.network=traefik-public`** — required in `docker-compose.yml` when the service joins `traefik-public`. Without it, Traefik often routes to the wrong interface → **502**. Redeploy after pulling latest: `./scripts/cluster-deploy.sh`.
 2. **Traefik `Host()` rule** must match the browser hostname (`luke-the-duke.com` / `www`).
 3. **Tasks running:** `docker service ps portfolio_portfolio --no-trunc` — want **Running**, not **Rejected**.
