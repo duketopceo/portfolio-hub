@@ -2,8 +2,6 @@
 # Usage:
 #   Local:  docker compose up --build
 #   Swarm:  docker stack deploy -c docker-compose.yml portfolio
-version: "3.8"
-
 services:
   portfolio:
     build:
