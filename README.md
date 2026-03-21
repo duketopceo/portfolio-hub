@@ -143,6 +143,8 @@ This **fetch + `reset --hard origin/main`**, **`docker compose build`**, **`dock
 
 **Multi-node Swarm — tasks fail with `No such image: ghcr.io/.../latest` on a worker:** the image only existed on the manager after `docker compose build`. Workers must pull from the registry — **`docker push`** on the manager (after **`docker login ghcr.io`** with a PAT that has `write:packages`). The script pushes by default. **`--with-registry-auth`** on `service update` forwards your registry login so workers can pull private images. To skip push (single-node / image already everywhere): `SKIP_PUSH=1 ./scripts/cluster-deploy.sh`.
 
+**Swarm message `image ... could not be accessed on a registry to record its digest`:** common during `docker stack deploy` even when **`docker push`** just succeeded. The manager sometimes doesn’t pin the digest in the spec; each node still resolves **`latest`** when starting tasks. Safe to ignore if push completed and **`docker service ps`** shows tasks **Running**.
+
 **If `docker stack deploy` fails with “port 3000 already in use”:** an old service (often named `portfolio`) is still publishing that port. List: `docker service ls`. Remove the stale one after confirming it’s safe: `docker service rm portfolio`, then run `./scripts/cluster-deploy.sh` again. With the current `docker-compose.yml` (no host `ports`), new deploys won’t grab `:3000` on the host.
 
 ### Option B: Vercel

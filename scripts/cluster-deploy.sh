@@ -62,12 +62,17 @@ else
     echo "  3. Or temporarily SKIP_PUSH=1 and set replicas=1 + manager placement (not recommended)" >&2
     exit 1
   fi
+  echo "    pushed digest:"
+  docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE" 2>/dev/null || docker inspect --format='{{.Id}}' "$IMAGE" 2>/dev/null || true
 fi
 
 echo "==> stack deploy (injects GITHUB_TOKEN from .env into service spec)"
 docker stack deploy -c docker-compose.yml "$STACK_NAME"
 
 echo "    SERVICE_NAME=$SERVICE_NAME"
+echo "    note: Swarm may print 'could not be accessed on a registry to record its digest'."
+echo "          After a successful docker push, that warning is usually harmless — workers"
+echo "          still pull :latest when tasks start; the rolling update below pins the rollout."
 
 echo "==> wait for swarm to settle (avoids 'update out of sequence')"
 sleep 8
