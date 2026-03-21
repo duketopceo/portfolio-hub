@@ -4,6 +4,10 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 ## [3.0.0] — 2026-03-21
 
+### Tooling (post-release)
+
+- **`scripts/cluster-deploy.sh`** — standardized Swarm deploy: `git reset` to `origin/main`, `docker compose build`, `docker stack deploy`, `docker service update`
+
 ### Highlights
 
 - **Cosmic Intelligence** rebrand across projects, activity, and detail pages

@@ -116,6 +116,17 @@ GITHUB_TOKEN=ghp_...   # fine-grained or classic PAT; enables private repos + st
 docker compose build portfolio && docker service update --force --image ghcr.io/duketopceo/portfolio-hub:latest portfolio
 ```
 
+### One-command deploy on the Swarm manager
+
+From the repo on the server (e.g. `~/portfolio-hub`), with `.env` beside `docker-compose.yml`:
+
+```bash
+chmod +x scripts/cluster-deploy.sh   # once
+./scripts/cluster-deploy.sh
+```
+
+This **fetch + `reset --hard origin/main`** (no stray server-side commits), **`docker compose build`**, **`docker stack deploy`** (so **`GITHUB_TOKEN`** is applied to the service), then **`docker service update --force`** to roll the new image. Override **`STACK_NAME`** / **`SERVICE_NAME`** if your stack differs.
+
 ### Option B: Vercel
 
 ```bash
