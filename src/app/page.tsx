@@ -1,10 +1,13 @@
 import { getEnrichedProjects } from "@/lib/github";
+import { sortProjectsByCompleteness } from "@/lib/project-completeness";
 import ConstellationNav from "@/components/ConstellationNav";
+import SolarSystemNav from "@/components/SolarSystemNav";
 
 export const revalidate = 3600;
 
 export default async function Home() {
   const all = await getEnrichedProjects();
+  const ordered = sortProjectsByCompleteness(all);
   const liveCount = all.filter((p) => p.liveUrl || p.demoUrl).length;
   const categories = new Set(all.map((p) => p.category));
 
@@ -37,11 +40,18 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── Solar orbit (completeness order) ───── */}
+      <SolarSystemNav projects={ordered} />
+
       {/* ── Constellation Navigation ─────────────── */}
       <section
         className="cosmic-page"
         style={{ paddingBottom: "clamp(1rem, 2vw, 1.5rem)" }}
+        aria-labelledby="explore-domain-heading"
       >
+        <h2 id="explore-domain-heading" className="detail-section-label">
+          Explore by domain
+        </h2>
         <ConstellationNav projects={all} />
       </section>
     </div>
