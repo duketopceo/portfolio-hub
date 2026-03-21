@@ -3,6 +3,18 @@ import { getEnrichedProjects } from "@/lib/github";
 
 export const revalidate = 3600;
 
+const IS_DEV = process.env.NODE_ENV === "development";
+
+function safeApiError(err: unknown): { message: string; detail?: string } {
+  if (err instanceof Error) {
+    return {
+      message: "Failed to fetch projects",
+      ...(IS_DEV && { detail: err.message }),
+    };
+  }
+  return { message: "Failed to fetch projects" };
+}
+
 /**
  * Public API endpoint for project data.
  * SECURITY: Strips sensitive fields — no repo URLs, no private flags, no owner info.
@@ -27,9 +39,13 @@ export async function GET() {
       })),
     });
   } catch (error) {
-    console.error("API error:", error);
+    const { message, detail } = safeApiError(error);
+    console.error("[api/repos] GET failed:", error);
     return NextResponse.json(
-      { error: "Failed to fetch projects" },
+      {
+        error: message,
+        ...(detail && { detail }),
+      },
       { status: 500 }
     );
   }

@@ -67,9 +67,7 @@ export default async function ProjectDetailPage({
       ? allProjects[projectIndex + 1]
       : null;
 
-  const readme = !project.private
-    ? await fetchReadme(project.repoName).catch(() => null)
-    : null;
+  const readme = !project.private ? await fetchReadme(project.repoName) : null;
 
   const meta = categoryMeta[project.category];
   const hasDemo = !!(project.liveUrl || project.demoUrl);

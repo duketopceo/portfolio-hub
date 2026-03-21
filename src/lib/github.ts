@@ -1,5 +1,13 @@
 import { GitHubRepo, EnrichedProject } from "./types";
 import { projectConfigs } from "@/data/projects";
+import {
+  classifyHttpStatus,
+  failureFromUnknown,
+  logGithubFailure,
+  parseGithubErrorBody,
+  rateLimitResetFromHeaders,
+  type GithubRequestFailure,
+} from "./github-errors";
 
 const GITHUB_API = "https://api.github.com";
 const GITHUB_USER = process.env.GITHUB_USER || "duketopceo";
@@ -8,7 +16,7 @@ const TOKEN = process.env.GITHUB_TOKEN;
 /**
  * Headers for GitHub API requests.
  */
-function headers(): HeadersInit {
+function authHeaders(): HeadersInit {
   const h: HeadersInit = {
     Accept: "application/vnd.github.v3+json",
     "User-Agent": "portfolio-hub",
@@ -19,8 +27,27 @@ function headers(): HeadersInit {
   return h;
 }
 
+async function handleFailedGithubResponse(
+  res: Response,
+  context: string
+): Promise<GithubRequestFailure> {
+  const bodySnippet = await parseGithubErrorBody(res);
+  const kind = classifyHttpStatus(res.status);
+  const rateLimitReset =
+    kind === "rate_limited" || res.status === 403
+      ? rateLimitResetFromHeaders(res)
+      : undefined;
+  return {
+    kind,
+    status: res.status,
+    message: `${context}: ${bodySnippet}`,
+    rateLimitReset,
+  };
+}
+
 /**
  * Fetch all repos for the configured GitHub user.
+ * On failure, logs a structured error and returns [] so curated data still renders.
  */
 export async function fetchAllRepos(): Promise<GitHubRepo[]> {
   const allRepos: GitHubRepo[] = [];
@@ -31,17 +58,43 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
       ? `${GITHUB_API}/user/repos?per_page=100&page=${page}&affiliation=owner&sort=updated`
       : `${GITHUB_API}/users/${GITHUB_USER}/repos?per_page=100&page=${page}&sort=updated`;
 
-    const res = await fetch(url, {
-      headers: headers(),
-      next: { revalidate: 3600 },
-    });
-
-    if (!res.ok) {
-      console.error(`GitHub API error: ${res.status} ${res.statusText}`);
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        headers: authHeaders(),
+        next: { revalidate: 3600 },
+      });
+    } catch (err) {
+      const failure = failureFromUnknown(`fetchAllRepos page ${page}`, err);
+      logGithubFailure("fetchAllRepos", failure);
       break;
     }
 
-    const repos: GitHubRepo[] = await res.json();
+    if (!res.ok) {
+      const failure = await handleFailedGithubResponse(res, `fetchAllRepos page ${page}`);
+      logGithubFailure("fetchAllRepos", failure);
+      break;
+    }
+
+    let repos: GitHubRepo[];
+    try {
+      repos = (await res.json()) as GitHubRepo[];
+    } catch {
+      logGithubFailure("fetchAllRepos", {
+        kind: "parse",
+        message: "Invalid JSON in repos list response",
+      });
+      break;
+    }
+
+    if (!Array.isArray(repos)) {
+      logGithubFailure("fetchAllRepos", {
+        kind: "parse",
+        message: "Expected array in repos list response",
+      });
+      break;
+    }
+
     if (repos.length === 0) break;
 
     allRepos.push(...repos);
@@ -58,16 +111,39 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
  */
 export async function fetchReadme(repoName: string): Promise<string | null> {
   const url = `${GITHUB_API}/repos/${GITHUB_USER}/${repoName}/readme`;
-  const res = await fetch(url, {
-    headers: {
-      ...headers(),
-      Accept: "application/vnd.github.html+json",
-    },
-    next: { revalidate: 3600 },
-  });
 
-  if (!res.ok) return null;
-  return res.text();
+  try {
+    const res = await fetch(url, {
+      headers: {
+        ...authHeaders(),
+        Accept: "application/vnd.github.html+json",
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!res.ok) {
+      if (res.status !== 404) {
+        const failure = await handleFailedGithubResponse(
+          res,
+          `fetchReadme ${repoName}`
+        );
+        logGithubFailure("fetchReadme", failure);
+      }
+      return null;
+    }
+
+    try {
+      return await res.text();
+    } catch (err) {
+      const failure = failureFromUnknown(`fetchReadme ${repoName} body`, err);
+      logGithubFailure("fetchReadme", failure);
+      return null;
+    }
+  } catch (err) {
+    const failure = failureFromUnknown(`fetchReadme ${repoName}`, err);
+    logGithubFailure("fetchReadme", failure);
+    return null;
+  }
 }
 
 /**
