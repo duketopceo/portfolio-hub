@@ -229,3 +229,22 @@ If you really want `docker run --network traefik-public`, the network must be cr
 - [ ] LB healthcheck uses **`/api/health`**, not only `/api/repos`.
 - [ ] **Cloudflare:** run `./scripts/audit-cloudflare.sh` — SSL mode and DNS point at the real origin; zone not paused.
 - [ ] No duplicate/conflicting routers for the same Host.
+
+---
+
+## 9. Resolved: 2026-03-21 — Cloudflare Tunnel + Swarm ingress
+
+**Root cause:** The Cloudflare Tunnel (cloudflared on cluster-1-master) routes
+`luke-the-duke.com` → `http://localhost:3000`. The docker-compose.yml had no
+published host port (designed for Traefik-only routing), and Swarm scheduled both
+replicas to cluster2. Nothing was listening on port 3000 on the manager node where
+cloudflared runs → **502**.
+
+**Fix:** Added `ports: ["3000:3000"]` to docker-compose.yml. Swarm ingress routing
+mesh makes port 3000 reachable on **every** node in the cluster, so cloudflared
+can reach the app regardless of task placement.
+
+**Key insight:** `study.luke-the-duke.com` was unaffected because it runs as a
+standalone docker-compose stack (not Swarm) with its own Traefik (`s65-traefik`)
+on port 8065, directly on the manager. The tunnel routes the study subdomain to
+`http://localhost:8065`.
