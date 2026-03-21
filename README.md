@@ -2,6 +2,8 @@
 
 Meta-portfolio site that aggregates GitHub repos into a curated, categorized project showcase. Built with Next.js 16, TypeScript, and Tailwind CSS.
 
+**Current release:** `v3.0.0` (see [CHANGELOG.md](CHANGELOG.md)). Docker: `ghcr.io/duketopceo/portfolio-hub:latest` and `:3.0.0` when the `v3.0.0` tag is pushed.
+
 ## Architecture
 
 ```

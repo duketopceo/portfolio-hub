@@ -3,6 +3,7 @@ name: Build & Deploy Portfolio Hub
 on:
   push:
     branches: [main]
+    tags: ["v*.*.*"]
   schedule:
     # Rebuild daily at 6am UTC to refresh GitHub data via ISR
     - cron: "0 6 * * *"
@@ -41,7 +42,8 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=sha,prefix=
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=semver,pattern={{version}}
 
       - name: Build and push
         uses: docker/build-push-action@v5
