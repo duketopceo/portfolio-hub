@@ -13,6 +13,11 @@
 - Verify with: `git ls-files | grep -E '\.env$|\.env\.local'` — should print **nothing**.
 - If a token was ever committed, **revoke it** in GitHub → Settings → Developer settings → Tokens and create a new one.
 
+## `CLOUDFLARE_API_TOKEN` (optional)
+
+- **Not used by the Next.js app.** Only for **`scripts/audit-cloudflare.sh`** (DNS + SSL audit from your laptop or a manager node).
+- Use a **restricted** API token: Zone Read, DNS Read, Zone Settings Read. Do not commit the real value.
+
 ## Files
 
 | File           | Commit to git? | Purpose                                      |

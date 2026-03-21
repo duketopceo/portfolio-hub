@@ -112,6 +112,8 @@ The `docker-compose.yml` includes:
 
 Usually Traefik can’t reach the app container (wrong Docker network, unhealthy LB, or **Host** mismatch).
 
+**Cloudflare audit (API + optional tunnel):** with a read-only API token, run **`./scripts/audit-cloudflare.sh`** (see [docs/AUDIT-502.md §4](docs/AUDIT-502.md)) — DNS, SSL mode, paused zone, `cloudflared tunnel list` if installed.
+
 1. **`traefik.docker.network=traefik-public`** — required in `docker-compose.yml` when the service joins `traefik-public`. Without it, Traefik often routes to the wrong interface → **502**. Redeploy after pulling latest: `./scripts/cluster-deploy.sh`.
 2. **Traefik `Host()` rule** must match the browser hostname (`luke-the-duke.com` / `www`).
 3. **Tasks running:** `docker service ps portfolio_portfolio --no-trunc` — want **Running**, not **Rejected**.

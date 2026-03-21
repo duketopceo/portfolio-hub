@@ -114,7 +114,26 @@ curl -fsS https://luke-the-duke.com/api/health
 
 ---
 
-## 4. Commands (copy-paste)
+## 4. Cloudflare CLI audit (DNS + SSL + tunnel)
+
+Use the repo script (HTTP API via `curl`, optional `cloudflared` / `wrangler` if installed):
+
+1. Create an **API token** (Dashboard → My Profile → API Tokens): **Zone → Zone Read**, **DNS Read**, **Zone Settings Read** (minimum for this audit).
+2. Run from the repo root (or any machine with `curl` + `python3`):
+
+```bash
+export CLOUDFLARE_API_TOKEN='...'
+./scripts/audit-cloudflare.sh
+# Optional: DOMAIN=example.com ./scripts/audit-cloudflare.sh
+```
+
+It prints **zone status**, **DNS records** (apex + subdomains under your zone), **SSL / TLS** settings (`ssl`, `always_use_https`, `min_tls_version`, etc.), optional **tunnel list**, and a **quick HTTPS** probe to `https://<DOMAIN>/api/health`.
+
+**Interpretation:** **502** with Cloudflare orange-cloud often means the **origin IP** is wrong, Traefik is down, or **TLS** between Cloudflare and origin fails (e.g. SSL mode **Full (strict)** without a valid cert on Traefik). **DNS-only** (grey cloud) bypasses the proxy for testing.
+
+---
+
+## 5. Commands (copy-paste)
 
 ```bash
 # Service state
@@ -134,13 +153,13 @@ docker run --rm --network "container:$TID" curlimages/curl:latest -sS -i "http:/
 
 ---
 
-## 5. Optional: attachable overlay (advanced)
+## 6. Optional: attachable overlay (advanced)
 
 If you really want `docker run --network traefik-public`, the network must be created with **`--attachable`** (often done when the network is first created). Recreating a production network affects every service using it — not recommended without a maintenance window. Prefer **`docker exec`** into a task, or **`--network container:$TID`** with the **VIP** (§2.A), not Swarm hostnames from Traefik’s resolver.
 
 ---
 
-## 6. Repo items outside this repository
+## 7. Repo items outside this repository
 
 - **Traefik** dynamic/static YAML (entrypoints, providers, networks).
 - **Cloudflare** DNS records, SSL mode, tunnel config.
@@ -148,11 +167,11 @@ If you really want `docker run --network traefik-public`, the network must be cr
 
 ---
 
-## 7. Summary checklist
+## 8. Summary checklist
 
 - [ ] `traefik.docker.network=traefik-public` deployed.
 - [ ] `docker exec` into a task: `http://127.0.0.1:3000/api/health` returns **200**; optional VIP curl from Traefik’s ns (§2.A) also **200** if you need to mimic Traefik’s routing without Swarm DNS.
 - [ ] Traefik label names match **your** Traefik config.
 - [ ] LB healthcheck uses **`/api/health`**, not only `/api/repos`.
-- [ ] Cloudflare SSL mode and DNS point at the real origin path.
+- [ ] **Cloudflare:** run `./scripts/audit-cloudflare.sh` — SSL mode and DNS point at the real origin; zone not paused.
 - [ ] No duplicate/conflicting routers for the same Host.
