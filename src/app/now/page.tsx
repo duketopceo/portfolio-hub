@@ -24,6 +24,27 @@ export default async function NowPage() {
         </p>
       </header>
 
+      <section
+        className="max-w-xl mb-12"
+        aria-label="Spotify — current track"
+      >
+        <p className="projects-page-header__eyebrow mb-3">ON REPEAT</p>
+        <div className="cosmic-spotify-embed overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-accent)_12%,transparent)]">
+          <iframe
+            data-testid="embed-iframe"
+            style={{ borderRadius: 12 }}
+            src="https://open.spotify.com/embed/track/4JXppv83zXXt1tNs4MsXd6?utm_source=generator"
+            width="100%"
+            height={352}
+            frameBorder={0}
+            allowFullScreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+            title="Spotify track embed"
+          />
+        </div>
+      </section>
+
       {!hasGitHubDates && recent.length > 0 && (
         <div className="cosmic-callout cosmic-callout--warning" role="status">
           <strong className="cosmic-callout__strong">

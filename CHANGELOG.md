@@ -7,7 +7,9 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 ### Tooling (post-release)
 
 - **`scripts/cluster-deploy.sh`** — standardized Swarm deploy: `git reset` to `origin/main`, `docker compose build`, `docker stack deploy`, `docker service update`
+- **`scripts/diagnose-502.sh`** / **`scripts/audit-cloudflare.sh`** — Swarm/Traefik/VIP checks + optional Cloudflare API audit; **`docs/AUDIT-502.md`** — overlay attachability, Traefik must join `traefik-public` via stack deploy
 - **Project dossier UI** — `components/dossier/*` + `.dossier-page` styles: same hero, section surfaces, two-column grid, and prev/next footer on every slug; classified banner copy cleaned up
+- **`/now`** — optional Spotify track embed (“ON REPEAT”)
 
 ### Highlights
 

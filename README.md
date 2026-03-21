@@ -16,7 +16,7 @@ portfolio-hub/
 │   │   ├── projects/
 │   │   │   ├── page.tsx        # /projects — All projects with filters
 │   │   │   └── [slug]/page.tsx # /projects/:slug — Project detail + README
-│   │   ├── now/page.tsx        # /now — Recently active projects
+│   │   ├── now/page.tsx        # /now — Recent activity + optional Spotify embed
 │   │   └── api/repos/route.ts  # /api/repos — JSON API
 │   ├── components/             # React components
 │   │   ├── dossier/            # Shared /projects/[slug] layout (hero, sections, footer nav)
@@ -33,6 +33,7 @@ portfolio-hub/
 │       └── utils.ts            # Date formatting, colors, helpers
 ├── Dockerfile                  # Multi-stage Docker build
 ├── docker-compose.yml          # Swarm + Traefik deployment
+├── scripts/                    # cluster-deploy.sh, diagnose-502.sh, audit-cloudflare.sh
 └── .github/workflows/deploy.yml # CI/CD pipeline
 ```
 
@@ -103,14 +104,16 @@ The `docker-compose.yml` includes:
 - 2 replicas with rolling updates
 - **No published host ports** — Traefik talks to the container on `traefik-public` (port 3000 internal only). Avoids Swarm errors like `port '3000' is already in use`.
 - Traefik routing for **`luke-the-duke.com`** and **`www.luke-the-duke.com`** (edit `docker-compose.yml` if you use another hostname)
-- Health check on `/api/repos` (image includes `wget` so Swarm healthchecks work on Alpine)
+- Docker **`HEALTHCHECK`** and Traefik LB probe on **`/api/health`** (lightweight; image includes `wget`)
 - Connection to `traefik-public` overlay network
+
+**Traefik itself** must run as a **Swarm stack service** on **`traefik-public`** (same external overlay). A Traefik container that only sits on a compose **bridge** cannot reach Swarm backends → **502**. You cannot fix that with `docker network connect` if the overlay is non-attachable. See **[docs/AUDIT-502.md](docs/AUDIT-502.md) §2.A** for an example `docker stack deploy` fragment.
 
 **Local Docker with a host port:** `docker compose -f docker-compose.yml -f docker-compose.local.yml up --build` → http://localhost:3000
 
 ### Cloudflare shows **502 Bad Gateway**
 
-Usually Traefik can’t reach the app container (wrong Docker network, unhealthy LB, or **Host** mismatch).
+Usually Traefik can’t reach the app container (wrong Docker network, unhealthy LB, or **Host** mismatch). **Confirm:** `docker inspect <traefik_container>` lists network **`traefik-public`** — not only a project bridge (e.g. `something_something`).
 
 **Cloudflare audit (API + optional tunnel):** with a read-only API token, run **`./scripts/audit-cloudflare.sh`** (see [docs/AUDIT-502.md §4](docs/AUDIT-502.md)) — DNS, SSL mode, paused zone, `cloudflared tunnel list` if installed.
 
