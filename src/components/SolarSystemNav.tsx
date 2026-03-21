@@ -1,9 +1,29 @@
 "use client";
 
-import { useState, useCallback, useEffect, type KeyboardEvent } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  type KeyboardEvent,
+} from "react";
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import { categoryMeta } from "@/data/projects";
+
+/** Ellipse radii (rem) — wide orbit, perspective-ish; mobile tightened via hook */
+function useOrbitRadiiRem() {
+  const [radii, setRadii] = useState({ rx: 12.5, ry: 6.25 });
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const apply = () =>
+      setRadii(mq.matches ? { rx: 9.25, ry: 4.6 } : { rx: 12.5, ry: 6.25 });
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  return radii;
+}
 
 interface SolarSystemNavProps {
   projects: EnrichedProject[];
@@ -21,6 +41,17 @@ const catColors: Record<string, string> = {
 export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
   const [focusIndex, setFocusIndex] = useState(0);
   const n = projects.length;
+  const { rx, ry } = useOrbitRadiiRem();
+
+  const orbitOffsets = useMemo(() => {
+    return Array.from({ length: n }, (_, i) => {
+      const theta = -Math.PI / 2 + (2 * Math.PI * i) / Math.max(n, 1);
+      return {
+        x: rx * Math.cos(theta),
+        y: ry * Math.sin(theta),
+      };
+    });
+  }, [n, rx, ry]);
 
   useEffect(() => {
     setFocusIndex((i) => {
@@ -78,12 +109,47 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
       </p>
 
       <div className="solar-system__stage">
-        <div className="solar-sun" aria-hidden />
-        <div className="solar-orbit-ring" aria-hidden />
+        <div className="solar-nebula" aria-hidden />
+        <div className="solar-nebula solar-nebula--accent" aria-hidden />
+
+        <div className="solar-orbit-decor" aria-hidden>
+          <svg
+            className="solar-orbit-decor__svg"
+            viewBox="0 0 400 260"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <ellipse
+              className="solar-orbit-line solar-orbit-line--a"
+              cx="200"
+              cy="130"
+              rx="188"
+              ry="94"
+            />
+            <ellipse
+              className="solar-orbit-line solar-orbit-line--b"
+              cx="200"
+              cy="130"
+              rx="148"
+              ry="74"
+            />
+            <ellipse
+              className="solar-orbit-line solar-orbit-line--c"
+              cx="200"
+              cy="130"
+              rx="108"
+              ry="54"
+            />
+          </svg>
+        </div>
+
+        <div className="solar-sun-stack" aria-hidden>
+          <div className="solar-sun solar-sun--halo" />
+          <div className="solar-sun solar-sun--core" />
+        </div>
 
         <div className="solar-planets">
           {projects.map((p, i) => {
-            const deg = -90 + (360 / n) * i;
+            const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
             const isFocused = i === focusIndex;
             const c = catColors[p.category] || "#2DD4BF";
             return (
@@ -91,7 +157,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
                 key={p.slug}
                 className="solar-planet-arm"
                 style={{
-                  transform: `rotate(${deg}deg) translateY(calc(-1 * var(--solar-orbit-r))) rotate(${-deg}deg)`,
+                  transform: `translate(${x}rem, ${y}rem)`,
                 }}
               >
                 <Link
