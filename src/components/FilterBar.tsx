@@ -142,7 +142,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
       </p>
 
       {/* Grid — 3-col desktop, 2-col tablet, 1-col mobile */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         {filtered.map((project, i) => (
           <div
             key={project.slug}

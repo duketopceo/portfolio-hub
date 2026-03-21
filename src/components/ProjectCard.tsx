@@ -21,7 +21,6 @@ const catColors: Record<string, string> = {
 
 export default function ProjectCard({
   project,
-  featured = false,
 }: ProjectCardProps) {
   const meta = categoryMeta[project.category];
   const hasDemo = !!(project.liveUrl || project.demoUrl);
@@ -32,88 +31,81 @@ export default function ProjectCard({
   const accentColor = catColors[project.category] || "#2DD4BF";
 
   return (
-    <div
+    <article
       className="cosmic-project-card group relative"
       style={{ "--card-accent": accentColor } as React.CSSProperties}
     >
       <Link
         href={`/projects/${project.slug}`}
-        className="flex flex-col flex-1 p-6"
+        className="cosmic-project-card__main flex flex-col flex-1"
         style={{ textDecoration: "none" }}
       >
-        {/* Top row: icon + category + date */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="cosmic-card-icon">
-              {getCategoryIcon(meta?.icon || "globe", "w-3.5 h-3.5")}
+        <header className="cosmic-project-card__top">
+          <div className="cosmic-project-card__identity">
+            <div className="cosmic-card-icon" aria-hidden>
+              {getCategoryIcon(meta?.icon || "globe", "w-4 h-4")}
             </div>
-            <span className="cosmic-card-category">
-              {meta?.label || project.category}
-            </span>
-            {project.private && (
-              <LockIcon className="w-3 h-3 opacity-40" />
-            )}
+            <div className="cosmic-project-card__labels">
+              <span className="cosmic-card-category">
+                {meta?.label || project.category}
+              </span>
+              {project.private && (
+                <LockIcon className="cosmic-project-card__lock w-3.5 h-3.5 opacity-50" />
+              )}
+            </div>
           </div>
           {project.lastUpdated && (
-            <span className="cosmic-card-date">
+            <time className="cosmic-card-date" dateTime={project.lastUpdated}>
               {formatDate(project.lastUpdated)}
-            </span>
+            </time>
           )}
-        </div>
+        </header>
 
-        {/* Title */}
-        <h3 className="cosmic-card-title group-hover:text-[var(--color-accent)] transition-colors duration-150">
+        <h3 className="cosmic-card-title group-hover:text-[var(--color-accent)] transition-colors duration-200">
           {project.displayName}
         </h3>
 
-        {/* Description — two lines */}
-        <p className="cosmic-card-desc line-clamp-2">
-          {project.tagline}
-        </p>
+        <p className="cosmic-card-desc line-clamp-3">{project.tagline}</p>
 
-        {/* Footer row */}
-        <div className="flex items-center gap-3">
-          {project.language && (
-            <span className="cosmic-card-lang">
-              <span
-                className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{ backgroundColor: langColor || "#6B7280" }}
-              />
-              {project.language}
-            </span>
-          )}
-          {project.stars > 0 && (
-            <span
-              className="flex items-center gap-1"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "11px",
-                color: "var(--color-text-faint)",
-              }}
-            >
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 1l2.47 5.01L18 6.86l-4 3.9.94 5.5L10 13.47l-4.94 2.79.94-5.5-4-3.9 5.53-.85L10 1z" />
-              </svg>
-              {project.stars}
-            </span>
-          )}
-          {hasDemo && (
-            <span className="cosmic-card-live">
-              <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
-                style={{ background: "var(--color-live)" }}
-              />
-              live
-            </span>
-          )}
-          <span className="cosmic-card-arrow opacity-0 group-hover:opacity-100 transition-opacity">
-            →
+        <div className="cosmic-project-card__meta" aria-label="Project metadata">
+          <div className="cosmic-project-card__pills">
+            {project.language && (
+              <span className="cosmic-card-pill">
+                <span
+                  className="cosmic-card-pill__dot"
+                  style={{ backgroundColor: langColor || "#6B7280" }}
+                />
+                {project.language}
+              </span>
+            )}
+            {project.stars > 0 && (
+              <span className="cosmic-card-pill cosmic-card-pill--muted">
+                <svg
+                  className="w-3.5 h-3.5 opacity-70"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden
+                >
+                  <path d="M10 1l2.47 5.01L18 6.86l-4 3.9.94 5.5L10 13.47l-4.94 2.79.94-5.5-4-3.9 5.53-.85L10 1z" />
+                </svg>
+                {project.stars}
+              </span>
+            )}
+            {hasDemo && (
+              <span className="cosmic-card-pill cosmic-card-pill--live">
+                <span className="cosmic-card-pill__pulse" />
+                Live
+              </span>
+            )}
+          </div>
+          <span className="cosmic-project-card__chevron" aria-hidden>
+            View
+            <span className="cosmic-project-card__chevron-arrow">→</span>
           </span>
         </div>
       </Link>
 
-      {/* Demo link — separate client component */}
       {hasDemo && demoUrl && <DemoLink url={demoUrl} />}
-    </div>
+    </article>
   );
 }
