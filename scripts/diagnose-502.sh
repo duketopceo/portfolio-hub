@@ -128,7 +128,8 @@ if [[ -n "${TR_NAME_EARLY:-}" ]]; then
   if [[ -n "${PORTFOLIO_CID:-}" ]]; then
     run "docker inspect \"$PORTFOLIO_CID\" --format 'Portfolio task networks: {{range \$k, \$v := .NetworkSettings.Networks}}{{\$k}}={{\$v.IPAddress}} {{end}}'"
   fi
-  echo "    If Traefik is missing traefik-public but portfolio has it → 502 / LB unhealthy until Traefik joins that overlay."
+  echo "    If Traefik is missing traefik-public but portfolio has it → 502 until Traefik is on that overlay."
+  echo "    docker network connect traefik-public <container> usually FAILS (overlay not attachable) — redeploy Traefik with docker stack deploy + networks: [traefik-public]. See docs/AUDIT-502.md §2.A."
 else
   echo "No Traefik container found."
 fi

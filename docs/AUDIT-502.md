@@ -34,6 +34,42 @@ Browser → **Cloudflare edge** → **your origin** (public IP / tunnel) → **T
 **Traefik must be on the same overlay:** The label tells Traefik **which network to use to reach this service**, but the **Traefik container/service** must also be attached to **`traefik-public`**. If Traefik is only on `bridge` or a different network, connections to the Swarm VIP (`10.0.x.x:3000`) can **time out** while `docker exec` into the app still returns **200** on `127.0.0.1` → Cloudflare **502**. Check:  
 `docker inspect <traefik_container> --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}={{$v.IPAddress}} {{end}}'` — expect **`traefik-public`**.
 
+**If Traefik only shows a compose bridge (e.g. `something_something=172.20.x.x`) and `docker network connect traefik-public <container>` errors with *network … not manually attachable*:**  
+That is expected. Swarm **overlay** networks are usually **not attachable**, so you **cannot** glue an existing `docker compose` Traefik container onto `traefik-public` by hand. **Redeploy Traefik as a Swarm service** that declares the same external network (see fragment below). Until then, Traefik cannot reach the portfolio VIP on the overlay → **502**.
+
+**Minimal Traefik on Swarm (manager / same repo host):** use `docker stack deploy` (not `docker compose up` for production Traefik) so the task joins the overlay:
+
+```yaml
+# traefik-stack.yml (example — adjust ports, volumes, command to match your flags)
+services:
+  traefik:
+    image: traefik:v2.11
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik-public"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # + your cert resolver / API entrypoints
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - traefik-public
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager   # or the node that has your public IP / 443 published
+networks:
+  traefik-public:
+    external: true
+```
+
+Then: `docker stack deploy -c traefik-stack.yml traefik` (name as you like). **Retire** the old standalone `s65-traefik` container once the new service is healthy, so only one Traefik binds 443.
+
 **Verify (on a Swarm manager):** Swarm overlay networks are usually **not** `attachable`, so `docker run --network traefik-public` fails with *network not manually attachable*. Use the commands below.
 
 **Why not `curl http://portfolio:3000` from Traefik’s network namespace?**  
@@ -187,7 +223,7 @@ If you really want `docker run --network traefik-public`, the network must be cr
 
 ## 8. Summary checklist
 
-- [ ] `traefik.docker.network=traefik-public` deployed.
+- [ ] `traefik.docker.network=traefik-public` deployed on **portfolio**, and **Traefik’s own task** is on **`traefik-public`** (not only a compose bridge — `docker network connect` won’t work if overlay is non-attachable).
 - [ ] `docker exec` into a task: `http://127.0.0.1:3000/api/health` returns **200**; optional VIP curl from Traefik’s ns (§2.A) also **200** if you need to mimic Traefik’s routing without Swarm DNS.
 - [ ] Traefik label names match **your** Traefik config.
 - [ ] LB healthcheck uses **`/api/health`**, not only `/api/repos`.
