@@ -33,13 +33,12 @@ services:
         - "traefik.http.routers.portfolio.entrypoints=websecure"
         - "traefik.http.routers.portfolio.tls.certresolver=cloudflare"
         - "traefik.http.services.portfolio.loadbalancer.server.port=3000"
-        # Traefik LB healthcheck (optional): if all backends fail here, Traefik returns 502.
-        # Use a fast path; container still has Docker healthcheck below.
-        - "traefik.http.services.portfolio.loadbalancer.healthcheck.path=/api/repos"
+        # Traefik LB healthcheck: use /api/health (no GitHub). If all checks fail → 502.
+        - "traefik.http.services.portfolio.loadbalancer.healthcheck.path=/api/health"
         - "traefik.http.services.portfolio.loadbalancer.healthcheck.interval=15s"
         - "traefik.http.services.portfolio.loadbalancer.healthcheck.timeout=5s"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/repos"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 5s
       retries: 3

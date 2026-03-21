@@ -116,7 +116,7 @@ Usually Traefik can’t reach the app container (wrong Docker network, unhealthy
 2. **Traefik `Host()` rule** must match the browser hostname (`luke-the-duke.com` / `www`).
 3. **Tasks running:** `docker service ps portfolio_portfolio --no-trunc` — want **Running**, not **Rejected**.
 4. **Reachability on `traefik-public`:** from any container on that network, the app should answer on port 3000:
-   `docker run --rm --network traefik-public curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" http://portfolio_portfolio:3000/api/repos`  
+   `docker run --rm --network traefik-public curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" http://portfolio_portfolio:3000/api/health`  
    Expect **200**. If this fails, Traefik will 502.
 5. **Logs:** `docker service logs portfolio_portfolio --tail 80` and Traefik logs.
 6. **Cloudflare SSL/TLS:** **Full** or **Full (strict)** toward origin; try **DNS only** (grey cloud) briefly to see if the issue is Cloudflare-specific.
@@ -152,6 +152,8 @@ This **fetch + `reset --hard origin/main`**, **`docker compose build`**, **`dock
 **Swarm message `image ... could not be accessed on a registry to record its digest`:** common during `docker stack deploy` even when **`docker push`** just succeeded. The manager sometimes doesn’t pin the digest in the spec; each node still resolves **`latest`** when starting tasks. Safe to ignore if push completed and **`docker service ps`** shows tasks **Running**.
 
 **If `docker stack deploy` fails with “port 3000 already in use”:** an old service (often named `portfolio`) is still publishing that port. List: `docker service ls`. Remove the stale one after confirming it’s safe: `docker service rm portfolio`, then run `./scripts/cluster-deploy.sh` again. With the current `docker-compose.yml` (no host `ports`), new deploys won’t grab `:3000` on the host.
+
+**502 Bad Gateway (full audit):** **[docs/AUDIT-502.md](docs/AUDIT-502.md)** — Traefik network, healthchecks, Cloudflare TLS, DNS vs tunnel.
 
 ### Option B: Vercel
 
