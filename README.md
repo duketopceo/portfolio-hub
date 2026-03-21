@@ -19,6 +19,7 @@ portfolio-hub/
 │   │   ├── now/page.tsx        # /now — Recently active projects
 │   │   └── api/repos/route.ts  # /api/repos — JSON API
 │   ├── components/             # React components
+│   │   ├── dossier/            # Shared /projects/[slug] layout (hero, sections, footer nav)
 │   │   ├── Header.tsx          # Sticky nav + dark mode toggle
 │   │   ├── Footer.tsx
 │   │   ├── ProjectCard.tsx     # Reusable project card

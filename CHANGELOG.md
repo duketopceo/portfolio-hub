@@ -7,6 +7,7 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 ### Tooling (post-release)
 
 - **`scripts/cluster-deploy.sh`** — standardized Swarm deploy: `git reset` to `origin/main`, `docker compose build`, `docker stack deploy`, `docker service update`
+- **Project dossier UI** — `components/dossier/*` + `.dossier-page` styles: same hero, section surfaces, two-column grid, and prev/next footer on every slug; classified banner copy cleaned up
 
 ### Highlights
 

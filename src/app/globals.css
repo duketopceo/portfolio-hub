@@ -1724,6 +1724,185 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
+   PROJECT DOSSIER — standard UI/UX for every /projects/[slug]
+   ═══════════════════════════════════════════════════════ */
+
+.dossier-page {
+  --dossier-accent: var(--color-accent);
+}
+
+.dossier-page__hero-band {
+  background: var(--color-surface);
+  border-top: 2px solid color-mix(in srgb, var(--dossier-accent) 22%, transparent);
+  border-bottom: 1px solid var(--color-border);
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+}
+
+.dossier-page__hero-icon {
+  width: 56px;
+  height: 56px;
+  background: color-mix(in srgb, var(--dossier-accent) 12%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--dossier-accent) 28%, transparent);
+}
+
+.dossier-page__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.dossier-page__tagline {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  max-width: 600px;
+}
+
+.dossier-page__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.dossier-page__pill--muted {
+  color: var(--color-text-faint);
+  background: var(--color-surface-3);
+}
+
+.dossier-page__pill--live {
+  color: var(--color-live);
+  background: rgba(52, 211, 153, 0.06);
+}
+
+.dossier-page__pill--border {
+  font-size: 11px;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-faint);
+}
+
+/* Content surfaces — same padding on every slug */
+.dossier-surface--glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+@media (min-width: 640px) {
+  .dossier-surface--glass {
+    padding: 1.75rem;
+  }
+}
+
+.dossier-surface--plain .detail-section-label {
+  margin-bottom: 0.75rem;
+}
+
+.dossier-page__main-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.dossier-page__two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2rem);
+  padding-top: clamp(1.25rem, 2vw, 2rem);
+  padding-bottom: clamp(1.25rem, 2vw, 2rem);
+}
+
+.dossier-page__aside {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .dossier-page__two-col {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: start;
+  }
+}
+
+.dossier-page__footer-nav {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid var(--color-border);
+  padding: clamp(0.75rem, 2vw, 1.25rem) 0;
+}
+
+.dossier-page__footer-nav .detail-nav-link {
+  flex: 1 1 45%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dossier-page__nav-link--next {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.dossier-page__nav-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.dossier-page__nav-text--next {
+  align-items: flex-end;
+}
+
+.dossier-page__nav-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.dossier-page__nav-title {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: min(42vw, 14rem);
+}
+
+@media (min-width: 640px) {
+  .dossier-page__nav-title {
+    max-width: min(36vw, 18rem);
+  }
+}
+
+.dossier-page__nav-arrow {
+  font-size: 13px;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+.dossier-page__nav-spacer {
+  min-width: 2rem;
+}
+
+/* ═══════════════════════════════════════════════════════
    DEMO FRAME
    ═══════════════════════════════════════════════════════ */
 
