@@ -1,8 +1,10 @@
 # Docker Compose for Swarm + local dev
 # Usage:
 #   Swarm:  docker stack deploy -c docker-compose.yml portfolio
-#           (No host ports — Traefik reaches the app on traefik-public:3000.)
 #   Local:  docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+#
+# Port 3000 is published via Swarm ingress routing mesh so that cloudflared
+# on the manager node can reach the app regardless of which node runs the task.
 services:
   portfolio:
     build:
@@ -10,6 +12,8 @@ services:
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
     image: ghcr.io/duketopceo/portfolio-hub:latest
+    ports:
+      - "3000:3000"
     environment:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - NODE_ENV=production
