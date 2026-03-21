@@ -5,7 +5,7 @@ import { formatDate } from "@/lib/utils";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Activity — Cosmic Intelligence",
+  title: "Activity",
   description:
     "Most recently active projects, updated automatically from commit history.",
 };

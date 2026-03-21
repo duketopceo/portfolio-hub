@@ -4,7 +4,7 @@ import FilterBar from "@/components/FilterBar";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Projects — Cosmic Intelligence",
+  title: "Projects — Catalog",
   description:
     "Browse all projects: AI automation, trading systems, OSINT platforms, infrastructure, and web apps.",
 };

@@ -4,6 +4,8 @@ Meta-portfolio site that aggregates GitHub repos into a curated, categorized pro
 
 **Current release:** `v3.0.0` (see [CHANGELOG.md](CHANGELOG.md)). Docker: `ghcr.io/duketopceo/portfolio-hub:latest` and `:3.0.0` when the `v3.0.0` tag is pushed.
 
+**Browser tab titles** use **Luke the Duke** as the primary name (see `layout.tsx` `title.template`). **Cosmic Intelligence** remains the in-app product brand (header, footer, hero).
+
 ## Architecture
 
 ```

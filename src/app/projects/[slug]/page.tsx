@@ -42,7 +42,7 @@ export async function generateMetadata({
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "Project Not Found" };
   return {
-    title: `${project.displayName} — Cosmic Intelligence`,
+    title: project.displayName,
     description: project.tagline,
   };
 }

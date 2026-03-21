@@ -25,6 +25,8 @@
 | 18 | **Project detail — public: observatory + demo frame; private: classified dossier** | ⬜ Pending |
 | 19 | **Activity (/now) page — cosmic timeline** | ⬜ Pending |
 | 20 | **`projects.ts` data — add businessContext, scopeAndScale, engineeringDecisions per private repo** | ⬜ Pending |
+| 21 | **Live demos — reliable previews (embeds, fallbacks, health)** | ⬜ Pending — see §21 |
+| 22 | **Document title / SEO — “Luke the Duke” primary in `<title>`; Cosmic as in-site brand** | ✅ Done |
 
 ---
 
@@ -1397,6 +1399,45 @@ Example data for a private project:
 
 ---
 
+## 21. Live demos & embeds (future implementation)
+
+**Problem:** Many project “live demo” links do not render inside the site: iframes are blocked by `X-Frame-Options` / `Content-Security-Policy: frame-ancestors`, sites require auth, or URLs are stale. Today `DemoEmbed` only shows a real iframe when `embeddable: true` in `projects.ts`; otherwise users get a placeholder or broken experience.
+
+**Goal:** Every public project with a demo should offer a **reliable** preview path: open in new tab always works; in-page preview should degrade gracefully with a clear explanation and visual.
+
+### Planned work (implement in a future milestone)
+
+1. **Per-project demo strategy in `projects.ts` / `ProjectConfig`**
+   - `demoMode: "iframe" | "screenshot" | "link-only" | "video"`
+   - Optional `demoScreenshot?: string` (path under `public/demos/…` or remote URL)
+   - Optional `demoVideoUrl?: string` (short loop hosted on R2/YouTube unlisted)
+   - `embeddable` stays as the iframe gate; audit every `liveUrl` / `demoUrl` and set realistic flags.
+
+2. **`DemoEmbed` / detail page UX**
+   - If iframe blocked or fails `onError`: show **screenshot + “Open in new tab”** CTA (no empty frame).
+   - **Link-only:** large hero preview card using screenshot or OG image fetch (server-side capture job optional).
+   - Loading / timeout state (e.g. 8s) then fallback to screenshot or CTA-only.
+   - Optional **“Preview unavailable”** copy explaining third-party framing policy.
+
+3. **Automation (optional)**
+   - CI or script: Playwright (or similar) **capture** `public/demos/{slug}.webp` on release; commit or upload to CDN.
+   - **Health check** workflow: ping `liveUrl` HEAD weekly; flag broken links in build or issue.
+
+4. **Legal / security**
+   - Only embed whitelisted origins or user-consented URLs; never proxy arbitrary URLs through the app without review.
+
+5. **Card / list**
+   - “Open live demo” remains; consider **tooltip** “Opens external site” when not embeddable.
+
+### Files to touch (when executing)
+
+- `src/data/projects.ts`, `src/lib/types.ts`
+- `src/components/DemoEmbed.tsx`, `src/app/projects/[slug]/page.tsx`
+- `public/demos/` (screenshots)
+- Optional: `.github/workflows/demo-screenshots.yml` or `scripts/capture-demos.ts`
+
+---
+
 ## 20. Updated Implementation Order
 
 1. ~~Copy brand assets into `public/brand/`~~ ✅ Done
@@ -1416,3 +1457,4 @@ Example data for a private project:
 15. Extract `cosmic-theme.css` for subdomains (Section 13)
 16. Test dark/light mode
 17. `npm run build` — verify clean build
+18. **§21 Live demos** — screenshot fallbacks, `demoMode`, iframe error handling, optional capture pipeline (separate PR)

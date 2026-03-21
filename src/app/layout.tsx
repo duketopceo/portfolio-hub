@@ -24,9 +24,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cosmic Intelligence — Engineering Portfolio",
+  title: {
+    default: "Luke the Duke — Portfolio",
+    template: "%s · Luke the Duke",
+  },
   description:
-    "Systems that compound. Engineering portfolio showcasing AI, trading systems, OSINT platforms, and production infrastructure.",
+    "Luke Kimball — engineering portfolio (Cosmic Intelligence). Systems that compound: AI, trading, OSINT, and production infrastructure.",
   icons: {
     icon: [
       { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
@@ -36,9 +39,9 @@ export const metadata: Metadata = {
     apple: "/brand/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Cosmic Intelligence — Engineering Portfolio",
+    title: "Luke the Duke — Portfolio · Cosmic Intelligence",
     description:
-      "Systems that compound. Projects spanning AI automation, algorithmic trading, OSINT platforms, and Docker Swarm infrastructure.",
+      "Luke Kimball — engineering portfolio. AI automation, trading systems, OSINT, and Docker Swarm infrastructure.",
     type: "website",
     images: [{ url: "/brand/og-image.png", width: 1200, height: 630 }],
   },
