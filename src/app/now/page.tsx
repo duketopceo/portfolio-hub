@@ -12,6 +12,7 @@ export const metadata = {
 
 export default async function NowPage() {
   const recent = await getRecentProjects(5);
+  const hasGitHubDates = recent.some((p) => Boolean(p.lastUpdated?.trim()));
 
   return (
     <div className="cosmic-page py-16 sm:py-20">
@@ -22,6 +23,30 @@ export default async function NowPage() {
           Projects with the most recent commits. Updated from GitHub.
         </p>
       </header>
+
+      {!hasGitHubDates && recent.length > 0 && (
+        <div
+          className="max-w-xl mb-8 rounded-lg border px-4 py-3 text-sm"
+          style={{
+            borderColor: "var(--glass-border)",
+            background: "var(--glass-bg)",
+            color: "var(--color-text-muted)",
+          }}
+          role="status"
+        >
+          <strong style={{ color: "var(--color-text)" }}>
+            GitHub timeline unavailable.
+          </strong>{" "}
+          Showing curated projects in catalog order. For live commit dates on this
+          page, set{" "}
+          <code className="text-xs" style={{ color: "var(--color-accent)" }}>
+            GITHUB_TOKEN
+          </code>{" "}
+          in the server environment (e.g.{" "}
+          <code className="text-xs">~/portfolio-hub/.env</code> on the cluster) and
+          rebuild the container.
+        </div>
+      )}
 
       {/* Timeline */}
       <div className="cosmic-timeline">

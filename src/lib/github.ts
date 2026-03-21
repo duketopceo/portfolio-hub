@@ -103,17 +103,21 @@ export async function getFeaturedProjects(): Promise<EnrichedProject[]> {
 }
 
 /**
- * Get the N most recently active projects.
+ * Get the N most recently active projects (by `lastUpdated` from GitHub).
+ * If no project has a push date (API failure, rate limit, or missing GITHUB_TOKEN
+ * in production), falls back to the first N curated projects so /now is never empty.
  */
 export async function getRecentProjects(n = 5): Promise<EnrichedProject[]> {
   const all = await getEnrichedProjects();
-  return all
+  const dated = all
     .filter((p) => p.lastUpdated)
     .sort(
       (a, b) =>
         new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
     )
     .slice(0, n);
+  if (dated.length > 0) return dated;
+  return all.slice(0, n);
 }
 
 /**

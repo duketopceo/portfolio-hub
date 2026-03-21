@@ -104,6 +104,18 @@ The `docker-compose.yml` includes:
 
 **Edit the Traefik Host rule** in `docker-compose.yml` to match your actual domain.
 
+**Cluster / Docker:** put a `.env` next to `docker-compose.yml` (e.g. `~/portfolio-hub/.env`) with at least:
+
+```bash
+GITHUB_TOKEN=ghp_...   # fine-grained or classic PAT; enables private repos + stable /now Activity
+```
+
+`docker compose` passes it into the build and runtime (see `docker-compose.yml`). Without it, the site still builds, but **`/now` may show no commit dates** and enrichment falls back to public API limits. Rebuild after changing `.env`:
+
+```bash
+docker compose build portfolio && docker service update --force --image ghcr.io/duketopceo/portfolio-hub:latest portfolio
+```
+
 ### Option B: Vercel
 
 ```bash
