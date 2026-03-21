@@ -31,6 +31,9 @@ Browser → **Cloudflare edge** → **your origin** (public IP / tunnel) → **T
 
 **Mitigation:** `traefik.docker.network=traefik-public` (in `docker-compose.yml`).
 
+**Traefik must be on the same overlay:** The label tells Traefik **which network to use to reach this service**, but the **Traefik container/service** must also be attached to **`traefik-public`**. If Traefik is only on `bridge` or a different network, connections to the Swarm VIP (`10.0.x.x:3000`) can **time out** while `docker exec` into the app still returns **200** on `127.0.0.1` → Cloudflare **502**. Check:  
+`docker inspect <traefik_container> --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}={{$v.IPAddress}} {{end}}'` — expect **`traefik-public`**.
+
 **Verify (on a Swarm manager):** Swarm overlay networks are usually **not** `attachable`, so `docker run --network traefik-public` fails with *network not manually attachable*. Use the commands below.
 
 **Why not `curl http://portfolio:3000` from Traefik’s network namespace?**  

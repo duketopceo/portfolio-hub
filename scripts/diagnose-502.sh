@@ -41,7 +41,7 @@ run "docker node ls 2>/dev/null || echo 'Not in Swarm mode or no permission'"
 
 # ── Networks ─────────────────────────────────────────────────────────────────
 sec "2) Overlay networks (expect traefik-public for Traefik ↔ app)"
-run "docker network ls --filter type=overlay --format 'table {{.Name}}\t{{.Driver}}\t{{.Scope}}'"
+run "docker network ls --filter driver=overlay --format 'table {{.Name}}\t{{.Driver}}\t{{.Scope}}'"
 run "docker network inspect traefik-public --format '{{json .IPAM.Config}}' 2>/dev/null || echo 'traefik-public: not found on this host'"
 
 # ── Services summary ─────────────────────────────────────────────────────────
@@ -87,6 +87,19 @@ else
   echo "Skip: no running portfolio container."
 fi
 
+# ── VIP reachable from portfolio task (overlay routing) ─────────────────────
+sec "9b) From portfolio task → service VIP (proves overlay routing to VIP)"
+if [[ -n "${PORTFOLIO_CID:-}" ]]; then
+  VIP_P=$(docker service inspect "$SERVICE_NAME" --format '{{(index .Endpoint.VirtualIPs 0).Addr}}' 2>/dev/null | cut -d/ -f1)
+  if [[ -n "${VIP_P:-}" ]]; then
+    run "docker exec \"$PORTFOLIO_CID\" wget -qO- --timeout=5 \"http://${VIP_P}:3000/api/health\" 2>&1"
+  else
+    echo "Skip: no VIP."
+  fi
+else
+  echo "Skip: no portfolio container."
+fi
+
 # ── Service VIP + Traefik namespace curl ─────────────────────────────────────
 sec "10) Swarm service VIP(s) for $SERVICE_NAME"
 run "docker service inspect \"$SERVICE_NAME\" --format '{{json .Endpoint.VirtualIPs}}' 2>/dev/null | python3 -m json.tool 2>/dev/null || docker service inspect \"$SERVICE_NAME\" --format '{{json .Endpoint.VirtualIPs}}'"
@@ -102,10 +115,22 @@ if [[ -n "${VIP:-}" && -n "${TID:-}" ]]; then
   if docker run --rm --network "container:$TID" curlimages/curl:latest -sS -o /dev/null -w 'HTTP %{http_code}\n' --max-time 8 "http://${VIP}:3000/api/health" 2>&1; then
     :
   else
-    echo "(curl via Traefik netns failed — common if Traefik uses host network or VIP mismatch)"
+    echo "(curl via Traefik netns failed — Traefik often NOT on traefik-public: attach Traefik to the same overlay as portfolio, or use Swarm service for Traefik)"
   fi
 else
   echo "Skip: need VIP and Traefik container."
+fi
+
+sec "11b) Traefik vs portfolio: both on traefik-public? (must match for routing)"
+TR_NAME_EARLY=$(docker ps --filter name=traefik --format '{{.Names}}' | head -1)
+if [[ -n "${TR_NAME_EARLY:-}" ]]; then
+  run "docker inspect \"$TR_NAME_EARLY\" --format 'Traefik networks: {{range \$k, \$v := .NetworkSettings.Networks}}{{\$k}}={{\$v.IPAddress}} {{end}}'"
+  if [[ -n "${PORTFOLIO_CID:-}" ]]; then
+    run "docker inspect \"$PORTFOLIO_CID\" --format 'Portfolio task networks: {{range \$k, \$v := .NetworkSettings.Networks}}{{\$k}}={{\$v.IPAddress}} {{end}}'"
+  fi
+  echo "    If Traefik is missing traefik-public but portfolio has it → 502 / LB unhealthy until Traefik joins that overlay."
+else
+  echo "No Traefik container found."
 fi
 
 # ── Traefik container ────────────────────────────────────────────────────────
@@ -121,10 +146,17 @@ fi
 sec "14) Portfolio service logs (last 80 lines)"
 run "docker service logs \"$SERVICE_NAME\" --tail 80 2>&1"
 
-sec "15) Traefik logs — search portfolio / backend / error (last 120 lines, filtered)"
+sec "15) Traefik logs — filtered (portfolio / backend / error / 502)"
 TR_NAME=$(docker ps --filter name=traefik --format '{{.Names}}' | head -1)
 if [[ -n "${TR_NAME:-}" ]]; then
-  run "docker logs \"$TR_NAME\" --tail 120 2>&1 | grep -iE 'portfolio|backend|error|502|bad gateway|health' | tail -40 || docker logs \"$TR_NAME\" --tail 40 2>&1"
+  FILT=$(docker logs "$TR_NAME" --tail 200 2>&1 | grep -iE 'portfolio|backend|error|502|bad gateway|health' | tail -40 || true)
+  if [[ -n "$FILT" ]]; then
+    echo "$FILT"
+  else
+    echo "(no matching lines — showing raw tail below)"
+  fi
+  sec "15b) Traefik logs — raw tail (last 50 lines)"
+  run "docker logs \"$TR_NAME\" --tail 50 2>&1"
 else
   echo "No traefik container found for logs."
 fi
@@ -143,6 +175,7 @@ if command -v dig >/dev/null 2>&1; then
   run "dig +short \"$DOMAIN\" A"
   run "dig +short \"www.$DOMAIN\" A"
   run "dig +short \"$DOMAIN\" AAAA"
+  echo "    If www is empty, add www CNAME or A in Cloudflare (Host() matches www in docker-compose)."
 elif command -v getent >/dev/null 2>&1; then
   run "getent hosts \"$DOMAIN\" || true"
 else
@@ -168,11 +201,11 @@ fi
 # ── Interpretation cheat-sheet ───────────────────────────────────────────────
 sec "20) Quick read of results"
 cat <<'EOF'
-• (9) App OK on 127.0.0.1 inside task but (16) public 502 → Cloudflare, DNS, Traefik TLS,
-  or Traefik router/host — not the Node app binary.
-• (9) fails → container crash, wrong port, or healthcheck killing tasks — fix Swarm/app first.
-• (11) fails but (9) works → Traefik ↔ overlay routing; check traefik.docker.network label.
-• Traefik logs show all backends down → LB healthcheck; ensure /api/health (see docker-compose labels).
+• (9) App OK on 127.0.0.1 inside task but (16) public 502 → Traefik ↔ backend, TLS, or router — not Next.js.
+• (9b) OK but (11) times out → Traefik likely not on traefik-public; join Traefik to the same overlay as portfolio.
+• (9) fails → fix app/Swarm first.
+• Traefik LB healthcheck → all servers down if Traefik cannot reach VIP:3000; label traefik.docker.network=traefik-public on the app is not enough if Traefik itself is off-overlay.
+• www: if dig www is empty, add DNS for www (see docker-compose Host() rules).
 • SSL: Cloudflare Full (strict) needs valid cert on Traefik for that hostname.
 EOF
 
