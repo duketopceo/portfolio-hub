@@ -9,6 +9,7 @@ import {
 } from "react";
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
+import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 
 /** Ellipse radii (rem) — wide orbit, perspective-ish; mobile tightened via hook */
@@ -29,15 +30,6 @@ interface SolarSystemNavProps {
   projects: EnrichedProject[];
 }
 
-const catColors: Record<string, string> = {
-  finance: "#2DD4BF",
-  ai: "#A78BFA",
-  osint: "#FBBF24",
-  data: "#38BDF8",
-  infra: "#F472B6",
-  apps: "#34D399",
-};
-
 export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
   const [focusIndex, setFocusIndex] = useState(0);
   /** +1 = next (card enters from right), -1 = prev (from left) — drives 3D snap */
@@ -55,12 +47,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
     });
   }, [n, rx, ry]);
 
-  useEffect(() => {
-    setFocusIndex((i) => {
-      if (n === 0) return 0;
-      return Math.min(i, n - 1);
-    });
-  }, [n]);
+  const safeFocusIndex = n === 0 ? 0 : Math.min(focusIndex, n - 1);
 
   const go = useCallback(
     (delta: number) => {
@@ -106,7 +93,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
     );
   }
 
-  const focused = projects[focusIndex];
+  const focused = projects[safeFocusIndex];
   const meta = categoryMeta[focused.category];
   const accent = catColors[focused.category] || "#2DD4BF";
 
@@ -166,7 +153,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
         <div className="solar-planets">
           {projects.map((p, i) => {
             const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
-            const isFocused = i === focusIndex;
+            const isFocused = i === safeFocusIndex;
             const c = catColors[p.category] || "#2DD4BF";
             return (
               <div

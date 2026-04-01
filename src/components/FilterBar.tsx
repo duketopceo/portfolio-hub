@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EnrichedProject, ProjectCategory } from "@/lib/types";
+import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import ProjectCard from "./ProjectCard";
 
@@ -18,16 +19,6 @@ const categories: { key: ProjectCategory | "all"; label: string }[] = [
   { key: "infra", label: "Infra" },
   { key: "apps", label: "Apps" },
 ];
-
-const catPillColors: Record<string, string> = {
-  all: "#2DD4BF",
-  finance: "#2DD4BF",
-  ai: "#A78BFA",
-  osint: "#FBBF24",
-  data: "#38BDF8",
-  infra: "#F472B6",
-  apps: "#34D399",
-};
 
 const sortLabels: Record<"recent" | "name" | "stars", string> = {
   recent: "Recent",
@@ -75,7 +66,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
                 : projects.filter((p) => p.category === cat.key).length;
             if (count === 0 && cat.key !== "all") return null;
             const active = activeCategory === cat.key;
-            const pillColor = catPillColors[cat.key] || "#2DD4BF";
+            const pillColor = catColors[cat.key] || "#2DD4BF";
             return (
               <button
                 key={cat.key}

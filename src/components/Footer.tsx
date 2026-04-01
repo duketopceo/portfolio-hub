@@ -95,7 +95,7 @@ export default function Footer() {
 
         {/* ── Bottom bar ──────────────────────────── */}
         <div className="cosmic-footer__bottom">
-          Cosmic Intelligence
+          &copy; {new Date().getFullYear()} Cosmic Intelligence
         </div>
       </div>
     </footer>
