@@ -23,9 +23,9 @@ export default function NotFound() {
             style={{
               left: `${s.left}%`,
               top: `${s.top}%`,
-              animationDelay: `${s.delay}s`,
-              animationDuration: `${s.duration}s`,
-            }}
+              "--star-delay": `${s.delay}s`,
+              "--star-dur": `${s.duration}s`,
+            } as React.CSSProperties}
           />
         ))}
       </div>

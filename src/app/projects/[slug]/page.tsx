@@ -16,6 +16,7 @@ import {
   CheckIcon,
 } from "@/components/Icons";
 import DemoEmbed from "@/components/DemoEmbed";
+import ProjectPreview from "@/components/ProjectPreview";
 import {
   DossierSection,
   ProjectHero,
@@ -64,6 +65,9 @@ export default async function ProjectDetailPage({
   const meta = categoryMeta[project.category];
   const hasDemo = !!(project.liveUrl || project.demoUrl);
   const embedUrl = project.demoUrl || project.liveUrl;
+  const showDemoEmbed = hasDemo && embedUrl && !project.private;
+  const showPreview =
+    !showDemoEmbed && (project.architecture || (project.highlights && project.highlights.length > 0));
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"
     : null;
@@ -81,10 +85,10 @@ export default async function ProjectDetailPage({
     <article className="dossier-page animate-fade-up" style={pageStyle}>
       <ProjectHero project={project} accentColor={accentColor} meta={meta} />
 
-      {hasDemo && embedUrl && !project.private && (
+      {showDemoEmbed && embedUrl && (
         <section
           className="cosmic-page"
-          style={{ paddingTop: "clamp(1rem, 2vw, 1.5rem)" }}
+          style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)" }}
         >
           <div className="demo-frame">
             <div className="demo-frame__header">
@@ -106,6 +110,15 @@ export default async function ProjectDetailPage({
               embeddable={project.embeddable}
             />
           </div>
+        </section>
+      )}
+
+      {showPreview && (
+        <section
+          className="cosmic-page"
+          style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)" }}
+        >
+          <ProjectPreview project={project} />
         </section>
       )}
 
@@ -244,7 +257,7 @@ export default async function ProjectDetailPage({
           )}
         </div>
 
-        <aside className="dossier-page__aside space-y-5">
+        <aside className="dossier-page__aside space-y-6">
           {hasDemo && project.liveUrl && (
             <a
               href={project.liveUrl}
