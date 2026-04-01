@@ -24,6 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://luke-the-duke.com"),
   title: {
     default: "Cosmic Intelligence · Luke Kimball",
     template: "%s · Cosmic Intelligence",

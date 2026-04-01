@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import DOMPurify from "isomorphic-dompurify";
 import {
   getProjectBySlug,
   getAllSlugs,
   getEnrichedProjects,
   fetchReadme,
 } from "@/lib/github";
-import { formatDate, languageColors } from "@/lib/utils";
+import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import {
   LockIcon,
@@ -22,15 +23,6 @@ import {
 } from "@/components/dossier";
 
 export const revalidate = 3600;
-
-const catColors: Record<string, string> = {
-  finance: "#2dd4bf",
-  ai: "#a78bfa",
-  osint: "#f59e0b",
-  data: "#38bdf8",
-  infra: "#f472b6",
-  apps: "#34d399",
-};
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -246,7 +238,7 @@ export default async function ProjectDetailPage({
             >
               <div
                 className="prose-readme"
-                dangerouslySetInnerHTML={{ __html: readme }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(readme) }}
               />
             </DossierSection>
           )}

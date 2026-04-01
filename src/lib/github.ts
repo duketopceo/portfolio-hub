@@ -63,6 +63,7 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
       res = await fetch(url, {
         headers: authHeaders(),
         next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(10_000),
       });
     } catch (err) {
       const failure = failureFromUnknown(`fetchAllRepos page ${page}`, err);
@@ -119,6 +120,7 @@ export async function fetchReadme(repoName: string): Promise<string | null> {
         Accept: "application/vnd.github.html+json",
       },
       next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(10_000),
     });
 
     if (!res.ok) {

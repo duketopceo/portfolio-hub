@@ -1,21 +1,13 @@
 /**
- * Format a date string into a human-readable relative format.
+ * Format a date string into an absolute human-readable format.
+ * Uses absolute dates ("Mar 19, 2026") to avoid stale relative dates on ISR pages.
  */
 export function formatDate(dateStr: string): string {
   if (!dateStr) return "—";
   const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays}d ago`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
-
   return date.toLocaleDateString("en-US", {
     month: "short",
+    day: "numeric",
     year: "numeric",
   });
 }
@@ -36,6 +28,18 @@ export const languageColors: Record<string, string> = {
   Rust: "#DEA584",
   Go: "#00ADD8",
   Java: "#B07219",
+};
+
+/**
+ * Category-to-accent-color mapping used across navigation, cards, and graphs.
+ */
+export const catColors: Record<string, string> = {
+  finance: "#2DD4BF",
+  ai: "#A78BFA",
+  osint: "#FBBF24",
+  data: "#38BDF8",
+  infra: "#F472B6",
+  apps: "#34D399",
 };
 
 /**

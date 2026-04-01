@@ -8,21 +8,13 @@ import {
   quadrantLabels,
   axisLabels,
 } from "@/data/quadrant-positions";
+import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import { projectIconMap } from "./ProjectIcons";
 
 interface QuadrantGraphProps {
   projects: EnrichedProject[];
 }
-
-const catColors: Record<string, string> = {
-  finance: "#2DD4BF",
-  ai: "#A78BFA",
-  osint: "#FBBF24",
-  data: "#38BDF8",
-  infra: "#F472B6",
-  apps: "#34D399",
-};
 
 export default function QuadrantGraph({ projects }: QuadrantGraphProps) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);

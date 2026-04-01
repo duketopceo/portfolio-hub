@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
-import { formatDate, languageColors } from "@/lib/utils";
+import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import { LockIcon, getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
@@ -9,15 +9,6 @@ interface ProjectCardProps {
   project: EnrichedProject;
   featured?: boolean;
 }
-
-const catColors: Record<string, string> = {
-  finance: "#2DD4BF",
-  ai: "#A78BFA",
-  osint: "#FBBF24",
-  data: "#38BDF8",
-  infra: "#F472B6",
-  apps: "#34D399",
-};
 
 export default function ProjectCard({
   project,

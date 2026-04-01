@@ -313,13 +313,13 @@ body {
 }
 
 .cosmic-footer__link {
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   text-decoration: none;
   transition: color var(--transition);
 }
 
 .cosmic-footer__link:hover {
-  color: var(--color-text-muted);
+  color: var(--color-accent);
 }
 
 .cosmic-footer__text {
@@ -2763,6 +2763,18 @@ body {
     padding-inline: var(--cosmic-page-pad-x, 1rem);
   }
   .filter-pills-row::-webkit-scrollbar { display: none; }
+  .filter-pills-row {
+    position: relative;
+  }
+  .filter-pills-row::after {
+    content: '';
+    position: sticky;
+    right: 0;
+    flex-shrink: 0;
+    width: 2rem;
+    background: linear-gradient(90deg, transparent, var(--color-bg));
+    pointer-events: none;
+  }
 
   .catalog-toolbar {
     margin-bottom: 1.125rem;
@@ -2828,5 +2840,54 @@ body {
   .solar-planet__label {
     font-size: 0.6rem;
     max-width: 5rem;
+  }
+}
+
+/* ── Not Found — starfield ──────────────────────────────── */
+.not-found-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.not-found-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0;
+  animation: twinkle-star 3s ease-in-out infinite;
+}
+@keyframes twinkle-star {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .not-found-star { animation: none; opacity: 0.3; }
+}
+
+/* ── Loading spinner ────────────────────────────────────── */
+.cosmic-spinner {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+}
+.cosmic-spinner__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--color-accent-muted);
+  border-top-color: var(--color-accent);
+  animation: cosmic-spin 0.8s linear infinite;
+}
+@keyframes cosmic-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-spinner__ring {
+    animation: none;
+    border-top-color: var(--color-accent);
+    opacity: 0.7;
   }
 }
