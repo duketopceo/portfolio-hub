@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
 import { sortProjectsByCompleteness } from "@/lib/project-completeness";
 import SolarSystemNav from "@/components/SolarSystemNav";
+import ActivityFeed from "@/components/ActivityFeed";
 
 export const revalidate = 3600;
 
@@ -43,6 +44,10 @@ export default async function Home() {
         </section>
 
         <SolarSystemNav projects={ordered} />
+
+        <div className="home-activity-wrapper">
+          <ActivityFeed />
+        </div>
       </div>
 
       <section

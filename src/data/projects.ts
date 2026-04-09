@@ -43,6 +43,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["TypeScript", "Next.js", "Financial APIs", "Chart.js"],
     private: true,
+    demoOffline: true,
     highlights: [
       "Realistic market dynamics and scenario modeling",
       "Portfolio construction and risk allocation engine",
@@ -67,6 +68,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["Python", "Plotly", "IBKR API", "Pandas"],
     private: true,
+    demoOffline: true,
     highlights: [
       "Real-time IBKR API integration",
       "Interactive Plotly visualizations",
@@ -111,6 +113,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["Python", "FastAPI", "Gemini", "Gradio", "Google Cloud"],
     private: true,
+    demoOffline: true,
     highlights: [
       "LLM-powered document analysis pipeline",
       "Automated permit coordination workflow",
@@ -135,6 +138,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["TypeScript", "LLM APIs", "React Native", "NLP"],
     private: false,
+    demoOffline: true,
     highlights: [
       "Automatic quiz generation from web sources",
       "Adaptive learning algorithm",
@@ -158,6 +162,28 @@ export const projectConfigs: ProjectConfig[] = [
       "Pre-built workflow automation templates",
       "ML models that adapt to usage patterns",
       "Small business-focused integrations",
+    ],
+  },
+
+  {
+    slug: "nanoclaw",
+    repoName: "nanoclaw",
+    displayName: "NanoClaw",
+    tagline:
+      "Lightweight agentic AI container that connects to WhatsApp, Telegram, Slack, Discord, Gmail",
+    description:
+      "Lightweight agentic AI container that connects to WhatsApp, Telegram, Slack, Discord, Gmail. Features persistent memory across sessions, scheduled job execution, and runs on the Anthropic Agents SDK. Containerized for security isolation with multi-platform messaging integrations.",
+    category: "ai",
+    type: "platform",
+    featured: false,
+    liveUrl: "https://nanoclaw.dev",
+    techStack: ["TypeScript", "Anthropic SDK", "Docker", "Node.js"],
+    private: false,
+    highlights: [
+      "Multi-platform messaging integrations",
+      "Persistent memory across sessions",
+      "Scheduled job execution",
+      "Containerized for security isolation",
     ],
   },
 
@@ -202,6 +228,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["Data", "OSINT", "JSON", "Documentation"],
     private: false,
+    demoOffline: true,
     highlights: [
       "Comprehensive multi-domain weapons catalog",
       "Structured data for research and analysis",
@@ -270,6 +297,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["TypeScript", "Next.js", "Playwright", "Docker", "CI/CD"],
     private: true,
+    demoOffline: true,
     highlights: [
       "Multi-course architecture with extensible schema",
       "Adaptive quizzing with anti-cheating enforcement",
@@ -296,6 +324,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["TypeScript", "React", "Node.js", "Python", "MediaPipe"],
     private: false,
+    demoOffline: true,
     highlights: [
       "End-to-end TypeScript type safety",
       "Server-side rendering with API routes",
@@ -312,6 +341,7 @@ export const projectConfigs: ProjectConfig[] = [
     category: "apps",
     type: "app",
     featured: false,
+    liveUrl: "https://chronicleweaver.com",
     techStack: ["TypeScript", "React", "Mobile"],
     private: false,
     highlights: [
@@ -335,6 +365,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["TypeScript", "Real-time", "WebSockets"],
     private: false,
+    demoOffline: true,
     highlights: [
       "Real-time multi-user collaboration",
       "Conflict resolution and version history",
@@ -356,6 +387,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["TypeScript", "Next.js", "CMS"],
     private: true,
+    demoOffline: true,
     highlights: [
       "Custom CMS integration",
       "SEO optimization and RSS generation",
@@ -378,6 +410,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["Swift", "SwiftUI", "Docker", "PostgreSQL", "REST API"],
     private: true,
+    demoOffline: true,
     highlights: [
       "Native iOS with SwiftUI interface",
       "Swipeable card-based content experience",

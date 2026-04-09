@@ -69,7 +69,7 @@ export default function RootLayout({
         </div>
 
         <Header />
-        <main className="flex-1 relative">{children}</main>
+        <main className="flex-1 relative animate-page-in">{children}</main>
         <Footer />
       </body>
     </html>
