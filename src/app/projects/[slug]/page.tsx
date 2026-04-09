@@ -65,7 +65,7 @@ export default async function ProjectDetailPage({
   const meta = categoryMeta[project.category];
   const hasDemo = !!(project.liveUrl || project.demoUrl);
   const embedUrl = project.demoUrl || project.liveUrl;
-  const showDemoEmbed = hasDemo && embedUrl && !project.private;
+  const showDemoEmbed = hasDemo && embedUrl && !project.private && !project.demoOffline;
   const showPreview =
     !showDemoEmbed && (project.architecture || (project.highlights && project.highlights.length > 0));
   const langColor = project.language
