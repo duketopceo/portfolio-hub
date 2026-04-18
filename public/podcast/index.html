@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <meta name="description" content="Live companion dashboard.">
+  <meta property="og:title" content="Dashboard">
+  <meta property="og:description" content="Live companion dashboard with charts, data, and analysis.">
+  <meta property="og:type" content="website">
+
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./base.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <canvas class="stars" id="starsCanvas"></canvas>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <a href="/" class="header__brand" aria-label="Home">
+      <span class="header__dot"></span>
+      <span class="header__title" id="brandTitle">Dashboard</span>
+    </a>
+
+    <div class="header__episode" id="headerEpisode">
+      <span class="header__ep-badge" id="epBadge">EP 01</span>
+      <span class="header__ep-title" id="epTitle">Loading...</span>
+      <span class="header__ep-date" id="epDate"></span>
+    </div>
+
+    <div class="header__right">
+      <!-- Page nav tabs -->
+      <nav class="page-nav" id="pageNav" aria-label="Dashboard pages"></nav>
+
+      <div class="social-bar" id="socialBar"></div>
+    </div>
+  </header>
+
+  <!-- Ticker tape -->
+  <div class="ticker-bar" id="tickerBar"></div>
+
+  <!-- Main dashboard grid — pages render here -->
+  <main class="dashboard" id="dashboard"></main>
+
+  <!-- Footer -->
+  <footer class="footer-bar">
+    <span class="footer-bar__left" id="footerStatus">LIVE</span>
+    <span class="footer-bar__right">
+      <span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> pages</span>
+      <span><kbd>←</kbd><kbd>→</kbd> nav</span>
+    </span>
+  </footer>
+
+  <script src="./bundle.min.js"></script>
+</body>
+</html>
