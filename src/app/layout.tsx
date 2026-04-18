@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -63,14 +63,11 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <div className="cosmic-bg" aria-hidden="true">
-          <div className="cosmic-bg__nebula" />
-          <div className="cosmic-bg__nebula cosmic-bg__nebula--accent" />
-        </div>
+        <SiteBackground />
 
         <Header />
         <main className="flex-1 relative animate-page-in">{children}</main>
-        <Footer />
+        <SiteFooter />
       </body>
     </html>
   );
