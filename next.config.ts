@@ -18,12 +18,19 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Bypass React routing for /podcast — serve the static dashboard directly
-  async rewrites() {
+  // Hard redirect /podcast and /podcast/ to the standalone static dashboard
+  // Static file lives at public/podcast/index.html → served at /podcast/index.html
+  async redirects() {
     return [
       {
         source: "/podcast",
         destination: "/podcast/index.html",
+        permanent: false,
+      },
+      {
+        source: "/podcast/",
+        destination: "/podcast/index.html",
+        permanent: false,
       },
     ];
   },
