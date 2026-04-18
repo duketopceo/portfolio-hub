@@ -1,3 +1,5 @@
+"use client";
+
 import Script from "next/script";
 
 export default function PodcastPage() {
@@ -50,7 +52,7 @@ export default function PodcastPage() {
         </span>
       </footer>
 
-      <Script src="/podcast/bundle.min.js" strategy="beforeInteractive" />
+      <Script src="/podcast/bundle.min.js" strategy="afterInteractive" />
     </>
   );
 }
