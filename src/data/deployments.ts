@@ -33,8 +33,8 @@ export const deployments: DeploymentConfig[] = [
   },
   {
     slug: "military-hardware-db",
-    url: "https://mildb.luke-the-duke.com",
-    subdomain: "mildb",
+    url: "https://omhdb.luke-the-duke.com/#/",
+    subdomain: "omhdb",
     host: "swarm",
     role: "Open military hardware database — 183 platforms across air, land, sea, and munitions",
     healthCheck: "/api/health",

@@ -45,7 +45,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://mildb.luke-the-duke.com"
+                  href="https://omhdb.luke-the-duke.com/#/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="cosmic-footer__link inline-flex items-center gap-1"
