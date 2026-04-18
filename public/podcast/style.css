@@ -229,10 +229,47 @@ button { cursor: pointer; background: none; border: none; color: inherit; font: 
 .panel__tag--warm   { color: var(--orange); }
 
 .panel__body {
-  flex: 1; overflow-y: auto;
+  flex: 1;
+  overflow: hidden;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .panel__body--flush { padding: 0; }
+
+/* ════════════════════════════
+   CHART height chain
+   panel → panel__body → tv-chart → tradingview-widget-container → widget div
+════════════════════════════ */
+.panel__body--flush .tv-chart {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+.panel__body--flush .tradingview-widget-container {
+  flex: 1;
+  min-height: 0;
+  height: 100% !important;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.panel__body--flush .tradingview-widget-container__widget {
+  flex: 1;
+  min-height: 0;
+  height: 100% !important;
+  width: 100%;
+}
+.panel__body--flush iframe {
+  flex: 1;
+  min-height: 0;
+  height: 100% !important;
+  width: 100% !important;
+  border: none;
+  display: block;
+}
 
 /* ════════════════════════════
    CHART (tv-chart)
