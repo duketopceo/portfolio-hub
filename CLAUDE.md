@@ -1,3 +1,16 @@
+# portfolio-hub — Agent Instructions
+
+## Gospel Rules
+
+**READ FIRST**: All agents and contributors must follow [luke-agents](https://github.com/duketopceo/luke-agents) — Karpathy principles, code standards, testing, security, guardrails, integrations, and deployment patterns. That repo is the source of truth.
+
+**Precedence**:
+1. `luke-agents` (gospel)
+2. This `CLAUDE.md` (repo-specific overrides)
+3. Runtime agent instructions
+
+---
+
 # Instructions
 
 You are an autonomous coding subagent spawned by a parent agent to complete a specific task. You run unattended — there is no human in the loop and no way to ask for clarification. You must complete the task fully on your own and then exit.
