@@ -16,6 +16,25 @@ SKIP_GIT=1 ./scripts/cluster-deploy.sh
 
 ## HTTPS: “Invalid username or token”
 
+This error usually means Git is sending a **bad or revoked PAT** (often from `~/.git-credentials` or another helper). **`portfolio-hub` is public** — after you remove the bad entry, **`git fetch` over HTTPS often works with no username/password at all**.
+
+### 0) Try anonymous fetch first (public repo)
+
+```bash
+rm -f ~/.git-credentials
+git config --global --unset-all credential.helper 2>/dev/null || true
+git config --system --unset-all credential.helper 2>/dev/null || true
+git config --local --unset-all credential.helper 2>/dev/null || true
+# remove ~/.netrc github lines if you use netrc
+cd ~/portfolio-hub
+git remote set-url origin https://github.com/duketopceo/portfolio-hub.git
+git ls-remote origin HEAD
+```
+
+If `git ls-remote` succeeds, run **`./scripts/cluster-deploy.sh`** (no PAT needed for fetch).
+
+### 1) If you still need a PAT (private fork, rate limits, org policy)
+
 1. Create a **new** PAT (classic **`repo`**, or fine‑grained read on this repo). Revoke any token that was ever pasted into chat, logs, or tickets.
 2. Clear old cached HTTPS creds on the manager:
 
