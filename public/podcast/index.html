@@ -9,18 +9,17 @@
   <meta property="og:description" content="Mission Control companion — markets, data grid, headlines, Stratum Engine and Perplexity updates.">
   <meta property="og:type" content="website">
 
-  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,8..60,500;1,8..60,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@1,8..60,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/podcast/base.css">
   <link rel="stylesheet" href="/podcast/style.css">
   <link rel="stylesheet" href="/podcast/ui-shell.css">
   <link rel="stylesheet" href="/podcast/ep009.css">
-  <link rel="stylesheet" href="/podcast/descript-layout.css">
+  <link rel="stylesheet" href="/podcast/cosmic-pod.css">
 </head>
-<body class="ep009-scroll">
+<body class="ep009-carousel">
   <div class="aurora" aria-hidden="true"></div>
   <div class="mesh-grid" aria-hidden="true"></div>
   <canvas class="stars" id="starsCanvas" aria-hidden="true"></canvas>
@@ -28,9 +27,9 @@
   <header class="header" id="header">
     <div class="header__brand" aria-label="Show">
       <svg class="header__logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <circle cx="16" cy="16" r="5" fill="#00d4aa"/>
-        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#00d4aa" stroke-width="1.2" opacity="0.4" transform="rotate(-20 16 16)"/>
-        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#f0a030" stroke-width="1.2" opacity="0.3" transform="rotate(40 16 16)"/>
+        <circle cx="16" cy="16" r="5" fill="#2DD4BF"/>
+        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#2DD4BF" stroke-width="1.2" opacity="0.4" transform="rotate(-20 16 16)"/>
+        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#818CF8" stroke-width="1.2" opacity="0.3" transform="rotate(40 16 16)"/>
       </svg>
       <span class="header__title" id="brandTitle">Mission Control</span>
     </div>
@@ -55,156 +54,591 @@
 
   <div class="ticker-bar" id="tickerBar"></div>
 
-  <main class="dashboard ep009-main" id="dashboard">
-    <header class="ep-hero">
-      <p class="ep-hero__badge">OPERATOR LOG · OP009</p>
-      <h1 class="ep-hero__title" style="font-family: 'Newsreader', Georgia, serif;">The Signal Stack</h1>
-      <p class="ep-hero__date">2026-04-28</p>
-      <ul class="ep-tags" aria-label="Episode tags">
-        <li>SPACEX + CURSOR</li>
-        <li>UTAH SMRs</li>
-        <li>NICK SHIRLEY</li>
-        <li>SPLC</li>
-        <li>WHCD SHOOTING</li>
-        <li>SAMSUNG TEXAS FAB</li>
-        <li>AI HARNESSES</li>
-        <li>BERT</li>
-        <li>QWEN LOCAL</li>
-        <li>STRATUM ENGINE</li>
-        <li>PERPLEXITY</li>
-      </ul>
-    </header>
+  <!-- ── Carousel ── -->
+  <main class="carousel-stage" id="carouselStage" role="main">
+    <div class="carousel-track" id="carouselTrack">
 
-    <section class="ep-section ep-section--market" aria-labelledby="chart-heading">
-      <div class="ep-market-head">
-        <h2 class="ep-section__title" id="chart-heading">Market</h2>
-        <button type="button" class="ep-market-toggle" id="epMarketToggle" aria-expanded="true" aria-controls="epMarketPanel">Hide chart</button>
-      </div>
-      <div class="ep-market-panel" id="epMarketPanel">
-        <div class="glass-card glass-card--flush">
-          <div class="glass-card__inner ep-chart-wrap">
-            <div class="ep-chart-controls">
-              <label for="symbolInput">MARKET · CHANGE SYMBOL ↑</label>
-              <input class="ep-symbol-input" type="text" id="symbolInput" name="symbol" placeholder="e.g. NVDA or NASDAQ:AMD" value="NASDAQ:NVDA" autocomplete="off" spellcheck="false">
-              <button type="button" class="ep-symbol-btn" id="symbolApply">Apply</button>
-            </div>
-            <div id="tv_chart_container" class="tv-chart" role="region" aria-label="TradingView advanced chart"></div>
+      <!-- ══ 1 · COLD OPEN ══ -->
+      <section class="slide slide--hero" data-label="Intro" role="region" aria-label="Episode intro">
+        <div class="slide__inner slide__inner--hero">
+          <div class="pod-hero-eyebrow">OPERATOR LOG · OP009 · 2026-04-28</div>
+          <h1 class="pod-hero-title">The Signal<br>Stack</h1>
+          <p class="pod-hero-sub">MARKETS · HARDWARE · AI · GEOPOLITICS · WHAT SHIPPED</p>
+          <div class="pod-hero-tags">
+            <span class="pod-hero-tag">SPACEX + CURSOR</span>
+            <span class="pod-hero-tag">UTAH SMRs</span>
+            <span class="pod-hero-tag">NICK SHIRLEY</span>
+            <span class="pod-hero-tag">WHCD</span>
+            <span class="pod-hero-tag">SAMSUNG TEXAS</span>
+            <span class="pod-hero-tag">AI HARNESSES</span>
+            <span class="pod-hero-tag">BERT</span>
+            <span class="pod-hero-tag">QWEN LOCAL</span>
+            <span class="pod-hero-tag">STRATUM ENGINE</span>
+            <span class="pod-hero-tag">PERPLEXITY</span>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="ep-section" aria-labelledby="stats-heading">
-      <h2 class="ep-section__title" id="stats-heading">Data grid</h2>
-      <div class="stat-grid">
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">Samsung Taylor fab size</span>
-          <span class="stat-card__value">4.85M m²</span>
-          <span class="stat-card__note">Taylor, TX — operational late 2026</span>
-        </div></article>
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">Employees relocating</span>
-          <span class="stat-card__value">~1,000</span>
-          <span class="stat-card__note">Samsung Austin Semi, first wave</span>
-        </div></article>
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">Utah SMR target</span>
-          <span class="stat-card__value">4 GW</span>
-          <span class="stat-card__note">Holtec — Mountain West plan</span>
-        </div></article>
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">Ward250 output</span>
-          <span class="stat-card__value">5 MW</span>
-          <span class="stat-card__note">Airlifted · Jul 4 2026 first power</span>
-        </div></article>
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">Nick Shirley views</span>
-          <span class="stat-card__value">135M</span>
-          <span class="stat-card__note">X platform · MN daycare claims</span>
-        </div></article>
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">Qwen 14B HumanEval</span>
-          <span class="stat-card__value">~50%</span>
-          <span class="stat-card__note">Local · Ollama / LM Studio</span>
-        </div></article>
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">Sonnet 4.6 HumanEval</span>
-          <span class="stat-card__value">97.6%</span>
-          <span class="stat-card__note">Cloud · Cursor / Composer</span>
-        </div></article>
-        <article class="glass-card stat-card"><div class="glass-card__inner">
-          <span class="stat-card__label">WHCD incident</span>
-          <span class="stat-card__value">APR 26 2026</span>
-          <span class="stat-card__note">Trump evacuated · shots outside Hilton</span>
-        </div></article>
-      </div>
-    </section>
-
-    <section class="ep-section" aria-labelledby="hl-heading">
-      <h2 class="ep-section__title" id="hl-heading">Headlines</h2>
-      <div class="hl-stack" id="hlStack"></div>
-    </section>
-
-    <section class="ep-section" aria-labelledby="stratum-heading">
-      <h2 class="ep-section__title" id="stratum-heading">Stratum Engine · what shipped</h2>
-      <div class="glass-card"><div class="glass-card__inner">
-        <div class="stm-block" id="stmBlock"></div>
-      </div></div>
-    </section>
-
-    <section class="ep-section" aria-labelledby="perplex-heading">
-      <h2 class="ep-section__title" id="perplex-heading">Perplexity · what shipped</h2>
-      <div class="perplex-grid" id="perplexGrid"></div>
-    </section>
-
-    <section class="ep-section" aria-labelledby="harness-heading">
-      <h2 class="ep-section__title" id="harness-heading">AI harnesses · the simple version</h2>
-      <div class="glass-card"><div class="glass-card__inner">
-        <div class="prose-block">
-          <p>An AI harness is a wrapper around a model. Input goes in. Rules enforced. Output comes out. The simplest harness is a system prompt + an API call — about <code>20</code> lines of Python.</p>
-          <p><strong>BERT</strong> (Google, 2018) reads text in both directions simultaneously. It masks words and predicts them from surrounding context. Example: &quot;My [MASK] is cute, he&apos;s playing.&quot; → BERT predicts &quot;dog.&quot; This is what powers Google Search&apos;s semantic understanding layer.</p>
-          <p>Simple build: <code>pip install transformers</code> → load <code>bert-base-uncased</code> → <code>.encode()</code> → classify. Complex build: fine-tune on domain data, multi-head attention layers, hardware-optimized inference. The difference is 20 lines of code vs. 200,000.</p>
+      <!-- ══ 2 · MARKET PULSE ══ -->
+      <section class="slide slide--market" data-label="Market" role="region" aria-label="Market chart">
+        <div class="slide__inner slide__inner--market">
+          <div class="slide-mkt-head">
+            <div class="pod-label">MARKET PULSE</div>
+            <h2 class="slide-h" style="margin-bottom:0;white-space:nowrap;">Live Chart</h2>
+            <label for="symbolInput" class="slide-mkt-label">SYMBOL</label>
+            <input class="ep-symbol-input" type="text" id="symbolInput" name="symbol"
+              placeholder="e.g. NVDA or NASDAQ:AMD" value="NASDAQ:NVDA" autocomplete="off" spellcheck="false">
+            <button type="button" class="ep-symbol-btn" id="symbolApply">Apply</button>
+          </div>
+          <div id="tv_chart_container" class="tv-chart slide-chart"
+            role="region" aria-label="TradingView advanced chart"></div>
         </div>
-      </div></div>
-    </section>
+      </section>
 
-    <section class="ep-section" aria-labelledby="bench-heading">
-      <h2 class="ep-section__title" id="bench-heading">Local models · HumanEval benchmark</h2>
-      <div class="glass-card"><div class="glass-card__inner">
-        <div class="bench-wrap">
-          <table class="bench-table">
-            <thead>
-              <tr><th>Model</th><th>HumanEval</th><th>Params</th><th>Runs where</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Claude Sonnet 4.6</td><td>97.6%</td><td>API</td><td>Cursor / Perplexity</td></tr>
-              <tr><td>DeepSeek R1</td><td>97.4%</td><td>API</td><td>Cloud</td></tr>
-              <tr><td>Qwen 3 480B</td><td>92.7%</td><td>API</td><td>Cloud</td></tr>
-              <tr><td>Qwen 3.5 9B</td><td>91.0%</td><td>9B</td><td>Ollama / Local</td></tr>
-              <tr><td>Qwen Coder 14B</td><td>~50%</td><td>14B</td><td>Ollama / LM Studio</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="bench-note">Running Qwen 14B locally through Cline against a repo with our full test stack — ruff, pytest, Playwright, real Postgres — exposes context limits fast. Sonnet in Cursor has full repo awareness. Local models don&apos;t. SpaceX chose Cursor. That&apos;s the answer.</p>
-      </div></div>
-    </section>
+      <!-- ══ 3 · KEY NUMBERS ══ -->
+      <section class="slide" data-label="Numbers" role="region" aria-label="Key numbers">
+        <div class="slide__inner">
+          <div class="pod-label">KEY NUMBERS</div>
+          <h2 class="slide-h">Data Grid</h2>
+          <p class="slide-sub">THE EPISODE IN EIGHT STATS</p>
 
-    <section class="ep-section" aria-labelledby="src-heading">
-      <h2 class="sr-only" id="src-heading">Sources</h2>
-      <div id="srcPanel" class="glass-card glass-card--tight src-panel">
-        <div class="glass-card__inner">
-          <button type="button" class="src-panel__toggle" id="srcToggle" aria-expanded="false" aria-controls="srcList">[ SOURCES ↓ ]</button>
-          <ol class="src-panel__list" id="srcList" aria-hidden="true"></ol>
+          <div class="pod-stat-grid">
+            <div class="pod-stat">
+              <div class="pod-stat__label">Samsung Taylor fab size</div>
+              <div class="pod-stat__value">4.85M m²</div>
+              <div class="pod-stat__note">Taylor, TX — operational late 2026</div>
+            </div>
+            <div class="pod-stat">
+              <div class="pod-stat__label">Employees relocating</div>
+              <div class="pod-stat__value">~1,000</div>
+              <div class="pod-stat__note">Samsung Austin Semi, first wave</div>
+            </div>
+            <div class="pod-stat">
+              <div class="pod-stat__label">Utah SMR target</div>
+              <div class="pod-stat__value">4 GW</div>
+              <div class="pod-stat__note">Holtec — Mountain West plan</div>
+            </div>
+            <div class="pod-stat">
+              <div class="pod-stat__label">Ward250 output</div>
+              <div class="pod-stat__value">5 MW</div>
+              <div class="pod-stat__note">Airlifted · Jul 4 2026 first power</div>
+            </div>
+            <div class="pod-stat">
+              <div class="pod-stat__label">Nick Shirley views</div>
+              <div class="pod-stat__value">135M</div>
+              <div class="pod-stat__note">X platform · MN daycare claims</div>
+            </div>
+            <div class="pod-stat">
+              <div class="pod-stat__label">WHCD incident</div>
+              <div class="pod-stat__value">APR 26</div>
+              <div class="pod-stat__note">Trump evacuated · shots outside Hilton</div>
+            </div>
+            <div class="pod-stat">
+              <div class="pod-stat__label">Qwen 14B HumanEval</div>
+              <div class="pod-stat__value">~50%</div>
+              <div class="pod-stat__note">Local · Ollama / LM Studio</div>
+            </div>
+            <div class="pod-stat">
+              <div class="pod-stat__label">Sonnet 4.6 HumanEval</div>
+              <div class="pod-stat__value">97.6%</div>
+              <div class="pod-stat__note">Cloud · Cursor / Composer</div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <!-- ══ 4 · CURRENT EVENTS ══ -->
+      <section class="slide" data-label="Events" role="region" aria-label="Current events">
+        <div class="slide__inner">
+          <div class="pod-label">CURRENT EVENTS</div>
+          <h2 class="slide-h">This Week's Signal</h2>
+          <p class="slide-sub">VIRAL CONTENT · POLITICAL FLASHPOINTS</p>
+
+          <div class="fc-list">
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>Nick Shirley — 135M views, daycare fraud allegations</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>23-year-old YouTuber · 42-minute video on Somali-run daycare fraud in Minnesota</li>
+                    <li>135M views on X — one of the highest-performing viral investigative videos ever</li>
+                    <li>Trump admin halted child care funding for Minnesota in direct response</li>
+                    <li>State investigators found no evidence of fraud at the specific sites visited</li>
+                    <li>The signal: one creator + camera + social platform = federal policy response</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>"Stop Nick Shirley Act" — California bill, First Amendment concerns</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>California bill aimed at restricting viral investigative content style</li>
+                    <li>Republicans named it "Stop Nick Shirley Act" — turned into a rhetorical weapon</li>
+                    <li>Critics: targets journalism, chills free speech, sets dangerous legal precedent</li>
+                    <li>Tension: state legislature trying to regulate platform-native citizen reporting</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>WHCD shooting — Trump evacuated, dinner postponed · Apr 26 2026</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>White House Correspondents' Dinner — Trump's first attendance as sitting president</li>
+                    <li>Gunshots outside Washington Hilton ballroom after 8:30 PM</li>
+                    <li>Secret Service rushed the stage, evacuated Trump, Vance, and Melania</li>
+                    <li>Dinner postponed — no confirmed injuries inside the venue</li>
+                    <li>SPLC filed suit against Trump admin the same week — parallel signal on political climate</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 5 · HARDWARE + ENERGY ══ -->
+      <section class="slide" data-label="Hardware" role="region" aria-label="Hardware and energy">
+        <div class="slide__inner">
+          <div class="pod-label">HARDWARE + ENERGY</div>
+          <h2 class="slide-h">The Physical Layer</h2>
+          <p class="slide-sub">SEMICONDUCTORS · NUCLEAR · DOMESTIC RESHORING</p>
+
+          <div class="fc-list">
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>Samsung Taylor fab — 4.85M m², ~1,000 relocating, late 2026</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>4.85M m² campus in Taylor, Texas — one of the largest chip fabs in US history</li>
+                    <li>~1,000 Samsung Austin employees moving to Taylor in the first relocation wave</li>
+                    <li>Advanced AI-grade chips targeted for late 2026 operational date</li>
+                    <li>Part of CHIPS Act + tariff-driven US semiconductor reshoring wave</li>
+                    <li>Watch: Intel struggling, TSMC Arizona scaling — Samsung needs flawless execution</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>Utah SMR plan — Holtec SMR-300, up to 10 reactors, 4 GW Mountain West</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>After NuScale/UAMPS Carbon Free Power Project collapsed, Utah pivoted hard to Holtec</li>
+                    <li>Holtec SMR-300: modular design, built faster than traditional nuclear plants</li>
+                    <li>Target: up to 10 reactors across the Mountain West = 4 GW total</li>
+                    <li>Utah positioning itself as the nuclear energy hub of the American West</li>
+                    <li>Key risk: NuScale promised 2030. Holtec promising similar. Track the timeline slip</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>Valar Ward250 — 5 MW microreactor, airlifted, July 4 2026 first power</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>5 MW microreactor — small enough to fit in a military cargo aircraft</li>
+                    <li>Airlifted to the San Rafael Energy Lab in Utah by the US military</li>
+                    <li>July 4, 2026 first power target — the date is symbolic and intentional</li>
+                    <li>Proving point for mobile/deployable nuclear: military, disaster relief, remote ops</li>
+                    <li>If July 4 hits: massive PR win for the microreactor category, unlocks DoD contracts</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 6 · AI FIELD ══ -->
+      <section class="slide" data-label="AI Field" role="region" aria-label="AI field">
+        <div class="slide__inner">
+          <div class="pod-label">AI FIELD</div>
+          <h2 class="slide-h">Models, Tools, Harnesses</h2>
+          <p class="slide-sub">HOW AI IS ACTUALLY BEING USED RIGHT NOW</p>
+
+          <div class="fc-list">
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>SpaceX picks Cursor — highest-profile enterprise AI coding validation yet</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>SpaceX adopted Cursor as primary AI dev environment across engineering teams</li>
+                    <li>Cursor runs Claude Sonnet 4.6 — 97.6% HumanEval, full repo awareness</li>
+                    <li>Highest-profile enterprise validation of AI-assisted coding to date</li>
+                    <li>The real signal: SpaceX has resources to run local models — they chose cloud</li>
+                    <li>That one decision settles the local vs. cloud debate for serious engineering orgs</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>What is an AI harness — system prompt + API call, ~20 lines of Python</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>Harness = wrapper around a model. Input in, rules enforced, output out</li>
+                    <li>Simplest harness: system prompt + API call — about 20 lines of Python</li>
+                    <li>Complex harness: fine-tuning, multi-head attention, hardware-optimized inference</li>
+                    <li>The difference between 20 lines and 200,000 is your use case, not the model</li>
+                    <li>Start at 20 lines. Only add complexity when you hit a concrete wall</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="fc-item">
+              <button class="fc-btn" aria-expanded="false">
+                <span>BERT (2018) — bidirectional transformer, Google Search semantic layer</span>
+                <span class="fc-icon">+</span>
+              </button>
+              <div class="fc-body" aria-hidden="true">
+                <div class="fc-body__inner">
+                  <ul>
+                    <li>Google 2018 — reads text in both directions simultaneously, unlike GPT</li>
+                    <li>Masks words and predicts from surrounding context: "My [MASK] is cute, he's playing" → dog</li>
+                    <li>Powers Google Search's semantic understanding layer — still running at global scale</li>
+                    <li>Simple build: pip install transformers → bert-base-uncased → .encode() → classify</li>
+                    <li>Most devs don't touch BERT directly — it's the plumbing behind search and NLU</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 7 · BENCHMARKS ══ -->
+      <section class="slide" data-label="Benchmarks" role="region" aria-label="AI benchmarks">
+        <div class="slide__inner">
+          <div class="pod-label">BENCHMARKS</div>
+          <h2 class="slide-h">Local vs. Cloud — HumanEval</h2>
+          <p class="slide-sub">WHAT THE NUMBERS MEAN FOR YOUR ACTUAL WORKFLOW</p>
+
+          <div class="pod-card" style="margin-bottom:14px;">
+            <div class="pod-card__inner">
+              <table class="pod-table">
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>HumanEval</th>
+                    <th>Params</th>
+                    <th>Runs where</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Claude Sonnet 4.6</td>
+                    <td>97.6%</td>
+                    <td>API</td>
+                    <td>Cursor / Perplexity</td>
+                  </tr>
+                  <tr>
+                    <td>DeepSeek R1</td>
+                    <td>97.4%</td>
+                    <td>API</td>
+                    <td>Cloud</td>
+                  </tr>
+                  <tr>
+                    <td>Qwen 3 480B</td>
+                    <td>92.7%</td>
+                    <td>API</td>
+                    <td>Cloud</td>
+                  </tr>
+                  <tr>
+                    <td>Qwen 3.5 9B</td>
+                    <td>91.0%</td>
+                    <td>9B</td>
+                    <td>Ollama / Local</td>
+                  </tr>
+                  <tr>
+                    <td>Qwen Coder 14B</td>
+                    <td>~50%</td>
+                    <td>14B</td>
+                    <td>Ollama / LM Studio</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="pod-card">
+            <div class="pod-card__inner">
+              <div class="fc-list">
+                <div class="fc-item">
+                  <button class="fc-btn" aria-expanded="false">
+                    <span>The local model trap — context limits expose the gap fast</span>
+                    <span class="fc-icon">+</span>
+                  </button>
+                  <div class="fc-body" aria-hidden="true">
+                    <div class="fc-body__inner">
+                      <ul>
+                        <li>Qwen 14B via Cline against a full repo: ruff, pytest, Playwright, real Postgres</li>
+                        <li>Context limits hit immediately — local models don't see the whole codebase</li>
+                        <li>Sonnet in Cursor has full repo context — reads everything, reasons across it</li>
+                        <li>SpaceX chose Cursor over running local. That's the answer for serious engineering</li>
+                        <li>Local wins at: privacy, edge, offline, rapid prototyping. Not at complex repo work</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 8 · STRATUM ENGINE ══ -->
+      <section class="slide" data-label="Stratum" role="region" aria-label="Stratum Engine updates">
+        <div class="slide__inner">
+          <div class="pod-label">STRATUM ENGINE</div>
+          <h2 class="slide-h">What Shipped</h2>
+          <p class="slide-sub">INFRASTRUCTURE · TOOLING · OBSERVABILITY</p>
+
+          <div class="pod-card">
+            <div class="pod-card__inner">
+              <div class="fc-list">
+
+                <div class="fc-item">
+                  <button class="fc-btn" aria-expanded="false">
+                    <span class="pod-terminal"><span class="shipped">[+]</span> CodeRabbit + Bartlett auto-deploy</span>
+                    <span class="fc-icon">+</span>
+                  </button>
+                  <div class="fc-body" aria-hidden="true">
+                    <div class="fc-body__inner">
+                      <ul>
+                        <li>CodeRabbit AI PR reviews — reads luke-agents standards on every pull request</li>
+                        <li>Bartlett Server nightly auto-deploy — 2AM cron, 24-section test suite, Docker</li>
+                        <li>Code quality gates are now automated — nothing ships without a review pass</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="fc-item">
+                  <button class="fc-btn" aria-expanded="false">
+                    <span class="pod-terminal"><span class="shipped">[+]</span> Observability stack — Grafana, Loki, Sentry</span>
+                    <span class="fc-icon">+</span>
+                  </button>
+                  <div class="fc-body" aria-hidden="true">
+                    <div class="fc-body__inner">
+                      <ul>
+                        <li>Nanobot (Zulip bot) — container health monitor, alerts to #Server-Alerts channel</li>
+                        <li>Grafana + Loki centralized logging — 30-day retention across Docker Swarm</li>
+                        <li>Sentry error tracking — FastAPI backend + React frontend, release-linked</li>
+                        <li>Full stack: you know something broke before users report it</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="fc-item">
+                  <button class="fc-btn" aria-expanded="false">
+                    <span class="pod-terminal"><span class="shipped">[+]</span> Testing pyramid + Playwright E2E + make lint</span>
+                    <span class="fc-icon">+</span>
+                  </button>
+                  <div class="fc-body" aria-hidden="true">
+                    <div class="fc-body__inner">
+                      <ul>
+                        <li>Testing pyramid formalized — unit / integration / E2E, 80%+ coverage target</li>
+                        <li>TOOLS_OPERATIONS.md — canonical ops source of truth in luke-agents repo</li>
+                        <li>Playwright E2E tests — user-flow tests run against staging environment</li>
+                        <li>make lint / make format — ruff + mypy enforced pre-commit</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="fc-item">
+                  <button class="fc-btn" aria-expanded="false">
+                    <span class="pod-terminal"><span class="progress">[~]</span> In progress — GitHub Actions CI, staging</span>
+                    <span class="fc-icon">+</span>
+                  </button>
+                  <div class="fc-body" aria-hidden="true">
+                    <div class="fc-body__inner">
+                      <ul>
+                        <li>GitHub Actions CI — paused (free tier exhausted), manual fly deploy for now</li>
+                        <li>Staging: stratum-engine-staging.fly.dev</li>
+                        <li>Production: stratumhq.app</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 9 · PERPLEXITY ══ -->
+      <section class="slide" data-label="Perplexity" role="region" aria-label="Perplexity updates">
+        <div class="slide__inner">
+          <div class="pod-label">PERPLEXITY</div>
+          <h2 class="slide-h">What Shipped</h2>
+          <p class="slide-sub">PRODUCT VELOCITY — 8 DROPS TRACKED</p>
+
+          <div class="pod-grid-2">
+
+            <div class="pod-update">
+              <span class="pod-update__date">APR 17 2026</span>
+              <div class="pod-update__title">Personal Computer on Mac</div>
+              <div class="pod-update__body">Local file editing, Comet browser, voice orchestration. Opus 4.7 is the default orchestrator.</div>
+            </div>
+
+            <div class="pod-update">
+              <span class="pod-update__date">APR 17 2026</span>
+              <div class="pod-update__title">Computer in Spaces</div>
+              <div class="pod-update__body">Collaborative AI workspace. Persistent memory per Space. Share AI context across a team.</div>
+            </div>
+
+            <div class="pod-update">
+              <span class="pod-update__date">APR 17 2026</span>
+              <div class="pod-update__title">Personal CFO (Plaid)</div>
+              <div class="pod-update__body">Link bank, credit, loans via Plaid. Net worth dashboard + portfolio tracker inside Perplexity.</div>
+            </div>
+
+            <div class="pod-update">
+              <span class="pod-update__date">MAR 27 2026</span>
+              <div class="pod-update__title">Comet iOS</div>
+              <div class="pod-update__body">Inline editing, task controls, live credit tracking. Mobile-first AI browser on iPhone.</div>
+            </div>
+
+            <div class="pod-update">
+              <span class="pod-update__date">MAR 13 2026</span>
+              <div class="pod-update__title">Deep Research → Deliverables</div>
+              <div class="pod-update__body">One prompt → slide deck, spreadsheet, dashboard, or deployable website. Research becomes artifact.</div>
+            </div>
+
+            <div class="pod-update">
+              <span class="pod-update__date">MAR 6 2026</span>
+              <div class="pod-update__title">Custom Skills + Model Council</div>
+              <div class="pod-update__body">Automate repeating tasks. Run multiple frontier models in parallel simultaneously.</div>
+            </div>
+
+            <div class="pod-update">
+              <span class="pod-update__date">FEB 13 2026</span>
+              <div class="pod-update__title">Opus 4.6 + Kimi K2.5</div>
+              <div class="pod-update__body">Enhanced memory, lower latency open-source reasoning. First non-Anthropic flagship in the lineup.</div>
+            </div>
+
+            <div class="pod-update">
+              <span class="pod-update__date">FEB 6 2026</span>
+              <div class="pod-update__title">Memory Engine v2</div>
+              <div class="pod-update__body">State-of-the-art recall benchmarks. 95% memory accuracy. Perplexity remembers you across sessions.</div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 10 · LIVE SIGNAL ══ -->
+      <section class="slide slide--chat" data-label="Live Signal" role="region" aria-label="Live search chat">
+        <div class="slide__inner slide__inner--chat">
+          <div class="slide-chat-head">
+            <div>
+              <div class="pod-label" style="margin-bottom:2px;">LIVE SIGNAL</div>
+              <div class="slide-h" style="margin-bottom:0;">Mid-Episode Search</div>
+            </div>
+            <div class="chat-live-badge">
+              <span class="chat-live-dot"></span>
+              PERPLEXITY LIVE
+            </div>
+          </div>
+          <div class="slide-chat-frame">
+            <iframe
+              src="/podcast/chat.html"
+              title="Live Signal — OpenRouter chat"
+              allow="clipboard-write"
+              loading="lazy"
+              sandbox="allow-scripts allow-same-origin allow-forms">
+            </iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 11 · SOURCES ══ -->
+      <section class="slide" data-label="Sources" role="region" aria-label="Sources">
+        <div class="slide__inner">
+          <div class="pod-label">SOURCES</div>
+          <h2 class="slide-h">Cited This Episode</h2>
+          <p class="slide-sub">14 REFERENCES · CLICK TO OPEN</p>
+
+          <div class="pod-card">
+            <div class="pod-card__inner">
+              <ol class="pod-sources">
+                <li data-n="1"><a href="https://koreaherald.com/article/10617705" target="_blank" rel="noopener noreferrer">Korea Herald — Samsung Taylor fab relocation</a></li>
+                <li data-n="2"><a href="https://www.nucnet.org/news/utah-announces-plans-to-deploy-up-to-10-holtec-small-modular-reactors-11-2-2025" target="_blank" rel="noopener noreferrer">NucNet — Utah Holtec SMR-300 plan</a></li>
+                <li data-n="3"><a href="https://www.latitudemedia.com/news/utah-bets-on-a-new-developer-to-revive-its-small-modular-reactor-ambitions/" target="_blank" rel="noopener noreferrer">Latitude Media — Utah SMR ambitions post-NuScale</a></li>
+                <li data-n="4"><a href="https://www.npr.org/2026/02/21/nx-s1-5721761/us-military-airlifts-small-reactor" target="_blank" rel="noopener noreferrer">NPR — Ward250 airlifted to Utah</a></li>
+                <li data-n="5"><a href="https://www.npr.org/2025/12/31/nx-s1-5662600/nick-shirley-minnesota-daycare-fraud" target="_blank" rel="noopener noreferrer">NPR — Nick Shirley Minnesota daycare fraud video</a></li>
+                <li data-n="6"><a href="https://en.wikipedia.org/wiki/Nick_Shirley" target="_blank" rel="noopener noreferrer">Wikipedia — Nick Shirley</a></li>
+                <li data-n="7"><a href="https://foxbaltimore.com/news/nation-world/ca-bill-nicknamed-stop-nick-shirley-act-raises-concerns-about-limiting-journalism-fraud" target="_blank" rel="noopener noreferrer">WBFF — "Stop Nick Shirley Act" First Amendment concerns</a></li>
+                <li data-n="8"><a href="https://www.nytimes.com/2026/04/26/business/media/white-house-correspondents-dinner-shooting.html" target="_blank" rel="noopener noreferrer">NYT — WHCD shooting, Trump evacuated</a></li>
+                <li data-n="9"><a href="https://www.youtube.com/watch?v=lgku06ZdpZw" target="_blank" rel="noopener noreferrer">YouTube — WHCD 2026 coverage</a></li>
+                <li data-n="10"><a href="https://www.perplexity.ai/changelog/personal-computer-on-mac-launch-and-computer-updates---april-17-2026" target="_blank" rel="noopener noreferrer">Perplexity Changelog — Personal Computer on Mac, Apr 17 2026</a></li>
+                <li data-n="11"><a href="https://www.perplexity.ai/changelog/" target="_blank" rel="noopener noreferrer">Perplexity Changelog — full history</a></li>
+                <li data-n="12"><a href="https://pricepertoken.com/leaderboards/benchmark/humaneval" target="_blank" rel="noopener noreferrer">HumanEval Leaderboard — pricepertoken.com</a></li>
+                <li data-n="13"><a href="https://www.exxactcorp.com/blog/Deep-Learning/how-do-bert-transformers-work" target="_blank" rel="noopener noreferrer">Exxact — How BERT Transformers work</a></li>
+                <li data-n="14"><a href="https://flexday.ai/bert/" target="_blank" rel="noopener noreferrer">Flexday AI — BERT explained simply</a></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /carousel-track -->
+
+    <button class="car-prev" id="carPrev" aria-label="Previous slide" disabled>‹</button>
+    <button class="car-next" id="carNext" aria-label="Next slide">›</button>
+    <div class="car-dots" id="carDots" role="tablist" aria-label="Slide navigation"></div>
   </main>
 
   <footer class="footer-bar">
     <span class="footer-bar__left" id="footerStatus">OP009 · The Signal Stack · 2026-04-28</span>
     <span class="footer-bar__right">
-      <span>Scroll · single page</span>
-      <span><a href="/podcast/index.html?descript=1" style="color:var(--text-muted)">Descript</a></span>
+      <span><kbd>←</kbd><kbd>→</kbd> navigate</span>
+      <span id="slideCounter" style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">1 / 11</span>
+      <span><a href="?descript=1" style="color:var(--text-muted)">Descript</a></span>
     </span>
   </footer>
 

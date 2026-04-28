@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Signal — EP009 Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080C14;
+      --panel:     rgba(12,18,30,0.92);
+      --border:    rgba(45,212,191,0.12);
+      --teal:      #2DD4BF;
+      --teal-dim:  rgba(45,212,191,0.08);
+      --text:      #E4E4E7;
+      --mid:       #94A3B8;
+      --muted:     #475569;
+      --green:     #34D399;
+      --red:       #F87171;
+      --font-ui:   'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 14px;
+      overflow: hidden;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    /* ── Top bar ── */
+    .chat-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+      flex-shrink: 0;
+    }
+    .chat-bar__model {
+      flex: 1;
+      min-width: 0;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--mid);
+      background: rgba(45,212,191,0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 10px;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .chat-bar__model:focus { border-color: rgba(45,212,191,0.28); }
+    .chat-bar__model option { background: #0d1525; }
+
+    .chat-bar__key {
+      flex: 0 0 auto;
+      width: 196px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--mid);
+      background: rgba(45,212,191,0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 10px;
+      outline: none;
+    }
+    .chat-bar__key::placeholder { color: var(--muted); }
+    .chat-bar__key:focus { border-color: rgba(45,212,191,0.28); }
+
+    .chat-bar__save {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--teal);
+      background: rgba(45,212,191,0.06);
+      border: 1px solid rgba(45,212,191,0.18);
+      border-radius: 6px;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: background 0.14s, border-color 0.14s;
+      white-space: nowrap;
+    }
+    .chat-bar__save:hover { background: rgba(45,212,191,0.12); border-color: rgba(45,212,191,0.32); }
+
+    /* ── Messages ── */
+    #msgs {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+    #msgs::-webkit-scrollbar { width: 4px; }
+    #msgs::-webkit-scrollbar-track { background: transparent; }
+    #msgs::-webkit-scrollbar-thumb { background: rgba(45,212,191,0.18); border-radius: 2px; }
+
+    .msg {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 88%;
+      animation: msg-in 0.22s ease both;
+    }
+    @keyframes msg-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .msg--user { align-self: flex-end; align-items: flex-end; }
+    .msg--assistant { align-self: flex-start; align-items: flex-start; }
+    .msg--system { align-self: center; align-items: center; }
+
+    .msg__role {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .msg--user .msg__role { color: rgba(45,212,191,0.5); }
+
+    .msg__bubble {
+      padding: 9px 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.58;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .msg--user .msg__bubble {
+      background: rgba(45,212,191,0.10);
+      border: 1px solid rgba(45,212,191,0.18);
+      color: var(--text);
+    }
+    .msg--assistant .msg__bubble {
+      background: rgba(12,18,30,0.75);
+      border: 1px solid rgba(45,212,191,0.08);
+      color: rgba(228,228,231,0.88);
+    }
+    .msg--system .msg__bubble {
+      background: rgba(45,212,191,0.04);
+      border: 1px solid rgba(45,212,191,0.08);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    /* Inline code */
+    .msg__bubble code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: rgba(45,212,191,0.08);
+      border: 1px solid rgba(45,212,191,0.10);
+      border-radius: 4px;
+      padding: 1px 5px;
+      color: var(--teal);
+    }
+
+    /* Streaming cursor */
+    .streaming-cursor::after {
+      content: '▋';
+      color: var(--teal);
+      animation: blink 0.85s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Input row ── */
+    .chat-input {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding: 10px 12px 12px;
+      border-top: 1px solid var(--border);
+      background: var(--panel);
+      flex-shrink: 0;
+    }
+    #userInput {
+      flex: 1;
+      min-height: 38px;
+      max-height: 110px;
+      resize: none;
+      background: rgba(45,212,191,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      line-height: 1.48;
+      scrollbar-width: thin;
+    }
+    #userInput::placeholder { color: var(--muted); }
+    #userInput:focus { border-color: rgba(45,212,191,0.28); }
+
+    #sendBtn {
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      background: rgba(45,212,191,0.10);
+      border: 1px solid rgba(45,212,191,0.22);
+      border-radius: 8px;
+      color: var(--teal);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.14s, box-shadow 0.14s;
+    }
+    #sendBtn:hover:not(:disabled) {
+      background: rgba(45,212,191,0.18);
+      box-shadow: 0 0 18px rgba(45,212,191,0.22);
+    }
+    #sendBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── Empty state ── */
+    #emptyState {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .empty-icon { font-size: 28px; opacity: 0.4; }
+    .empty-title { font-size: 13px; font-weight: 600; color: var(--mid); }
+    .empty-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 4px; }
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(45,212,191,0.65);
+      padding: 4px 12px;
+      border: 1px solid rgba(45,212,191,0.14);
+      border-radius: 999px;
+      background: rgba(45,212,191,0.04);
+      cursor: pointer;
+      transition: border-color 0.14s, color 0.14s;
+    }
+    .chip:hover { border-color: rgba(45,212,191,0.3); color: var(--teal); }
+
+    /* ── Error toast ── */
+    #errToast {
+      display: none;
+      position: fixed;
+      bottom: 68px; left: 50%; transform: translateX(-50%);
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.28);
+      color: var(--red);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 16px;
+      border-radius: 6px;
+      white-space: nowrap;
+      z-index: 99;
+      animation: fadein 0.18s ease;
+    }
+    @keyframes fadein { from{opacity:0;transform:translateX(-50%) translateY(4px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+    /* No-key warning */
+    #keyWarning {
+      display: none;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(248,113,113,0.7);
+      text-align: center;
+      padding: 4px 0 0;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Top bar: model + API key -->
+  <div class="chat-bar">
+    <select class="chat-bar__model" id="modelSel" title="Model">
+      <option value="perplexity/sonar-pro">perplexity/sonar-pro</option>
+      <option value="perplexity/sonar">perplexity/sonar</option>
+      <option value="anthropic/claude-sonnet-4-6">claude-sonnet-4-6</option>
+      <option value="openai/gpt-4o">gpt-4o</option>
+      <option value="google/gemini-2.5-pro">gemini-2.5-pro</option>
+      <option value="deepseek/deepseek-r1">deepseek-r1</option>
+    </select>
+    <input class="chat-bar__key" id="keyInput" type="password"
+      placeholder="OpenRouter API key (sk-or-…)" autocomplete="off" spellcheck="false">
+    <button class="chat-bar__save" id="saveKeyBtn">SAVE</button>
+  </div>
+  <div id="keyWarning">No API key — enter one above or pass ?orkey= in the URL</div>
+
+  <!-- Messages -->
+  <div id="msgs" role="log" aria-live="polite">
+    <div id="emptyState">
+      <div class="empty-icon">⚡</div>
+      <div class="empty-title">Live Signal</div>
+      <div class="empty-sub">Perplexity web search · EP009 context loaded</div>
+      <div class="chip-row">
+        <button class="chip" onclick="useChip(this)">What's NVDA doing today?</button>
+        <button class="chip" onclick="useChip(this)">Latest on Samsung Taylor fab?</button>
+        <button class="chip" onclick="useChip(this)">Holtec SMR status?</button>
+        <button class="chip" onclick="useChip(this)">SpaceX + Cursor latest?</button>
+        <button class="chip" onclick="useChip(this)">Perplexity news this week?</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input">
+    <textarea id="userInput" rows="1" placeholder="Ask anything… search is live"></textarea>
+    <button id="sendBtn" title="Send" aria-label="Send">↑</button>
+  </div>
+</div>
+
+<div id="errToast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var EP_SYSTEM = [
+    'You are the Live Signal assistant for The Signal Stack podcast, episode OP009 (2026-04-28).',
+    'You have web search capability. When the user asks about market data, news, or current events, search for up-to-date information.',
+    '',
+    'Episode topics for context:',
+    '- SpaceX adopted Cursor (Claude Sonnet 4.6) as their primary AI dev environment',
+    '- Samsung Taylor TX fab: 4.85M m², ~1,000 employees relocating, operational late 2026',
+    '- Utah SMR: Holtec SMR-300 plan, up to 10 reactors, 4GW target for Mountain West',
+    '- Valar Atomics Ward250: 5MW microreactor, airlifted to Utah, July 4 2026 first power target',
+    '- Nick Shirley: 135M view X video on MN daycare fraud, CA "Stop Nick Shirley Act"',
+    '- WHCD shooting: April 26 2026, Trump evacuated from Washington Hilton, dinner postponed',
+    '- AI benchmarks: Claude Sonnet 4.6 97.6% HumanEval, DeepSeek R1 97.4%, Qwen 3 480B 92.7%',
+    '- Stratum Engine: deployed CodeRabbit, Grafana/Loki, Sentry, Playwright E2E, Bartlett auto-deploy',
+    '- Perplexity: Personal Computer on Mac (Opus 4.7), Personal CFO (Plaid), Deep Research deliverables',
+    '',
+    'Keep answers tight, factual, and data-driven. Lead with numbers when available. Format for podcast flow — punchy, not academic.',
+  ].join('\n');
+
+  var msgs = [];
+  var streaming = false;
+  var orKey = '';
+
+  var msgsEl = document.getElementById('msgs');
+  var emptyEl = document.getElementById('emptyState');
+  var inputEl = document.getElementById('userInput');
+  var sendBtn = document.getElementById('sendBtn');
+  var keyInput = document.getElementById('keyInput');
+  var saveBtn = document.getElementById('saveKeyBtn');
+  var modelSel = document.getElementById('modelSel');
+  var keyWarning = document.getElementById('keyWarning');
+
+  /* ── Key management ── */
+  function loadKey() {
+    try {
+      var urlKey = new URLSearchParams(window.location.search).get('orkey');
+      if (urlKey) { orKey = urlKey; keyInput.value = urlKey; return; }
+      var stored = localStorage.getItem('or_api_key');
+      if (stored) { orKey = stored; keyInput.value = stored; }
+    } catch (e) {}
+  }
+
+  function saveKey() {
+    var v = keyInput.value.trim();
+    if (!v) return;
+    orKey = v;
+    try { localStorage.setItem('or_api_key', v); } catch (e) {}
+    keyWarning.style.display = 'none';
+    flash(saveBtn, 'SAVED ✓');
+  }
+
+  function flash(el, txt) {
+    var orig = el.textContent;
+    el.textContent = txt;
+    setTimeout(function () { el.textContent = orig; }, 1600);
+  }
+
+  saveBtn.addEventListener('click', saveKey);
+  keyInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); saveKey(); }
+  });
+
+  /* ── Render ── */
+  function renderMsg(role, text, streaming) {
+    var div = document.createElement('div');
+    div.className = 'msg msg--' + role;
+    var roleLabel = role === 'user' ? 'YOU' : role === 'assistant' ? 'SIGNAL' : 'SYS';
+    div.innerHTML =
+      '<span class="msg__role">' + roleLabel + '</span>' +
+      '<div class="msg__bubble' + (streaming ? ' streaming-cursor' : '') + '">' +
+      escHtml(text) +
+      '</div>';
+    return div;
+  }
+
+  function escHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+
+  function addMsg(role, text, streamEl) {
+    if (emptyEl && emptyEl.parentNode) emptyEl.parentNode.removeChild(emptyEl);
+    if (streamEl) {
+      streamEl.querySelector('.msg__bubble').innerHTML = escHtml(text);
+      return streamEl;
+    }
+    var el = renderMsg(role, text, false);
+    msgsEl.appendChild(el);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    return el;
+  }
+
+  function createStreamingEl(role) {
+    if (emptyEl && emptyEl.parentNode) emptyEl.parentNode.removeChild(emptyEl);
+    var el = renderMsg(role, '', true);
+    msgsEl.appendChild(el);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    return el;
+  }
+
+  function updateStream(el, text) {
+    var bubble = el.querySelector('.msg__bubble');
+    bubble.innerHTML = escHtml(text);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  }
+
+  function finalizeStream(el, text) {
+    var bubble = el.querySelector('.msg__bubble');
+    bubble.className = 'msg__bubble';
+    bubble.innerHTML = escHtml(text);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  }
+
+  function showErr(msg) {
+    var toast = document.getElementById('errToast');
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(function () { toast.style.display = 'none'; }, 5000);
+  }
+
+  /* ── Send ── */
+  function setSending(v) {
+    streaming = v;
+    sendBtn.disabled = v;
+    inputEl.disabled = v;
+  }
+
+  async function send(userText) {
+    if (streaming || !userText.trim()) return;
+    if (!orKey) {
+      keyWarning.style.display = 'block';
+      keyInput.focus();
+      return;
+    }
+
+    addMsg('user', userText);
+    msgs.push({ role: 'user', content: userText });
+    inputEl.value = '';
+    inputEl.style.height = '';
+    setSending(true);
+
+    var streamEl = createStreamingEl('assistant');
+    var accumulated = '';
+
+    try {
+      var payload = {
+        model: modelSel.value,
+        messages: [{ role: 'system', content: EP_SYSTEM }].concat(msgs),
+        stream: true,
+        max_tokens: 1024,
+      };
+
+      var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + orKey,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': window.location.origin || 'https://luke-the-duke.com',
+          'X-Title': 'The Signal Stack EP009',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!resp.ok) {
+        var errBody = await resp.text().catch(function () { return ''; });
+        throw new Error(resp.status + ' ' + (errBody || resp.statusText));
+      }
+
+      var reader = resp.body.getReader();
+      var decoder = new TextDecoder();
+      var buf = '';
+
+      while (true) {
+        var chunk = await reader.read();
+        if (chunk.done) break;
+        buf += decoder.decode(chunk.value, { stream: true });
+        var lines = buf.split('\n');
+        buf = lines.pop();
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line || line === 'data: [DONE]') continue;
+          if (line.startsWith('data: ')) {
+            try {
+              var data = JSON.parse(line.slice(6));
+              var delta = data.choices && data.choices[0] && data.choices[0].delta;
+              if (delta && delta.content) {
+                accumulated += delta.content;
+                updateStream(streamEl, accumulated);
+              }
+            } catch (e) {}
+          }
+        }
+      }
+
+      finalizeStream(streamEl, accumulated || '(no response)');
+      msgs.push({ role: 'assistant', content: accumulated });
+
+    } catch (err) {
+      finalizeStream(streamEl, '[Error] ' + err.message);
+      msgs.pop();
+      showErr(err.message.slice(0, 80));
+    } finally {
+      setSending(false);
+      inputEl.focus();
+    }
+  }
+
+  /* ── Input handlers ── */
+  sendBtn.addEventListener('click', function () {
+    send(inputEl.value);
+  });
+
+  inputEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send(inputEl.value);
+    }
+  });
+
+  inputEl.addEventListener('input', function () {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + 'px';
+  });
+
+  window.useChip = function (el) {
+    inputEl.value = el.textContent.trim();
+    send(inputEl.value);
+  };
+
+  /* ── Init ── */
+  loadKey();
+  inputEl.focus();
+})();
+</script>
+</body>
+</html>

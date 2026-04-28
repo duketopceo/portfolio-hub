@@ -257,7 +257,11 @@ export async function fetchAllOpenPullsAggregated(): Promise<
   >
 > {
   const owner = GITHUB_ACCOUNT_LOGIN;
-  const uniqueNames = [...new Set(projectConfigs.map((p) => p.repoName))];
+  const uniqueNames = [
+    ...new Set(
+      projectConfigs.filter((p) => !p.private).map((p) => p.repoName)
+    ),
+  ];
 
   const perRepo = await runWithConcurrency(uniqueNames, 4, async (repoName) => {
     const meta = repoNameToMeta.get(repoName)!;

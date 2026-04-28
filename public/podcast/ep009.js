@@ -1,272 +1,27 @@
 (function () {
   'use strict';
 
-  var HEADLINES = [
-    {
-      title: 'SpaceX signs Cursor as primary AI dev environment across engineering teams',
-      sourceLabel: 'The Verge',
-      sourceUrl: 'https://www.theverge.com',
-      context:
-        'SpaceX adopted Cursor — the AI code editor powered by Sonnet — across its engineering teams. This is the highest-profile enterprise validation of AI-assisted coding to date. It directly ties into the local model vs. cloud model debate this episode covers.',
-    },
-    {
-      title: 'Samsung moves 1,000 staff to Taylor, Texas fab — operational late 2026',
-      sourceLabel: 'Korea Herald',
-      sourceUrl: 'https://koreaherald.com/article/10617705',
-      context:
-        "Samsung's Taylor campus spans 4.85M m² and will produce advanced AI chips by late 2026. This is part of the broader US semiconductor reshoring push, accelerated by tariff policy and CHIPS Act incentives.",
-    },
-    {
-      title: 'Utah bets on Holtec for up to 10 SMR-300 reactors — 4GW target',
-      sourceLabel: 'NucNet',
-      sourceUrl:
-        'https://www.nucnet.org/news/utah-announces-plans-to-deploy-up-to-10-holtec-small-modular-reactors-11-2-2025',
-      context:
-        "After the NuScale/UAMPS Carbon Free Power Project collapsed, Utah pivoted to Holtec International's SMR-300 design. The plan targets up to 4 GW across the Mountain West, positioning Utah as a nuclear energy hub.",
-    },
-    {
-      title: 'Valar Atomics Ward250 airlifted to Utah — July 4, 2026 first power target',
-      sourceLabel: 'NPR',
-      sourceUrl: 'https://www.npr.org/2026/02/21/nx-s1-5721761/us-military-airlifts-small-reactor',
-      context:
-        'The Ward250 is a 5MW microreactor small enough to fit in a military cargo plane. It was airlifted to the San Rafael Energy Lab in Utah and is targeting first power generation on July 4, 2026 — a deliberate symbolic date.',
-    },
-    {
-      title: 'Nick Shirley daycare fraud video hits 135M views — Trump admin halts MN funding',
-      sourceLabel: 'NPR',
-      sourceUrl: 'https://www.npr.org/2025/12/31/nx-s1-5662600/nick-shirley-minnesota-daycare-fraud',
-      context:
-        'A 23-year-old YouTuber released a 42-minute video alleging fraud at Somali-run daycares in Minnesota. It went viral at 135M views on X. The Trump administration halted child care funding for Minnesota in response, though state investigators found no evidence of fraud at the specific sites visited.',
-    },
-    {
-      title: "California bill nicknamed 'Stop Nick Shirley Act' raises First Amendment concerns",
-      sourceLabel: 'WBFF',
-      sourceUrl:
-        'https://foxbaltimore.com/news/nation-world/ca-bill-nicknamed-stop-nick-shirley-act-raises-concerns-about-limiting-journalism-fraud',
-      context:
-        'California lawmakers introduced a bill Republicans dubbed the "Stop Nick Shirley Act" aimed at restricting certain styles of viral investigative content. Critics argue it targets journalism and could chill free speech.',
-    },
-    {
-      title: "Shots fired outside White House Correspondents' Dinner — Trump evacuated",
-      sourceLabel: 'NYT',
-      sourceUrl: 'https://www.nytimes.com/2026/04/26/business/media/white-house-correspondents-dinner-shooting.html',
-      context:
-        'President Trump attended the WHCD for the first time as president on April 26, 2026. Shortly after 8:30 PM, gunshots rang outside the Washington Hilton ballroom. Secret Service rushed the stage and evacuated Trump, Vance, and Melania. The dinner was postponed.',
-    },
-    {
-      title: 'Perplexity launches Personal Computer on Mac — Opus 4.7 default orchestrator',
-      sourceLabel: 'Perplexity Changelog',
-      sourceUrl:
-        'https://www.perplexity.ai/changelog/personal-computer-on-mac-launch-and-computer-updates---april-17-2026',
-      context:
-        "Perplexity's Personal Computer feature launched on Mac with local file editing, Comet browser integration, and voice orchestration. Opus 4.7 is now the default model for orchestrating multi-step computer tasks.",
-    },
-    {
-      title: 'Perplexity Personal CFO: link bank accounts via Plaid, track net worth + portfolio',
-      sourceLabel: 'Perplexity Changelog',
-      sourceUrl: 'https://www.perplexity.ai/changelog/',
-      context:
-        'Perplexity now integrates directly with Plaid to connect bank accounts, credit cards, and loans. Users get a unified net worth dashboard and portfolio tracker inside the Perplexity interface.',
-    },
-    {
-      title: 'Perplexity Deep Research now creates presentations, spreadsheets, and websites',
-      sourceLabel: 'Perplexity Changelog',
-      sourceUrl: 'https://www.perplexity.ai/changelog/',
-      context:
-        'Deep Research went beyond text — it can now output full deliverables: slide decks, Excel-compatible spreadsheets, dashboards, and deployable websites from a single research prompt.',
-    },
-  ];
-
-  var STRATUM_LINES = [
-    { flag: '+', text: 'CodeRabbit AI PR reviews — reads luke-agents standards on every pull request' },
-    { flag: '+', text: 'Bartlett Server nightly auto-deploy — 2AM cron, 24-section test suite, Docker' },
-    { flag: '+', text: 'Nanobot (Zulip bot) — container health monitor, alerts to #Server-Alerts channel' },
-    { flag: '+', text: 'Grafana + Loki centralized logging — 30-day retention across Docker Swarm' },
-    { flag: '+', text: 'Sentry error tracking — FastAPI backend + React frontend, release-linked' },
-    { flag: '+', text: 'Testing pyramid formalized — unit / integration / E2E, 80%+ coverage target' },
-    { flag: '+', text: 'TOOLS_OPERATIONS.md — canonical ops source of truth in luke-agents repo' },
-    { flag: '+', text: 'Playwright E2E tests — user-flow tests run against staging environment' },
-    { flag: '+', text: 'make lint / make format — ruff + mypy enforced pre-commit' },
-    { flag: '~', text: 'GitHub Actions CI — paused (free tier exhausted), manual fly deploy for now' },
-    { flag: '~', text: 'Staging: stratum-engine-staging.fly.dev' },
-    { flag: '~', text: 'Production: stratumhq.app' },
-  ];
-
-  var PERPLEX = [
-    { date: 'APR 17 2026', title: 'Personal Computer on Mac', body: 'Local file editing, Comet browsing, voice orchestration. Opus 4.7 default.' },
-    { date: 'APR 17 2026', title: 'Computer in Spaces', body: 'Collaborative AI workspace. Persistent memory per Space.' },
-    { date: 'APR 17 2026', title: 'Personal CFO (Plaid)', body: 'Link bank/credit/loans. Net worth + portfolio dashboard.' },
-    { date: 'MAR 27 2026', title: 'Comet iOS', body: 'Inline editing, task controls, live credit tracking.' },
-    { date: 'MAR 13 2026', title: 'Deep Research → Deliverables', body: 'Outputs presentations, spreadsheets, dashboards, websites from one prompt.' },
-    { date: 'MAR 6 2026', title: 'Custom Skills + Model Council', body: 'Automate repeating tasks. Run parallel frontier models simultaneously.' },
-    { date: 'FEB 13 2026', title: 'Opus 4.6 + Kimi K2.5', body: 'Enhanced memory, lower latency open-source reasoning.' },
-    { date: 'FEB 6 2026', title: 'Memory Engine v2', body: 'State-of-the-art recall benchmarks. 95% memory accuracy.' },
-  ];
-
-  var SOURCES = [
-    { title: 'Korea Herald — Samsung Taylor fab', url: 'https://koreaherald.com/article/10617705' },
-    {
-      title: 'NucNet — Utah Holtec SMR',
-      url: 'https://www.nucnet.org/news/utah-announces-plans-to-deploy-up-to-10-holtec-small-modular-reactors-11-2-2025',
-    },
-    {
-      title: 'Latitude Media — Utah SMR ambitions',
-      url: 'https://www.latitudemedia.com/news/utah-bets-on-a-new-developer-to-revive-its-small-modular-reactor-ambitions/',
-    },
-    { title: 'NPR — Ward250 airlifted', url: 'https://www.npr.org/2026/02/21/nx-s1-5721761/us-military-airlifts-small-reactor' },
-    {
-      title: 'NPR — Nick Shirley daycare fraud',
-      url: 'https://www.npr.org/2025/12/31/nx-s1-5662600/nick-shirley-minnesota-daycare-fraud',
-    },
-    { title: 'Wikipedia — Nick Shirley', url: 'https://en.wikipedia.org/wiki/Nick_Shirley' },
-    {
-      title: 'WBFF — Stop Nick Shirley Act',
-      url: 'https://foxbaltimore.com/news/nation-world/ca-bill-nicknamed-stop-nick-shirley-act-raises-concerns-about-limiting-journalism-fraud',
-    },
-    {
-      title: 'NYT — WHCD shooting',
-      url: 'https://www.nytimes.com/2026/04/26/business/media/white-house-correspondents-dinner-shooting.html',
-    },
-    { title: 'YouTube — WHCD coverage', url: 'https://www.youtube.com/watch?v=lgku06ZdpZw' },
-    {
-      title: 'Perplexity Changelog — Apr 17 2026',
-      url: 'https://www.perplexity.ai/changelog/personal-computer-on-mac-launch-and-computer-updates---april-17-2026',
-    },
-    { title: 'Perplexity Changelog — full', url: 'https://www.perplexity.ai/changelog/' },
-    { title: 'HumanEval Leaderboard', url: 'https://pricepertoken.com/leaderboards/benchmark/humaneval' },
-    { title: 'Exxact — BERT explained', url: 'https://www.exxactcorp.com/blog/Deep-Learning/how-do-bert-transformers-work' },
-    { title: 'Flexday AI — BERT simple', url: 'https://flexday.ai/bert/' },
-  ];
-
-  function esc(s) {
-    if (!s) return '';
-    var d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
-  function renderHeadlines() {
-    var root = document.getElementById('hlStack');
-    if (!root) return;
-    var html = '';
-    for (var i = 0; i < HEADLINES.length; i++) {
-      var h = HEADLINES[i];
-      var id = 'hl-ctx-' + i;
-      html +=
-        '<article class="glass-card hl-card" data-hl-card>' +
-        '<div class="glass-card__inner">' +
-        '<h3 class="hl-card__title">' +
-        esc(h.title) +
-        '</h3>' +
-        '<p class="hl-card__src"><a href="' +
-        esc(h.sourceUrl) +
-        '" target="_blank" rel="noopener noreferrer">' +
-        esc(h.sourceLabel) +
-        '</a></p>' +
-        '<button type="button" class="hl-card__toggle" data-ctx-toggle aria-expanded="false" aria-controls="' +
-        id +
-        '">▸ CONTEXT</button>' +
-        '<div class="hl-card__ctx" id="' +
-        id +
-        '" role="region" aria-hidden="true">' +
-        esc(h.context) +
-        '</div>' +
-        '</div></article>';
-    }
-    root.innerHTML = html;
-  }
-
-  function bindHeadlineToggles() {
-    document.querySelectorAll('[data-ctx-toggle]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var card = btn.closest('[data-hl-card]');
-        var id = btn.getAttribute('aria-controls');
-        var pane = id ? document.getElementById(id) : null;
-        var open = btn.getAttribute('aria-expanded') === 'true';
-        var next = !open;
-        btn.setAttribute('aria-expanded', next ? 'true' : 'false');
-        if (card) card.classList.toggle('is-open', next);
-        btn.textContent = next ? '▾ CONTEXT' : '▸ CONTEXT';
-        if (pane) pane.setAttribute('aria-hidden', next ? 'false' : 'true');
-      });
-    });
-  }
-
-  function renderStratum() {
-    var el = document.getElementById('stmBlock');
-    if (!el) return;
-    var lines = STRATUM_LINES.map(function (row) {
-      var sym = row.flag === '+' ? '[+]' : '[~]';
-      var cls = row.flag === '+' ? 'shipped' : 'progress';
-      return (
-        '<div class="stm-line"><span class="' + cls + '">' + sym + ' ' + esc(row.text) + '</span></div>'
-      );
-    });
-    el.innerHTML = lines.join('');
-  }
-
-  function renderPerplex() {
-    var root = document.getElementById('perplexGrid');
-    if (!root) return;
-    var html = '';
-    for (var i = 0; i < PERPLEX.length; i++) {
-      var p = PERPLEX[i];
-      html +=
-        '<article class="glass-card perplex-card"><div class="glass-card__inner">' +
-        '<span class="perplex-card__date">' +
-        esc(p.date) +
-        '</span>' +
-        '<h3 class="perplex-card__title">' +
-        esc(p.title) +
-        '</h3>' +
-        '<p class="perplex-card__body">' +
-        esc(p.body) +
-        '</p>' +
-        '</div></article>';
-    }
-    root.innerHTML = html;
-  }
-
-  function renderSources() {
-    var list = document.getElementById('srcList');
-    if (!list) return;
-    var html = '';
-    for (var i = 0; i < SOURCES.length; i++) {
-      var s = SOURCES[i];
-      html +=
-        '<li>' +
-        (i + 1) +
-        '. ' +
-        esc(s.title) +
-        ' — <a href="' +
-        esc(s.url) +
-        '" target="_blank" rel="noopener noreferrer">' +
-        esc(s.url) +
-        '</a></li>';
-    }
-    list.innerHTML = html;
-  }
-
+  /* ── Ticker symbols ─────────────────────────────────────── */
   function initTicker() {
     var bar = document.getElementById('tickerBar');
     if (!bar) return;
     var descript = document.body.classList.contains('mc-descript');
     var symbols = [
       { proName: 'NASDAQ:NVDA', title: 'NVIDIA' },
-      { proName: 'NASDAQ:AMD', title: 'AMD' },
-      { proName: 'NYSE:SMR', title: 'NuScale / SMR basket' },
+      { proName: 'NASDAQ:AMD',  title: 'AMD' },
+      { proName: 'NYSE:SMR',    title: 'SMR' },
       { proName: 'FOREXCOM:SPXUSD', title: 'S&P 500' },
       { proName: 'BITSTAMP:BTCUSD', title: 'Bitcoin' },
     ];
     bar.innerHTML = '';
-    var wrap = document.createElement('div');
+    var wrap  = document.createElement('div');
     wrap.className = 'tradingview-widget-container';
     var inner = document.createElement('div');
     inner.className = 'tradingview-widget-container__widget';
     wrap.appendChild(inner);
     var scr = document.createElement('script');
     scr.type = 'text/javascript';
-    scr.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+    scr.src  = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
     scr.async = true;
     scr.textContent = JSON.stringify({
       symbols: symbols,
@@ -280,27 +35,23 @@
     bar.appendChild(wrap);
   }
 
+  /* ── TradingView chart ──────────────────────────────────── */
   function toolbarBgFromTheme() {
     var c = getComputedStyle(document.body).backgroundColor;
     return c && c !== 'rgba(0, 0, 0, 0)' ? c : '';
   }
 
   function normalizeSymbol(raw) {
-    var s = String(raw || '')
-      .trim()
-      .toUpperCase();
+    var s = String(raw || '').trim().toUpperCase();
     if (!s) return null;
-    if (s.indexOf(':') >= 0) return s;
-    return 'NASDAQ:' + s;
+    return s.indexOf(':') >= 0 ? s : 'NASDAQ:' + s;
   }
 
   function initTradingView() {
     var container = document.getElementById('tv_chart_container');
-    var input = document.getElementById('symbolInput');
-    var apply = document.getElementById('symbolApply');
+    var input     = document.getElementById('symbolInput');
+    var apply     = document.getElementById('symbolApply');
     if (!container || typeof TradingView === 'undefined' || !TradingView.widget) return;
-
-    var toolbarBg = toolbarBgFromTheme();
 
     var widget = new TradingView.widget({
       container_id: 'tv_chart_container',
@@ -311,7 +62,7 @@
       theme: 'dark',
       style: '1',
       locale: 'en',
-      toolbar_bg: toolbarBg || undefined,
+      toolbar_bg: toolbarBgFromTheme() || undefined,
       enable_publishing: false,
       hide_top_toolbar: false,
       hide_legend: false,
@@ -322,42 +73,44 @@
 
     function applySymbol() {
       var sym = normalizeSymbol(input && input.value);
-      if (!sym || !widget || typeof widget.setSymbol !== 'function') return;
+      if (!sym || typeof widget.setSymbol !== 'function') return;
       widget.setSymbol(sym, '1D', function () {});
     }
 
     if (apply) apply.addEventListener('click', applySymbol);
     if (input) {
       input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          applySymbol();
-        }
+        if (e.key === 'Enter') { e.preventDefault(); applySymbol(); }
       });
     }
   }
 
-  function initSourcesToggle() {
-    var panel = document.getElementById('srcPanel');
-    var btn = document.getElementById('srcToggle');
-    var list = document.getElementById('srcList');
-    if (!panel || !btn || !list) return;
-    btn.addEventListener('click', function () {
-      var open = panel.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      list.setAttribute('aria-hidden', open ? 'false' : 'true');
-      btn.textContent = open ? '[ SOURCES ↑ ]' : '[ SOURCES ↓ ]';
+  /* ── Collapsible flashcard items ────────────────────────── */
+  function initCollapsibles() {
+    document.querySelectorAll('.fc-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('.fc-item');
+        if (!item) return;
+        var body  = item.querySelector('.fc-body');
+        var icon  = btn.querySelector('.fc-icon');
+        var open  = item.classList.toggle('is-open');
+
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (body)  body.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (icon)  icon.textContent = open ? '×' : '+';
+      });
     });
   }
 
+  /* ── Star field ─────────────────────────────────────────── */
   function initStars() {
     var canvas = document.getElementById('starsCanvas');
     if (!canvas || !canvas.getContext) return;
-    var ctx = canvas.getContext('2d');
+    var ctx   = canvas.getContext('2d');
     var stars = [];
 
     function resize() {
-      canvas.width = window.innerWidth;
+      canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
       stars = [];
       var n = Math.floor((canvas.width * canvas.height) / 5000);
@@ -390,6 +143,7 @@
     requestAnimationFrame(frame);
   }
 
+  /* ── Descript layout mode ───────────────────────────────── */
   function initDescriptLayout() {
     try {
       var q = new URLSearchParams(window.location.search);
@@ -399,41 +153,98 @@
     } catch (e) {}
   }
 
-  function initMarketToggle() {
-    var sec = document.querySelector('.ep-section--market');
-    var btn = document.getElementById('epMarketToggle');
-    var panel = document.getElementById('epMarketPanel');
-    if (!sec || !btn || !panel) return;
-    var collapsed = sessionStorage.getItem('ep009_chart_collapsed') === '1';
-    function apply() {
-      sec.classList.toggle('is-chart-collapsed', collapsed);
-      btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-      btn.textContent = collapsed ? 'Show chart' : 'Hide chart';
-      if (window.__tvWidget && typeof window.__tvWidget.resize === 'function') {
-        try {
-          window.__tvWidget.resize();
-        } catch (e) {}
-      }
+  /* ── Carousel ───────────────────────────────────────────── */
+  var _carCur   = 0;
+  var _carTotal = 0;
+
+  function initCarousel() {
+    var track   = document.getElementById('carouselTrack');
+    var dotsEl  = document.getElementById('carDots');
+    var prevBtn = document.getElementById('carPrev');
+    var nextBtn = document.getElementById('carNext');
+    if (!track) return;
+
+    var slides = track.querySelectorAll('.slide');
+    _carTotal  = slides.length;
+    if (_carTotal === 0) return;
+
+    for (var i = 0; i < _carTotal; i++) {
+      (function (idx) {
+        var dot = document.createElement('button');
+        dot.className = 'car-dot';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', slides[idx].getAttribute('data-label') || ('Slide ' + (idx + 1)));
+        dot.addEventListener('click', function () { carGo(idx); });
+        if (dotsEl) dotsEl.appendChild(dot);
+      })(i);
     }
-    if (collapsed) apply();
-    btn.addEventListener('click', function () {
-      collapsed = !collapsed;
-      sessionStorage.setItem('ep009_chart_collapsed', collapsed ? '1' : '0');
-      apply();
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { carGo(_carCur - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { carGo(_carCur + 1); });
+
+    var swipeX = 0;
+    var stage  = document.getElementById('carouselStage');
+    if (stage) {
+      stage.addEventListener('touchstart', function (e) {
+        swipeX = e.touches[0].clientX;
+      }, { passive: true });
+      stage.addEventListener('touchend', function (e) {
+        var dx = e.changedTouches[0].clientX - swipeX;
+        if (Math.abs(dx) > 48) carGo(dx < 0 ? _carCur + 1 : _carCur - 1);
+      }, { passive: true });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); carGo(_carCur + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); carGo(_carCur - 1); }
     });
+
+    carGo(0);
   }
 
+  function carGo(n) {
+    var track   = document.getElementById('carouselTrack');
+    var dotsEl  = document.getElementById('carDots');
+    var prevBtn = document.getElementById('carPrev');
+    var nextBtn = document.getElementById('carNext');
+    var counter = document.getElementById('slideCounter');
+    if (!track) return;
+
+    var slides = track.querySelectorAll('.slide');
+    if (n < 0 || n >= slides.length) return;
+    _carCur = n;
+
+    track.style.transform = 'translateX(calc(' + (-n) + ' * 100vw))';
+
+    for (var i = 0; i < slides.length; i++) {
+      if (i === n) {
+        slides[i].classList.remove('is-active');
+        void slides[i].offsetWidth;
+        slides[i].classList.add('is-active');
+        slides[i].scrollTop = 0;
+      } else {
+        slides[i].classList.remove('is-active');
+      }
+    }
+
+    if (dotsEl) {
+      var dots = dotsEl.querySelectorAll('.car-dot');
+      for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('active', d === n);
+    }
+
+    if (prevBtn) prevBtn.disabled = (n === 0);
+    if (nextBtn) nextBtn.disabled = (n === slides.length - 1);
+    if (counter) counter.textContent = (n + 1) + ' / ' + slides.length;
+  }
+
+  /* ── Boot ───────────────────────────────────────────────── */
   function boot() {
     initDescriptLayout();
     initStars();
     initTicker();
-    renderHeadlines();
-    bindHeadlineToggles();
-    renderStratum();
-    renderPerplex();
-    renderSources();
-    initSourcesToggle();
-    initMarketToggle();
+    initCollapsibles();
+    initCarousel();
     if (document.readyState === 'complete') {
       initTradingView();
     } else {
