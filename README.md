@@ -154,6 +154,8 @@ chmod +x scripts/cluster-deploy.sh   # once
 ./scripts/cluster-deploy.sh
 ```
 
+If **`git fetch`** fails on the server (HTTPS / SSH), see **[docs/DEPLOY-GIT-AUTH.md](docs/DEPLOY-GIT-AUTH.md)**. To build and roll **without** pulling (emergency only): `SKIP_GIT=1 ./scripts/cluster-deploy.sh`.
+
 This **fetch + `reset --hard origin/main`**, **`docker compose build`**, **`docker push`** to **`ghcr.io/.../latest`** (so worker nodes can pull the image), **`docker stack deploy`**, then **`docker service update --force --with-registry-auth`** on **`portfolio_portfolio`** (retries if Swarm reports “update out of sequence”). Override **`STACK_NAME`** / **`SERVICE_NAME`** if your stack differs.
 
 **Multi-node Swarm — tasks fail with `No such image: ghcr.io/.../latest` on a worker:** the image only existed on the manager after `docker compose build`. Workers must pull from the registry — **`docker push`** on the manager (after **`docker login ghcr.io`** with a PAT that has `write:packages`). The script pushes by default. **`--with-registry-auth`** on `service update` forwards your registry login so workers can pull private images. To skip push (single-node / image already everywhere): `SKIP_PUSH=1 ./scripts/cluster-deploy.sh`.

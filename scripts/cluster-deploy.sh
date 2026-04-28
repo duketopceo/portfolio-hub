@@ -18,6 +18,9 @@
 # Skip registry push (only if all replicas run on this node and image is already loaded):
 #   SKIP_PUSH=1 ./scripts/cluster-deploy.sh
 #
+# Skip git sync (build + push + Swarm from whatever is already on disk — use while fixing HTTPS/SSH auth):
+#   SKIP_GIT=1 ./scripts/cluster-deploy.sh
+#
 # Override if needed:
 #   STACK_NAME=portfolio SERVICE_NAME=portfolio_portfolio ./scripts/cluster-deploy.sh
 #
@@ -31,20 +34,26 @@ IMAGE="${IMAGE:-ghcr.io/duketopceo/portfolio-hub:latest}"
 # Compose service is "portfolio" → Swarm name is "<stack>_portfolio"
 SERVICE_NAME="${SERVICE_NAME:-${STACK_NAME}_portfolio}"
 SKIP_PUSH="${SKIP_PUSH:-0}"
+SKIP_GIT="${SKIP_GIT:-0}"
 
 echo "==> portfolio-hub cluster deploy"
 echo "    ROOT=$ROOT"
-echo "    STACK_NAME=$STACK_NAME  IMAGE=$IMAGE  SKIP_PUSH=$SKIP_PUSH"
+echo "    STACK_NAME=$STACK_NAME  IMAGE=$IMAGE  SKIP_PUSH=$SKIP_PUSH  SKIP_GIT=$SKIP_GIT"
 
 if [[ ! -f docker-compose.yml ]]; then
   echo "error: docker-compose.yml not found (run from repo root)" >&2
   exit 1
 fi
 
-echo "==> git: fetch + hard reset to origin/main (discard local commits on server)"
-git fetch origin
-git reset --hard "origin/main"
-echo "    HEAD=$(git rev-parse --short HEAD) $(git log -1 --oneline)"
+if [[ "$SKIP_GIT" == "1" ]]; then
+  echo "==> SKIP_GIT=1 — not fetching (using current working tree; ensure it matches what you intend to ship)"
+  echo "    HEAD=$(git rev-parse --short HEAD 2>/dev/null || echo '?') $(git log -1 --oneline 2>/dev/null || true)"
+else
+  echo "==> git: fetch + hard reset to origin/main (discard local commits on server)"
+  git fetch origin
+  git reset --hard "origin/main"
+  echo "    HEAD=$(git rev-parse --short HEAD) $(git log -1 --oneline)"
+fi
 
 echo "==> docker compose build (loads .env for GITHUB_TOKEN build-arg)"
 docker compose build portfolio
