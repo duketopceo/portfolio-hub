@@ -33,6 +33,14 @@ git ls-remote origin HEAD
 
 If `git ls-remote` succeeds, run **`./scripts/cluster-deploy.sh`** (no PAT needed for fetch).
 
+If **`git ls-remote` still fails** after clearing `~/.git-credentials`, **`~/.netrc`** is the usual culprit: **libcurl** (used by Git’s HTTPS transport) sends `machine github.com` login/password even when Git’s `credential.helper` is unset. Edit **`~/.netrc`** and remove the **`machine github.com`** block, **or** run fetches with netrc disabled:
+
+```bash
+git -c credential.helper= -c http.useNetrc=false ls-remote origin HEAD
+```
+
+Automated checks + same test: **`bash scripts/fix-github-https-auth.sh`** (from repo root).
+
 ### 1) If you still need a PAT (private fork, rate limits, org policy)
 
 1. Create a **new** PAT (classic **`repo`**, or fine‑grained read on this repo). Revoke any token that was ever pasted into chat, logs, or tickets.

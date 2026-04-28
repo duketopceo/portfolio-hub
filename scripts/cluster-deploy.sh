@@ -50,7 +50,12 @@ if [[ "$SKIP_GIT" == "1" ]]; then
   echo "    HEAD=$(git rev-parse --short HEAD 2>/dev/null || echo '?') $(git log -1 --oneline 2>/dev/null || true)"
 else
   echo "==> git: fetch + hard reset to origin/main (discard local commits on server)"
-  git fetch origin
+  # Public clone URL — strips any user:token@ accidentally baked into origin.
+  git remote set-url origin "https://github.com/duketopceo/portfolio-hub.git"
+  # Stale Authorization headers (e.g. old gh actions / PAT experiments) break public HTTPS.
+  git config --local --unset-all http.https://github.com/.extraheader 2>/dev/null || true
+  # Ignore broken ~/.netrc github.com lines (libcurl otherwise sends bad Basic auth for HTTPS).
+  git -c credential.helper= -c http.useNetrc=false fetch origin
   git reset --hard "origin/main"
   echo "    HEAD=$(git rev-parse --short HEAD) $(git log -1 --oneline)"
 fi
