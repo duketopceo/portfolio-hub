@@ -9,14 +9,16 @@ import {
   type GithubRequestFailure,
 } from "./github-errors";
 
-const GITHUB_API = "https://api.github.com";
-const GITHUB_USER = process.env.GITHUB_USER || "duketopceo";
+export const GITHUB_API_BASE = "https://api.github.com";
+const GITHUB_API = GITHUB_API_BASE;
+export const GITHUB_ACCOUNT_LOGIN = process.env.GITHUB_USER || "duketopceo";
+const GITHUB_USER = GITHUB_ACCOUNT_LOGIN;
 const TOKEN = process.env.GITHUB_TOKEN;
 
 /**
- * Headers for GitHub API requests.
+ * Headers for GitHub API requests (server-side only).
  */
-function authHeaders(): HeadersInit {
+export function githubAuthHeaders(): HeadersInit {
   const h: HeadersInit = {
     Accept: "application/vnd.github.v3+json",
     "User-Agent": "portfolio-hub",
@@ -53,15 +55,15 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
   const allRepos: GitHubRepo[] = [];
   let page = 1;
 
-  while (page <= 3) {
+  for (;;) {
     const url = TOKEN
-      ? `${GITHUB_API}/user/repos?per_page=100&page=${page}&affiliation=owner&sort=updated`
+      ? `${GITHUB_API}/user/repos?type=all&sort=updated&per_page=100&page=${page}`
       : `${GITHUB_API}/users/${GITHUB_USER}/repos?per_page=100&page=${page}&sort=updated`;
 
     let res: Response;
     try {
       res = await fetch(url, {
-        headers: authHeaders(),
+        headers: githubAuthHeaders(),
         next: { revalidate: 3600 },
         signal: AbortSignal.timeout(10_000),
       });
@@ -116,7 +118,7 @@ export async function fetchReadme(repoName: string): Promise<string | null> {
   try {
     const res = await fetch(url, {
       headers: {
-        ...authHeaders(),
+        ...githubAuthHeaders(),
         Accept: "application/vnd.github.html+json",
       },
       next: { revalidate: 3600 },
@@ -163,11 +165,13 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
     const repo = repoMap.get(config.repoName) || null;
     return {
       ...config,
+      private: repo?.private ?? config.private,
       repo: null, // Never expose raw repo data to client
       lastUpdated: repo?.pushed_at || "",
       language: repo?.language || null,
       stars: repo?.stargazers_count || 0,
       forks: repo?.forks_count || 0,
+      openIssuesCount: repo?.open_issues_count ?? 0,
     };
   });
 }

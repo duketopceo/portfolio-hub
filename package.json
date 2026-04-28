@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "notion:seed": "node scripts/notion/seed-episodes.mjs"
   },
   "dependencies": {
     "isomorphic-dompurify": "^3.7.1",

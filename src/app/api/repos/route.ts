@@ -34,6 +34,8 @@ export async function GET() {
         language: p.language,
         techStack: p.techStack,
         stars: p.stars,
+        forks: p.forks,
+        openIssues: p.openIssuesCount,
         lastUpdated: p.lastUpdated,
         liveUrl: p.liveUrl || null,
       })),

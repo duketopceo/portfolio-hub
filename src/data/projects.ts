@@ -87,6 +87,8 @@ export const projectConfigs: ProjectConfig[] = [
     type: "app",
     featured: false,
     liveUrl: "https://devpost.com/software/finance-frenzy/",
+    demoUrl: "https://devpost.com/software/finance-frenzy/",
+    embeddable: false,
     techStack: ["Python", "PyQt", "Simulation", "Game Design"],
     private: false,
     highlights: [
@@ -98,7 +100,7 @@ export const projectConfigs: ProjectConfig[] = [
 
   {
     slug: "nem-stock-pitch",
-    repoName: "",
+    repoName: "nem-stock-pitch",
     displayName: "NEM Stock Pitch",
     tagline:
       "Institutional-grade equity research — LONG Newmont, built entirely with Perplexity Computer",
@@ -203,6 +205,8 @@ export const projectConfigs: ProjectConfig[] = [
     type: "platform",
     featured: false,
     liveUrl: "https://nanoclaw.dev",
+    demoUrl: "https://nanoclaw.dev",
+    embeddable: false,
     techStack: ["TypeScript", "Anthropic SDK", "Docker", "Node.js"],
     private: false,
     highlights: [
@@ -227,9 +231,9 @@ export const projectConfigs: ProjectConfig[] = [
     featured: true,
     liveUrl: "https://republicatlas.com",
     demoUrl: "https://republicatlas.com",
-    embeddable: true,
+    embeddable: false,
     techStack: ["Python", "Firebase", "Data Visualization", "GIS"],
-    private: true,
+    private: false,
     highlights: [
       "Interactive election analytics maps",
       "Real-time data aggregation pipelines",
@@ -358,6 +362,26 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
   {
+    slug: "stratum-hq",
+    repoName: "stratumhq",
+    displayName: "Stratum",
+    tagline: "Product and platform home for Stratum — live app and roadmap",
+    description:
+      "Stratum is the umbrella product surface for related apps and infrastructure. This entry links the live marketing and app shell at stratumhq.app; GitHub metadata appears when the repository name matches your org.",
+    category: "apps",
+    type: "platform",
+    featured: false,
+    liveUrl: "https://stratumhq.app",
+    demoUrl: "https://stratumhq.app",
+    embeddable: false,
+    techStack: ["TypeScript", "Next.js", "Docker"],
+    private: false,
+    highlights: [
+      "Live product shell at stratumhq.app",
+      "Aligned with portfolio Swarm and tunnel deployment story",
+    ],
+  },
+  {
     slug: "chronicle-weaver",
     repoName: "rork-chronicle-weaver",
     displayName: "Chronicle Weaver",
@@ -368,6 +392,8 @@ export const projectConfigs: ProjectConfig[] = [
     type: "app",
     featured: false,
     liveUrl: "https://chronicleweaver.com",
+    demoUrl: "https://chronicleweaver.com",
+    embeddable: false,
     techStack: ["TypeScript", "React", "Mobile"],
     private: false,
     highlights: [

@@ -1,0 +1,30 @@
+[
+  {
+    "episode": 9,
+    "name": "Episode 009 — (title TBD)",
+    "status": "Research",
+    "sciencePillar": "Nuclear",
+    "scienceNotes": "Fill from TEMP-perplexity-ep9.md output.",
+    "techBeat": "TBD",
+    "techNotes": "",
+    "historyBeat": "TBD",
+    "historyNotes": "",
+    "founderBeat": "TBD",
+    "founderNotes": "",
+    "tempPerplexityPointer": "Repo: public/podcast/tools/notion/TEMP-perplexity-ep9.md — paste results here, then delete."
+  },
+  {
+    "episode": 10,
+    "name": "Episode 010 — (title TBD) · Chemistry lens",
+    "status": "Staged",
+    "sciencePillar": "Chemistry",
+    "scienceNotes": "Staged — run TEMP-perplexity-ep10.md before locking beats.",
+    "techBeat": "TBD — must pair with chemistry thread",
+    "techNotes": "",
+    "historyBeat": "TBD — chemistry-era parallel",
+    "historyNotes": "",
+    "founderBeat": "TBD",
+    "founderNotes": "",
+    "tempPerplexityPointer": "Repo: public/podcast/tools/notion/TEMP-perplexity-ep10.md — paste results here, then delete."
+  }
+]

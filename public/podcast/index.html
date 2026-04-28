@@ -3,65 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luke the Duke Show — Mission Control</title>
-  <meta name="description" content="Live companion dashboard for the Luke the Duke Show — economics, politics, philosophy, tech, and more.">
-  <meta property="og:title" content="Luke the Duke Show — Mission Control">
-  <meta property="og:description" content="Multi-panel Bloomberg-style dashboard for live episode recording.">
+  <title>OP009 — The Signal Stack — Mission Control</title>
+  <meta name="description" content="Episode 009: SpaceX and Cursor, Utah SMRs, Nick Shirley, WHCD, Samsung Taylor fab, AI harnesses, local Qwen vs cloud Sonnet, Stratum Engine and Perplexity shipped.">
+  <meta property="og:title" content="OP009 — The Signal Stack">
+  <meta property="og:description" content="Mission Control companion — markets, data grid, headlines, Stratum Engine and Perplexity updates.">
   <meta property="og:type" content="website">
 
-  <!-- Fonts -->
   <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,8..60,500;1,8..60,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/podcast/base.css">
   <link rel="stylesheet" href="/podcast/style.css">
+  <link rel="stylesheet" href="/podcast/ui-shell.css">
+  <link rel="stylesheet" href="/podcast/ep009.css">
+  <link rel="stylesheet" href="/podcast/descript-layout.css">
 </head>
-<body>
-  <!-- Stars canvas -->
+<body class="ep009-scroll">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="mesh-grid" aria-hidden="true"></div>
   <canvas class="stars" id="starsCanvas" aria-hidden="true"></canvas>
 
-  <!-- Header -->
   <header class="header" id="header">
-    <a href="https://luke-the-duke.com" target="_blank" rel="noopener noreferrer" class="header__brand" aria-label="Luke the Duke home">
+    <div class="header__brand" aria-label="Show">
       <svg class="header__logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
         <circle cx="16" cy="16" r="5" fill="#00d4aa"/>
         <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#00d4aa" stroke-width="1.2" opacity="0.4" transform="rotate(-20 16 16)"/>
         <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#f0a030" stroke-width="1.2" opacity="0.3" transform="rotate(40 16 16)"/>
       </svg>
-      <span class="header__title">Luke the Duke</span>
-    </a>
+      <span class="header__title" id="brandTitle">Mission Control</span>
+    </div>
 
     <div class="header__episode" id="headerEpisode">
-      <span class="header__ep-badge" id="epBadge">EP 01</span>
-      <span class="header__ep-title" id="epTitle">Loading...</span>
-      <span class="header__ep-date" id="epDate"></span>
+      <span class="header__ep-badge" id="epBadge">OP009</span>
+      <span class="header__ep-title" id="epTitle">The Signal Stack</span>
+      <span class="header__ep-date" id="epDate">2026-04-28</span>
     </div>
 
     <div class="header__right">
-      <nav class="page-nav" id="pageNav" aria-label="Dashboard pages"></nav>
-      <div class="social-bar" id="socialBar"></div>
+      <nav class="page-nav ep-nav" id="pageNav" aria-label="Episode navigation">
+        <a href="#">← EP008</a>
+        <span class="ep-nav__sep" aria-hidden="true">|</span>
+        <a href="/podcast/live.html">Mission</a>
+        <span class="ep-nav__sep" aria-hidden="true">|</span>
+        <a href="#">EP010 →</a>
+      </nav>
+      <div class="social-bar" id="socialBar" aria-label="Social links"></div>
     </div>
   </header>
 
-  <!-- Ticker tape -->
   <div class="ticker-bar" id="tickerBar"></div>
 
-  <!-- Main dashboard -->
-  <main class="dashboard" id="dashboard"></main>
+  <main class="dashboard ep009-main" id="dashboard">
+    <header class="ep-hero">
+      <p class="ep-hero__badge">OPERATOR LOG · OP009</p>
+      <h1 class="ep-hero__title" style="font-family: 'Newsreader', Georgia, serif;">The Signal Stack</h1>
+      <p class="ep-hero__date">2026-04-28</p>
+      <ul class="ep-tags" aria-label="Episode tags">
+        <li>SPACEX + CURSOR</li>
+        <li>UTAH SMRs</li>
+        <li>NICK SHIRLEY</li>
+        <li>SPLC</li>
+        <li>WHCD SHOOTING</li>
+        <li>SAMSUNG TEXAS FAB</li>
+        <li>AI HARNESSES</li>
+        <li>BERT</li>
+        <li>QWEN LOCAL</li>
+        <li>STRATUM ENGINE</li>
+        <li>PERPLEXITY</li>
+      </ul>
+    </header>
 
-  <!-- Footer -->
+    <section class="ep-section ep-section--market" aria-labelledby="chart-heading">
+      <div class="ep-market-head">
+        <h2 class="ep-section__title" id="chart-heading">Market</h2>
+        <button type="button" class="ep-market-toggle" id="epMarketToggle" aria-expanded="true" aria-controls="epMarketPanel">Hide chart</button>
+      </div>
+      <div class="ep-market-panel" id="epMarketPanel">
+        <div class="glass-card glass-card--flush">
+          <div class="glass-card__inner ep-chart-wrap">
+            <div class="ep-chart-controls">
+              <label for="symbolInput">MARKET · CHANGE SYMBOL ↑</label>
+              <input class="ep-symbol-input" type="text" id="symbolInput" name="symbol" placeholder="e.g. NVDA or NASDAQ:AMD" value="NASDAQ:NVDA" autocomplete="off" spellcheck="false">
+              <button type="button" class="ep-symbol-btn" id="symbolApply">Apply</button>
+            </div>
+            <div id="tv_chart_container" class="tv-chart" role="region" aria-label="TradingView advanced chart"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ep-section" aria-labelledby="stats-heading">
+      <h2 class="ep-section__title" id="stats-heading">Data grid</h2>
+      <div class="stat-grid">
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">Samsung Taylor fab size</span>
+          <span class="stat-card__value">4.85M m²</span>
+          <span class="stat-card__note">Taylor, TX — operational late 2026</span>
+        </div></article>
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">Employees relocating</span>
+          <span class="stat-card__value">~1,000</span>
+          <span class="stat-card__note">Samsung Austin Semi, first wave</span>
+        </div></article>
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">Utah SMR target</span>
+          <span class="stat-card__value">4 GW</span>
+          <span class="stat-card__note">Holtec — Mountain West plan</span>
+        </div></article>
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">Ward250 output</span>
+          <span class="stat-card__value">5 MW</span>
+          <span class="stat-card__note">Airlifted · Jul 4 2026 first power</span>
+        </div></article>
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">Nick Shirley views</span>
+          <span class="stat-card__value">135M</span>
+          <span class="stat-card__note">X platform · MN daycare claims</span>
+        </div></article>
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">Qwen 14B HumanEval</span>
+          <span class="stat-card__value">~50%</span>
+          <span class="stat-card__note">Local · Ollama / LM Studio</span>
+        </div></article>
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">Sonnet 4.6 HumanEval</span>
+          <span class="stat-card__value">97.6%</span>
+          <span class="stat-card__note">Cloud · Cursor / Composer</span>
+        </div></article>
+        <article class="glass-card stat-card"><div class="glass-card__inner">
+          <span class="stat-card__label">WHCD incident</span>
+          <span class="stat-card__value">APR 26 2026</span>
+          <span class="stat-card__note">Trump evacuated · shots outside Hilton</span>
+        </div></article>
+      </div>
+    </section>
+
+    <section class="ep-section" aria-labelledby="hl-heading">
+      <h2 class="ep-section__title" id="hl-heading">Headlines</h2>
+      <div class="hl-stack" id="hlStack"></div>
+    </section>
+
+    <section class="ep-section" aria-labelledby="stratum-heading">
+      <h2 class="ep-section__title" id="stratum-heading">Stratum Engine · what shipped</h2>
+      <div class="glass-card"><div class="glass-card__inner">
+        <div class="stm-block" id="stmBlock"></div>
+      </div></div>
+    </section>
+
+    <section class="ep-section" aria-labelledby="perplex-heading">
+      <h2 class="ep-section__title" id="perplex-heading">Perplexity · what shipped</h2>
+      <div class="perplex-grid" id="perplexGrid"></div>
+    </section>
+
+    <section class="ep-section" aria-labelledby="harness-heading">
+      <h2 class="ep-section__title" id="harness-heading">AI harnesses · the simple version</h2>
+      <div class="glass-card"><div class="glass-card__inner">
+        <div class="prose-block">
+          <p>An AI harness is a wrapper around a model. Input goes in. Rules enforced. Output comes out. The simplest harness is a system prompt + an API call — about <code>20</code> lines of Python.</p>
+          <p><strong>BERT</strong> (Google, 2018) reads text in both directions simultaneously. It masks words and predicts them from surrounding context. Example: &quot;My [MASK] is cute, he&apos;s playing.&quot; → BERT predicts &quot;dog.&quot; This is what powers Google Search&apos;s semantic understanding layer.</p>
+          <p>Simple build: <code>pip install transformers</code> → load <code>bert-base-uncased</code> → <code>.encode()</code> → classify. Complex build: fine-tune on domain data, multi-head attention layers, hardware-optimized inference. The difference is 20 lines of code vs. 200,000.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="ep-section" aria-labelledby="bench-heading">
+      <h2 class="ep-section__title" id="bench-heading">Local models · HumanEval benchmark</h2>
+      <div class="glass-card"><div class="glass-card__inner">
+        <div class="bench-wrap">
+          <table class="bench-table">
+            <thead>
+              <tr><th>Model</th><th>HumanEval</th><th>Params</th><th>Runs where</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Claude Sonnet 4.6</td><td>97.6%</td><td>API</td><td>Cursor / Perplexity</td></tr>
+              <tr><td>DeepSeek R1</td><td>97.4%</td><td>API</td><td>Cloud</td></tr>
+              <tr><td>Qwen 3 480B</td><td>92.7%</td><td>API</td><td>Cloud</td></tr>
+              <tr><td>Qwen 3.5 9B</td><td>91.0%</td><td>9B</td><td>Ollama / Local</td></tr>
+              <tr><td>Qwen Coder 14B</td><td>~50%</td><td>14B</td><td>Ollama / LM Studio</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="bench-note">Running Qwen 14B locally through Cline against a repo with our full test stack — ruff, pytest, Playwright, real Postgres — exposes context limits fast. Sonnet in Cursor has full repo awareness. Local models don&apos;t. SpaceX chose Cursor. That&apos;s the answer.</p>
+      </div></div>
+    </section>
+
+    <section class="ep-section" aria-labelledby="src-heading">
+      <h2 class="sr-only" id="src-heading">Sources</h2>
+      <div id="srcPanel" class="glass-card glass-card--tight src-panel">
+        <div class="glass-card__inner">
+          <button type="button" class="src-panel__toggle" id="srcToggle" aria-expanded="false" aria-controls="srcList">[ SOURCES ↓ ]</button>
+          <ol class="src-panel__list" id="srcList" aria-hidden="true"></ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <footer class="footer-bar">
-    <span class="footer-bar__left" id="footerStatus">LIVE</span>
+    <span class="footer-bar__left" id="footerStatus">OP009 · The Signal Stack · 2026-04-28</span>
     <span class="footer-bar__right">
-      <span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> pages</span>
-      <span><kbd>←</kbd><kbd>→</kbd> nav</span>
+      <span>Scroll · single page</span>
+      <span><a href="/podcast/index.html?descript=1" style="color:var(--text-muted)">Descript</a></span>
     </span>
   </footer>
 
-  <!-- Lightweight Charts — canvas-based, no iframes, no ad-block issues -->
-  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="/podcast/bundle.min.js"></script>
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script src="/podcast/ep009.js"></script>
 </body>
 </html>

@@ -1,0 +1,49 @@
+/*
+ * Descript / screen-record layout: face cam usually bottom-right.
+ * ?descript=1 or localStorage mc_descript=1
+ * Reduces moire-prone overlays and reserves right + bottom safe zones.
+ */
+
+body.mc-descript {
+  --ticker-h: 32px;
+  --chart-dock-expanded-h: clamp(180px, 24vh, 260px);
+}
+
+/* Soften scanline / CRT overlay (reduces shimmer on 1080p screen capture) */
+body.mc-descript::after {
+  opacity: 0.12 !important;
+}
+
+body.mc-descript .aurora {
+  opacity: 0.45;
+  animation: none;
+}
+
+/* Keep headlines / tiles readable beside a circular cam overlay */
+body.mc-descript #dashboard,
+body.mc-descript .dashboard {
+  padding-right: min(30vw, 380px);
+  padding-bottom: min(14vh, 140px);
+  box-sizing: border-box;
+}
+
+body.mc-descript #chartDock {
+  padding-right: min(30vw, 380px);
+}
+
+body.mc-descript .ticker-bar .tradingview-widget-container__widget {
+  transform: scale(0.92);
+  transform-origin: top left;
+}
+
+body.mc-descript .footer-bar__right::after {
+  content: "Descript layout";
+  margin-left: 8px;
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.mc-descript .aurora {
+    animation: none;
+  }
+}

@@ -39,14 +39,26 @@ function authHeaders(): HeadersInit {
 
 export async function GET() {
   try {
-    const res = await fetch(
-      `${GITHUB_API}/users/${GITHUB_USER}/events/public?per_page=50`,
-      {
-        headers: authHeaders(),
-        next: { revalidate: 300 },
-        signal: AbortSignal.timeout(10_000),
-      }
-    );
+    const primaryUrl = TOKEN
+      ? `${GITHUB_API}/users/${GITHUB_USER}/events?per_page=50`
+      : `${GITHUB_API}/users/${GITHUB_USER}/events/public?per_page=50`;
+
+    let res = await fetch(primaryUrl, {
+      headers: authHeaders(),
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(10_000),
+    });
+
+    if (!res.ok && TOKEN) {
+      res = await fetch(
+        `${GITHUB_API}/users/${GITHUB_USER}/events/public?per_page=50`,
+        {
+          headers: authHeaders(),
+          next: { revalidate: 300 },
+          signal: AbortSignal.timeout(10_000),
+        }
+      );
+    }
 
     if (!res.ok) {
       console.error(`[api/activity] GitHub API ${res.status}`);

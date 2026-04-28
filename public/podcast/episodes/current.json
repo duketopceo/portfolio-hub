@@ -1,0 +1,164 @@
+{
+  "id": "ep9-prep",
+  "number": 9,
+  "useGlobalChart": true,
+  "brand": "Mission Control",
+  "title": "Episode 9 — title TBD",
+  "date": "—",
+  "theme": "Prep · fill in copy & data before show",
+  "pageRotateSec": 0,
+  "duration": "—",
+  "ticker": [
+    { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
+    { "proName": "NASDAQ:NVDA", "title": "NVIDIA" },
+    { "proName": "TVC:GOLD", "title": "Gold" },
+    { "proName": "TVC:DXY", "title": "Dollar" },
+    { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" }
+  ],
+  "links": {
+    "youtube": "",
+    "x": "",
+    "linkedin": "",
+    "spotify": "",
+    "apple": ""
+  },
+  "pages": [
+    {
+      "label": "Main",
+      "layout": "page--chart-sidebar",
+      "panels": [
+        {
+          "type": "chart",
+          "symbol": "FOREXCOM:SPXUSD",
+          "interval": "D",
+          "bars": [
+            { "time": "2026-03-01", "open": 5980, "high": 6012, "low": 5965, "close": 5998 },
+            { "time": "2026-03-02", "open": 5998, "high": 6020, "low": 5988, "close": 6015 },
+            { "time": "2026-03-03", "open": 6015, "high": 6035, "low": 6001, "close": 6028 },
+            { "time": "2026-03-04", "open": 6028, "high": 6040, "low": 6010, "close": 6018 },
+            { "time": "2026-03-05", "open": 6018, "high": 6055, "low": 6012, "close": 6042 },
+            { "time": "2026-03-06", "open": 6042, "high": 6068, "low": 6035, "close": 6055 },
+            { "time": "2026-03-09", "open": 6055, "high": 6088, "low": 6048, "close": 6075 },
+            { "time": "2026-03-10", "open": 6075, "high": 6095, "low": 6060, "close": 6070 },
+            { "time": "2026-03-11", "open": 6070, "high": 6082, "low": 6045, "close": 6058 },
+            { "time": "2026-03-12", "open": 6058, "high": 6075, "low": 6048, "close": 6068 },
+            { "time": "2026-03-13", "open": 6068, "high": 6088, "low": 6055, "close": 6078 },
+            { "time": "2026-03-16", "open": 6078, "high": 6105, "low": 6070, "close": 6095 },
+            { "time": "2026-03-17", "open": 6095, "high": 6112, "low": 6088, "close": 6102 },
+            { "time": "2026-03-18", "open": 6102, "high": 6120, "low": 6095, "close": 6115 },
+            { "time": "2026-03-19", "open": 6115, "high": 6128, "low": 6105, "close": 6110 },
+            { "time": "2026-03-20", "open": 6110, "high": 6125, "low": 6098, "close": 6118 },
+            { "time": "2026-03-23", "open": 6118, "high": 6140, "low": 6110, "close": 6135 },
+            { "time": "2026-03-24", "open": 6135, "high": 6155, "low": 6128, "close": 6148 },
+            { "time": "2026-03-25", "open": 6148, "high": 6162, "low": 6135, "close": 6155 },
+            { "time": "2026-03-26", "open": 6155, "high": 6170, "low": 6148, "close": 6165 },
+            { "time": "2026-03-27", "open": 6165, "high": 6180, "low": 6155, "close": 6172 },
+            { "time": "2026-03-30", "open": 6172, "high": 6195, "low": 6165, "close": 6188 },
+            { "time": "2026-03-31", "open": 6188, "high": 6205, "low": 6178, "close": 6195 },
+            { "time": "2026-04-01", "open": 6195, "high": 6210, "low": 6185, "close": 6202 },
+            { "time": "2026-04-02", "open": 6202, "high": 6220, "low": 6195, "close": 6215 },
+            { "time": "2026-04-03", "open": 6215, "high": 6235, "low": 6208, "close": 6228 },
+            { "time": "2026-04-06", "open": 6228, "high": 6250, "low": 6220, "close": 6242 },
+            { "time": "2026-04-07", "open": 6242, "high": 6260, "low": 6235, "close": 6255 },
+            { "time": "2026-04-08", "open": 6255, "high": 6275, "low": 6248, "close": 6268 },
+            { "time": "2026-04-09", "open": 6268, "high": 6288, "low": 6260, "close": 6280 },
+            { "time": "2026-04-10", "open": 6280, "high": 6295, "low": 6272, "close": 6288 },
+            { "time": "2026-04-13", "open": 6288, "high": 6310, "low": 6280, "close": 6302 },
+            { "time": "2026-04-14", "open": 6302, "high": 6320, "low": 6295, "close": 6315 },
+            { "time": "2026-04-15", "open": 6315, "high": 6335, "low": 6308, "close": 6325 },
+            { "time": "2026-04-16", "open": 6325, "high": 6345, "low": 6318, "close": 6338 },
+            { "time": "2026-04-17", "open": 6338, "high": 6355, "low": 6330, "close": 6348 },
+            { "time": "2026-04-20", "open": 6348, "high": 6368, "low": 6340, "close": 6360 },
+            { "time": "2026-04-21", "open": 6360, "high": 6380, "low": 6352, "close": 6372 },
+            { "time": "2026-04-22", "open": 6372, "high": 6390, "low": 6365, "close": 6382 },
+            { "time": "2026-04-23", "open": 6382, "high": 6400, "low": 6375, "close": 6395 },
+            { "time": "2026-04-24", "open": 6395, "high": 6412, "low": 6388, "close": 6405 }
+          ]
+        },
+        {
+          "type": "tiles",
+          "items": [
+            { "label": "Metric A", "value": "—", "note": "Replace before show" },
+            { "label": "Metric B", "value": "—", "note": "Replace before show" },
+            { "label": "Metric C", "value": "—", "note": "Replace before show" },
+            { "label": "Metric D", "value": "—", "note": "Replace before show" }
+          ]
+        },
+        {
+          "type": "headlines",
+          "items": [
+            { "title": "Headline placeholder — swap in real story", "source": "Source TBD" },
+            { "title": "Second slot for talking points or wire copy", "source": "Source TBD" },
+            { "title": "Third slot", "source": "Source TBD" },
+            { "title": "Fourth slot", "source": "Source TBD" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Brief",
+      "layout": "page--focus",
+      "panels": [
+        {
+          "type": "chart",
+          "symbol": "NASDAQ:NVDA",
+          "interval": "W",
+          "bars": [
+            { "time": "2026-01-05", "open": 140, "high": 148, "low": 138, "close": 145 },
+            { "time": "2026-01-12", "open": 145, "high": 152, "low": 142, "close": 150 },
+            { "time": "2026-01-19", "open": 150, "high": 158, "low": 148, "close": 155 },
+            { "time": "2026-01-26", "open": 155, "high": 162, "low": 152, "close": 158 },
+            { "time": "2026-02-02", "open": 158, "high": 165, "low": 155, "close": 162 },
+            { "time": "2026-02-09", "open": 162, "high": 172, "low": 160, "close": 168 },
+            { "time": "2026-02-16", "open": 168, "high": 175, "low": 165, "close": 170 },
+            { "time": "2026-02-23", "open": 170, "high": 178, "low": 168, "close": 175 },
+            { "time": "2026-03-02", "open": 175, "high": 182, "low": 172, "close": 180 },
+            { "time": "2026-03-09", "open": 180, "high": 188, "low": 178, "close": 185 },
+            { "time": "2026-03-16", "open": 185, "high": 192, "low": 182, "close": 188 },
+            { "time": "2026-03-23", "open": 188, "high": 198, "low": 185, "close": 195 },
+            { "time": "2026-03-30", "open": 195, "high": 205, "low": 192, "close": 200 },
+            { "time": "2026-04-06", "open": 200, "high": 210, "low": 198, "close": 205 },
+            { "time": "2026-04-13", "open": 205, "high": 215, "low": 202, "close": 212 },
+            { "time": "2026-04-20", "open": 212, "high": 220, "low": 208, "close": 218 }
+          ]
+        },
+        {
+          "type": "content",
+          "items": [
+            {
+              "heading": "Block 1 — talking points",
+              "bullets": [
+                "Bullet placeholder",
+                "Bullet placeholder",
+                "Bullet placeholder"
+              ]
+            },
+            {
+              "heading": "Block 2 — context",
+              "bullets": [
+                "Bullet placeholder",
+                "Bullet placeholder"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tiles",
+          "items": [
+            { "label": "Side stat", "value": "—", "note": "Optional" },
+            { "label": "Side stat", "value": "—", "note": "Optional" }
+          ]
+        },
+        {
+          "type": "content",
+          "items": [
+            {
+              "heading": "Lower rail",
+              "bullets": ["Optional fourth panel copy on focus layout"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

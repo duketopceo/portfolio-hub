@@ -32,6 +32,16 @@ const nextConfig: NextConfig = {
         destination: "/podcast/index.html",
         permanent: false,
       },
+      {
+        source: "/podcast/mission",
+        destination: "/podcast/live.html",
+        permanent: false,
+      },
+      {
+        source: "/podcast/live",
+        destination: "/podcast/live.html",
+        permanent: false,
+      },
     ];
   },
 };

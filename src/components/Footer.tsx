@@ -1,6 +1,25 @@
 import Link from "next/link";
 import { ExternalIcon } from "@/components/Icons";
 
+const liveLinks = [
+  {
+    label: "Stratum",
+    href: "https://stratumhq.app",
+  },
+  {
+    label: "Chronicle Weaver",
+    href: "https://chronicleweaver.com",
+  },
+  {
+    label: "Republic Atlas",
+    href: "https://republicatlas.com",
+  },
+  {
+    label: "Military Hardware DB",
+    href: "https://omhdb.luke-the-duke.com/#/",
+  },
+];
+
 export default function Footer() {
   return (
     <footer className="cosmic-footer">
@@ -29,31 +48,26 @@ export default function Footer() {
           {/* Live Projects */}
           <div>
             <h3 className="cosmic-footer__heading">
-              Live Projects
+              Live projects
             </h3>
-            <ul className="space-y-1">
-              <li>
-                <a
-                  href="https://republic-atlas.web.app/elections?state=IL"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cosmic-footer__link inline-flex items-center gap-1"
-                >
-                  Republic Atlas
-                  <ExternalIcon className="w-2.5 h-2.5 opacity-50" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://omhdb.luke-the-duke.com/#/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cosmic-footer__link inline-flex items-center gap-1"
-                >
-                  Military Hardware DB
-                  <ExternalIcon className="w-2.5 h-2.5 opacity-50" />
-                </a>
-              </li>
+            <ul className="cosmic-footer__live-list space-y-2">
+              {liveLinks.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cosmic-footer__link cosmic-footer__live-row inline-flex items-center gap-2"
+                  >
+                    <span
+                      className="cosmic-footer__planet"
+                      aria-hidden
+                    />
+                    <span>{item.label}</span>
+                    <ExternalIcon className="w-2.5 h-2.5 opacity-50 shrink-0" />
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 

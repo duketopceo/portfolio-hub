@@ -1,9 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
 import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import { LockIcon, getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
+import RepoDetailModal from "./RepoDetailModal";
 
 interface ProjectCardProps {
   project: EnrichedProject;
@@ -13,6 +17,7 @@ interface ProjectCardProps {
 export default function ProjectCard({
   project,
 }: ProjectCardProps) {
+  const [modalOpen, setModalOpen] = useState(false);
   const meta = categoryMeta[project.category];
   const hasDemo = !!(project.liveUrl || project.demoUrl);
   const demoUrl = project.liveUrl || project.demoUrl;
@@ -26,10 +31,12 @@ export default function ProjectCard({
       className="cosmic-project-card group relative"
       style={{ "--card-accent": accentColor } as React.CSSProperties}
     >
-      <Link
-        href={`/projects/${project.slug}`}
-        className="cosmic-project-card__main flex flex-col flex-1"
-        style={{ textDecoration: "none" }}
+      <button
+        type="button"
+        className="cosmic-project-card__main flex flex-col flex-1 text-left w-full"
+        onClick={() => setModalOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={modalOpen}
       >
         <header className="cosmic-project-card__top">
           <div className="cosmic-project-card__identity">
@@ -41,7 +48,10 @@ export default function ProjectCard({
                 {meta?.label || project.category}
               </span>
               {project.private && (
-                <LockIcon className="cosmic-project-card__lock w-3.5 h-3.5 opacity-50" />
+                <LockIcon
+                  className="cosmic-project-card__lock w-3.5 h-3.5 opacity-50"
+                  aria-label="Private repository"
+                />
               )}
             </div>
           </div>
@@ -52,11 +62,19 @@ export default function ProjectCard({
           )}
         </header>
 
-        <h3 className="cosmic-card-title group-hover:text-[var(--color-accent)] transition-colors duration-200">
+        <h3
+          className="cosmic-card-title group-hover:text-[var(--color-accent)] transition-colors duration-200 truncate max-w-full"
+          title={project.displayName}
+        >
           {project.displayName}
         </h3>
 
-        <p className="cosmic-card-desc line-clamp-3">{project.tagline}</p>
+        <p
+          className="cosmic-card-desc line-clamp-3 break-words"
+          title={project.tagline}
+        >
+          {project.tagline}
+        </p>
 
         <div className="cosmic-project-card__meta" aria-label="Project metadata">
           <div className="cosmic-project-card__pills">
@@ -90,13 +108,28 @@ export default function ProjectCard({
             )}
           </div>
           <span className="cosmic-project-card__chevron" aria-hidden>
-            View
+            Details
             <span className="cosmic-project-card__chevron-arrow">→</span>
           </span>
         </div>
+      </button>
+
+      <Link
+        href={`/projects/${project.slug}`}
+        className="cosmic-project-card__dossier-link"
+        onClick={(e) => e.stopPropagation()}
+        prefetch={false}
+      >
+        Dossier only →
       </Link>
 
       {hasDemo && demoUrl && <DemoLink url={demoUrl} />}
+
+      <RepoDetailModal
+        project={project}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </article>
   );
 }

@@ -1,0 +1,37 @@
+{
+  "tiles_sample": {
+    "type": "tiles",
+    "items": [
+      { "label": "Label", "value": "0.0%", "delta": "up", "note": "Footnote" },
+      { "label": "Label", "value": "—", "delta": "down", "note": "Footnote" }
+    ]
+  },
+  "headlines_sample": {
+    "type": "headlines",
+    "items": [
+      { "title": "Story headline goes here", "source": "Outlet · date" }
+    ]
+  },
+  "content_sample": {
+    "type": "content",
+    "items": [
+      {
+        "heading": "Section title",
+        "bullets": ["Point one", "Point two"]
+      }
+    ]
+  },
+  "stratum_sample": {
+    "type": "stratum",
+    "version": "v0.0",
+    "status": "Status",
+    "users": "—",
+    "tagline": "One-line product blurb.",
+    "features": ["Feature A", "Feature B"]
+  },
+  "feed_sample": {
+    "type": "feed",
+    "channelId": "YOUR_YOUTUBE_CHANNEL_ID",
+    "count": 4
+  }
+}

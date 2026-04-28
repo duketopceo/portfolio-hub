@@ -64,10 +64,26 @@ export default async function ProjectDetailPage({
 
   const meta = categoryMeta[project.category];
   const hasDemo = !!(project.liveUrl || project.demoUrl);
-  const embedUrl = project.demoUrl || project.liveUrl;
-  const showDemoEmbed = hasDemo && embedUrl && !project.private && !project.demoOffline;
+  const embedUrl = (project.demoUrl || project.liveUrl) ?? "";
+  const showDemoSection =
+    hasDemo && Boolean(embedUrl) && !project.private;
+  /** Click-to-load iframe only when host allows framing and demo is not marked offline. */
+  const useIframeEmbed =
+    showDemoSection &&
+    !project.demoOffline &&
+    project.embeddable === true;
   const showPreview =
-    !showDemoEmbed && (project.architecture || (project.highlights && project.highlights.length > 0));
+    !showDemoSection &&
+    (project.architecture ||
+      (project.highlights && project.highlights.length > 0));
+  const demoHint =
+    showDemoSection && !useIframeEmbed
+      ? project.demoOffline
+        ? "Best viewed on the live site — opens in a new tab."
+        : project.embeddable !== true
+          ? "Embedding unavailable for this URL — opens in a new tab."
+          : "Opens in a new tab."
+      : null;
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"
     : null;
@@ -85,16 +101,21 @@ export default async function ProjectDetailPage({
     <article className="dossier-page animate-fade-up" style={pageStyle}>
       <ProjectHero project={project} accentColor={accentColor} meta={meta} />
 
-      {showDemoEmbed && embedUrl && (
+      {showDemoSection && embedUrl && (
         <section
           className="cosmic-page"
           style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)" }}
         >
           <div className="demo-frame">
             <div className="demo-frame__header">
-              <span className="demo-frame__url">
-                {embedUrl.replace(/^https?:\/\//, "")}
-              </span>
+              <div className="demo-frame__header-text">
+                <span className="demo-frame__url">
+                  {embedUrl.replace(/^https?:\/\//, "")}
+                </span>
+                {demoHint && (
+                  <span className="demo-frame__hint">{demoHint}</span>
+                )}
+              </div>
               <a
                 href={embedUrl}
                 target="_blank"
@@ -107,7 +128,7 @@ export default async function ProjectDetailPage({
             <DemoEmbed
               url={embedUrl}
               title={project.displayName}
-              embeddable={project.embeddable}
+              embeddable={useIframeEmbed}
             />
           </div>
         </section>
@@ -258,9 +279,9 @@ export default async function ProjectDetailPage({
         </div>
 
         <aside className="dossier-page__aside space-y-6">
-          {hasDemo && project.liveUrl && (
+          {showDemoSection && (project.liveUrl || project.demoUrl) && (
             <a
-              href={project.liveUrl}
+              href={project.liveUrl || project.demoUrl || embedUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="glass-card p-4 block transition-colors group"
@@ -295,7 +316,7 @@ export default async function ProjectDetailPage({
                   transition: "color 150ms",
                 }}
               >
-                {project.liveUrl
+                {(project.liveUrl || project.demoUrl || embedUrl)
                   .replace(/^https?:\/\//, "")
                   .replace(/\/$/, "")}
                 <ExternalIcon className="w-3 h-3 opacity-50" />

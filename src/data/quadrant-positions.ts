@@ -22,6 +22,7 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "etl-pipeline":      { x: -0.70, y: -0.70 },
   "server-cluster":    { x: -0.80, y:  0.45 },
   "dixi":              { x:  0.70, y:  0.15 },
+  "stratum-hq":        { x:  0.55, y:  0.28 },
   "chronicle-weaver":  { x:  0.80, y:  0.00 },
   "collaborative-essay": { x: 0.30, y: -0.70 },
   "personal-blog":     { x:  0.80, y: -0.65 },

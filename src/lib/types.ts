@@ -5,6 +5,7 @@ export interface GitHubRepo {
   topics: string[];
   stargazers_count: number;
   forks_count: number;
+  open_issues_count?: number;
   created_at: string;
   pushed_at: string;
   homepage: string | null;
@@ -69,4 +70,6 @@ export interface EnrichedProject extends ProjectConfig {
   language: string | null;
   stars: number;
   forks: number;
+  /** Open issues count from GitHub when token can read the repo */
+  openIssuesCount: number;
 }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Control</title>
+  <meta name="description" content="Mission Control — paginated dashboard, markets tape, optional Descript layout (?descript=1).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/podcast/base.css">
+  <link rel="stylesheet" href="/podcast/style.css">
+  <link rel="stylesheet" href="/podcast/ui-shell.css">
+  <link rel="stylesheet" href="/podcast/chart-dock.css">
+  <link rel="stylesheet" href="/podcast/descript-layout.css">
+</head>
+<body class="mc-live">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="mesh-grid" aria-hidden="true"></div>
+  <canvas class="stars" id="starsCanvas" aria-hidden="true"></canvas>
+
+  <header class="header" id="header">
+    <div class="header__brand" aria-label="Show">
+      <svg class="header__logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="5" fill="#00d4aa"/>
+        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#00d4aa" stroke-width="1.2" opacity="0.4" transform="rotate(-20 16 16)"/>
+        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#f0a030" stroke-width="1.2" opacity="0.3" transform="rotate(40 16 16)"/>
+      </svg>
+      <span class="header__title" id="brandTitle">Mission Control</span>
+    </div>
+    <div class="header__episode">
+      <span class="header__ep-badge" id="epBadge">EP —</span>
+      <span class="header__ep-title" id="epTitle">Loading…</span>
+      <span class="header__ep-date" id="epDate">—</span>
+    </div>
+    <div class="header__right">
+      <nav class="page-nav" id="pageNav" aria-label="Page navigation"></nav>
+      <div class="social-bar" id="socialBar"></div>
+    </div>
+  </header>
+
+  <div class="ticker-bar" id="tickerBar"></div>
+
+  <div id="chartDock" style="display:none" aria-label="Main chart">
+    <div class="chart-dock__toolbar">
+      <span class="chart-dock__label" id="chartDockLabel">main chart</span>
+      <button type="button" class="chart-dock__toggle" id="chartDockToggle" aria-expanded="true">Hide chart</button>
+    </div>
+    <div class="chart-dock__body">
+      <div id="globalChartHost"></div>
+    </div>
+  </div>
+
+  <main class="dashboard" id="dashboard"></main>
+
+  <footer class="footer-bar">
+    <span class="footer-bar__left" id="footerStatus">Mission Control</span>
+    <span class="footer-bar__right">
+      <span><kbd>←</kbd><kbd>→</kbd> pages</span>
+      <span><kbd>k</kbd> chart</span>
+      <span><kbd>space</kbd> pause</span>
+      <span><a href="/podcast/index.html" style="color:var(--gold);opacity:0.85">EP009 page</a></span>
+      <span><a href="/podcast/live.html?descript=1" style="color:var(--text-muted)">Descript</a></span>
+    </span>
+  </footer>
+
+  <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+  <script src="/podcast/mission-app.js"></script>
+</body>
+</html>
