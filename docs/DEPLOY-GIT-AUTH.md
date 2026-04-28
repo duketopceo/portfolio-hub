@@ -41,6 +41,34 @@ git -c credential.helper= -c http.useNetrc=false ls-remote origin HEAD
 
 Automated checks + same test: **`bash scripts/fix-github-https-auth.sh`** (from repo root).
 
+---
+
+## `curl` to `raw.githubusercontent.com` returns **404**
+
+That usually means the repo is **private**. Raw URLs do not serve without auth.
+
+**Option A — from your laptop (SSH):**
+
+```bash
+scp scripts/cluster-deploy.sh cluster-1-master@cluster1:~/portfolio-hub/scripts/cluster-deploy.sh
+```
+
+**Option B — on the server, PAT in `.env` (`GITHUB_TOKEN=…`):**
+
+```bash
+cd ~/portfolio-hub
+bash scripts/download-cluster-deploy.sh
+```
+
+Then:
+
+```bash
+chmod +x scripts/cluster-deploy.sh
+./scripts/cluster-deploy.sh
+```
+
+(`download-cluster-deploy.sh` is in the repo on `main`; if you do not have it yet, use **scp** once for that file too, or paste from GitHub’s web UI.)
+
 ### 1) If you still need a PAT (private fork, rate limits, org policy)
 
 1. Create a **new** PAT (classic **`repo`**, or fine‑grained read on this repo). Revoke any token that was ever pasted into chat, logs, or tickets.

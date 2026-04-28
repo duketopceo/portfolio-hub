@@ -52,9 +52,13 @@ else
   echo "==> git: fetch + hard reset to origin/main (discard local commits on server)"
   # Public clone URL — strips any user:token@ accidentally baked into origin.
   git remote set-url origin "https://github.com/duketopceo/portfolio-hub.git"
-  # Stale Authorization headers (e.g. old gh actions / PAT experiments) break public HTTPS.
+  # Stale Authorization headers (CI / PAT experiments) at any scope break HTTPS.
   git config --local --unset-all http.https://github.com/.extraheader 2>/dev/null || true
-  # Ignore broken ~/.netrc github.com lines (libcurl otherwise sends bad Basic auth for HTTPS).
+  git config --global --unset-all http.https://github.com/.extraheader 2>/dev/null || true
+  git config --system --unset-all http.https://github.com/.extraheader 2>/dev/null || true
+  # Non-interactive: no TTY prompts; no ~/.netrc for this call; no helper (avoids dead stored PAT).
+  export GIT_TERMINAL_PROMPT=0
+  unset GIT_ASKPASS SSH_ASKPASS || true
   git -c credential.helper= -c http.useNetrc=false fetch origin
   git reset --hard "origin/main"
   echo "    HEAD=$(git rev-parse --short HEAD) $(git log -1 --oneline)"
