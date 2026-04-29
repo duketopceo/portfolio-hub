@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import WelcomeIntro from "@/components/WelcomeIntro";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 
 const spaceGrotesk = Space_Grotesk({
@@ -64,6 +65,7 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <SiteBackground />
+        <WelcomeIntro />
 
         <Header />
         <main className="flex-1 relative animate-page-in">{children}</main>
