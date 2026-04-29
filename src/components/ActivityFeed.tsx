@@ -36,7 +36,11 @@ function Skeleton() {
   );
 }
 
-export default function ActivityFeed() {
+interface ActivityFeedProps {
+  variant?: "widget" | "strip";
+}
+
+export default function ActivityFeed({ variant = "widget" }: ActivityFeedProps) {
   const [events, setEvents] = useState<ActivityEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,11 +48,52 @@ export default function ActivityFeed() {
     fetch("/api/activity")
       .then((r) => r.json())
       .then((data) => {
-        setEvents((data.events || []).slice(0, 10));
+        setEvents((data.events || []).slice(0, variant === "strip" ? 6 : 10));
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (variant === "strip") {
+    return (
+      <div className="activity-strip">
+        <div className="activity-strip__label">
+          <span className="activity-strip__pulse" aria-hidden />
+          Recent Activity
+        </div>
+        <div className="activity-strip__list">
+          {loading ? (
+            <>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="activity-strip__skeleton" />
+              ))}
+            </>
+          ) : events.length === 0 ? (
+            <span className="activity-strip__empty">No recent commits</span>
+          ) : (
+            events.map((event, i) => (
+              <div key={`${event.repo}-${event.timestamp}-${i}`} className="activity-strip__event">
+                <span className="activity-strip__event-repo">{event.repo}</span>
+                <span className="activity-strip__event-msg">
+                  {event.message || `${event.count} commit${event.count !== 1 ? "s" : ""} to ${event.branch}`}
+                </span>
+                <span className="activity-strip__event-time">{relativeTime(event.timestamp)}</span>
+              </div>
+            ))
+          )}
+        </div>
+        <a
+          href="https://github.com/duketopceo"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="activity-strip__more"
+        >
+          GitHub →
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="activity-feed">
@@ -73,9 +118,6 @@ export default function ActivityFeed() {
               <span className="activity-feed__repo">
                 {event.repo} / {event.branch}
               </span>
-              {i < events.length - 1 && (
-                <span className="activity-feed__dot" aria-hidden="true" />
-              )}
             </div>
           ))
         )}

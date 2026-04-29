@@ -161,7 +161,8 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
                 className="solar-planet-arm"
                 style={{
                   transform: `translate(${x}rem, ${y}rem)`,
-                }}
+                  "--planet-index": i,
+                } as React.CSSProperties}
               >
                 <Link
                   href={`/projects/${p.slug}`}

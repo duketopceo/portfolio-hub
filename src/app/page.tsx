@@ -44,10 +44,11 @@ export default async function Home() {
         </section>
 
         <SolarSystemNav projects={ordered} />
+      </div>
 
-        <div className="home-activity-wrapper">
-          <ActivityFeed />
-        </div>
+      {/* ── Activity strip — below orbit, full width ── */}
+      <div className="home-activity-strip">
+        <ActivityFeed variant="strip" />
       </div>
 
       <section
@@ -55,7 +56,7 @@ export default async function Home() {
         aria-label="Domain map in catalog"
       >
         <Link href="/projects#domain-map" className="detail-nav-link">
-          Domain quadrant map →
+          Explore domain quadrant map →
         </Link>
       </section>
     </div>

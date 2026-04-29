@@ -2580,33 +2580,35 @@ body {
   stroke: rgba(255, 255, 255, 0.1);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
+  stroke-dasharray: 8 6;
 }
 
 .solar-orbit-line--a {
-  stroke: rgba(200, 230, 255, 0.12);
+  stroke: rgba(200, 230, 255, 0.15);
+  stroke-dasharray: 10 8;
   animation: solar-orbit-shimmer 14s ease-in-out infinite;
 }
 
 .solar-orbit-line--b {
-  stroke: rgba(45, 212, 191, 0.1);
+  stroke: rgba(45, 212, 191, 0.12);
+  stroke-dasharray: 6 10;
   animation: solar-orbit-shimmer 18s ease-in-out infinite;
   animation-delay: -4s;
 }
 
 .solar-orbit-line--c {
-  stroke: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.09);
+  stroke-dasharray: 4 14;
   animation: solar-orbit-shimmer 22s ease-in-out infinite;
   animation-delay: -9s;
 }
 
 @keyframes solar-orbit-shimmer {
-  0%,
-  100% {
-    stroke-opacity: 0.35;
-  }
-  50% {
-    stroke-opacity: 0.85;
-  }
+  0%   { stroke-opacity: 0.12; stroke-dashoffset: 0; }
+  25%  { stroke-opacity: 0.6; }
+  50%  { stroke-opacity: 0.95; stroke-dashoffset: 40; }
+  75%  { stroke-opacity: 0.5; }
+  100% { stroke-opacity: 0.12; stroke-dashoffset: 0; }
 }
 
 /* ── Center sun (stacked, mild pulse) ─────────────────── */
@@ -2796,6 +2798,19 @@ body {
     transform var(--transition),
     box-shadow var(--transition),
     background var(--transition);
+  animation: planet-dot-breathe 4s ease-in-out infinite;
+  animation-delay: calc(var(--planet-index, 0) * 0.55s);
+}
+
+@keyframes planet-dot-breathe {
+  0%, 100% {
+    box-shadow: 0 0 8px color-mix(in srgb, var(--planet-accent, var(--color-accent)) 35%, transparent);
+    opacity: 0.8;
+  }
+  50% {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--planet-accent, var(--color-accent)) 65%, transparent);
+    opacity: 1;
+  }
 }
 
 @media (hover: hover) {
@@ -2879,6 +2894,12 @@ body {
 .solar-nav-btn:hover {
   background: var(--glass-bg-hover);
   border-color: var(--glass-border-hover);
+}
+
+.solar-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .solar-focus-card {
@@ -3356,30 +3377,142 @@ body {
   50% { opacity: 0.8; }
 }
 
-/* Desktop: bottom-right widget */
-.home-activity-wrapper {
-  position: absolute;
-  bottom: 2rem;
-  right: 1.5rem;
-  z-index: 10;
-}
-
-/* Mobile: full-width below solar system */
-@media (max-width: 768px) {
-  .home-activity-wrapper {
-    position: relative;
-    bottom: auto;
-    right: auto;
-    padding: 0 1rem 1rem;
-  }
-  .activity-feed {
-    width: 100%;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .activity-feed__skeleton-line {
     animation: none;
     opacity: 0.6;
+  }
+}
+
+/* ── Activity Strip (below solar on home) ───────────────── */
+.home-activity-strip {
+  width: 100%;
+  border-top: 1px solid rgba(45, 212, 191, 0.06);
+  background: linear-gradient(
+    180deg,
+    rgba(8, 12, 20, 0.6) 0%,
+    transparent 100%
+  );
+}
+
+.activity-strip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.625rem var(--cosmic-page-pad-x);
+  max-width: var(--cosmic-page-max);
+  margin: 0 auto;
+  overflow: hidden;
+  flex-wrap: nowrap;
+}
+
+.activity-strip__label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.activity-strip__pulse {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: strip-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes strip-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.35); }
+}
+
+.activity-strip__list {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.activity-strip__event {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: rgba(45, 212, 191, 0.04);
+  border: 1px solid rgba(45, 212, 191, 0.07);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.activity-strip__event-repo {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-accent);
+  opacity: 0.8;
+}
+
+.activity-strip__event-msg {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  max-width: 18ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activity-strip__event-time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+}
+
+.activity-strip__skeleton {
+  width: 140px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: rgba(45, 212, 191, 0.04);
+  animation: activity-pulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.activity-strip__empty {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-faint);
+}
+
+.activity-strip__more {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-accent);
+  opacity: 0.6;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity var(--transition);
+}
+.activity-strip__more:hover { opacity: 1; }
+
+@media (max-width: 640px) {
+  .activity-strip {
+    gap: 0.625rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .activity-strip__event-msg {
+    max-width: 10ch;
   }
 }
 
