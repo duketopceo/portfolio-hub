@@ -85,19 +85,29 @@
     }
   }
 
-  /* ── Collapsible flashcard items ────────────────────────── */
-  function initCollapsibles() {
-    document.querySelectorAll('.fc-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var item = btn.closest('.fc-item');
-        if (!item) return;
-        var body  = item.querySelector('.fc-body');
-        var icon  = btn.querySelector('.fc-icon');
-        var open  = item.classList.toggle('is-open');
+  /* ── Mosaic tile expand / collapse ─────────────────────── */
+  function initMosaic() {
+    document.querySelectorAll('.mosaic-grid').forEach(function (grid) {
+      grid.querySelectorAll('.mosaic-tile').forEach(function (tile) {
+        tile.addEventListener('click', function (e) {
+          var isOpen = tile.classList.contains('is-open');
 
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        if (body)  body.setAttribute('aria-hidden', open ? 'false' : 'true');
-        if (icon)  icon.textContent = open ? '×' : '+';
+          /* Clicking inside the body doesn't toggle */
+          if (isOpen && !e.target.closest('.mosaic-tile__face')) return;
+
+          /* Close any currently open tile in this grid */
+          grid.querySelectorAll('.mosaic-tile.is-open').forEach(function (t) {
+            t.classList.remove('is-open');
+            t.style.gridColumn = '';
+          });
+
+          if (!isOpen) {
+            tile.style.gridColumn = '1 / -1';
+            tile.classList.add('is-open');
+            /* Scroll tile into view if needed */
+            tile.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        });
       });
     });
   }
@@ -243,7 +253,7 @@
     initDescriptLayout();
     initStars();
     initTicker();
-    initCollapsibles();
+    initMosaic();
     initCarousel();
     if (document.readyState === 'complete') {
       initTradingView();
