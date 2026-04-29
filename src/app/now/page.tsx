@@ -16,32 +16,35 @@ export default async function NowPage() {
 
   return (
     <div className="cosmic-page cosmic-page--shell">
-      <header className="projects-page-header max-w-xl mb-12">
+      <header className="projects-page-header max-w-xl" style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}>
         <p className="projects-page-header__eyebrow">MISSION LOG</p>
         <h1 className="projects-page-header__title">Recent Activity</h1>
         <p className="projects-page-header__sub">
-          Projects with the most recent commits. Updated from GitHub.
+          Most recently active projects. Updated from GitHub.
         </p>
       </header>
 
       <section
-        className="max-w-xl mb-12"
+        className="now-spotify-section"
         aria-label="Spotify — current track"
       >
-        <p className="projects-page-header__eyebrow mb-3">ON REPEAT</p>
-        <div className="cosmic-spotify-embed overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-accent)_12%,transparent)]">
-          <iframe
-            data-testid="embed-iframe"
-            style={{ borderRadius: 12 }}
-            src="https://open.spotify.com/embed/track/4JXppv83zXXt1tNs4MsXd6?utm_source=generator"
-            width="100%"
-            height={352}
-            frameBorder={0}
-            allowFullScreen
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-            title="Spotify track embed"
-          />
+        <div className="now-spotify-card">
+          <div className="now-spotify-card__label">
+            <span className="now-spotify-card__dot" aria-hidden />
+            On Repeat
+          </div>
+          <div className="now-spotify-card__embed">
+            <iframe
+              style={{ borderRadius: 10, display: "block" }}
+              src="https://open.spotify.com/embed/track/4JXppv83zXXt1tNs4MsXd6?utm_source=generator&theme=0"
+              width="100%"
+              height={80}
+              frameBorder={0}
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              title="Spotify track"
+            />
+          </div>
         </div>
       </section>
 

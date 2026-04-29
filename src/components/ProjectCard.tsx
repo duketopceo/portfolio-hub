@@ -19,7 +19,7 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const meta = categoryMeta[project.category];
-  const hasDemo = !!(project.liveUrl || project.demoUrl);
+  const hasDemo = !!(project.liveUrl || project.demoUrl) && !project.demoOffline;
   const demoUrl = project.liveUrl || project.demoUrl;
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"

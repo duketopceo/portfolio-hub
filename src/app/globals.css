@@ -2050,8 +2050,8 @@ body {
   align-items: center;
   gap: 0.35rem;
   font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 2px 8px;
+  font-size: 11px;
+  padding: 3px 9px;
   border-radius: 4px;
 }
 
@@ -4103,4 +4103,147 @@ body {
 
 .cosmic-project-card__dossier-link:hover {
   color: var(--color-accent);
+}
+
+/* ── /now — Spotify mini-card ───────────────────────────── */
+.now-spotify-section {
+  max-width: 36rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.now-spotify-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.65rem 0.875rem;
+  background: rgba(12, 18, 30, 0.70);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+.now-spotify-card__label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #1DB954;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.now-spotify-card__dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #1DB954;
+  box-shadow: 0 0 6px #1DB95488;
+  animation: q-pulse 2.5s ease-in-out infinite;
+}
+
+.now-spotify-card__embed {
+  flex: 1;
+  min-width: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ── Typography uplift — small sizes to 11px minimum ───── */
+
+/* Eyebrows: projects page + now page */
+.projects-page-header__eyebrow {
+  font-size: 11px;
+}
+
+/* Compact hero eyebrow */
+.cosmic-hero--compact .cosmic-hero__eyebrow {
+  font-size: 10px;
+}
+
+/* Architecture flow steps */
+.detail-arch-step {
+  font-size: 11px;
+}
+
+/* Architecture arrow */
+.detail-arch-arrow {
+  font-size: 12px;
+}
+
+/* Detail section label */
+.detail-section-label {
+  font-size: 11px;
+}
+
+/* Feature card text */
+.detail-feature-card span[style] {
+  /* override inline style floor */
+}
+.detail-feature-card {
+  font-size: 12px;
+}
+
+/* Dossier pill base */
+.dossier-page__pill {
+  font-size: 11px;
+}
+
+/* Tech chips */
+.detail-tech-chip {
+  font-size: 12px;
+}
+
+/* Breadcrumb */
+.detail-breadcrumb__nav {
+  font-size: clamp(0.75rem, 1.2vw, 0.8125rem);
+}
+
+/* Compact hero stats */
+.cosmic-hero--compact .cosmic-hero__stats {
+  font-size: 11px;
+}
+
+/* Solar system hint — already 11px but ensure it */
+.solar-system__hint {
+  font-size: 12px;
+}
+
+/* q-legend */
+.q-legend__count,
+.q-legend__hint {
+  font-size: 12px;
+}
+
+/* Catalog sort buttons */
+.catalog-sort__btn {
+  font-size: 11px;
+}
+
+/* Catalog view toggle buttons */
+.catalog-view-toggle__btn {
+  font-size: 11px;
+}
+
+/* Activity feed time + repo */
+.activity-feed__time,
+.activity-feed__repo {
+  font-size: 10px;
+}
+
+/* Footer label */
+.cosmic-footer__heading {
+  font-size: 11px;
+}
+.cosmic-footer__bottom {
+  font-size: 11px;
+}
+.cosmic-footer__grid {
+  font-size: 11px;
 }

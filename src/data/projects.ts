@@ -111,7 +111,8 @@ export const projectConfigs: ProjectConfig[] = [
     featured: true,
     liveUrl: "https://nem.luke-the-duke.com",
     demoUrl: "https://nem.luke-the-duke.com",
-    embeddable: true,
+    embeddable: false,
+    demoOffline: true,
     techStack: ["HTML/CSS", "Chart.js", "MapLibre", "Perplexity Computer"],
     private: false,
     highlights: [
