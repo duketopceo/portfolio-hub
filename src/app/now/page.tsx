@@ -12,7 +12,6 @@ export const metadata = {
 
 export default async function NowPage() {
   const recent = await getRecentProjects(5);
-  const hasGitHubDates = recent.some((p) => Boolean(p.lastUpdated?.trim()));
 
   return (
     <div className="cosmic-page cosmic-page--shell">
@@ -47,18 +46,6 @@ export default async function NowPage() {
           </div>
         </div>
       </section>
-
-      {!hasGitHubDates && recent.length > 0 && (
-        <div className="cosmic-callout cosmic-callout--warning" role="status">
-          <strong className="cosmic-callout__strong">
-            GitHub timeline unavailable.
-          </strong>{" "}
-          Showing curated projects in catalog order. For live commit dates on this
-          page, set{" "}
-          <code>GITHUB_TOKEN</code> in the server environment (e.g.{" "}
-          <code>~/portfolio-hub/.env</code> on the cluster) and rebuild the container.
-        </div>
-      )}
 
       {/* Timeline */}
       <div className="cosmic-timeline">
