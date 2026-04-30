@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OP009 — The Signal Stack — Mission Control</title>
+  <meta name="description" content="Episode 009: SpaceX and Cursor, Utah SMRs, Nick Shirley, WHCD, Samsung Taylor fab, AI harnesses, local Qwen vs cloud Sonnet, Stratum Engine and Perplexity shipped.">
+  <meta property="og:title" content="OP009 — The Signal Stack">
+  <meta property="og:description" content="Mission Control companion — markets, data grid, headlines, Stratum Engine and Perplexity updates.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/podcast/shell/pod.css">
+  <link rel="stylesheet" href="/podcast/episodes/ep009/ep009.css">
+</head>
+<body class="ep009">
+  <canvas class="stars" id="starsCanvas" aria-hidden="true"></canvas>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════════════════════════════ -->
+  <header class="header" id="header">
+    <div class="header__brand" aria-label="Show">
+      <!-- Logo: 18x18 dot only -->
+      <svg class="header__logo" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <circle cx="9" cy="9" r="4" fill="#2DD4BF"/>
+      </svg>
+      <span class="header__title">Mission Control</span>
+    </div>
+
+    <div class="header__episode" id="headerEpisode">
+      <span class="header__ep-badge" id="epBadge">OP009</span>
+      <span class="header__ep-title" id="epTitle">The Signal Stack</span>
+      <span class="header__ep-date" id="epDate">2026-04-28</span>
+    </div>
+
+    <div class="header__right">
+      <nav class="page-nav ep-nav" id="pageNav" aria-label="Episode navigation">
+        <a href="#">&larr; EP008</a>
+        <span class="ep-nav__sep" aria-hidden="true">|</span>
+        <a href="/podcast/live.html">Mission</a>
+        <span class="ep-nav__sep" aria-hidden="true">|</span>
+        <a href="#">EP010 &rarr;</a>
+      </nav>
+      <div class="social-bar" id="socialBar" aria-label="Social links"></div>
+    </div>
+  </header>
+
+  <div class="ticker-bar" id="tickerBar"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       CAROUSEL
+       ═══════════════════════════════════════════════════════════════ -->
+  <div class="carousel" id="carousel" role="region" aria-label="Episode slides">
+    <div class="carousel__track" id="carouselTrack">
+
+      <!-- SLIDE 1: Cold Open -->
+      <section class="slide is-active" id="slide-cold" data-slide="0" aria-label="Cold open">
+        <div class="slide__inner">
+          <div class="pod-hero">
+            <p class="pod-hero__badge">OPERATOR LOG &middot; OP009</p>
+            <h1 class="pod-hero__title">The Signal Stack</h1>
+            <p class="pod-hero__tagline">Systems that <strong>compound.</strong></p>
+            <p class="pod-hero__date">2026-04-28</p>
+            <ul class="pod-hero__tags" aria-label="Episode tags">
+              <li>SPACEX + CURSOR</li>
+              <li>UTAH SMRs</li>
+              <li>NICK SHIRLEY</li>
+              <li>SPLC</li>
+              <li>WHCD SHOOTING</li>
+              <li>SAMSUNG TEXAS FAB</li>
+              <li>AI HARNESSES</li>
+              <li>BERT</li>
+              <li>QWEN LOCAL</li>
+              <li>STRATUM ENGINE</li>
+              <li>PERPLEXITY</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Market -->
+      <section class="slide" id="slide-market" data-slide="1" aria-label="Market">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">MARKET INTELLIGENCE</p>
+            <h2 class="slide-h">Price Action</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="ep-chart-controls">
+                <label for="symbolInput">MARKET &middot; CHANGE SYMBOL &uarr;</label>
+                <input class="ep-symbol-input" type="text" id="symbolInput" name="symbol" placeholder="e.g. NVDA or NASDAQ:AMD" value="NASDAQ:NVDA" autocomplete="off" spellcheck="false">
+                <button type="button" class="ep-symbol-btn" id="symbolApply">Apply</button>
+              </div>
+              <div id="tv_chart_container" class="tv-chart" role="region" aria-label="TradingView advanced chart"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Key Numbers -->
+      <section class="slide" id="slide-numbers" data-slide="2" aria-label="Key numbers">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">DATA GRID</p>
+            <h2 class="slide-h">Key Numbers</h2>
+          </div>
+          <div class="mosaic-grid">
+            <article class="mosaic-tile" style="--tile-delay: 0s;">
+              <span class="mosaic-tile__icon">&#127970;</span>
+              <span class="mosaic-tile__label">Samsung Taylor fab size</span>
+              <span class="mosaic-tile__value">4.85M m&sup2;</span>
+              <span class="mosaic-tile__note">Taylor, TX &mdash; operational late 2026</span>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.04s;">
+              <span class="mosaic-tile__icon">&#128104;&#8205;&#128188;</span>
+              <span class="mosaic-tile__label">Employees relocating</span>
+              <span class="mosaic-tile__value">~1,000</span>
+              <span class="mosaic-tile__note">Samsung Austin Semi, first wave</span>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.08s;">
+              <span class="mosaic-tile__icon">&#9889;</span>
+              <span class="mosaic-tile__label">Utah SMR target</span>
+              <span class="mosaic-tile__value">4 GW</span>
+              <span class="mosaic-tile__note">Holtec &mdash; Mountain West plan</span>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.12s;">
+              <span class="mosaic-tile__icon">&#128640;</span>
+              <span class="mosaic-tile__label">Ward250 output</span>
+              <span class="mosaic-tile__value">5 MW</span>
+              <span class="mosaic-tile__note">Airlifted &middot; Jul 4 2026 first power</span>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.16s;">
+              <span class="mosaic-tile__icon">&#128172;</span>
+              <span class="mosaic-tile__label">Nick Shirley views</span>
+              <span class="mosaic-tile__value">135M</span>
+              <span class="mosaic-tile__note">X platform &middot; MN daycare claims</span>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.20s;">
+              <span class="mosaic-tile__icon">&#129302;</span>
+              <span class="mosaic-tile__label">Qwen 14B HumanEval</span>
+              <span class="mosaic-tile__value">~50%</span>
+              <span class="mosaic-tile__note">Local &middot; Ollama / LM Studio</span>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.24s;">
+              <span class="mosaic-tile__icon">&#9729;&#65039;</span>
+              <span class="mosaic-tile__label">Sonnet 4.6 HumanEval</span>
+              <span class="mosaic-tile__value">97.6%</span>
+              <span class="mosaic-tile__note">Cloud &middot; Cursor / Composer</span>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.28s;">
+              <span class="mosaic-tile__icon">&#127963;&#65039;</span>
+              <span class="mosaic-tile__label">WHCD incident</span>
+              <span class="mosaic-tile__value">APR 26 2026</span>
+              <span class="mosaic-tile__note">Trump evacuated &middot; shots outside Hilton</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Current Events -->
+      <section class="slide" id="slide-events" data-slide="3" aria-label="Current events">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">FIELD REPORT</p>
+            <h2 class="slide-h">Current Events</h2>
+          </div>
+          <div class="hl-stack" id="hlStack"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Hardware -->
+      <section class="slide" id="slide-hardware" data-slide="4" aria-label="Hardware">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">PHYSICAL LAYER</p>
+            <h2 class="slide-h">Hardware</h2>
+          </div>
+          <div class="mosaic-grid">
+            <article class="mosaic-tile" style="--tile-delay: 0s;">
+              <span class="mosaic-tile__icon">&#127970;</span>
+              <span class="mosaic-tile__label">Samsung Taylor</span>
+              <p class="mosaic-tile__body">Samsung moves <strong>1,000 staff</strong> to Taylor, Texas fab. Campus spans <strong>4.85M m&sup2;</strong>, operational late 2026. Part of US semiconductor reshoring push accelerated by CHIPS Act.</p>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.06s;">
+              <span class="mosaic-tile__icon">&#9889;</span>
+              <span class="mosaic-tile__label">Utah SMR Pivot</span>
+              <p class="mosaic-tile__body">After NuScale/UAMPS collapse, Utah pivots to <strong>Holtec SMR-300</strong>. Target: <strong>up to 10 reactors, 4 GW</strong> across the Mountain West. Positions Utah as nuclear energy hub.</p>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.12s;">
+              <span class="mosaic-tile__icon">&#128640;</span>
+              <span class="mosaic-tile__label">Ward250 Microreactor</span>
+              <p class="mosaic-tile__body"><strong>5 MW</strong> reactor airlifted to San Rafael Energy Lab, Utah. Small enough for a military cargo plane. First power target: <strong>July 4, 2026</strong>.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: AI Field -->
+      <section class="slide" id="slide-ai" data-slide="5" aria-label="AI field">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">MODEL LAYER</p>
+            <h2 class="slide-h">AI Field</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="prose-block">
+                <p>An AI harness is a wrapper around a model. Input goes in. Rules enforced. Output comes out. The simplest harness is a system prompt + an API call &mdash; about <code>20</code> lines of Python.</p>
+                <p><strong>BERT</strong> (Google, 2018) reads text in both directions simultaneously. It masks words and predicts them from surrounding context. Example: &quot;My [MASK] is cute, he&apos;s playing.&quot; &rarr; BERT predicts &quot;dog.&quot; This is what powers Google Search&apos;s semantic understanding layer.</p>
+                <p>Simple build: <code>pip install transformers</code> &rarr; load <code>bert-base-uncased</code> &rarr; <code>.encode()</code> &rarr; classify. Complex build: fine-tune on domain data, multi-head attention layers, hardware-optimized inference. The difference is 20 lines of code vs. 200,000.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Benchmarks -->
+      <section class="slide" id="slide-bench" data-slide="6" aria-label="Benchmarks">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">EVALUATION</p>
+            <h2 class="slide-h">Local Models</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="bench-wrap">
+                <table class="bench-table">
+                  <thead>
+                    <tr><th>Model</th><th>HumanEval</th><th>Params</th><th>Runs where</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Claude Sonnet 4.6</td><td>97.6%</td><td>API</td><td>Cursor / Perplexity</td></tr>
+                    <tr><td>DeepSeek R1</td><td>97.4%</td><td>API</td><td>Cloud</td></tr>
+                    <tr><td>Qwen 3 480B</td><td>92.7%</td><td>API</td><td>Cloud</td></tr>
+                    <tr><td>Qwen 3.5 9B</td><td>91.0%</td><td>9B</td><td>Ollama / Local</td></tr>
+                    <tr><td>Qwen Coder 14B</td><td>~50%</td><td>14B</td><td>Ollama / LM Studio</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="bench-note">Running Qwen 14B locally through Cline against a repo with our full test stack &mdash; ruff, pytest, Playwright, real Postgres &mdash; exposes context limits fast. Sonnet in Cursor has full repo awareness. Local models don&apos;t. SpaceX chose Cursor. That&apos;s the answer.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Stratum -->
+      <section class="slide" id="slide-stratum" data-slide="7" aria-label="Stratum">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">SHIP LOG</p>
+            <h2 class="slide-h">Stratum Engine</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="stm-block" id="stmBlock"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Perplexity -->
+      <section class="slide" id="slide-perplex" data-slide="8" aria-label="Perplexity">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">PRODUCT LOG</p>
+            <h2 class="slide-h">Perplexity</h2>
+          </div>
+          <div class="perplex-grid" id="perplexGrid"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Live Signal -->
+      <section class="slide" id="slide-signal" data-slide="9" aria-label="Live signal">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">SIGNAL STRENGTH</p>
+            <h2 class="slide-h">Live Signal</h2>
+          </div>
+          <div class="mosaic-grid">
+            <article class="mosaic-tile" style="--tile-delay: 0s;">
+              <span class="mosaic-tile__icon">&#128225;</span>
+              <span class="mosaic-tile__label">SpaceX + Cursor</span>
+              <p class="mosaic-tile__body">Highest-profile enterprise validation of AI-assisted coding. Sonnet-powered Cursor adopted across SpaceX engineering. The local vs. cloud debate is over for elite teams.</p>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.06s;">
+              <span class="mosaic-tile__icon">&#9889;</span>
+              <span class="mosaic-tile__label">Energy Reshoring</span>
+              <p class="mosaic-tile__body">Samsung, Holtec, and Valar Atomics represent a <strong>$100B+</strong> hardware migration to the Mountain West and Texas. CHIPS Act + tariff policy accelerating timeline.</p>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.12s;">
+              <span class="mosaic-tile__icon">&#129302;</span>
+              <span class="mosaic-tile__label">AI Product Velocity</span>
+              <p class="mosaic-tile__body">Perplexity shipped <strong>5 major features</strong> in 60 days: Personal Computer, CFO with Plaid, Deep Research deliverables, Comet iOS, Model Council. Speed compounds.</p>
+            </article>
+            <article class="mosaic-tile" style="--tile-delay: 0.18s;">
+              <span class="mosaic-tile__icon">&#128200;</span>
+              <span class="mosaic-tile__label">Stratum Engine</span>
+              <p class="mosaic-tile__body">9 shipped features, 3 in progress. CodeRabbit AI reviews, nightly auto-deploy, Grafana + Loki logging, Sentry tracking, Playwright E2E. Infrastructure as product.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Sources -->
+      <section class="slide" id="slide-sources" data-slide="10" aria-label="Sources">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">INTELLIGENCE SOURCES</p>
+            <h2 class="slide-h">Sources</h2>
+          </div>
+          <div id="srcPanel" class="glass-card glass-card--tight src-panel">
+            <div class="glass-card__inner">
+              <button type="button" class="src-panel__toggle" id="srcToggle" aria-expanded="false" aria-controls="srcList">[ SOURCES &darr; ]</button>
+              <ol class="src-panel__list" id="srcList" aria-hidden="true"></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTER + CAROUSEL NAV
+       ═══════════════════════════════════════════════════════════════ -->
+  <footer class="footer-bar">
+    <span class="footer-bar__left" id="footerStatus">OP009 &middot; The Signal Stack &middot; 2026-04-28</span>
+
+    <div class="footer-bar__center">
+      <button class="car-prev" type="button" aria-label="Previous slide">&larr;</button>
+      <div class="car-dots" id="carDots" aria-label="Slide navigation"></div>
+      <button class="car-next" type="button" aria-label="Next slide">&rarr;</button>
+    </div>
+
+    <span class="footer-bar__right">
+      <span>Arrow keys navigate</span>
+      <span><a href="/podcast/index.html?descript=1" style="color:var(--text-muted)">Descript</a></span>
+    </span>
+  </footer>
+
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <script src="/podcast/shell/pod.js"></script>
+</body>
+</html>

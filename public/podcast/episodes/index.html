@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Luke the Duke Show — Episode Archive</title>
+  <meta name="description" content="Archive of all episodes of The Luke the Duke Show.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/podcast/shell/pod.css">
+  <style>
+    .archive-body {
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: auto;
+      min-height: 100dvh;
+    }
+    .archive-main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: calc(var(--header-h) + 32px) 24px calc(var(--footer-h) + 40px);
+    }
+    .archive-h {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--text-primary);
+      margin-bottom: 32px;
+      letter-spacing: -0.02em;
+    }
+    .archive-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .archive-row {
+      display: grid;
+      grid-template-columns: 70px 1fr 110px auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    .archive-badge {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(45,212,191,0.2);
+      border-radius: var(--radius);
+      padding: 3px 10px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .archive-title {
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-weight: 500;
+    }
+    .archive-title a {
+      color: inherit;
+      transition: color 180ms ease;
+    }
+    .archive-title a:hover {
+      color: var(--accent);
+    }
+    .archive-date {
+      color: var(--text-muted);
+      font-size: 11px;
+      text-align: right;
+    }
+    .archive-status {
+      color: var(--text-muted);
+      font-size: 11px;
+      text-align: right;
+      font-style: italic;
+    }
+    .archive-row--placeholder .archive-title {
+      color: var(--text-muted);
+    }
+    @media (max-width: 640px) {
+      .archive-row {
+        grid-template-columns: 60px 1fr;
+        gap: 8px 12px;
+        padding: 16px 0;
+      }
+      .archive-date { text-align: left; grid-column: 2; }
+      .archive-status { display: none; }
+    }
+  </style>
+</head>
+<body class="archive-body">
+  <canvas class="stars" id="starsCanvas" aria-hidden="true"></canvas>
+
+  <header class="header" id="header">
+    <div class="header__brand" aria-label="Show">
+      <svg class="header__logo" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <circle cx="9" cy="9" r="4" fill="#2DD4BF"/>
+      </svg>
+      <span class="header__title">Mission Control</span>
+    </div>
+    <div class="header__episode" style="justify-content: flex-end;">
+      <span class="header__ep-title">Episode Archive</span>
+    </div>
+    <div class="header__right">
+      <nav class="page-nav ep-nav" aria-label="Navigation">
+        <a href="/podcast/episodes/ep009/">Latest &rarr;</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ticker-bar" id="tickerBar"></div>
+
+  <main class="archive-main">
+    <h1 class="archive-h">The Luke the Duke Show — Episode Archive</h1>
+    <div class="archive-list">
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP001</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP002</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP003</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP004</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP005</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP006</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP007</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row archive-row--placeholder">
+        <span class="archive-badge">EP008</span>
+        <span class="archive-title">&mdash; archived</span>
+        <span class="archive-date">&mdash;</span>
+        <span class="archive-status">&mdash; archived</span>
+      </div>
+      <div class="archive-row">
+        <span class="archive-badge">EP009</span>
+        <span class="archive-title"><a href="/podcast/episodes/ep009/">The Signal Stack</a></span>
+        <span class="archive-date">2026-04-28</span>
+        <span class="archive-status">live</span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-bar">
+    <span class="footer-bar__left">Luke the Duke Show &middot; Archive</span>
+    <span class="footer-bar__right">
+      <span><a href="/podcast/episodes/ep009/" style="color:var(--text-muted)">Latest episode</a></span>
+    </span>
+  </footer>
+
+  <script src="/podcast/shell/pod.js"></script>
+</body>
+</html>

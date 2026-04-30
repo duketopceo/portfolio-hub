@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- REPLACE: Episode title -->
+  <title>OP0XX — EPISODE TITLE — Mission Control</title>
+  <!-- REPLACE: Episode description -->
+  <meta name="description" content="Episode 0XX: Brief summary of episode topics.">
+  <meta property="og:title" content="OP0XX — EPISODE TITLE">
+  <!-- REPLACE: Episode OG description -->
+  <meta property="og:description" content="Mission Control companion — brief summary.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Shell CSS — shared across all episodes. Do not modify per-episode. -->
+  <link rel="stylesheet" href="/podcast/shell/pod.css">
+  <!-- Episode-specific CSS override. Add per-episode tweaks here if needed. -->
+  <link rel="stylesheet" href="/podcast/episodes/ep0XX/ep0XX.css">
+</head>
+<!-- REPLACE: Episode body class. Format: ep0XX (e.g. ep010, ep011) -->
+<body class="ep0XX">
+  <canvas class="stars" id="starsCanvas" aria-hidden="true"></canvas>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════════════════════════════ -->
+  <header class="header" id="header">
+    <div class="header__brand" aria-label="Show">
+      <svg class="header__logo" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <circle cx="9" cy="9" r="4" fill="#2DD4BF"/>
+      </svg>
+      <span class="header__title">Mission Control</span>
+    </div>
+
+    <div class="header__episode" id="headerEpisode">
+      <!-- REPLACE: Episode badge number (e.g. OP009, OP010) -->
+      <span class="header__ep-badge" id="epBadge">OP0XX</span>
+      <!-- REPLACE: Episode title -->
+      <span class="header__ep-title" id="epTitle">EPISODE TITLE</span>
+      <!-- REPLACE: Episode date (YYYY-MM-DD) -->
+      <span class="header__ep-date" id="epDate">YYYY-MM-DD</span>
+    </div>
+
+    <div class="header__right">
+      <nav class="page-nav ep-nav" id="pageNav" aria-label="Episode navigation">
+        <!-- REPLACE: Previous episode link. Use "#" if none yet. -->
+        <a href="#">&larr; EP0XX</a>
+        <span class="ep-nav__sep" aria-hidden="true">|</span>
+        <a href="/podcast/live.html">Mission</a>
+        <span class="ep-nav__sep" aria-hidden="true">|</span>
+        <!-- REPLACE: Next episode link. Use "#" if none yet. -->
+        <a href="#">EP0XX &rarr;</a>
+      </nav>
+      <div class="social-bar" id="socialBar" aria-label="Social links"></div>
+    </div>
+  </header>
+
+  <div class="ticker-bar" id="tickerBar"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       CAROUSEL
+       ═══════════════════════════════════════════════════════════════ -->
+  <div class="carousel" id="carousel" role="region" aria-label="Episode slides">
+    <div class="carousel__track" id="carouselTrack">
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 1: COLD OPEN
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide is-active" id="slide-cold" data-slide="0" aria-label="Cold open">
+        <div class="slide__inner">
+          <div class="pod-hero">
+            <!-- REPLACE: Episode log label (e.g. OPERATOR LOG · OP009) -->
+            <p class="pod-hero__badge">OPERATOR LOG &middot; OP0XX</p>
+            <!-- REPLACE: Episode main title -->
+            <h1 class="pod-hero__title">EPISODE TITLE</h1>
+            <!-- REPLACE: Episode tagline/subtitle -->
+            <p class="pod-hero__tagline">Tagline or thesis sentence.</p>
+            <!-- REPLACE: Episode date -->
+            <p class="pod-hero__date">YYYY-MM-DD</p>
+            <!-- REPLACE: Episode tags. Add/remove <li> items as needed. -->
+            <ul class="pod-hero__tags" aria-label="Episode tags">
+              <li>TAG ONE</li>
+              <li>TAG TWO</li>
+              <li>TAG THREE</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 2: MARKET
+           Optional. Delete this slide if episode has no market coverage.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-market" data-slide="1" aria-label="Market">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">MARKET INTELLIGENCE</p>
+            <h2 class="slide-h">Price Action</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="ep-chart-controls">
+                <label for="symbolInput">MARKET &middot; CHANGE SYMBOL &uarr;</label>
+                <!-- REPLACE: Default chart symbol -->
+                <input class="ep-symbol-input" type="text" id="symbolInput" name="symbol" placeholder="e.g. NVDA or NASDAQ:AMD" value="NASDAQ:NVDA" autocomplete="off" spellcheck="false">
+                <button type="button" class="ep-symbol-btn" id="symbolApply">Apply</button>
+              </div>
+              <div id="tv_chart_container" class="tv-chart" role="region" aria-label="TradingView advanced chart"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 3: KEY NUMBERS
+           Data grid / stat cards. Add/remove mosaic-tile blocks as needed.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-numbers" data-slide="2" aria-label="Key numbers">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">DATA GRID</p>
+            <h2 class="slide-h">Key Numbers</h2>
+          </div>
+          <div class="mosaic-grid">
+            <!-- REPLACE: Stat tile 1. Update icon, label, value, note. -->
+            <article class="mosaic-tile" style="--tile-delay: 0s;">
+              <span class="mosaic-tile__icon">&#127970;</span>
+              <span class="mosaic-tile__label">Stat label</span>
+              <span class="mosaic-tile__value">0.00</span>
+              <span class="mosaic-tile__note">Context note</span>
+            </article>
+            <!-- REPLACE: Add more mosaic-tile blocks as needed. Copy/paste the block above. -->
+            <!-- Stagger delay increments by 0.04s per tile: 0s, 0.04s, 0.08s, etc. -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 4: CURRENT EVENTS
+           Headlines with expandable context. Content is injected by JS from
+           the HEADLINES array in shell/pod.js. Update that array for this episode.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-events" data-slide="3" aria-label="Current events">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">FIELD REPORT</p>
+            <h2 class="slide-h">Current Events</h2>
+          </div>
+          <!-- Headlines are rendered here by pod.js. See HEADLINES array. -->
+          <div class="hl-stack" id="hlStack"></div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 5: HARDWARE
+           Physical layer stories: chips, reactors, infrastructure, etc.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-hardware" data-slide="4" aria-label="Hardware">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">PHYSICAL LAYER</p>
+            <h2 class="slide-h">Hardware</h2>
+          </div>
+          <div class="mosaic-grid">
+            <!-- REPLACE: Hardware story tiles. Update icon, label, body text. -->
+            <article class="mosaic-tile" style="--tile-delay: 0s;">
+              <span class="mosaic-tile__icon">&#127970;</span>
+              <span class="mosaic-tile__label">Story title</span>
+              <p class="mosaic-tile__body">Story body. Use <strong>bold</strong> for key facts.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 6: AI FIELD
+           Model layer: AI tools, frameworks, research, etc.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-ai" data-slide="5" aria-label="AI field">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">MODEL LAYER</p>
+            <h2 class="slide-h">AI Field</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="prose-block">
+                <!-- REPLACE: AI field prose content. Add/remove <p> blocks. -->
+                <p>Paragraph one. Use <code>code</code> for inline code. Use <strong>bold</strong> for emphasis.</p>
+                <p>Paragraph two.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 7: BENCHMARKS
+           Comparison tables, metrics, evaluation results.
+           Optional. Delete if not applicable.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-bench" data-slide="6" aria-label="Benchmarks">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">EVALUATION</p>
+            <h2 class="slide-h">Benchmarks</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="bench-wrap">
+                <table class="bench-table">
+                  <thead>
+                    <!-- REPLACE: Table headers -->
+                    <tr><th>Model</th><th>Score</th><th>Size</th><th>Runs where</th></tr>
+                  </thead>
+                  <tbody>
+                    <!-- REPLACE: Table rows. Add/remove <tr> blocks. -->
+                    <tr><td>Model name</td><td>0%</td><td>API</td><td>Location</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- REPLACE: Benchmark note / analysis -->
+              <p class="bench-note">Analysis paragraph.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 8: STRATUM
+           Stratum Engine ship log. Content injected by JS from STRATUM_LINES array.
+           Optional. Delete if not applicable.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-stratum" data-slide="7" aria-label="Stratum">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">SHIP LOG</p>
+            <h2 class="slide-h">Stratum Engine</h2>
+          </div>
+          <div class="glass-card">
+            <div class="glass-card__inner">
+              <div class="stm-block" id="stmBlock"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 9: PERPLEXITY
+           Perplexity product log. Content injected by JS from PERPLEX array.
+           Optional. Delete if not applicable.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-perplex" data-slide="8" aria-label="Perplexity">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">PRODUCT LOG</p>
+            <h2 class="slide-h">Perplexity</h2>
+          </div>
+          <div class="perplex-grid" id="perplexGrid"></div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 10: LIVE SIGNAL
+           Episode synthesis / key takeaways. Mosaic tiles with themes.
+           Optional. Replace with a different synthesis format if needed.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-signal" data-slide="9" aria-label="Live signal">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">SIGNAL STRENGTH</p>
+            <h2 class="slide-h">Live Signal</h2>
+          </div>
+          <div class="mosaic-grid">
+            <!-- REPLACE: Synthesis tiles. One per key theme. -->
+            <article class="mosaic-tile" style="--tile-delay: 0s;">
+              <span class="mosaic-tile__icon">&#128225;</span>
+              <span class="mosaic-tile__label">Theme title</span>
+              <p class="mosaic-tile__body">Theme synthesis. Use <strong>bold</strong> for key takeaways.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════
+           SLIDE 11: SOURCES
+           Sources list. Content injected by JS from SOURCES array.
+           Optional. Delete if not applicable.
+           ═══════════════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-sources" data-slide="10" aria-label="Sources">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <p class="pod-label">INTELLIGENCE SOURCES</p>
+            <h2 class="slide-h">Sources</h2>
+          </div>
+          <div id="srcPanel" class="glass-card glass-card--tight src-panel">
+            <div class="glass-card__inner">
+              <button type="button" class="src-panel__toggle" id="srcToggle" aria-expanded="false" aria-controls="srcList">[ SOURCES &darr; ]</button>
+              <ol class="src-panel__list" id="srcList" aria-hidden="true"></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTER + CAROUSEL NAV
+       ═══════════════════════════════════════════════════════════════ -->
+  <footer class="footer-bar">
+    <!-- REPLACE: Footer status text -->
+    <span class="footer-bar__left" id="footerStatus">OP0XX &middot; EPISODE TITLE &middot; YYYY-MM-DD</span>
+
+    <div class="footer-bar__center">
+      <button class="car-prev" type="button" aria-label="Previous slide">&larr;</button>
+      <div class="car-dots" id="carDots" aria-label="Slide navigation"></div>
+      <button class="car-next" type="button" aria-label="Next slide">&rarr;</button>
+    </div>
+
+    <span class="footer-bar__right">
+      <span>Arrow keys navigate</span>
+      <span><a href="/podcast/index.html?descript=1" style="color:var(--text-muted)">Descript</a></span>
+    </span>
+  </footer>
+
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <!-- Shell JS — shared across all episodes. Do not modify per-episode. -->
+  <script src="/podcast/shell/pod.js"></script>
+</body>
+</html>
