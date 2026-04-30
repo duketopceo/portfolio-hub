@@ -732,6 +732,297 @@ body.mc-descript .footer-bar__right::after {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   BROADCAST MODE — recording / screen-share quality
+   Trigger: ?broadcast=1 in URL
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Typography bump ── */
+body.broadcast {
+  --font-size-base: 18px;
+  font-size: var(--font-size-base);
+}
+
+body.broadcast .slide__inner {
+  max-width: none;
+  margin: 0;
+  padding: 0 48px;
+}
+
+/* Header: strip to essentials */
+body.broadcast .header__title,
+body.broadcast .page-nav,
+body.broadcast .social-bar {
+  display: none;
+}
+
+body.broadcast .header {
+  padding: 0 48px;
+}
+
+body.broadcast .header__brand::after {
+  display: none;
+}
+
+body.broadcast .header__episode {
+  justify-content: flex-start;
+  margin-left: 16px;
+}
+
+/* Footer: strip to essentials */
+body.broadcast .footer-bar__center,
+body.broadcast .footer-bar__right {
+  display: none;
+}
+
+body.broadcast .footer-bar {
+  padding: 0 48px;
+}
+
+/* Safe zone — face cam bottom-right */
+body.broadcast .slide__inner {
+  padding-right: max(48px, calc(340px + 48px));
+}
+
+body.broadcast .slide__inner--hero {
+  padding-right: 48px;
+}
+
+/* ── Tiles: density up ── */
+body.broadcast .mosaic-tile {
+  padding: 28px;
+  gap: 12px;
+}
+
+body.broadcast .mosaic-tile__icon {
+  font-size: 40px;
+}
+
+body.broadcast .mosaic-tile__label {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+
+body.broadcast .mosaic-tile__value {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+body.broadcast .mosaic-tile__note {
+  font-size: 14px;
+}
+
+body.broadcast .mosaic-tile__body {
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* ── Hero: left-aligned, larger ── */
+body.broadcast .pod-hero {
+  align-items: flex-start;
+  text-align: left;
+  gap: 20px;
+}
+
+body.broadcast .pod-hero__badge {
+  font-size: 14px;
+}
+
+body.broadcast .pod-hero__title {
+  font-size: clamp(72px, 10vw, 120px);
+}
+
+body.broadcast .pod-hero__tagline {
+  font-size: 24px;
+}
+
+body.broadcast .pod-hero__tags {
+  justify-content: flex-start;
+  gap: 10px;
+  max-width: 900px;
+}
+
+body.broadcast .pod-hero__tags li {
+  font-size: 13px;
+  padding: 6px 14px;
+}
+
+/* ── Slide headers ── */
+body.broadcast .pod-label {
+  font-size: 14px;
+}
+
+body.broadcast .slide-h {
+  font-size: clamp(28px, 3vw, 42px);
+}
+
+body.broadcast .slide__header {
+  margin-bottom: 24px;
+}
+
+/* ── Chart: full bleed, hide controls ── */
+body.broadcast .ep-chart-controls {
+  display: none;
+}
+
+body.broadcast .tv-chart {
+  height: 100%;
+}
+
+body.broadcast .ep-market-panel,
+body.broadcast .ep-chart-wrap {
+  max-height: none;
+  height: 100%;
+}
+
+body.broadcast .glass-card:has(.tv-chart) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+body.broadcast .glass-card:has(.tv-chart) .glass-card__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+/* ── Headlines: 2-col, expanded ── */
+body.broadcast .hl-stack {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  body.broadcast .hl-stack {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.broadcast .hl-card__title {
+  font-size: 18px;
+}
+
+body.broadcast .hl-card__ctx {
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+body.broadcast .hl-card__toggle {
+  display: none;
+}
+
+body.broadcast .hl-card__ctx {
+  opacity: 1;
+  max-height: none;
+  transform: none;
+  pointer-events: auto;
+  margin-top: 12px;
+}
+
+/* ── Stratum: full terminal ── */
+body.broadcast .stm-block {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+body.broadcast .stm-line + .stm-line {
+  margin-top: 10px;
+}
+
+/* ── Perplexity: 2×2 grid, larger ── */
+body.broadcast .perplex-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+body.broadcast .perplex-card__date {
+  font-size: 13px;
+  padding: 4px 12px;
+}
+
+body.broadcast .perplex-card__title {
+  font-size: 24px;
+}
+
+body.broadcast .perplex-card__body {
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* ── Prose + Table ── */
+body.broadcast .prose-block {
+  font-size: 18px;
+  line-height: 1.75;
+  column-count: 2;
+  column-gap: 48px;
+}
+
+@media (max-width: 1024px) {
+  body.broadcast .prose-block {
+    column-count: 1;
+  }
+}
+
+body.broadcast .prose-block code {
+  font-size: 16px;
+}
+
+body.broadcast .bench-table {
+  font-size: 18px;
+}
+
+body.broadcast .bench-table th,
+body.broadcast .bench-table td {
+  padding: 14px 16px;
+}
+
+body.broadcast .bench-table th {
+  font-size: 13px;
+}
+
+body.broadcast .bench-note {
+  font-size: 16px;
+}
+
+/* ── Sources: expanded ── */
+body.broadcast .src-panel__toggle {
+  display: none;
+}
+
+body.broadcast .src-panel__list {
+  opacity: 1;
+  max-height: none;
+  transform: none;
+  font-size: 16px;
+  line-height: 1.8;
+  column-count: 2;
+  column-gap: 48px;
+}
+
+@media (max-width: 1024px) {
+  body.broadcast .src-panel__list {
+    column-count: 1;
+  }
+}
+
+body.broadcast .src-panel__list li {
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+
+/* ── Glass card padding bump ── */
+body.broadcast .glass-card__inner {
+  padding: 28px 32px;
+}
+
+/* ── Slide 2 market specific ── */
+body.broadcast .slide#slide-market .slide__inner {
+  padding-right: 48px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    UTILITY
    ═══════════════════════════════════════════════════════════════ */
 .sr-only {
