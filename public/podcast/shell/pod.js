@@ -423,6 +423,51 @@
     } catch (e) {}
   }
 
+  /* ── Broadcast Mode ──────────────────────────────────────── */
+  function initBroadcastMode() {
+    try {
+      var q = new URLSearchParams(window.location.search);
+      if (q.get('broadcast') === '1' || q.get('descript') === '1') {
+        document.body.classList.add('broadcast');
+      }
+    } catch (e) {}
+  }
+
+  function autoExpandBroadcastContent() {
+    if (!document.body.classList.contains('broadcast')) return;
+
+    // Expand all headline context
+    document.querySelectorAll('[data-hl-card]').forEach(function (card) {
+      card.classList.add('is-open');
+      var btn = card.querySelector('[data-ctx-toggle]');
+      if (btn) {
+        btn.setAttribute('aria-expanded', 'true');
+        btn.innerHTML = '&#9660; CONTEXT';
+      }
+      var pane = card.querySelector('.hl-card__ctx');
+      if (pane) {
+        pane.setAttribute('aria-hidden', 'false');
+      }
+    });
+
+    // Expand sources panel
+    var srcPanel = document.getElementById('srcPanel');
+    var srcToggle = document.getElementById('srcToggle');
+    var srcList = document.getElementById('srcList');
+    if (srcPanel && srcToggle && srcList) {
+      srcPanel.classList.add('is-open');
+      srcToggle.setAttribute('aria-expanded', 'true');
+      srcList.setAttribute('aria-hidden', 'false');
+      srcToggle.textContent = '[ SOURCES ↑ ]';
+    }
+
+    // Expand market chart if collapsed
+    var marketSec = document.querySelector('.ep-section--market');
+    if (marketSec) {
+      marketSec.classList.remove('is-chart-collapsed');
+    }
+  }
+
   /* ── Social bar ──────────────────────────────────────────── */
   function initSocialBar() {
     var bar = document.getElementById('socialBar');
@@ -440,6 +485,7 @@
   /* ── Boot ────────────────────────────────────────────────── */
   function boot() {
     initDescriptLayout();
+    initBroadcastMode();
     checkScrollMode();
     initStars();
     initTicker();
@@ -452,6 +498,7 @@
     renderSources();
     initSourcesToggle();
     initMarketToggle();
+    autoExpandBroadcastContent();
     if (document.readyState === 'complete') {
       initTradingView();
     } else {
