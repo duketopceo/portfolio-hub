@@ -1,5 +1,9 @@
 # AGENTS.md
 
+Inherits from [luke-agents/AGENTS.md](https://github.com/duketopceo/luke-agents/blob/main/AGENTS.md). This file specializes; it does not replace.
+
+**Shared agent brain:** see luke-agents `AGENTS.md` §0a (AppFlowy primary Session Log / Decisions / Projects / Rules). Do not Swarm-deploy or dual-host the brain.
+
 ## Cursor Cloud specific instructions
 
 ### Overview
