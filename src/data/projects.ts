@@ -5,6 +5,166 @@ import { ProjectConfig } from "@/lib/types";
  * SECURITY: No personal emails, no GitHub usernames, no internal details.
  */
 export const projectConfigs: ProjectConfig[] = [
+  // ── Lead systems ─────────────────────────────────────────────────
+  {
+    slug: "kurultai",
+    repoName: "kurultai",
+    displayName: "Kurultai",
+    tagline:
+      "Unified knowledge retrieval — one embeddings table, per-source connectors, MCP tools",
+    description:
+      "Kurultai is a unified knowledge retrieval layer that assembles what you know from wherever it lives. Inspired by Cerebras's internal knowledge base, it stores embeddings in one table, connects heterogeneous sources through per-source connectors, and exposes the knowledge graph to agents via MCP tools. Built for open, showcasable knowledge infrastructure — retrieve across notes, repos, and docs without bolting on another siloed RAG stack.",
+    category: "ai",
+    type: "platform",
+    featured: true,
+    techStack: ["TypeScript", "Embeddings", "MCP", "PostgreSQL", "Connectors"],
+    private: false,
+    highlights: [
+      "Single embeddings table across heterogeneous sources",
+      "Per-source connectors for notes, repos, and docs",
+      "MCP tools for agent-native retrieval",
+      "Designed as open, showcasable knowledge infrastructure",
+    ],
+    architecture:
+      "Source connectors → Embeddings store → Retrieval API → MCP tool surface → Agent consumers",
+  },
+  {
+    slug: "pace-server",
+    repoName: "Pace-Server",
+    displayName: "Pace Server",
+    tagline:
+      "The private cloud for small businesses — one login, one bill, AI built in",
+    description:
+      "Pace Server is a private-cloud product for small businesses: identity, billing, and AI capabilities in one operational surface. The platform targets operators who want cloud convenience without surrendering control of their data plane. Curated dossier for recruitment and product showcase — source available on request.",
+    category: "ai",
+    type: "platform",
+    featured: true,
+    techStack: ["TypeScript", "Next.js", "Docker", "AI", "Multi-tenant"],
+    private: true,
+    highlights: [
+      "Unified login and billing for small-business ops",
+      "AI built into the product surface",
+      "Private-cloud posture with operator control",
+    ],
+    architecture:
+      "Product shell → Auth & billing → AI services → Tenant data plane",
+    businessContext:
+      "Small businesses need cloud productivity without enterprise complexity or opaque SaaS sprawl. Pace packages identity, billing, and AI into one private-cloud story operators can actually run.",
+    scopeAndScale:
+      "Product-stage platform with multi-tenant architecture aimed at small-business operators and service firms.",
+    engineeringDecisions: [
+      "Private-cloud packaging — Keeps data-plane control with the operator while shipping a productized UX",
+      "AI-native surface — Treats assistants as first-class product capability, not a bolt-on chat widget",
+    ],
+  },
+  {
+    slug: "homelab",
+    repoName: "homelab",
+    displayName: "Homelab",
+    tagline:
+      "Three-node Mac Mini Docker Swarm — Traefik, tunnels, agents, and monitoring",
+    description:
+      "Personal home lab Docker Swarm on Apple Silicon Mac Minis: Traefik ingress, Cloudflare Tunnel for public routes, Tailscale mesh, asset tracking, monitoring, and auto-discovery. Hosts public showcases such as Cosmic Intelligence and Open Military Hardware DB alongside internal agent stacks. The showcasable infra story for how luke-the-duke.com subdomains are meant to run.",
+    category: "infra",
+    type: "infra",
+    featured: true,
+    techStack: ["Docker", "Swarm", "Traefik", "Cloudflare", "Tailscale"],
+    private: true,
+    highlights: [
+      "Multi-node Swarm on Apple Silicon",
+      "Traefik + Cloudflare Tunnel public routing",
+      "Agent stacks, monitoring, and auto-discovery",
+    ],
+    architecture:
+      "GitHub deploy → Docker Swarm → Traefik → Cloudflare Tunnel → Public subdomains",
+    businessContext:
+      "Self-hosted infrastructure that proves production patterns — ingress, TLS, CI deploy, and observability — without a hyperscaler bill.",
+    scopeAndScale:
+      "Three-node cluster hosting portfolio, databases, chat, and agent workloads.",
+    engineeringDecisions: [
+      "Swarm over k8s — Matches three-node Mac Mini footprint and operator simplicity",
+      "Tunnel over port-forward — Public exposure without opening the LAN edge",
+    ],
+  },
+  {
+    slug: "luke-agents",
+    repoName: "luke-agents",
+    displayName: "Luke Agents",
+    tagline:
+      "King-file standards for AI-assisted engineering — Karpathy principles, guardrails, inheritance",
+    description:
+      "Source of truth for AI agent behavior across Luke Kimball repositories: constitution (AGENTS.md), Karpathy principles, guardrails, code and testing standards, and tool ecosystem docs. Other repos inherit via thin local AGENTS.md pointers so agents stay consistent without copy-paste drift.",
+    category: "ai",
+    type: "library",
+    featured: true,
+    techStack: ["Markdown", "Agent Standards", "MCP", "Guardrails"],
+    private: true,
+    highlights: [
+      "Single inheritance root for agent behavior",
+      "Immutable Karpathy principles + evolving guardrails",
+      "Repo-local AGENTS.md specialization pattern",
+    ],
+    architecture:
+      "luke-agents constitution → Repo AGENTS.md pointers → Agent runtimes (Cursor, Claude, Codex)",
+    businessContext:
+      "Multi-repo agent work fails when each project invents its own rules. Luke Agents centralizes engineering gospel so every session starts from the same constitution.",
+    scopeAndScale:
+      "Cross-repo standards consumed by active application and infra repositories.",
+    engineeringDecisions: [
+      "Inheritance over duplication — Thin repo pointers prevent forked standards",
+      "Principles immutable, patterns evolve — Separates gospel from tactical guidance",
+    ],
+  },
+  {
+    slug: "ai-debate-arena",
+    repoName: "ai-debate-arena",
+    displayName: "AI Debate Arena",
+    tagline:
+      "Two AI agents debate any topic — Venn prompts, Ollama + OpenRouter, rich terminal UI",
+    description:
+      "Open-source terminal experience where two AI agents debate a topic using a Venn-diagram prompt system. Supports local Ollama models and OpenRouter for cloud models, with a rich terminal UI for following arguments, rebuttals, and synthesis.",
+    category: "ai",
+    type: "experiment",
+    featured: false,
+    techStack: ["Python", "Ollama", "OpenRouter", "Terminal UI"],
+    private: false,
+    highlights: [
+      "Dual-agent debate with structured Venn prompts",
+      "Ollama local + OpenRouter cloud model paths",
+      "Rich terminal UI for following the exchange",
+    ],
+    architecture:
+      "CLI → Prompt orchestrator → Ollama/OpenRouter → Dual agent turns → Terminal renderer",
+  },
+  {
+    slug: "luke-the-duke-show",
+    repoName: "lukethedukeshow",
+    displayName: "Luke the Duke Show",
+    tagline:
+      "Podcast deck and episode shell — broadcast mode for recording-quality presentation",
+    description:
+      "Next.js podcast site for Luke the Duke Show: episode shell, carousel, and broadcast mode tuned for recording-quality deck presentation. Separate from Cosmic Intelligence (portfolio-hub) but part of the luke-the-duke brand surface.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: ["TypeScript", "Next.js", "Tailwind", "Podcast"],
+    private: true,
+    highlights: [
+      "Episode shell + carousel structure",
+      "Broadcast mode for recording-quality decks",
+      "Brand-aligned Cosmic visual language",
+    ],
+    architecture:
+      "Next.js App Router → Episode templates → Broadcast deck mode → Static/SSR delivery",
+    businessContext:
+      "A dedicated show surface for episodes and live recording decks, distinct from the portfolio hub.",
+    scopeAndScale:
+      "Single-product podcast site with episode catalog and presentation modes.",
+    engineeringDecisions: [
+      "Separate repo from portfolio-hub — Keeps show content and Cosmic portfolio deploy pipelines independent",
+    ],
+  },
+
   // ── Finance & Trading ────────────────────────────────────────────
   {
     slug: "trading-bot",
@@ -136,7 +296,7 @@ export const projectConfigs: ProjectConfig[] = [
       "AI-powered platform purpose-built for roofing contractors that automates the permit coordination workflow — from initial application through approval tracking. The document analysis pipeline uses Google's Gemini models to extract key information from construction plans, municipal codes, and insurance documents. Customer communication management handles scheduling, follow-ups, and status updates across channels. Backend runs on FastAPI with a Gradio interface for rapid internal prototyping.",
     category: "ai",
     type: "platform",
-    featured: true,
+    featured: false,
     liveUrl: "https://skyguard.luke-the-duke.com",
     demoUrl: "https://skyguard.luke-the-duke.com",
     embeddable: true,
@@ -299,7 +459,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Multi-node Docker Swarm infrastructure running on Apple Silicon Mac Minis in a home lab configuration. Features automated container deployments via GitHub webhooks, Traefik reverse proxy handling TLS termination and routing for multiple subdomains, Cloudflare Tunnel for secure public access without port forwarding, and Tailscale mesh VPN for encrypted inter-node communication. Currently hosts the portfolio site, military hardware database, and several internal tools.",
     category: "infra",
     type: "infra",
-    featured: true,
+    featured: false,
     techStack: ["Docker", "Shell", "Traefik", "Cloudflare", "Tailscale"],
     private: true,
     highlights: [

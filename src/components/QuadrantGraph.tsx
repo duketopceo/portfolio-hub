@@ -115,7 +115,7 @@ export default function QuadrantGraph({ projects }: QuadrantGraphProps) {
           const isHovered = hoveredSlug === project.slug;
           const dotColor = catColors[project.category] || "#2dd4bf";
           const IconComponent = projectIconMap[project.slug];
-          const hasDemo = !!(project.liveUrl || project.demoUrl);
+          const hasDemo = !!(project.liveUrl || project.demoUrl) && !project.demoOffline;
           const isVisible = filteredSlugs.has(project.slug);
 
           return (

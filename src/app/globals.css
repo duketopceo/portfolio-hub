@@ -1284,6 +1284,16 @@ body {
   margin-bottom: var(--space-md);
 }
 
+.cosmic-hero__lead {
+  margin: -0.35rem 0 var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  opacity: 0.92;
+}
+
 .cosmic-hero__accent {
   color: var(--color-accent);
   text-shadow: 0 0 24px rgba(45, 212, 191, 0.4), 0 0 48px rgba(45, 212, 191, 0.15);
@@ -1419,7 +1429,12 @@ body {
 
 .cosmic-hero--compact .cosmic-hero__tagline {
   font-size: clamp(0.88rem, 1.85vw, 1.15rem);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.cosmic-hero--compact .cosmic-hero__lead {
+  margin: 0 0 0.45rem;
+  font-size: 0.62rem;
 }
 
 .cosmic-hero--compact .cosmic-hero__stats {
@@ -2756,6 +2771,8 @@ body {
   width: 0;
   height: 0;
   z-index: 3;
+  /* Planets stay clickable; center deck sits above and wins overlaps */
+  pointer-events: none;
 }
 
 .solar-planet-arm {
@@ -2765,6 +2782,7 @@ body {
   width: 0;
   height: 0;
   transform-origin: center center;
+  pointer-events: none;
 }
 
 .solar-planet {
@@ -2780,6 +2798,7 @@ body {
   padding: 0.35rem;
   border-radius: var(--radius-md);
   transition: color var(--transition);
+  pointer-events: auto;
 }
 
 .solar-planet:hover {
@@ -2841,12 +2860,14 @@ body {
 
 .solar-center {
   position: relative;
-  z-index: 4;
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   flex-wrap: wrap;
   justify-content: center;
+  pointer-events: auto;
+  isolation: isolate;
 }
 
 /* 3D “deck” — dossier card snaps in from the direction you navigated */
@@ -2858,6 +2879,8 @@ body {
 .solar-focus-card-rotator {
   transform-style: preserve-3d;
   animation: solar-card-deck-snap 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  z-index: 2;
 }
 
 @keyframes solar-card-deck-snap {
@@ -2873,27 +2896,40 @@ body {
 }
 
 .solar-nav-btn {
+  position: relative;
+  z-index: 3;
   flex-shrink: 0;
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 44px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
   border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
+  background: color-mix(in srgb, var(--glass-bg) 88%, var(--color-bg) 12%);
   color: var(--color-accent);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 12%, transparent);
   transition:
     background var(--transition),
-    border-color var(--transition);
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
 }
 
 .solar-nav-btn:hover {
   background: var(--glass-bg-hover);
   border-color: var(--glass-border-hover);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  transform: translateY(-1px);
+}
+
+.solar-nav-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .solar-nav-btn:disabled {
@@ -2905,12 +2941,12 @@ body {
 .solar-focus-card {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.75rem 1rem;
+  gap: 0.35rem;
+  padding: 0.9rem 1.15rem;
   min-width: 0;
-  max-width: 17rem;
+  max-width: 18.5rem;
   border-radius: var(--radius-lg);
-  background: var(--glass-bg);
+  background: color-mix(in srgb, var(--glass-bg) 92%, var(--color-bg) 8%);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
@@ -2920,6 +2956,9 @@ body {
       color-mix(in srgb, var(--focus-accent, var(--color-accent)) 14%, transparent);
   text-decoration: none;
   color: var(--color-text);
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
   transition:
     border-color var(--transition),
     box-shadow var(--transition),

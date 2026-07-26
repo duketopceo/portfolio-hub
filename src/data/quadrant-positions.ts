@@ -10,6 +10,12 @@
  *   Bottom-Right: User Tools (frontend + tool)
  */
 export const quadrantPositions: Record<string, { x: number; y: number }> = {
+  "kurultai":          { x: -0.15, y:  0.92 },
+  "pace-server":       { x:  0.20, y:  0.88 },
+  "homelab":           { x: -0.85, y:  0.55 },
+  "luke-agents":       { x: -0.45, y:  0.35 },
+  "ai-debate-arena":   { x:  0.45, y: -0.55 },
+  "luke-the-duke-show":{ x:  0.72, y: -0.20 },
   "trading-bot":       { x: -0.60, y:  0.55 },
   "alphahedge":        { x:  0.25, y:  0.65 },
   "ikbr-dashboard":    { x:  0.15, y: -0.35 },
@@ -17,6 +23,7 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "skyguard-ai":       { x: -0.25, y:  0.75 },
   "quiz-the-best":     { x:  0.65, y: -0.45 },
   "optimezer":         { x: -0.35, y:  0.20 },
+  "nanoclaw":          { x: -0.10, y:  0.50 },
   "republic-atlas":    { x:  0.05, y:  0.85 },
   "military-hardware-db": { x: -0.55, y: -0.50 },
   "etl-pipeline":      { x: -0.70, y: -0.70 },

@@ -12,17 +12,25 @@ import type { EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 
-/** Ellipse radii (rem) — wide orbit, perspective-ish; mobile tightened via hook */
-function useOrbitRadiiRem() {
+/** Ellipse radii (rem) — widen slightly when orbit is crowded */
+function useOrbitRadiiRem(count: number) {
   const [radii, setRadii] = useState({ rx: 23, ry: 11.5 });
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
-    const apply = () =>
-      setRadii(mq.matches ? { rx: 13.5, ry: 6.75 } : { rx: 23, ry: 11.5 });
+    const apply = () => {
+      const crowded = count > 18;
+      if (mq.matches) {
+        setRadii(
+          crowded ? { rx: 14.5, ry: 7.25 } : { rx: 13.5, ry: 6.75 }
+        );
+      } else {
+        setRadii(crowded ? { rx: 25, ry: 12.5 } : { rx: 23, ry: 11.5 });
+      }
+    };
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
-  }, []);
+  }, [count]);
   return radii;
 }
 
@@ -35,7 +43,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
   /** +1 = next (card enters from right), -1 = prev (from left) — drives 3D snap */
   const [flipDir, setFlipDir] = useState(1);
   const n = projects.length;
-  const { rx, ry } = useOrbitRadiiRem();
+  const { rx, ry } = useOrbitRadiiRem(n);
 
   const orbitOffsets = useMemo(() => {
     return Array.from({ length: n }, (_, i) => {
@@ -47,7 +55,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
     });
   }, [n, rx, ry]);
 
-  const safeFocusIndex = n === 0 ? 0 : Math.min(focusIndex, n - 1);
+  const safeFocusIndex = n === 0 ? 0 : ((focusIndex % n) + n) % n;
 
   const go = useCallback(
     (delta: number) => {
@@ -150,7 +158,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
           <div className="solar-sun solar-sun--core" />
         </div>
 
-        <div className="solar-planets">
+        <div className="solar-planets" aria-hidden={false}>
           {projects.map((p, i) => {
             const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
             const isFocused = i === safeFocusIndex;
@@ -170,6 +178,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
                   style={{ "--planet-accent": c } as React.CSSProperties}
                   onMouseEnter={() => moveFocusTo(i)}
                   onFocus={() => moveFocusTo(i)}
+                  tabIndex={isFocused ? 0 : -1}
                 >
                   <span className="solar-planet__dot" aria-hidden />
                   <span className="solar-planet__label">{p.displayName}</span>

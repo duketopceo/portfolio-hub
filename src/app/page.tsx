@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
-import { sortProjectsByCompleteness } from "@/lib/project-completeness";
+import { sortPortfolioOrbit } from "@/lib/project-completeness";
+import { isProjectLive } from "@/lib/deployments";
 import SolarSystemNav from "@/components/SolarSystemNav";
 import ActivityFeed from "@/components/ActivityFeed";
 
@@ -8,9 +9,10 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const all = await getEnrichedProjects();
-  const ordered = sortProjectsByCompleteness(all);
-  const liveCount = all.filter((p) => p.liveUrl || p.demoUrl).length;
+  const ordered = sortPortfolioOrbit(all);
+  const liveCount = all.filter(isProjectLive).length;
   const categories = new Set(all.map((p) => p.category));
+  const lead = ordered[0];
 
   return (
     <div>
@@ -33,6 +35,11 @@ export default async function Home() {
             <p className="cosmic-hero__tagline">
               Systems that <span className="cosmic-hero__accent">compound.</span>
             </p>
+            {lead && (
+              <p className="cosmic-hero__lead">
+                Lead system · {lead.displayName}
+              </p>
+            )}
             <div className="cosmic-hero__stats" aria-label="Portfolio summary">
               <span>{all.length} repositories</span>
               <span className="cosmic-hero__dot">·</span>
@@ -43,7 +50,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <SolarSystemNav projects={ordered} />
+        <SolarSystemNav key={lead?.slug ?? "orbit"} projects={ordered} />
       </div>
 
       {/* ── Activity strip — below orbit, full width ── */}

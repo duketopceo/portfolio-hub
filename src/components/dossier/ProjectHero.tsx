@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { EnrichedProject } from "@/lib/types";
 import { LockIcon, ExternalIcon, ChevronIcon, getCategoryIcon } from "@/components/Icons";
+import { isProjectLive } from "@/lib/deployments";
 
 type CategoryMeta = { label: string; icon: string };
 
@@ -15,7 +16,7 @@ interface ProjectHeroProps {
  * Standard top band for every `/projects/[slug]` — icon, title, badges, tagline, tech, CTAs.
  */
 export function ProjectHero({ project, accentColor, meta }: ProjectHeroProps) {
-  const hasDemo = !!(project.liveUrl || project.demoUrl);
+  const hasDemo = isProjectLive(project);
 
   return (
     <>

@@ -174,7 +174,7 @@ export default function ConstellationNav({ projects }: ConstellationNavProps) {
             const isHovered = hoveredSlug === project.slug;
             const dotColor = catColors[project.category] || "#2DD4BF";
             const IconComponent = projectIconMap[project.slug];
-            const hasDemo = !!(project.liveUrl || project.demoUrl);
+            const hasDemo = !!(project.liveUrl || project.demoUrl) && !project.demoOffline;
             const isVisible = filteredSlugs.has(project.slug);
 
             return (

@@ -8,6 +8,10 @@ import {
   getEnrichedProjects,
   fetchReadme,
 } from "@/lib/github";
+import {
+  sortPortfolioOrbit,
+  getOrbitAdjacent,
+} from "@/lib/project-completeness";
 import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import {
@@ -49,16 +53,11 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const allProjects = await getEnrichedProjects();
-  const projectIndex = allProjects.findIndex((p) => p.slug === slug);
-  if (projectIndex === -1) notFound();
+  const allProjects = sortPortfolioOrbit(await getEnrichedProjects());
+  const adjacent = getOrbitAdjacent(allProjects, slug);
+  if (!adjacent) notFound();
 
-  const project = allProjects[projectIndex];
-  const prevProject = projectIndex > 0 ? allProjects[projectIndex - 1] : null;
-  const nextProject =
-    projectIndex < allProjects.length - 1
-      ? allProjects[projectIndex + 1]
-      : null;
+  const { project, prev: prevProject, next: nextProject } = adjacent;
 
   const readme = !project.private ? await fetchReadme(project.repoName) : null;
 
@@ -395,7 +394,7 @@ export default async function ProjectDetailPage({
                     <span style={{ color: "var(--color-text-muted)" }}>
                       {rp.displayName}
                     </span>
-                    {(rp.liveUrl || rp.demoUrl) && (
+                    {(rp.liveUrl || rp.demoUrl) && !rp.demoOffline && (
                       <span
                         className="ml-auto"
                         style={{

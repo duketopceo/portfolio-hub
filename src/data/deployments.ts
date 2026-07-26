@@ -1,11 +1,11 @@
 /**
  * Subdomain + Live Deployment Configuration
  *
- * Maps project slugs to their live deployment URLs and subdomain routing.
- * Update this file when you deploy a new app to your Swarm or external host.
+ * Single source of truth for live URLs and subdomain routing.
+ * Merged onto projectConfigs in getEnrichedProjects().
  *
- * The portfolio site reads this at build time to show "Live" badges
- * and link to running instances.
+ * `online: false` → demoOffline (still listed, not counted as "live").
+ * Update this file when Swarm / external hosts change.
  */
 
 export interface DeploymentConfig {
@@ -13,7 +13,7 @@ export interface DeploymentConfig {
   slug: string;
   /** Full live URL */
   url: string;
-  /** Subdomain (e.g., "atlas" → atlas.yourdomain.com) */
+  /** Subdomain (e.g., "omhdb" → omhdb.luke-the-duke.com) */
   subdomain?: string;
   /** Deployment target */
   host: "swarm" | "vercel" | "cloudflare" | "firebase" | "railway" | "other";
@@ -21,16 +21,14 @@ export interface DeploymentConfig {
   role: string;
   /** Health check endpoint (relative) */
   healthCheck?: string;
+  /**
+   * Whether the deployment currently answers.
+   * false → treat as demoOffline in the portfolio UI.
+   */
+  online: boolean;
 }
 
 export const deployments: DeploymentConfig[] = [
-  {
-    slug: "republic-atlas",
-    url: "https://republicatlas.com",
-    host: "other",
-    role: "Political data platform — election analytics and civic mapping",
-    healthCheck: "/",
-  },
   {
     slug: "military-hardware-db",
     url: "https://omhdb.luke-the-duke.com/#/",
@@ -38,7 +36,48 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "Open military hardware database — 183 platforms across air, land, sea, and munitions",
     healthCheck: "/api/health",
+    online: true,
   },
+  {
+    slug: "republic-atlas",
+    url: "https://republicatlas.com",
+    host: "other",
+    role: "Political data platform — election analytics and civic mapping",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "nanoclaw",
+    url: "https://nanoclaw.dev",
+    host: "other",
+    role: "Lightweight multi-channel agentic AI container",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "stratum-hq",
+    url: "https://stratumhq.app",
+    host: "other",
+    role: "Stratum product shell and roadmap",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "chronicle-weaver",
+    url: "https://chronicleweaver.com",
+    host: "other",
+    role: "Interactive narrative platform",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "finance-frenzy",
+    url: "https://devpost.com/software/finance-frenzy/",
+    host: "other",
+    role: "Hackathon finance simulation — Devpost write-up",
+    online: true,
+  },
+  // ── Swarm subdomains currently offline ──────────────────────────
   {
     slug: "alphahedge",
     url: "https://alphahedge.luke-the-duke.com",
@@ -46,6 +85,7 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "Hedge fund simulation with real-time market dynamics and portfolio analytics",
     healthCheck: "/",
+    online: false,
   },
   {
     slug: "dixi",
@@ -54,6 +94,7 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "AI projection system — computer vision, gesture recognition, real-time AI canvas",
     healthCheck: "/",
+    online: false,
   },
   {
     slug: "quiz-the-best",
@@ -62,6 +103,7 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "AI-powered study companion — flashcards, quizzes, and summaries",
     healthCheck: "/",
+    online: false,
   },
   {
     slug: "personal-blog",
@@ -70,6 +112,7 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "Personal blog platform with AI-assisted content and dark mode",
     healthCheck: "/",
+    online: false,
   },
   {
     slug: "collaborative-essay",
@@ -78,6 +121,7 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "Collaborative writing platform with PR-based editing and AI assistance",
     healthCheck: "/",
+    online: false,
   },
   {
     slug: "ikbr-dashboard",
@@ -86,6 +130,7 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "Interactive Brokers portfolio dashboard with real-time charts",
     healthCheck: "/",
+    online: false,
   },
   {
     slug: "skyguard-ai",
@@ -94,5 +139,39 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "SkyGuard AI — roofing operations assistant powered by Gemini",
     healthCheck: "/",
+    online: false,
+  },
+  {
+    slug: "series65-study-app",
+    url: "https://study.luke-the-duke.com",
+    subdomain: "study",
+    host: "swarm",
+    role: "Series 65 study platform",
+    healthCheck: "/",
+    online: false,
+  },
+  {
+    slug: "curious-storycard",
+    url: "https://curious.luke-the-duke.com",
+    subdomain: "curious",
+    host: "swarm",
+    role: "Curious — swipeable knowledge cards",
+    healthCheck: "/",
+    online: false,
+  },
+  {
+    slug: "nem-stock-pitch",
+    url: "https://nem.luke-the-duke.com",
+    subdomain: "nem",
+    host: "swarm",
+    role: "NEM stock pitch — Perplexity Computer competition",
+    healthCheck: "/",
+    online: false,
   },
 ];
+
+export function getDeploymentBySlug(
+  slug: string
+): DeploymentConfig | undefined {
+  return deployments.find((d) => d.slug === slug);
+}

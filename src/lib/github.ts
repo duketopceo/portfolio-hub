@@ -1,5 +1,6 @@
 import { GitHubRepo, EnrichedProject } from "./types";
 import { projectConfigs } from "@/data/projects";
+import { applyDeploymentOverlay } from "@/lib/deployments";
 import {
   classifyHttpStatus,
   failureFromUnknown,
@@ -162,10 +163,11 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   }
 
   return projectConfigs.map((config) => {
-    const repo = repoMap.get(config.repoName) || null;
+    const withDeploy = applyDeploymentOverlay(config);
+    const repo = repoMap.get(withDeploy.repoName) || null;
     return {
-      ...config,
-      private: repo?.private ?? config.private,
+      ...withDeploy,
+      private: repo?.private ?? withDeploy.private,
       repo: null, // Never expose raw repo data to client
       lastUpdated: repo?.pushed_at || "",
       language: repo?.language || null,

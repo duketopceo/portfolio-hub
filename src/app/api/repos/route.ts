@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getEnrichedProjects } from "@/lib/github";
+import { isProjectLive } from "@/lib/deployments";
 
 export const revalidate = 3600;
 
@@ -37,7 +38,8 @@ export async function GET() {
         forks: p.forks,
         openIssues: p.openIssuesCount,
         lastUpdated: p.lastUpdated,
-        liveUrl: p.liveUrl || null,
+        liveUrl: isProjectLive(p) ? p.liveUrl || p.demoUrl || null : null,
+        demoOffline: !!p.demoOffline,
       })),
     });
   } catch (error) {
