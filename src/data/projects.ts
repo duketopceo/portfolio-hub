@@ -7,6 +7,28 @@ import { ProjectConfig } from "@/lib/types";
 export const projectConfigs: ProjectConfig[] = [
   // ── Lead systems ─────────────────────────────────────────────────
   {
+    slug: "khan",
+    repoName: "Khan",
+    displayName: "Khan",
+    tagline:
+      "Agent Zero fork — plugins, secret-first ops, Perplexity research harness, multi-agent board",
+    description:
+      "Khan is a private fork of Agent Zero rebuilt for first-class plugins, secret-first operations, a Perplexity-powered research harness, and memory/skills in the Hermes style. Five milestone themes — Yurt (rebrand/UI), Steppe (connectors), Horde (plugins), Kurultai (knowledge brain), Silk Road (cloud/community) — executed by a multi-agent board (cursor, grok, droid, hermes) coordinated through a live hey.md presence board.",
+    category: "ai",
+    type: "platform",
+    featured: true,
+    techStack: ["Python", "Flask", "LiteLLM", "Socket.IO", "Alpine.js"],
+    private: true,
+    highlights: [
+      "Plugin-first architecture with sandboxed execution",
+      "Secret-first operations — encrypted vault, name-only references",
+      "Perplexity-powered research harness with citations",
+      "Live multi-agent coordination board (hey.md)",
+    ],
+    architecture:
+      "Agent Zero core → Khan plugins (branding, secrets) → Perplexity harness → WebUI (Linear baseline) → Multi-agent board",
+  },
+  {
     slug: "kurultai",
     repoName: "kurultai",
     displayName: "Kurultai",
