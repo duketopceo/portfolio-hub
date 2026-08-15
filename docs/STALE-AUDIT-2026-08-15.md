@@ -1,6 +1,6 @@
 # Portfolio-hub stale audit — 2026-08-15
 
-Focused content/data drift check. No UI redesign in the companion PR.
+Repository, catalog, and deployment audit for the Cosmic Intelligence portfolio. The Cosmic UI chrome remains unchanged; this refresh focuses on accurate project data and the technical dossier flow.
 
 ## Timeline on `main`
 
@@ -9,45 +9,65 @@ Focused content/data drift check. No UI redesign in the companion PR.
 | **2026-08-08** | Last meaningful `main` commit — Khan project entry (`8eefb62`) |
 | **2026-07-26** | Cosmic refresh — Kurultai-led portfolio refresh, live config, orbit nav (`bdf1cd2`) |
 
-## CI / deploy blockers
+## Repository verification
 
-- **Issue #16** — `GH_PAT` used by Swarm SSH deploy is likely **expired**; automated cluster deploys from GitHub Actions are broken until the secret is rotated.
-- Without a working PAT + SSH path to the manager, image/stack updates do not land on the Tailscale Swarm.
+Current GitHub metadata and selected READMEs were checked before rebuilding the catalog. Material corrections include:
+
+- **Kurultai** is the active public Rust / SQLite / MCP lead system.
+- **Pace Server** is Go-primary with a TypeScript/Vite product UI.
+- **NanoClaw** is a private Go tenant-execution harness with context, tool, schema, and autonomy gates — not a public TypeScript messaging container.
+- **Bartlett Server-001** is a single-server Docker Compose/nginx/Cloudflare Access operations repository — separate from the Tailscale Docker Swarm in `homelab`.
+- **Republic Atlas** has an archived private repository and a retained external live deployment.
+- **Finance Frenzy** now includes an Unreal Engine 5 rebuild while preserving the award-winning Python prototype.
+
+## Curated catalog
+
+The catalog now contains only 18 intentional entries:
+
+`kurultai`, `khan`, `pace-server`, `luke-agents`, `portfolio-hub`, `homelab`, `bartlett-permits`, `bartlett-data-platform`, `luke-the-duke-show`, `server-cluster`, `openclaw`, `finance-frenzy`, `nem-stock-pitch`, `republic-atlas`, `nanoclaw`, `stratum-hq`, `personal-blog`, `gpu-hosting`.
+
+The following stale or archived clutter was removed entirely:
+
+`trading-bot`, `alphahedge`, `ikbr-dashboard`, `skyguard-ai`, `quiz-the-best`, `optimezer`, `military-hardware-db`, `etl-pipeline`, `series65-study-app`, `dixi`, `chronicle-weaver`, `collaborative-essay`, `curious-storycard`, `ai-debate-arena`.
+
+Project definitions now live one per file under `src/data/projects/catalog/`; see [`CATALOG.md`](./CATALOG.md) for the add/import workflow. Kurultai is first in the array and remains force-pinned by `PORTFOLIO_LEAD_SLUG`.
+
+## Deployments
+
+Verified catalog deployments retained in `src/data/deployments.ts`:
+
+- External live: Republic Atlas, NanoClaw, Stratum, Finance Frenzy.
+- Swarm offline: Technical Blog and NEM Stock Pitch.
+
+Every deployment for a dropped slug was removed. No new URL was inferred from repository metadata.
 
 ## Cluster reality
 
-- Production origin is a **Tailscale** Docker Swarm: **cluster1 / cluster2 / cluster3**.
-- **cluster1** has historically been the **Swarm manager**; cluster2/cluster3 are workers.
-- Operator report: only **some** nodes are online. If the manager is down, Swarm scheduling and the Cloudflare tunnel path degrade (public subdomains 502 / offline even when DNS still resolves at the edge).
+- Portfolio-origin workloads use a **Tailscale** Docker Swarm across **cluster1 / cluster2 / cluster3**.
+- **cluster1** has historically been the Swarm manager; cluster2 and cluster3 are workers.
+- If the manager is unavailable, scheduling and the Cloudflare tunnel path can degrade even while edge DNS resolves.
 
 ## Cloudflare edge
 
-- Public hostnames under `*.luke-the-duke.com` are **proxied to Cloudflare anycast** (DNS at CF).
-- Origin is reached via **Cloudflare Tunnel** into the Tailscale Swarm.
-- Tunnel token / stack config lives in the private **homelab** repo under `stacks/cloudflare` — never commit tokens here.
-- Audit helper in this repo: `scripts/audit-cloudflare.sh` (plus `scripts/diagnose-502.sh` / `docs/AUDIT-502.md`).
+- Public portfolio hostnames are proxied through Cloudflare.
+- Origin is reached through Cloudflare Tunnel into the Tailscale Swarm.
+- Runtime credentials remain outside git.
+- Audit helper: `scripts/audit-cloudflare.sh` (plus `scripts/diagnose-502.sh` and `docs/AUDIT-502.md`).
 
-## Content drift fixed in this PR
+## CI / deploy blockers
 
-| Item | Before | After |
-|------|--------|-------|
-| Kurultai `techStack` | TypeScript / Embeddings / PostgreSQL-led | **Rust, SQLite, MCP, Axum, FTS5** (+ local-first description) |
-| Pace Server `techStack` | TypeScript / Next.js | **Go** primary + **TypeScript/Vite** UI |
-| Archived showcases | Looked “live” or current | Brief **archived / demo offline** honesty in highlights |
-| OMHDB | `online: true` / `demoOffline: false` | **`online: false`** / **`demoOffline: true`** (archived; no proof up) |
-| `deployments.ts` | No edge/origin note | Header documents CF edge + Tailscale Swarm roles |
-
-External hosts (republicatlas, nanoclaw, stratumhq, chronicleweaver, finance-frenzy) left as-is. **No new live URLs invented.** No LAN IPs, passwords, or GitHub usernames in public project copy.
+- **Issue #16** reports that the credential used by Swarm SSH deploy may be expired; automated cluster deploys require verification and rotation if confirmed.
+- Without a working GitHub Actions-to-manager path, image and stack updates do not land on the Swarm.
 
 ## Open follow-ups
 
-1. **Rotate `GH_PAT`** (and related deploy secrets) so issue #16 / Swarm SSH deploy works again.
-2. **Bring cluster1 online** (manager) — restore Swarm quorum and tunnel stability; verify workers.
-3. **Auth Cloudflare MCP** (or use dashboard + `audit-cloudflare.sh`) to confirm DNS/tunnel health without guessing.
-4. **Merge docs PR #17** (`cursor/tailscale-cluster-hosting-e607`) or cherry-pick `docs/CLUSTER.md` onto main — cluster topology docs without mixing into this content-only refresh unless desired.
-5. **UI roadmap** (`docs/AUDIT-UI-ROADMAP.md`) remains open — out of scope for this PR.
+1. Verify and, if needed, rotate the Swarm deployment credential associated with issue #16.
+2. Restore and verify Swarm manager and worker health.
+3. Audit Cloudflare DNS and tunnel health through an authenticated operator path.
+4. Reconcile the separate cluster documentation from PR #17.
 
 ## Related
 
-- Password / access pointers (no secrets): [`PASSWORD-RECOVERY.md`](./PASSWORD-RECOVERY.md)
-- Draft content PR branch: `cursor/portfolio-refresh-e607`
+- Catalog maintenance: [`CATALOG.md`](./CATALOG.md)
+- Password and access pointers (no secrets): [`PASSWORD-RECOVERY.md`](./PASSWORD-RECOVERY.md)
+- Draft refresh branch: `cursor/portfolio-refresh-e607`
