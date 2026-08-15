@@ -15,6 +15,7 @@ import { isProjectLive } from "@/lib/deployments";
  * - stars: +1 each up to +25
  * - highlights: +4 each up to +20, techStack entries: +1 each up to +12
  * - architecture string: +10, description length buckets: up to +12
+ * - lead/core portfolio tier: +8 / +4
  * - lastUpdated: up to +18 decay (90d full, older tapers)
  * - Private without repo: small base only
  */
@@ -67,6 +68,9 @@ export function scoreProjectCompleteness(p: EnrichedProject): number {
   if (descLen > 400) s += 12;
   else if (descLen > 200) s += 8;
   else if (descLen > 80) s += 4;
+
+  if (p.tier === "lead") s += 8;
+  else if (p.tier === "core") s += 4;
 
   if (p.lastUpdated) s += recencyScore(p.lastUpdated);
 
