@@ -10,6 +10,12 @@ Inherits from [luke-agents/AGENTS.md](https://github.com/duketopceo/luke-agents/
 
 Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database, no external services required for local dev. Project data is curated in `src/data/projects.ts` and optionally enriched via the GitHub API.
 
+### Production hosting (self-hosted)
+
+- **Self-hosted** on Tailscale Swarm nodes **cluster1** (`cluster-1-master`), **cluster2**, and **cluster3** — not Vercel as the primary path.
+- Deploy from the manager with `./scripts/cluster-deploy.sh` (see `docs/CLUSTER.md`, `README.md` Deployment).
+- Public edge: Cloudflare Tunnel → Traefik → `portfolio` stack on `traefik-public`.
+
 ### Quick reference
 
 | Action | Command |
@@ -19,6 +25,7 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 | Lint | `npm run lint` (ESLint 9) |
 | Build | `npm run build` |
 | Prod server | `npm run start` |
+| Swarm deploy (manager) | `./scripts/cluster-deploy.sh` |
 
 ### Environment
 
