@@ -4,18 +4,26 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 ## [Unreleased]
 
-### Content
+### Portfolio
 
-- **Kurultai** — tech stack corrected to Rust / SQLite / MCP / Axum / FTS5; description reflects local-first SQLite knowledge brain (MCP + connectors unchanged)
-- **Pace Server** — tech stack corrected to Go-primary with TypeScript/Vite UI (was mislabeled TypeScript/Next.js)
-- **Archived showcases** — honesty notes on archived repos / offline Swarm demos (curious-storycard, Dixi, AlphaHedge, TradingBot, Series 65, OMHDB, AI Debate Arena, Chronicle Weaver, OptiMezer/Zer_solutions, IBKR, etc.)
-- **OMHDB deployment** — `online: false` / `demoOffline: true` (archived; no proof the Swarm demo is up)
+- **Modular project catalog** — project definitions now live one per file under `src/data/projects/catalog/`, use `defineProject()` defaults, and are aggregated by `src/data/projects/index.ts`
+- **Curated repository set** — reduced the catalog to 18 intentional active/core/showcase systems and removed stale or archived clutter
+- **Kurultai lead** — Kurultai is first in the catalog, carries `tier: "lead"`, and remains pinned by `PORTFOLIO_LEAD_SLUG`
+- **Repository corrections** — Kurultai uses Rust/SQLite/MCP/Axum/FTS5; Pace is Go plus TypeScript/Vite; NanoClaw is a Go tenant-execution harness; Bartlett Server-001 is Compose/nginx infrastructure
+- **Deployment cleanup** — retained only catalog-backed external live and Swarm-offline entries
+
+### Experience
+
+- **Behind the Build** — project detail pages now lead with architecture pipelines and engineering decisions for public and private projects
+- **Narrative order** — capabilities and context precede demos/previews; public README documentation is last
+- **Public repository link** — public project sidebars link to the configured GitHub owner and repository
 
 ### Docs
 
-- **`docs/STALE-AUDIT-2026-08-15.md`** — staleness findings, cluster/Cloudflare/CI blockers, follow-ups
-- **`docs/PASSWORD-RECOVERY.md`** — pointer-only recovery paths (1Password / Apple ID OTP / Tailscale / Cloudflare); no credentials
-- **`deployments.ts` header** — Cloudflare public edge + Tailscale Swarm origin (cluster1 manager historically)
+- **`docs/CATALOG.md`** — one-file-plus-one-import project maintenance workflow and curation rules
+- **`docs/STALE-AUDIT-2026-08-15.md`** — verified repository findings, curated slugs, deployment state, and infrastructure follow-ups
+- **`docs/PASSWORD-RECOVERY.md`** — pointer-only recovery guidance with personal emails and credentials excluded
+- **`deployments.ts` header** — Cloudflare public edge plus Tailscale Swarm origin context
 
 ## [3.0.0] — 2026-03-21
 
