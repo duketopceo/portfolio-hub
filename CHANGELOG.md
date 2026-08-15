@@ -2,6 +2,12 @@
 
 All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.io/duketopceo/portfolio-hub`.
 
+## [Unreleased]
+
+### Docs
+
+- Document production hosting on Tailscale nodes **cluster1**, **cluster2**, and **cluster3** (`docs/CLUSTER.md`, AGENTS.md, `.cursorrules`, README)
+
 ## [3.0.0] — 2026-03-21
 
 ### Tooling (post-release)
