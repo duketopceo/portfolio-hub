@@ -4,8 +4,13 @@
  * Single source of truth for live URLs and subdomain routing.
  * Merged onto projectConfigs in getEnrichedProjects().
  *
+ * Public edge: Cloudflare DNS for `*.luke-the-duke.com` (proxied anycast).
+ * Origin: Tailscale Docker Swarm — cluster1 historically the manager;
+ * cluster2 / cluster3 are workers. Tunnel token lives in homelab
+ * `stacks/cloudflare` (never commit). Audit with `scripts/audit-cloudflare.sh`.
+ *
  * `online: false` → demoOffline (still listed, not counted as "live").
- * Update this file when Swarm / external hosts change.
+ * Update this file when Swarm / external hosts change. Do not invent live URLs.
  */
 
 export interface DeploymentConfig {
@@ -34,9 +39,9 @@ export const deployments: DeploymentConfig[] = [
     url: "https://omhdb.luke-the-duke.com/#/",
     subdomain: "omhdb",
     host: "swarm",
-    role: "Open military hardware database — 183 platforms across air, land, sea, and munitions",
+    role: "Open military hardware database — 183 platforms across air, land, sea, and munitions (archived; demo offline)",
     healthCheck: "/api/health",
-    online: true,
+    online: false,
   },
   {
     slug: "republic-atlas",
