@@ -41,6 +41,8 @@ export interface ProjectConfig {
   category: ProjectCategory;
   type: ProjectType;
   featured: boolean;
+  tier?: "lead" | "core" | "supporting";
+  status?: "active" | "showcase" | "archived";
   liveUrl?: string;
   /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
   demoUrl?: string;
@@ -60,7 +62,7 @@ export interface ProjectConfig {
   businessContext?: string;
   /** Private project dossier — 1–3 sentences: volume, accounts, throughput, reach */
   scopeAndScale?: string;
-  /** Private project dossier — "Decision — Rationale" strings */
+  /** Project dossier — "Decision — Rationale" strings */
   engineeringDecisions?: string[];
 }
 
