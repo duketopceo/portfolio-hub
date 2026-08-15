@@ -2,6 +2,21 @@
 
 All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.io/duketopceo/portfolio-hub`.
 
+## [Unreleased]
+
+### Content
+
+- **Kurultai** — tech stack corrected to Rust / SQLite / MCP / Axum / FTS5; description reflects local-first SQLite knowledge brain (MCP + connectors unchanged)
+- **Pace Server** — tech stack corrected to Go-primary with TypeScript/Vite UI (was mislabeled TypeScript/Next.js)
+- **Archived showcases** — honesty notes on archived repos / offline Swarm demos (curious-storycard, Dixi, AlphaHedge, TradingBot, Series 65, OMHDB, AI Debate Arena, Chronicle Weaver, OptiMezer/Zer_solutions, IBKR, etc.)
+- **OMHDB deployment** — `online: false` / `demoOffline: true` (archived; no proof the Swarm demo is up)
+
+### Docs
+
+- **`docs/STALE-AUDIT-2026-08-15.md`** — staleness findings, cluster/Cloudflare/CI blockers, follow-ups
+- **`docs/PASSWORD-RECOVERY.md`** — pointer-only recovery paths (1Password / Apple ID OTP / Tailscale / Cloudflare); no credentials
+- **`deployments.ts` header** — Cloudflare public edge + Tailscale Swarm origin (cluster1 manager historically)
+
 ## [3.0.0] — 2026-03-21
 
 ### Tooling (post-release)
