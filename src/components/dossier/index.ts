@@ -1,3 +1,4 @@
+export { BehindTheBuild } from "./BehindTheBuild";
 export { DossierSection } from "./DossierSection";
 export type { DossierSectionProps } from "./DossierSection";
 export { ProjectHero } from "./ProjectHero";
