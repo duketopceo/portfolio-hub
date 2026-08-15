@@ -33,22 +33,22 @@ export const projectConfigs: ProjectConfig[] = [
     repoName: "kurultai",
     displayName: "Kurultai",
     tagline:
-      "Unified knowledge retrieval — one embeddings table, per-source connectors, MCP tools",
+      "Local-first SQLite knowledge brain — FTS search, MCP tools, per-source connectors",
     description:
-      "Kurultai is a unified knowledge retrieval layer that assembles what you know from wherever it lives. Inspired by Cerebras's internal knowledge base, it stores embeddings in one table, connects heterogeneous sources through per-source connectors, and exposes the knowledge graph to agents via MCP tools. Built for open, showcasable knowledge infrastructure — retrieve across notes, repos, and docs without bolting on another siloed RAG stack.",
+      "Kurultai is a local-first SQLite knowledge brain: a Rust CLI and daemon that indexes notes and docs, searches with FTS5 (optional embeddings when an API key is set), and exposes the graph to agents via MCP tools. Per-source connectors pull heterogeneous stores into one searchable brain. Optional Postgres sits behind a hub feature — day-to-day use is SQLite on disk. Built for open, showcasable knowledge infrastructure without bolting on another siloed RAG stack.",
     category: "ai",
     type: "platform",
     featured: true,
-    techStack: ["TypeScript", "Embeddings", "MCP", "PostgreSQL", "Connectors"],
+    techStack: ["Rust", "SQLite", "MCP", "Axum", "FTS5"],
     private: false,
     highlights: [
-      "Single embeddings table across heterogeneous sources",
+      "Local-first SQLite store with FTS5 search",
+      "Rust CLI + daemon (Axum) for status, search, and UI",
       "Per-source connectors for notes, repos, and docs",
       "MCP tools for agent-native retrieval",
-      "Designed as open, showcasable knowledge infrastructure",
     ],
     architecture:
-      "Source connectors → Embeddings store → Retrieval API → MCP tool surface → Agent consumers",
+      "Source connectors → SQLite (FTS5) → Daemon/API → MCP tool surface → Agent consumers",
   },
   {
     slug: "pace-server",
@@ -61,7 +61,7 @@ export const projectConfigs: ProjectConfig[] = [
     category: "ai",
     type: "platform",
     featured: true,
-    techStack: ["TypeScript", "Next.js", "Docker", "AI", "Multi-tenant"],
+    techStack: ["Go", "TypeScript", "Vite", "Docker", "Multi-tenant"],
     private: true,
     highlights: [
       "Unified login and billing for small-business ops",
@@ -69,7 +69,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Private-cloud posture with operator control",
     ],
     architecture:
-      "Product shell → Auth & billing → AI services → Tenant data plane",
+      "Go services → Auth & billing → AI capabilities → TypeScript/Vite product UI → Tenant data plane",
     businessContext:
       "Small businesses need cloud productivity without enterprise complexity or opaque SaaS sprawl. Pace packages identity, billing, and AI into one private-cloud story operators can actually run.",
     scopeAndScale:
@@ -151,6 +151,7 @@ export const projectConfigs: ProjectConfig[] = [
     techStack: ["Python", "Ollama", "OpenRouter", "Terminal UI"],
     private: false,
     highlights: [
+      "Archived GitHub repo — kept as a showcase experiment",
       "Dual-agent debate with structured Venn prompts",
       "Ollama local + OpenRouter cloud model paths",
       "Rich terminal UI for following the exchange",
@@ -202,6 +203,7 @@ export const projectConfigs: ProjectConfig[] = [
     techStack: ["Python", "Machine Learning", "REST APIs", "Pandas", "NumPy"],
     private: true,
     highlights: [
+      "Archived GitHub repo — showcase dossier; not an active trading service",
       "ML signal generation with backtesting framework",
       "Real-time market data ingestion pipeline",
       "Automated risk management and position sizing",
@@ -227,6 +229,7 @@ export const projectConfigs: ProjectConfig[] = [
     private: true,
     demoOffline: true,
     highlights: [
+      "Archived repo; Swarm demo offline",
       "Realistic market dynamics and scenario modeling",
       "Portfolio construction and risk allocation engine",
       "Real-time P&L tracking with interactive charts",
@@ -252,6 +255,7 @@ export const projectConfigs: ProjectConfig[] = [
     private: true,
     demoOffline: true,
     highlights: [
+      "Archived repo; Swarm demo offline",
       "Real-time IBKR API integration",
       "Interactive Plotly visualizations",
       "Account analytics and position tracking",
@@ -370,6 +374,7 @@ export const projectConfigs: ProjectConfig[] = [
     techStack: ["Python", "AI/ML", "REST APIs", "Automation"],
     private: true,
     highlights: [
+      "Archived GitHub repo — historical showcase",
       "Pre-built workflow automation templates",
       "ML models that adapt to usage patterns",
       "Small business-focused integrations",
@@ -441,8 +446,9 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["Data", "OSINT", "JSON", "Documentation"],
     private: false,
-    demoOffline: false,
+    demoOffline: true,
     highlights: [
+      "Archived repo; Swarm demo treated as offline unless re-verified",
       "Comprehensive multi-domain weapons catalog",
       "Structured data for research and analysis",
       "Open-source intelligence methodology",
@@ -512,6 +518,7 @@ export const projectConfigs: ProjectConfig[] = [
     private: true,
     demoOffline: true,
     highlights: [
+      "Archived repo; Swarm demo offline",
       "Multi-course architecture with extensible schema",
       "Adaptive quizzing with anti-cheating enforcement",
       "Full CI/CD with Playwright e2e test suite",
@@ -539,6 +546,7 @@ export const projectConfigs: ProjectConfig[] = [
     private: false,
     demoOffline: true,
     highlights: [
+      "Archived repo; Swarm demo offline",
       "End-to-end TypeScript type safety",
       "Server-side rendering with API routes",
       "Modern React patterns and responsive UI",
@@ -580,6 +588,7 @@ export const projectConfigs: ProjectConfig[] = [
     techStack: ["TypeScript", "React", "Mobile"],
     private: false,
     highlights: [
+      "Archived GitHub repo — external marketing URL may still resolve",
       "Branching narrative engine",
       "Rich media storytelling",
       "Mobile-first with offline support",
@@ -647,6 +656,7 @@ export const projectConfigs: ProjectConfig[] = [
     private: true,
     demoOffline: true,
     highlights: [
+      "Archived repo; Swarm demo offline",
       "Native iOS with SwiftUI interface",
       "Swipeable card-based content experience",
       "Docker-hosted backend with PostgreSQL",
