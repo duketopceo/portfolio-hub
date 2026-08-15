@@ -85,9 +85,11 @@ npm run dev
 
 ## Deployment
 
+**Production path:** self-hosted on Tailscale Swarm nodes **cluster1** (`cluster-1-master`), **cluster2**, and **cluster3**. See **[docs/CLUSTER.md](docs/CLUSTER.md)**. Vercel / Cloudflare Pages below are optional alternatives, not the primary live site.
+
 ### Option A: Docker Swarm (Recommended)
 
-Designed to run on your Mac mini cluster behind Traefik + Cloudflare.
+Designed to run on the three-node Tailscale Mac Mini Swarm (cluster1 / cluster-1-master, cluster2, cluster3) behind Traefik + Cloudflare Tunnel.
 
 ```bash
 # Build and push to GHCR

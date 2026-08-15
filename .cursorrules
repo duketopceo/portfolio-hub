@@ -167,7 +167,7 @@ The brand is a **center Venn diagram** — all projects share the core tokens ab
 - It is the canonical implementation of Cosmic Intelligence — all other projects link back here
 - Brand assets live in `public/brand/` (logo-cosmic.svg, og-image.png, hero-bg.jpg, favicon.ico, apple-touch-icon.png)
 - `COSMIC-REBRAND-PLAN.md` at repo root is the full implementation spec — refer to it for detailed section breakdown
-- Deploy target: Docker container on a 2-node Docker Swarm (cluster-1-master + cluster2), served via Cloudflare tunnel
+- Deploy target: self-hosted Docker Swarm on three Tailscale nodes (cluster1 / cluster-1-master, cluster2, cluster3), served via Traefik + Cloudflare Tunnel over the Tailscale mesh
 - This site should have the MOST expressive cosmic effects — star field, gradient background, entrance animations, the works
 - Project cards link to subdomains or external repos
 - SECURITY: Never expose personal email, GitHub username, real name, or location in any public-facing code or content

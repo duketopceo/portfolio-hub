@@ -84,9 +84,9 @@ export const projectConfigs: ProjectConfig[] = [
     repoName: "homelab",
     displayName: "Homelab",
     tagline:
-      "Three-node Mac Mini Docker Swarm — Traefik, tunnels, agents, and monitoring",
+      "Three Tailscale nodes (cluster1–cluster3) — Mac Mini Swarm with Traefik, tunnels, agents, and monitoring",
     description:
-      "Personal home lab Docker Swarm on Apple Silicon Mac Minis: Traefik ingress, Cloudflare Tunnel for public routes, Tailscale mesh, asset tracking, monitoring, and auto-discovery. Hosts public showcases such as Cosmic Intelligence and Open Military Hardware DB alongside internal agent stacks. The showcasable infra story for how luke-the-duke.com subdomains are meant to run.",
+      "Personal home lab Docker Swarm on a three-node Tailscale mesh (cluster1 manager, cluster2 and cluster3 workers) running Apple Silicon Mac Minis: Traefik ingress, Cloudflare Tunnel for public routes, asset tracking, monitoring, and auto-discovery. Hosts public showcases such as Cosmic Intelligence and Open Military Hardware DB alongside internal agent stacks. The showcasable infra story for how luke-the-duke.com subdomains are meant to run.",
     category: "infra",
     type: "infra",
     featured: true,
@@ -102,7 +102,7 @@ export const projectConfigs: ProjectConfig[] = [
     businessContext:
       "Self-hosted infrastructure that proves production patterns — ingress, TLS, CI deploy, and observability — without a hyperscaler bill.",
     scopeAndScale:
-      "Three-node cluster hosting portfolio, databases, chat, and agent workloads.",
+      "Three Tailscale nodes (cluster1–cluster3) hosting portfolio, databases, chat, and agent workloads.",
     engineeringDecisions: [
       "Swarm over k8s — Matches three-node Mac Mini footprint and operator simplicity",
       "Tunnel over port-forward — Public exposure without opening the LAN edge",
@@ -478,7 +478,7 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Docker Swarm infrastructure — multi-node cluster with Traefik, monitoring, and CI/CD",
     description:
-      "Multi-node Docker Swarm infrastructure running on Apple Silicon Mac Minis in a home lab configuration. Features automated container deployments via GitHub webhooks, Traefik reverse proxy handling TLS termination and routing for multiple subdomains, Cloudflare Tunnel for secure public access without port forwarding, and Tailscale mesh VPN for encrypted inter-node communication. Currently hosts the portfolio site, military hardware database, and several internal tools.",
+      "Three-node Docker Swarm on Tailscale (cluster1 / cluster-1-master as manager, cluster2 and cluster3 as workers) running Apple Silicon Mac Minis. Features automated container deployments via GitHub webhooks, Traefik reverse proxy handling TLS termination and routing for multiple subdomains, Cloudflare Tunnel for secure public access without port forwarding, and Tailscale mesh VPN for encrypted inter-node communication. Currently hosts the portfolio site, military hardware database, and several internal tools.",
     category: "infra",
     type: "infra",
     featured: false,

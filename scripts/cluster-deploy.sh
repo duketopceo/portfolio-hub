@@ -4,7 +4,8 @@
 #
 # Multi-node Swarm: every worker must be able to pull the image. After `docker compose build`
 # the image exists only on this node — you MUST `docker push` to GHCR (or another registry)
-# so workers (e.g. cluster2) can run tasks. Otherwise: "No such image: ghcr.io/.../latest".
+# so Tailscale workers (cluster2, cluster3) can run tasks. Manager is cluster1 / cluster-1-master.
+# Otherwise: "No such image: ghcr.io/.../latest".
 #
 # Prerequisites:
 #   - .env with GITHUB_TOKEN next to docker-compose.yml
