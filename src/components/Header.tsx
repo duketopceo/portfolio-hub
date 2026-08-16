@@ -4,12 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { MenuIcon, CloseIcon } from "./Icons";
-
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
-  { href: "/now", label: "Now" },
-];
+import { siteNavItems as navItems } from "@/data/site-nav";
 
 export default function Header() {
   const pathname = usePathname();

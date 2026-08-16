@@ -1,25 +1,21 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
 import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
+import { isProjectLive } from "@/lib/deployments";
 import { LockIcon, getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
-import RepoDetailModal from "./RepoDetailModal";
+import GithubLink from "./GithubLink";
 
 interface ProjectCardProps {
   project: EnrichedProject;
-  featured?: boolean;
 }
 
 export default function ProjectCard({
   project,
 }: ProjectCardProps) {
-  const [modalOpen, setModalOpen] = useState(false);
   const meta = categoryMeta[project.category];
-  const hasDemo = !!(project.liveUrl || project.demoUrl) && !project.demoOffline;
+  const hasDemo = isProjectLive(project);
   const demoUrl = project.liveUrl || project.demoUrl;
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"
@@ -31,12 +27,10 @@ export default function ProjectCard({
       className="cosmic-project-card group relative"
       style={{ "--card-accent": accentColor } as React.CSSProperties}
     >
-      <button
-        type="button"
+      <Link
+        href={`/projects/${project.slug}`}
         className="cosmic-project-card__main flex flex-col flex-1 text-left w-full"
-        onClick={() => setModalOpen(true)}
-        aria-haspopup="dialog"
-        aria-expanded={modalOpen}
+        prefetch={false}
       >
         <header className="cosmic-project-card__top">
           <div className="cosmic-project-card__identity">
@@ -112,24 +106,10 @@ export default function ProjectCard({
             <span className="cosmic-project-card__chevron-arrow">→</span>
           </span>
         </div>
-      </button>
-
-      <Link
-        href={`/projects/${project.slug}`}
-        className="cosmic-project-card__dossier-link"
-        onClick={(e) => e.stopPropagation()}
-        prefetch={false}
-      >
-        Dossier only →
       </Link>
 
+      {project.githubUrl && <GithubLink url={project.githubUrl} />}
       {hasDemo && demoUrl && <DemoLink url={demoUrl} />}
-
-      <RepoDetailModal
-        project={project}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
     </article>
   );
 }

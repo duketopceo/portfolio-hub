@@ -1,6 +1,12 @@
-# Portfolio Hub
+# Luke Kimball — Cosmic Intelligence
 
-Meta-portfolio site that aggregates GitHub repos into a curated, categorized project showcase. Built with Next.js 16, TypeScript, and Tailwind CSS.
+Personal engineering portfolio at **[luke-the-duke.com](https://luke-the-duke.com)**. I build systems that compound — AI infrastructure, open-source tools, and the operational layer behind them.
+
+I am Luke Kimball, a systems builder, currently an IT Support and Data Specialist at Bartlett Roofing. This site is how hiring managers see the work: curated projects, dossiers, and a hire conversation.
+
+**Hire:** [luke-the-duke.com/hire](https://luke-the-duke.com/hire)
+
+This repository is the Next.js app behind that site (`portfolio-hub`). Architecture, local setup, and Swarm notes follow below.
 
 **Current release:** `v3.0.0` (see [CHANGELOG.md](CHANGELOG.md)). Docker: `ghcr.io/duketopceo/portfolio-hub:latest` and `:3.0.0` when the `v3.0.0` tag is pushed.
 
@@ -16,6 +22,9 @@ portfolio-hub/
 │   │   ├── projects/
 │   │   │   ├── page.tsx        # /projects — All projects with filters
 │   │   │   └── [slug]/page.tsx # /projects/:slug — Project detail + README
+│   │   ├── about/page.tsx      # /about — who Luke is
+│   │   ├── contact/page.tsx    # /contact — mailto
+│   │   ├── hire/page.tsx       # /hire — hire intent + mailto
 │   │   ├── now/page.tsx        # /now — Recent activity + optional Spotify embed
 │   │   └── api/repos/route.ts  # /api/repos — JSON API
 │   ├── components/             # React components
@@ -85,11 +94,11 @@ npm run dev
 
 ## Deployment
 
-**Production path:** self-hosted on Tailscale Swarm nodes **cluster1** (`cluster-1-master`), **cluster2**, and **cluster3**. See **[docs/CLUSTER.md](docs/CLUSTER.md)**. Vercel / Cloudflare Pages below are optional alternatives, not the primary live site.
+Production is already `docker stack deploy -c docker-compose.yml portfolio`. Node names, Tailscale, and cluster wiring live in **[docs/CLUSTER.md](docs/CLUSTER.md)** — do not copy them here. Vercel / Cloudflare Pages below are optional alternatives, not the primary live site.
 
 ### Option A: Docker Swarm (Recommended)
 
-Designed to run on the three-node Tailscale Mac Mini Swarm (cluster1 / cluster-1-master, cluster2, cluster3) behind Traefik + Cloudflare Tunnel.
+Designed to run as Swarm stack `portfolio` behind Traefik + Cloudflare Tunnel. See **[docs/CLUSTER.md](docs/CLUSTER.md)** for the cluster.
 
 ```bash
 # Build and push to GHCR
@@ -138,7 +147,7 @@ Usually Traefik can’t reach the app container (wrong Docker network, unhealthy
 **Cluster / Docker:** put a `.env` next to `docker-compose.yml` (e.g. `~/portfolio-hub/.env`) with at least:
 
 ```bash
-GITHUB_TOKEN=ghp_...   # fine-grained or classic PAT; enables private repos + stable /now Activity
+GITHUB_TOKEN=   # name only; set the value in a gitignored .env — never commit it
 ```
 
 `docker compose` passes it into the build and runtime (see `docker-compose.yml`). Without it, the site still builds, but **`/now` may show no commit dates** and enrichment falls back to public API limits. Rebuild after changing `.env`:

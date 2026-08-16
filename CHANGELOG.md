@@ -4,6 +4,13 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 ## [Unreleased]
 
+### Changed
+
+- Recruiter hire path: `/about`, `/contact`, `/hire` with a public mailto
+- Catalog cards open the dossier; public GitHub is a separate CTA
+- GitHub summary API no longer 502s expected misses (unknown, private, unauthorized)
+- Stratum is kept in the catalog but is not advertised as live
+
 ### Docs
 
 - Document production hosting on Tailscale nodes **cluster1**, **cluster2**, and **cluster3** (`docs/CLUSTER.md`, AGENTS.md, `.cursorrules`, README)

@@ -72,4 +72,9 @@ export interface EnrichedProject extends ProjectConfig {
   forks: number;
   /** Open issues count from GitHub when token can read the repo */
   openIssuesCount: number;
+  /**
+   * Public GitHub URL from curated `private` + repoName.
+   * Null for catalog-private rows even if GitHub later reports public.
+   */
+  githubUrl: string | null;
 }

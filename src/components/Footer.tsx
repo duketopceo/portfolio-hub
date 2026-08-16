@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { ExternalIcon } from "@/components/Icons";
+import { siteNavItems } from "@/data/site-nav";
 
 const liveLinks = [
-  {
-    label: "Stratum",
-    href: "https://stratumhq.app",
-  },
   {
     label: "Chronicle Weaver",
     href: "https://chronicleweaver.com",
@@ -32,16 +29,13 @@ export default function Footer() {
               Navigation
             </h3>
             <ul className="space-y-1">
-              <li>
-                <Link href="/" className="cosmic-footer__link">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/projects" className="cosmic-footer__link">
-                  Projects
-                </Link>
-              </li>
+              {siteNavItems.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="cosmic-footer__link">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

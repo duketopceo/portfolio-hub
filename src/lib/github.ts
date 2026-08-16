@@ -1,6 +1,7 @@
 import { GitHubRepo, EnrichedProject } from "./types";
 import { projectConfigs } from "@/data/projects";
 import { applyDeploymentOverlay } from "@/lib/deployments";
+import { publicGithubUrl } from "@/lib/github-public-url";
 import {
   classifyHttpStatus,
   failureFromUnknown,
@@ -165,8 +166,14 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   return projectConfigs.map((config) => {
     const withDeploy = applyDeploymentOverlay(config);
     const repo = repoMap.get(withDeploy.repoName) || null;
+    const githubUrl = publicGithubUrl(
+      withDeploy.private || repo?.private === true,
+      withDeploy.repoName,
+      GITHUB_ACCOUNT_LOGIN
+    );
     return {
       ...withDeploy,
+      githubUrl,
       private: repo?.private ?? withDeploy.private,
       repo: null, // Never expose raw repo data to client
       lastUpdated: repo?.pushed_at || "",

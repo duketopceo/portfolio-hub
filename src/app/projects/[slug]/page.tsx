@@ -12,6 +12,7 @@ import {
   sortPortfolioOrbit,
   getOrbitAdjacent,
 } from "@/lib/project-completeness";
+import { isProjectLive } from "@/lib/deployments";
 import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import {
@@ -62,10 +63,9 @@ export default async function ProjectDetailPage({
   const readme = !project.private ? await fetchReadme(project.repoName) : null;
 
   const meta = categoryMeta[project.category];
-  const hasDemo = !!(project.liveUrl || project.demoUrl);
+  const hasDemo = isProjectLive(project);
   const embedUrl = (project.demoUrl || project.liveUrl) ?? "";
-  const showDemoSection =
-    hasDemo && Boolean(embedUrl) && !project.private;
+  const showDemoSection = hasDemo && Boolean(embedUrl) && !project.private;
   /** Click-to-load iframe only when host allows framing and demo is not marked offline. */
   const useIframeEmbed =
     showDemoSection &&
@@ -323,6 +323,45 @@ export default async function ProjectDetailPage({
             </a>
           )}
 
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-card p-4 block transition-colors group"
+              style={{
+                textDecoration: "none",
+                border: "1px solid var(--color-accent-subtle)",
+              }}
+            >
+              <div
+                className="flex items-center gap-2 mb-1"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  fontWeight: 500,
+                  textTransform: "uppercase" as const,
+                  letterSpacing: "0.08em",
+                  color: "var(--color-accent)",
+                }}
+              >
+                Source
+              </div>
+              <div
+                className="flex items-center gap-1.5 group-hover:text-[var(--color-accent)]"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-sm)",
+                  color: "var(--color-text)",
+                  transition: "color 150ms",
+                }}
+              >
+                {project.githubUrl.replace(/^https?:\/\//, "")}
+                <ExternalIcon className="w-3 h-3 opacity-50" />
+              </div>
+            </a>
+          )}
+
           <div className="glass-card p-4">
             <h2 className="detail-section-label">Tech Stack</h2>
             <div className="flex flex-wrap gap-1.5">
@@ -394,7 +433,7 @@ export default async function ProjectDetailPage({
                     <span style={{ color: "var(--color-text-muted)" }}>
                       {rp.displayName}
                     </span>
-                    {(rp.liveUrl || rp.demoUrl) && !rp.demoOffline && (
+                    {isProjectLive(rp) && (
                       <span
                         className="ml-auto"
                         style={{

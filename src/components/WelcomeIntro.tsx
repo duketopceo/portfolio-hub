@@ -57,6 +57,15 @@ export default function WelcomeIntro() {
         <Link href="/now" className="welcome-intro__chip" onClick={dismiss}>
           Activity →
         </Link>
+        <Link href="/about" className="welcome-intro__chip" onClick={dismiss}>
+          About →
+        </Link>
+        <Link href="/contact" className="welcome-intro__chip" onClick={dismiss}>
+          Contact →
+        </Link>
+        <Link href="/hire" className="welcome-intro__chip" onClick={dismiss}>
+          Hire →
+        </Link>
         <Link
           href="/podcast"
           className="welcome-intro__chip welcome-intro__chip--accent"
