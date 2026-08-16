@@ -65,9 +65,12 @@ export interface CuratedSummaryFallback {
   ciSha: null;
 }
 
+export function catalogProjectByRepoName(repoName: string) {
+  return projectConfigs.find((p) => p.repoName === repoName);
+}
+
 export function isCatalogPrivateRepo(repoName: string): boolean {
-  const cfg = projectConfigs.find((p) => p.repoName === repoName);
-  return cfg?.private === true;
+  return catalogProjectByRepoName(repoName)?.private === true;
 }
 
 export function hasGithubToken(): boolean {
@@ -75,7 +78,7 @@ export function hasGithubToken(): boolean {
 }
 
 export function curatedSummaryFallback(repoName: string): CuratedSummaryFallback {
-  const cfg = projectConfigs.find((p) => p.repoName === repoName);
+  const cfg = catalogProjectByRepoName(repoName);
   return {
     repo: repoName,
     slug: cfg?.slug ?? repoName,

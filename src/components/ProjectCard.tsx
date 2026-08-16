@@ -1,23 +1,21 @@
-"use client";
-
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
 import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
+import { isProjectLive } from "@/lib/deployments";
 import { LockIcon, getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
 import GithubLink from "./GithubLink";
 
 interface ProjectCardProps {
   project: EnrichedProject;
-  featured?: boolean;
 }
 
 export default function ProjectCard({
   project,
 }: ProjectCardProps) {
   const meta = categoryMeta[project.category];
-  const hasDemo = !!(project.liveUrl || project.demoUrl) && !project.demoOffline;
+  const hasDemo = isProjectLive(project);
   const demoUrl = project.liveUrl || project.demoUrl;
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"

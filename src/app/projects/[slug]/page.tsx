@@ -433,7 +433,7 @@ export default async function ProjectDetailPage({
                     <span style={{ color: "var(--color-text-muted)" }}>
                       {rp.displayName}
                     </span>
-                    {(rp.liveUrl || rp.demoUrl) && !rp.demoOffline && (
+                    {isProjectLive(rp) && (
                       <span
                         className="ml-auto"
                         style={{
