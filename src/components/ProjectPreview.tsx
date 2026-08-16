@@ -1,4 +1,5 @@
 import { EnrichedProject } from "@/lib/types";
+import { isProjectLive } from "@/lib/deployments";
 import { ExternalIcon, CheckIcon } from "./Icons";
 
 interface ProjectPreviewProps {
@@ -9,9 +10,10 @@ export default function ProjectPreview({ project }: ProjectPreviewProps) {
   const archSteps = project.architecture
     ? project.architecture.split(" → ")
     : [];
-  const hasLiveUrl = !!project.liveUrl;
-  const hasDemoUrl = !!project.demoUrl;
-  const externalUrl = project.liveUrl || project.demoUrl;
+  const live = isProjectLive(project);
+  const hasLiveUrl = live && !!project.liveUrl;
+  const hasDemoUrl = live && !!project.demoUrl;
+  const externalUrl = live ? project.liveUrl || project.demoUrl : undefined;
 
   return (
     <div

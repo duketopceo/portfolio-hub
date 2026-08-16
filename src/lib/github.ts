@@ -167,7 +167,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
     const withDeploy = applyDeploymentOverlay(config);
     const repo = repoMap.get(withDeploy.repoName) || null;
     const githubUrl = publicGithubUrl(
-      withDeploy.private,
+      withDeploy.private || repo?.private === true,
       withDeploy.repoName,
       GITHUB_ACCOUNT_LOGIN
     );

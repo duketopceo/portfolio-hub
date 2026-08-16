@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   curatedSummaryFallback,
+  isCatalogPrivateRepo,
   mapGithubSummaryStatus,
 } from "./github-summary-status";
 
@@ -103,11 +104,24 @@ describe("mapGithubSummaryStatus", () => {
   });
 });
 
+describe("isCatalogPrivateRepo", () => {
+  it("returns true for a catalog-private repoName", () => {
+    expect(isCatalogPrivateRepo("Khan")).toBe(true);
+  });
+
+  it("returns false for a catalog-public repoName", () => {
+    expect(isCatalogPrivateRepo("kurultai")).toBe(false);
+  });
+});
+
 describe("curatedSummaryFallback", () => {
   it("omits githubPath, pull htmlUrl, and GitHub error fields", () => {
     const body = curatedSummaryFallback("Khan");
     const json = JSON.stringify(body);
     expect(body.pulls).toEqual([]);
+    expect(body.private).toBe(true);
+    expect(body.slug).toBe("khan");
+    expect(body.displayName).toBe("Khan");
     expect(body).not.toHaveProperty("githubPath");
     expect(json).not.toMatch(/github\.com/);
     expect(json).not.toMatch(/ghp_/);
