@@ -3,10 +3,6 @@ import { ExternalIcon } from "@/components/Icons";
 
 const liveLinks = [
   {
-    label: "Stratum",
-    href: "https://stratumhq.app",
-  },
-  {
     label: "Chronicle Weaver",
     href: "https://chronicleweaver.com",
   },
@@ -40,6 +36,26 @@ export default function Footer() {
               <li>
                 <Link href="/projects" className="cosmic-footer__link">
                   Projects
+                </Link>
+              </li>
+              <li>
+                <Link href="/now" className="cosmic-footer__link">
+                  Now
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="cosmic-footer__link">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="cosmic-footer__link">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/hire" className="cosmic-footer__link">
+                  Hire
                 </Link>
               </li>
             </ul>

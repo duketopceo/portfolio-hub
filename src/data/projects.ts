@@ -548,9 +548,9 @@ export const projectConfigs: ProjectConfig[] = [
     slug: "stratum-hq",
     repoName: "stratumhq",
     displayName: "Stratum",
-    tagline: "Product and platform home for Stratum — live app and roadmap",
+    tagline: "Product and platform home for Stratum — shell and roadmap",
     description:
-      "Stratum is the umbrella product surface for related apps and infrastructure. This entry links the live marketing and app shell at stratumhq.app; GitHub metadata appears when the repository name matches your org.",
+      "Stratum is the umbrella product surface for related apps and infrastructure. This entry covers the product shell and roadmap; it is not listed as a live deployment.",
     category: "apps",
     type: "platform",
     featured: false,
@@ -560,8 +560,8 @@ export const projectConfigs: ProjectConfig[] = [
     techStack: ["TypeScript", "Next.js", "Docker"],
     private: false,
     highlights: [
-      "Live product shell at stratumhq.app",
-      "Aligned with portfolio Swarm and tunnel deployment story",
+      "Product shell and roadmap for the Stratum brand surface",
+      "Aligned with the portfolio deployment story",
     ],
   },
   {

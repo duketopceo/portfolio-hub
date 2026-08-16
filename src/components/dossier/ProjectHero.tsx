@@ -102,6 +102,17 @@ export function ProjectHero({ project, accentColor, meta }: ProjectHeroProps) {
                     <ExternalIcon className="w-3 h-3 opacity-80" />
                   </a>
                 )}
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="detail-cta"
+                  >
+                    View on GitHub
+                    <ExternalIcon className="w-3 h-3 opacity-80" />
+                  </a>
+                )}
                 {project.private && (
                   <span className="dossier-page__pill dossier-page__pill--border">
                     <LockIcon className="w-3.5 h-3.5" />

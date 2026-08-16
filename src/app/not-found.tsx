@@ -58,9 +58,14 @@ export default function NotFound() {
         </p>
       </div>
 
-      <Link href="/projects" className="detail-cta relative z-10">
-        Back to Projects
-      </Link>
+      <div className="relative z-10 flex flex-wrap items-center justify-center gap-3">
+        <Link href="/hire" className="detail-cta">
+          Hire Luke
+        </Link>
+        <Link href="/projects" className="detail-nav-link">
+          Back to Projects
+        </Link>
+      </div>
     </div>
   );
 }

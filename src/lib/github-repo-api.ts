@@ -87,15 +87,25 @@ interface GhCombinedStatus {
 async function ghFetch<T>(
   path: string,
   revalidateSeconds: number
-): Promise<{ ok: true; data: T } | { ok: false; status: number }> {
-  const res = await fetch(`${GITHUB_API_BASE}${path}`, {
-    headers: githubAuthHeaders(),
-    next: { revalidate: revalidateSeconds },
-    signal: AbortSignal.timeout(15_000),
-  });
-  if (!res.ok) return { ok: false, status: res.status };
-  const data = (await res.json()) as T;
-  return { ok: true, data };
+): Promise<
+  | { ok: true; data: T }
+  | { ok: false; status: number; timeout?: boolean }
+> {
+  try {
+    const res = await fetch(`${GITHUB_API_BASE}${path}`, {
+      headers: githubAuthHeaders(),
+      next: { revalidate: revalidateSeconds },
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!res.ok) return { ok: false, status: res.status };
+    const data = (await res.json()) as T;
+    return { ok: true, data };
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      return { ok: false, status: 0, timeout: true };
+    }
+    throw err;
+  }
 }
 
 async function runWithConcurrency<T, R>(
@@ -164,7 +174,7 @@ export async function fetchLatestCiState(
   return { sha, ci: "unknown" };
 }
 
-export async function fetchRepoSummaryPayload(repoName: string): Promise<{
+export type RepoSummaryPayload = {
   repo: string;
   slug: string;
   displayName: string;
@@ -179,7 +189,16 @@ export async function fetchRepoSummaryPayload(repoName: string): Promise<{
   pulls: PullPayload[];
   ci: CiStateKind;
   ciSha: string | null;
-}> {
+};
+
+export type RepoSummaryFetchResult =
+  | { ok: true; payload: RepoSummaryPayload }
+  | { ok: false; timeout: true }
+  | { ok: false; timeout?: false; status: number };
+
+export async function fetchRepoSummaryPayload(
+  repoName: string
+): Promise<RepoSummaryFetchResult> {
   const owner = GITHUB_ACCOUNT_LOGIN;
   const meta = repoNameToMeta.get(repoName);
   const slug = meta?.slug ?? repoName;
@@ -190,7 +209,8 @@ export async function fetchRepoSummaryPayload(repoName: string): Promise<{
     180
   );
   if (!repoRes.ok) {
-    throw new Error(`repo_fetch_${repoRes.status}`);
+    if (repoRes.timeout) return { ok: false, timeout: true };
+    return { ok: false, status: repoRes.status };
   }
   const r = repoRes.data;
 
@@ -198,6 +218,9 @@ export async function fetchRepoSummaryPayload(repoName: string): Promise<{
     `/repos/${owner}/${encodeURIComponent(repoName)}/pulls?state=open&per_page=30`,
     180
   );
+  if (!pullsRes.ok && pullsRes.timeout) {
+    return { ok: false, timeout: true };
+  }
   const rawPulls = pullsRes.ok ? pullsRes.data : [];
 
   const statuses = await runWithConcurrency(rawPulls, 4, async (pr) => {
@@ -230,20 +253,23 @@ export async function fetchRepoSummaryPayload(repoName: string): Promise<{
   );
 
   return {
-    repo: repoName,
-    slug,
-    displayName,
-    description: r.description,
-    language: r.language,
-    stars: r.stargazers_count,
-    forks: r.forks_count,
-    openIssues: r.open_issues_count,
-    pushedAt: r.pushed_at,
-    private: r.private,
-    githubPath: `${owner}/${repoName}`,
-    pulls: statuses,
-    ci,
-    ciSha: sha,
+    ok: true,
+    payload: {
+      repo: repoName,
+      slug,
+      displayName,
+      description: r.description,
+      language: r.language,
+      stars: r.stargazers_count,
+      forks: r.forks_count,
+      openIssues: r.open_issues_count,
+      pushedAt: r.pushed_at,
+      private: r.private,
+      githubPath: `${owner}/${repoName}`,
+      pulls: statuses,
+      ci,
+      ciSha: sha,
+    },
   };
 }
 

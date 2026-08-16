@@ -60,7 +60,7 @@ export const deployments: DeploymentConfig[] = [
     host: "other",
     role: "Stratum product shell and roadmap",
     healthCheck: "/",
-    online: true,
+    online: false,
   },
   {
     slug: "chronicle-weaver",
