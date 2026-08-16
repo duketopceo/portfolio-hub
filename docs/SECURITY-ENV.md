@@ -7,6 +7,18 @@
 - **Docker build:** The token is passed as a **build-arg** from `docker-compose.yml` / CI — it is **not** copied from disk into the image context because **`.env*` is listed in `.dockerignore`**. That avoids baking secrets into layer metadata from accidental `COPY`.
 - **Docker runtime:** Set `GITHUB_TOKEN` in the environment of the running container (e.g. `environment:` in Compose, Swarm secrets, or your host `~/portfolio-hub/.env` read by Compose when you deploy).
 
+## Other names (values never in git)
+
+| Name | Where it is used |
+|------|------------------|
+| `GITHUB_USER` | Server GitHub login fallback (`src/lib/github.ts`) |
+| `GH_PAT` | CI build-arg / GitHub Actions secret name only |
+| `SWARM_HOST` | Deploy workflow |
+| `SWARM_USER` | Deploy workflow |
+| `SWARM_SSH_KEY` | Deploy workflow |
+
+These names are listed so operators know what to set. Do not paste values into this file or into client JavaScript.
+
 ## Do not commit secrets
 
 - `.gitignore` ignores `.env*` except `.env.example` (template only).
