@@ -6,8 +6,8 @@ Server-only authentication for GitHub API calls. **Visitors never OAuth.** There
 
 The site enriches curated project dossiers and a **live/daily activity showcase** with metadata for public and private repos Luke installs the app on:
 
-- **Homepage:** compact last-7-days highlights across featured projects (PR merges, reviews, releases)
-- **Dossiers:** per-repo timelines with day counts — public repos link to GitHub; private repos show scrubbed summaries only
+- **Homepage:** compact last-7-days digest (5–10 lines) across featured projects — PRs opened/merged, reviews, releases, issues started/finished; day counts when multiple repos active
+- **Dossiers:** per-repo timelines (opened, reviewed, merged, released, started, finished) with day counts — public repos link to GitHub; private repos show scrubbed summaries only
 
 Private file trees, READMEs, diffs, and commit bodies stay off the client except **`SHOWCASE.md`** at repo root (allowlisted server fetch).
 
@@ -29,7 +29,7 @@ Activity responses are cached via Next.js ISR (`revalidate: 3600` — hourly).
    - **Metadata:** Read
    - **Contents:** Read (public README + private `SHOWCASE.md` allowlist only)
    - **Pull requests:** Read (activity timelines)
-   - **Issues:** Read (optional issue events)
+   - **Issues:** Read (started/finished events on timelines)
    - **Checks:** Read (CI summary on dossiers)
 6. **Where can this app be installed?** Only on this account
 7. Create the app → note **App ID**
