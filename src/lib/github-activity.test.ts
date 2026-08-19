@@ -7,12 +7,26 @@ import {
 import { fixtureHomepageActivity } from "./github-activity-fixtures";
 
 describe("github-activity fixtures", () => {
-  it("homepage fixture returns up to 4 featured lines", async () => {
+  it("homepage fixture returns up to 4 repos with condensed charts", async () => {
     const data = await getHomepageActivityShowcase({ useFixtures: true });
     expect(data.source).toBe("fixture");
-    expect(data.lines.length).toBeGreaterThanOrEqual(1);
-    expect(data.lines.length).toBeLessThanOrEqual(4);
-    expect(data.lines[0].line).toMatch(/merged|review|release|PR/i);
+    expect(data.repos.length).toBeGreaterThanOrEqual(1);
+    expect(data.repos.length).toBeLessThanOrEqual(4);
+    expect(data.repos[0].condensed.days).toHaveLength(7);
+    expect(data.repos[0].condensed.showcase.length).toBeGreaterThan(0);
+  });
+
+  it("pace-server fixture condenses review flood to one PR row", async () => {
+    const data = await getProjectActivityTimeline("pace-server", {
+      useFixtures: true,
+    });
+    const { condenseProjectActivity } = await import("./activity-aggregate");
+    const condensed = condenseProjectActivity(data, {
+      anchorDate: new Date(data.fetchedAt),
+    });
+    const pr938 = condensed.showcase.find((r) => r.ref === "938");
+    expect(pr938?.reviewCount).toBe(5);
+    expect(pr938?.label).toBe("PR #938 — merged · 5 reviews");
   });
 
   it("project fixture for kurultai includes reviews, issues, releases", async () => {
@@ -37,7 +51,8 @@ describe("github-activity fixtures", () => {
 
   it("fixtureHomepageActivity matches shape", () => {
     const f = fixtureHomepageActivity();
-    expect(f.lines.every((l) => l.href.startsWith("/projects/"))).toBe(true);
+    expect(f.repos.every((r) => r.href.startsWith("/projects/"))).toBe(true);
+    expect(f.repos.every((r) => r.condensed.days.length === 7)).toBe(true);
   });
 
   it("activityKindVerb covers all event kinds", () => {

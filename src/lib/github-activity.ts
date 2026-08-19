@@ -2,6 +2,10 @@ import { projectConfigs } from "@/data/projects";
 import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
 import { scrubActivityText, scrubBranchRef } from "@/lib/activity-scrubber";
 import {
+  condenseProjectActivity,
+  formatTotalsLine,
+} from "@/lib/activity-aggregate";
+import {
   fixtureHomepageActivity,
   fixtureProjectActivity,
 } from "@/lib/github-activity-fixtures";
@@ -11,6 +15,7 @@ import type {
   ActivityTimelineItem,
   HomepageActivityLine,
   HomepageActivityPayload,
+  HomepageRepoActivity,
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
 import { getGithubAccessToken } from "@/lib/github-app";
@@ -494,22 +499,36 @@ function buildHeadline(
   return parts.join(" · ");
 }
 
-function buildHomepageDigest(
+function buildHomepageRepos(
   summaries: ProjectActivityPayload[]
-): HomepageActivityLine[] {
+): HomepageRepoActivity[] {
   const sorted = [...summaries].sort((a, b) => b.items.length - a.items.length);
 
-  const lines: HomepageActivityLine[] = sorted
-    .slice(0, HOMEPAGE_MAX_LINES)
-    .map((summary) => ({
+  return sorted.slice(0, HOMEPAGE_MAX_LINES).map((summary) => {
+    const condensed = condenseProjectActivity(summary, {
+      anchorDate: new Date(summary.fetchedAt),
+    });
+    return {
       slug: summary.slug,
       displayName: summary.displayName,
       private: summary.private,
-      line: summary.headline,
       href: `/projects/${summary.slug}`,
-    }));
+      headline: summary.headline,
+      condensed,
+    };
+  });
+}
 
-  return lines.slice(0, HOMEPAGE_MAX_LINES);
+function buildHomepageDigest(
+  summaries: ProjectActivityPayload[]
+): HomepageActivityLine[] {
+  return buildHomepageRepos(summaries).map((repo) => ({
+    slug: repo.slug,
+    displayName: repo.displayName,
+    private: repo.private,
+    line: formatTotalsLine(repo.condensed.totals) || repo.headline,
+    href: repo.href,
+  }));
 }
 
 export async function getProjectActivityTimeline(
@@ -580,21 +599,25 @@ export async function getHomepageActivityShowcase(options?: {
       }
       return {
         lines: [],
+        repos: [],
         fetchedAt: new Date().toISOString(),
         source: "empty",
       };
     }
     return {
       lines: [],
+      repos: [],
       fetchedAt: new Date().toISOString(),
       source: "empty",
     };
   }
 
+  const repos = buildHomepageRepos(summaries);
   const lines = buildHomepageDigest(summaries);
 
   return {
     lines,
+    repos,
     fetchedAt: new Date().toISOString(),
     source: "github",
   };

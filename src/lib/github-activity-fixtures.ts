@@ -2,43 +2,41 @@ import type {
   HomepageActivityPayload,
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
+import { condenseProjectActivity } from "@/lib/activity-aggregate";
 
 const now = new Date("2026-08-19T12:00:00.000Z");
 
+function homepageRepo(summary: ProjectActivityPayload) {
+  const condensed = condenseProjectActivity(summary, { anchorDate: now });
+  return {
+    slug: summary.slug,
+    displayName: summary.displayName,
+    private: summary.private,
+    href: `/projects/${summary.slug}`,
+    headline: summary.headline,
+    condensed,
+  };
+}
+
 export function fixtureHomepageActivity(): HomepageActivityPayload {
+  const summaries = [
+    fixtureProjectActivity("khan"),
+    fixtureProjectActivity("kurultai"),
+    fixtureProjectActivity("pace-server"),
+    fixtureProjectActivity("openrouter"),
+  ];
+  const repos = summaries.map(homepageRepo);
   return {
     fetchedAt: now.toISOString(),
     source: "fixture",
-    lines: [
-      {
-        slug: "khan",
-        displayName: "Khan",
-        private: true,
-        line: "4 PRs merged Aug 18 · 2 reviews · release cut",
-        href: "/projects/khan",
-      },
-      {
-        slug: "kurultai",
-        displayName: "Kurultai",
-        private: false,
-        line: "PR #225 opened · 3 merged this week",
-        href: "/projects/kurultai",
-      },
-      {
-        slug: "pace-server",
-        displayName: "Pace Server",
-        private: true,
-        line: "12 PRs merged this week · 5 reviews",
-        href: "/projects/pace-server",
-      },
-      {
-        slug: "openrouter",
-        displayName: "OpenRouter Demos",
-        private: false,
-        line: "PR merged · fixtures pytest green",
-        href: "/projects/openrouter",
-      },
-    ],
+    repos,
+    lines: repos.map((r) => ({
+      slug: r.slug,
+      displayName: r.displayName,
+      private: r.private,
+      line: r.headline,
+      href: r.href,
+    })),
   };
 }
 
@@ -144,9 +142,119 @@ export function fixtureProjectActivity(slug: string): ProjectActivityPayload {
     };
   }
 
+  if (slug === "pace-server") {
+    const reviewItems = [1, 2, 3, 4, 5].map((n) => ({
+      id: `pace-r${n}`,
+      kind: "review" as const,
+      at: `2026-08-18T1${n}:00:00.000Z`,
+      label: `Review on PR #938 (${n === 1 ? "approved" : "commented"})`,
+      ref: "938",
+    }));
+    return {
+      ...base,
+      displayName: "Pace Server",
+      private: true,
+      headline: "12 PRs merged this week · 18 reviews",
+      items: [
+        {
+          id: "pace-m1",
+          kind: "pr_merged",
+          at: "2026-08-18T14:00:00.000Z",
+          label: "PR #938 merged",
+          ref: "938",
+        },
+        {
+          id: "pace-o1",
+          kind: "pr_opened",
+          at: "2026-08-17T09:00:00.000Z",
+          label: "PR #938 opened",
+          ref: "938",
+        },
+        ...reviewItems,
+        {
+          id: "pace-m2",
+          kind: "pr_merged",
+          at: "2026-08-17T16:00:00.000Z",
+          label: "PR #920 merged",
+          ref: "920",
+        },
+        {
+          id: "pace-rel",
+          kind: "release",
+          at: "2026-08-16T12:00:00.000Z",
+          label: "Release v0.9.1",
+          ref: "v0.9.1",
+        },
+      ],
+      days: [
+        {
+          date: "2026-08-18",
+          prsOpened: 0,
+          prsMerged: 1,
+          reviews: 5,
+          releases: 0,
+          issuesOpened: 0,
+          issuesClosed: 0,
+          items: [],
+        },
+        {
+          date: "2026-08-17",
+          prsOpened: 1,
+          prsMerged: 1,
+          reviews: 0,
+          releases: 0,
+          issuesOpened: 0,
+          issuesClosed: 0,
+          items: [],
+        },
+        {
+          date: "2026-08-16",
+          prsOpened: 0,
+          prsMerged: 0,
+          reviews: 0,
+          releases: 1,
+          issuesOpened: 0,
+          issuesClosed: 0,
+          items: [],
+        },
+      ],
+    };
+  }
+
+  if (slug === "openrouter") {
+    return {
+      ...base,
+      displayName: "OpenRouter Demos",
+      private: false,
+      headline: "PR merged · fixtures pytest green",
+      items: [
+        {
+          id: "or-1",
+          kind: "pr_merged",
+          at: "2026-08-18T11:00:00.000Z",
+          label: "PR #12 merged — caesar trace schema",
+          ref: "12",
+          url: "https://github.com/duketopceo/openrouter-demos/pull/12",
+        },
+      ],
+      days: [
+        {
+          date: "2026-08-18",
+          prsOpened: 0,
+          prsMerged: 1,
+          reviews: 0,
+          releases: 0,
+          issuesOpened: 0,
+          issuesClosed: 0,
+          items: [],
+        },
+      ],
+    };
+  }
+
   return {
     ...base,
-    displayName: slug,
+    displayName: slug === "khan" ? "Khan" : slug,
     private: true,
     headline: "4 PRs merged Aug 18 · 1 review",
     items: [
@@ -154,7 +262,7 @@ export function fixtureProjectActivity(slug: string): ProjectActivityPayload {
         id: `${slug}-1`,
         kind: "pr_merged",
         at: "2026-08-18T09:00:00.000Z",
-        label: "PR merged",
+        label: "PR #42 merged",
         ref: "42",
       },
       {

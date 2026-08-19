@@ -1,5 +1,7 @@
 /** Safe for client — no tokens, raw commit bodies, or private deep-links unless public */
 
+import type { CondensedActivity } from "@/lib/activity-aggregate";
+
 export type ActivityEventKind =
   | "pr_opened"
   | "pr_merged"
@@ -54,8 +56,18 @@ export interface HomepageActivityLine {
   href: string;
 }
 
+export interface HomepageRepoActivity {
+  slug: string;
+  displayName: string;
+  private: boolean;
+  href: string;
+  headline: string;
+  condensed: CondensedActivity;
+}
+
 export interface HomepageActivityPayload {
   lines: HomepageActivityLine[];
+  repos: HomepageRepoActivity[];
   fetchedAt: string;
   source: "github" | "fixture" | "empty";
 }
