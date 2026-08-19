@@ -33,6 +33,16 @@ export default function HirePage() {
             Email kimballluke@gmail.com
           </a>
         </p>
+        <p>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-cta inline-flex"
+          >
+            Download résumé (PDF)
+          </a>
+        </p>
       </div>
     </div>
   );

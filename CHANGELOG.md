@@ -15,6 +15,20 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 - Document production hosting on Tailscale nodes **cluster1**, **cluster2**, and **cluster3** (`docs/CLUSTER.md`, AGENTS.md, `.cursorrules`, README)
 
+## [3.1.0] — 2026-08-19
+
+### Added
+
+- **Hosted résumé** — `public/resume.pdf` served at `/resume.pdf`, with a clean `/resume` redirect route (301) and a download CTA on `/hire`
+- **`/llms.txt`** — LLM-friendly site summary (projects, links, résumé pointer) so AI screeners and agents can probe the portfolio
+- **`railway.json`** — Railway deploy config (Dockerfile builder, `/` healthcheck, on-failure restart) for one-click Railway hosting
+- **Resume nav link** — `Resume` entry in site nav alongside Hire
+
+### Changed
+
+- Bumped version `3.0.0` → `3.1.0`
+- robots.txt already permissive (`User-agent: * / Allow: /`) — no AI crawler blocking
+
 ## [3.0.0] — 2026-03-21
 
 ### Tooling (post-release)

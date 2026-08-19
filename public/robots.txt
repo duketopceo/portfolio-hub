@@ -1,3 +1,36 @@
+# robots.txt — Luke Kimball portfolio (luke-the-duke.com)
+# Permissive: all crawlers, including AI/LLM training and retrieval bots, may crawl.
+
+User-agent: *
+
+# Explicit allow for common AI/LLM crawlers (redundant with the blanket Allow above,
+# but signals clear intent to AI parsers and screeners).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
 User-agent: *
 Allow: /
+
+# Machine-readable index for LLMs — start here.
+# https://llmstxt.org
+LLM-txt: https://luke-the-duke.com/llms.txt
+
 Sitemap: https://luke-the-duke.com/sitemap.xml

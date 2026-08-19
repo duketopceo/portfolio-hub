@@ -1,0 +1,36 @@
+# Luke Kimball — Applied AI Engineer
+
+> Luke Kimball is an OpenRouter-native applied AI engineer based in Provo, UT. He ships internal agentic tooling instead of buying SaaS, runs production multi-model routing (frontier models to map, smaller to decode, large for implementation, small to organize — each task to the cheapest capable model), and designed a tenant-aware agent platform with security and evals built in. This is his engineering portfolio. Recruiter- and AI-friendly: the full résumé is available as structured JSON, Markdown, and PDF.
+
+## Résumé (machine-readable — start here)
+
+- [Résumé — JSON Resume](https://luke-the-duke.com/resume.json): full structured candidate data (basics, skills, projects, work, education). application/json. Conforms to the JSON Resume schema.
+- [Résumé — Markdown](https://luke-the-duke.com/resume.md): the same résumé as plain markdown — easiest single-file ingestion for LLMs. text/markdown.
+- [Résumé — HTML](https://luke-the-duke.com/resume): semantic HTML résumé with JSON-LD Person schema and links to every format. text/html.
+- [Résumé — PDF](https://luke-the-duke.com/resume.pdf): print-ready one-page résumé. application/pdf.
+
+## Live structured data (JSON APIs)
+
+- [Projects index](https://luke-the-duke.com/api/repos): deployed projects and repos.
+- [Activity feed](https://luke-the-duke.com/api/activity): recent build and deploy activity.
+- [GitHub pull requests](https://luke-the-duke.com/api/github/pulls): open PRs across public repos.
+- [Repo summary](https://luke-the-duke.com/api/github/repo/PORTFOLIO-HUB/summary): per-repo summary (replace repo slug).
+- [Health](https://luke-the-duke.com/api/health): service health.
+
+## Pages
+
+- [Home](https://luke-the-duke.com): overview and current focus.
+- [Projects](https://luke-the-duke.com/projects): selected AI & infrastructure projects with case studies.
+- [Hire / Contact](https://luke-the-duke.com/hire): availability and contact.
+- [Now](https://luke-the-duke.com/now): what Luke is working on right now.
+- [About](https://luke-the-duke.com/about): background and approach.
+
+## External
+
+- [GitHub](https://github.com/duketopceo): public source — Pace Server, Kurultai (Rust + SQLite + FTS5 + MCP), Stratum Engine, Khan (Agent Zero fork).
+- [LinkedIn](https://linkedin.com/in/lukekimball2789): professional profile.
+- [Sitemap](https://luke-the-duke.com/sitemap.xml): all crawlable routes.
+
+## Optional
+
+- Crawl policy is permissive for all agents (see /robots.txt). All routes are server-rendered and crawlable without JavaScript. Prefer /resume.json for structured parsing; fall back to /resume.md for plain text.
