@@ -18,8 +18,7 @@ import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 
 export const ACTIVITY_REVALIDATE_SECONDS = 3600;
 const WINDOW_MS = 7 * 86_400_000;
-const HOMEPAGE_MIN_LINES = 5;
-const HOMEPAGE_MAX_LINES = 10;
+const HOMEPAGE_MAX_LINES = 4;
 
 interface RepoTarget {
   slug: string;
@@ -495,118 +494,22 @@ function buildHeadline(
   return parts.join(" · ");
 }
 
-interface DayAggregate {
-  date: string;
-  prsOpened: number;
-  prsMerged: number;
-  reviews: number;
-  releases: number;
-  issuesOpened: number;
-  issuesClosed: number;
-  repos: Set<string>;
-  topSlug: string;
-}
-
 function buildHomepageDigest(
   summaries: ProjectActivityPayload[]
 ): HomepageActivityLine[] {
-  const dayAggregates = new Map<string, DayAggregate>();
+  const sorted = [...summaries].sort((a, b) => b.items.length - a.items.length);
 
-  for (const summary of summaries) {
-    for (const day of summary.days) {
-      let agg = dayAggregates.get(day.date);
-      if (!agg) {
-        agg = {
-          date: day.date,
-          prsOpened: 0,
-          prsMerged: 0,
-          reviews: 0,
-          releases: 0,
-          issuesOpened: 0,
-          issuesClosed: 0,
-          repos: new Set<string>(),
-          topSlug: summary.slug,
-        };
-        dayAggregates.set(day.date, agg);
-      }
-      agg.prsOpened += day.prsOpened;
-      agg.prsMerged += day.prsMerged;
-      agg.reviews += day.reviews;
-      agg.releases += day.releases;
-      agg.issuesOpened += day.issuesOpened;
-      agg.issuesClosed += day.issuesClosed;
-      if (
-        day.prsMerged + day.prsOpened + day.reviews + day.releases > 0
-      ) {
-        agg.repos.add(summary.displayName);
-        agg.topSlug = summary.slug;
-      }
-    }
-  }
-
-  const lines: HomepageActivityLine[] = [];
-
-  const sortedDays = [...dayAggregates.values()].sort((a, b) =>
-    b.date.localeCompare(a.date)
-  );
-
-  for (const day of sortedDays) {
-    const parts: string[] = [];
-    if (day.prsMerged > 0) parts.push(`${day.prsMerged} merged`);
-    if (day.prsOpened > 0) parts.push(`${day.prsOpened} opened`);
-    if (day.reviews > 0) parts.push(`${day.reviews} reviews`);
-    if (day.releases > 0) {
-      parts.push(
-        day.releases === 1 ? "1 release" : `${day.releases} releases`
-      );
-    }
-    if (day.issuesOpened > 0) parts.push(`${day.issuesOpened} started`);
-    if (day.issuesClosed > 0) parts.push(`${day.issuesClosed} finished`);
-    if (parts.length === 0) continue;
-
-    const repoHint =
-      day.repos.size > 1
-        ? ` (${[...day.repos].slice(0, 3).join(", ")}${day.repos.size > 3 ? "…" : ""})`
-        : day.repos.size === 1
-          ? ` (${[...day.repos][0]})`
-          : "";
-
-    lines.push({
-      slug: day.topSlug,
-      displayName: formatShortDate(`${day.date}T12:00:00.000Z`),
-      private: false,
-      line: parts.join(" · ") + repoHint,
-      href: `/projects/${day.topSlug}`,
-    });
-
-    if (lines.length >= HOMEPAGE_MAX_LINES) break;
-  }
-
-  for (const summary of summaries) {
-    if (lines.length >= HOMEPAGE_MAX_LINES) break;
-    const duplicate = lines.some(
-      (l) => l.slug === summary.slug && l.line === summary.headline
-    );
-    if (duplicate) continue;
-    lines.push({
+  const lines: HomepageActivityLine[] = sorted
+    .slice(0, HOMEPAGE_MAX_LINES)
+    .map((summary) => ({
       slug: summary.slug,
       displayName: summary.displayName,
       private: summary.private,
       line: summary.headline,
       href: `/projects/${summary.slug}`,
-    });
-  }
+    }));
 
-  const unique = lines.filter(
-    (line, idx, arr) =>
-      arr.findIndex((l) => l.slug === line.slug && l.line === line.line) === idx
-  );
-
-  if (unique.length >= HOMEPAGE_MIN_LINES) {
-    return unique.slice(0, HOMEPAGE_MAX_LINES);
-  }
-
-  return unique.slice(0, HOMEPAGE_MAX_LINES);
+  return lines.slice(0, HOMEPAGE_MAX_LINES);
 }
 
 export async function getProjectActivityTimeline(

@@ -7,40 +7,40 @@ interface HomeActivityShowcaseProps {
 }
 
 export function HomeActivityShowcase({ data }: HomeActivityShowcaseProps) {
+  const lines = data.lines.slice(0, 4);
+
   return (
-    <div className="activity-strip activity-strip--showcase">
+    <div className="activity-strip activity-strip--digest">
       <div className="activity-strip__label">
         <span className="activity-strip__pulse" aria-hidden />
         Last 7 days
       </div>
-      <div className="activity-strip__list activity-strip__list--showcase">
-        {data.lines.length === 0 ? (
-          <span className="activity-strip__empty">
-            GitHub activity unavailable — curated dossiers below
-          </span>
-        ) : (
-          data.lines.map((line) => (
-            <Link
-              key={line.slug}
-              href={line.href}
-              className="activity-strip__highlight"
-            >
-              <span className="activity-strip__highlight-name">
-                {line.displayName}:
-                {line.private && (
-                  <LockIcon
-                    className="inline w-3 h-3 ml-1 opacity-60"
-                    aria-label="Private repository"
-                  />
-                )}
-              </span>
-              <span className="activity-strip__highlight-text">
-                {line.line}
-              </span>
-            </Link>
-          ))
-        )}
-      </div>
+
+      {lines.length === 0 ? (
+        <p className="activity-strip__empty activity-strip__digest-empty">
+          GitHub activity unavailable — curated dossiers below
+        </p>
+      ) : (
+        <ul className="activity-strip__digest-list">
+          {lines.map((line) => (
+            <li key={`${line.slug}-${line.line}`}>
+              <Link href={line.href} className="activity-strip__digest-line">
+                <span className="activity-strip__digest-repo">
+                  {line.displayName}
+                  {line.private && (
+                    <LockIcon
+                      className="inline w-3 h-3 ml-1 opacity-60"
+                      aria-label="Private repository"
+                    />
+                  )}
+                </span>
+                <span className="activity-strip__digest-text">{line.line}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <span className="activity-strip__meta">
         {data.source === "github" ? "via GitHub App" : data.source}
       </span>

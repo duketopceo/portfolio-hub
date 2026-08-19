@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Cosmic Intelligence · Luke Kimball",
     description:
-      "Engineering portfolio — systems that compound. AI automation, trading, OSINT, and Docker Swarm infrastructure.",
+      "Engineering portfolio — systems that compound. Applied AI, OpenRouter demos, and production infrastructure on Railway.",
     type: "website",
     images: [{ url: "/brand/og-image.png", width: 1200, height: 630 }],
   },

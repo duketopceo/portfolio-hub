@@ -7,12 +7,12 @@ import {
 import { fixtureHomepageActivity } from "./github-activity-fixtures";
 
 describe("github-activity fixtures", () => {
-  it("homepage fixture returns 5–10 featured lines", async () => {
+  it("homepage fixture returns up to 4 featured lines", async () => {
     const data = await getHomepageActivityShowcase({ useFixtures: true });
     expect(data.source).toBe("fixture");
-    expect(data.lines.length).toBeGreaterThanOrEqual(5);
-    expect(data.lines.length).toBeLessThanOrEqual(10);
-    expect(data.lines[0].line).toMatch(/merged|review|release/i);
+    expect(data.lines.length).toBeGreaterThanOrEqual(1);
+    expect(data.lines.length).toBeLessThanOrEqual(4);
+    expect(data.lines[0].line).toMatch(/merged|review|release|PR/i);
   });
 
   it("project fixture for kurultai includes reviews, issues, releases", async () => {

@@ -12,20 +12,6 @@ export function fixtureHomepageActivity(): HomepageActivityPayload {
     lines: [
       {
         slug: "khan",
-        displayName: "Aug 18",
-        private: false,
-        line: "4 merged · 2 reviews · 1 release (Khan, Pace Server)",
-        href: "/projects/khan",
-      },
-      {
-        slug: "kurultai",
-        displayName: "Aug 17",
-        private: false,
-        line: "3 merged · 2 reviews (Kurultai)",
-        href: "/projects/kurultai",
-      },
-      {
-        slug: "khan",
         displayName: "Khan",
         private: true,
         line: "4 PRs merged Aug 18 · 2 reviews · release cut",

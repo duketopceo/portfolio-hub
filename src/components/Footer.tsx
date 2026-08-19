@@ -65,26 +65,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Credits */}
-          <div>
-            <h3 className="cosmic-footer__heading">
-              Credits
-            </h3>
-            <ul className="space-y-1">
-              <li>
-                <a
-                  href="https://www.perplexity.ai/computer"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cosmic-footer__link inline-flex items-center gap-1"
-                >
-                  Created with Perplexity
-                  <ExternalIcon className="w-2.5 h-2.5 opacity-50" />
-                </a>
-              </li>
-            </ul>
-          </div>
-
           {/* Stack */}
           <div>
             <h3 className="cosmic-footer__heading">
@@ -95,7 +75,10 @@ export default function Footer() {
                 Built with Next.js
               </li>
               <li className="cosmic-footer__text">
-                Deployed on Docker Swarm
+                Deployed on Railway
+              </li>
+              <li className="cosmic-footer__text">
+                luke-the-duke.com
               </li>
             </ul>
           </div>
