@@ -12,7 +12,7 @@ Production deploy target for **portfolio-hub** (luke-the-duke.com site). The Rai
 | Region | US West (California) |
 | Replicas | 1 |
 | Private network | `luke-the-duke.railway.internal` (alias: `luke-the-duke`) |
-| Public networking | **None** — no Railway-generated domain, no custom domain, no TCP proxy |
+| Public networking | **luke-the-duke.com** (custom domain on Railway) |
 | Outbound IPv6 | Off |
 
 Recent deploys from `duketopceo` succeed when changes land on the branch Railway watches (typically `main`).
@@ -41,17 +41,11 @@ Set in Railway → **portfolio-hub** → **Variables** (never commit secrets):
 
 Optional: pass `GITHUB_TOKEN` as a **build** variable if you want GitHub data at build time; runtime variables cover ISR refreshes.
 
-## Public access today vs Railway DNS
+## Public access
 
-The service is **Online** on Railway private networking (`luke-the-duke.railway.internal`). **Public networking on Railway is not configured yet** — no generated domain, no custom domain.
+Production is served at **https://luke-the-duke.com** via Railway custom domain + Cloudflare DNS. Push to `main` on the connected branch to deploy.
 
-Luke currently reaches the site via **localhost + tunnel** for development/preview. When ready to cut over **luke-the-duke.com** to Railway:
-
-1. Railway → **portfolio-hub** → **Networking** → add custom domain.
-2. Copy the DNS target Railway displays — do **not** invent Cloudflare records.
-3. Add that record in Cloudflare (or your DNS provider), then confirm TLS in Railway.
-
-As of Aug 2026 the service has **no public endpoint**. To serve `luke-the-duke.com` (or a Railway subdomain) from this service:
+To change or add domains: Railway → **portfolio-hub** → **Networking** → custom domain. Copy DNS targets from the Railway UI into Cloudflare — do not guess CNAME values. See steps below if attaching a new hostname.
 
 1. Railway dashboard → project → **portfolio-hub** → **Settings** → **Networking** (or **Public Networking**).
 2. **Generate domain** — Railway assigns a `*.up.railway.app` hostname for smoke tests, **or**
