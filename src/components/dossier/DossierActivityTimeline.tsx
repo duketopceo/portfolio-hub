@@ -1,8 +1,15 @@
-import Link from "next/link";
+"use client";
+
+import { useMemo, useState } from "react";
 import type { ProjectActivityPayload } from "@/lib/github-activity-types";
-import type { CondensedActivity } from "@/lib/activity-aggregate";
-import { condenseProjectActivity } from "@/lib/activity-aggregate";
+import {
+  ACTIVITY_DEFAULT_RANGE,
+  activityRangeLabel,
+  condenseProjectActivity,
+  type ActivityRangeDays,
+} from "@/lib/activity-aggregate";
 import { ActivityCondensedPanel } from "@/components/activity/ActivityCondensedPanel";
+import { ActivityRangeToggle } from "@/components/activity/ActivityRangeToggle";
 import { LockIcon } from "@/components/Icons";
 import type { EnrichedProject } from "@/lib/types";
 
@@ -16,9 +23,18 @@ export function DossierActivityTimeline({
   activity,
 }: DossierActivityTimelineProps) {
   const isPrivate = project.private;
-  const condensed: CondensedActivity = condenseProjectActivity(activity, {
-    anchorDate: new Date(activity.fetchedAt),
-  });
+  const [rangeDays, setRangeDays] = useState<ActivityRangeDays>(
+    ACTIVITY_DEFAULT_RANGE
+  );
+
+  const condensed = useMemo(
+    () =>
+      condenseProjectActivity(activity, {
+        anchorDate: new Date(activity.fetchedAt),
+        windowDays: rangeDays,
+      }),
+    [activity, rangeDays]
+  );
 
   return (
     <section
@@ -26,15 +42,27 @@ export function DossierActivityTimeline({
       aria-labelledby={`timeline-${project.slug}`}
     >
       <div className="dossier-timeline__head">
-        <h2 id={`timeline-${project.slug}`} className="dossier-timeline__title">
-          GitHub activity
-        </h2>
-        {isPrivate && (
-          <span className="dossier-page__pill dossier-page__pill--muted">
-            <LockIcon className="w-3 h-3" />
-            Private — scrubbed summaries only
-          </span>
-        )}
+        <div className="dossier-timeline__head-main">
+          <h2 id={`timeline-${project.slug}`} className="dossier-timeline__title">
+            GitHub activity
+          </h2>
+          <p className="dossier-timeline__range-label">
+            {activityRangeLabel(rangeDays)} · up to 90d ingested
+          </p>
+        </div>
+        <div className="dossier-timeline__head-actions">
+          <ActivityRangeToggle
+            value={rangeDays}
+            onChange={setRangeDays}
+            id={`activity-range-${project.slug}`}
+          />
+          {isPrivate && (
+            <span className="dossier-page__pill dossier-page__pill--muted">
+              <LockIcon className="w-3 h-3" />
+              Private — scrubbed summaries only
+            </span>
+          )}
+        </div>
       </div>
 
       <ActivityCondensedPanel

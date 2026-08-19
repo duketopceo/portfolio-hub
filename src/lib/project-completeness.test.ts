@@ -3,6 +3,7 @@ import {
   HOMEPAGE_FEATURED_SLUGS,
   getHomepageOrbitProjects,
   getHomepageSecondaryOrbitProjects,
+  resolveOrbitTier,
 } from "./project-completeness";
 import { projectConfigs } from "@/data/projects";
 
@@ -27,6 +28,24 @@ describe("homepage orbit split", () => {
     const featured = new Set<string>(HOMEPAGE_FEATURED_SLUGS);
     expect(secondary.every((p) => !featured.has(p.slug))).toBe(true);
     expect(primary.length + secondary.length).toBe(projectConfigs.length);
+  });
+
+  it("resolveOrbitTier defaults non-featured to secondary", () => {
+    expect(resolveOrbitTier({ slug: "homelab", featured: false })).toBe(
+      "secondary"
+    );
+    expect(resolveOrbitTier({ slug: "khan", featured: true })).toBe(
+      "featured"
+    );
+  });
+
+  it("catalog-only entries are excluded from secondary orbit", () => {
+    const withCatalogOnly = enriched.map((p) =>
+      p.slug === "homelab" ? { ...p, orbitTier: "catalog-only" as const } : p
+    );
+    const secondary = getHomepageSecondaryOrbitProjects(withCatalogOnly);
+    expect(secondary.some((p) => p.slug === "homelab")).toBe(false);
+    expect(secondary.length).toBe(projectConfigs.length - 6);
   });
 
   it("catalog has 28 projects with 5 featured flags", () => {

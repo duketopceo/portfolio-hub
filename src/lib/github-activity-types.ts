@@ -1,6 +1,9 @@
 /** Safe for client — no tokens, raw commit bodies, or private deep-links unless public */
 
-import type { CondensedActivity } from "@/lib/activity-aggregate";
+import type {
+  CondensedActivity,
+  ActivityRangeDays,
+} from "@/lib/activity-aggregate";
 
 export type ActivityEventKind =
   | "pr_opened"
@@ -62,6 +65,9 @@ export interface HomepageRepoActivity {
   private: boolean;
   href: string;
   headline: string;
+  /** Full fetched history (up to 90d) — client condenses by range. */
+  activity: ProjectActivityPayload;
+  /** SSR default view at 7d */
   condensed: CondensedActivity;
 }
 
@@ -70,4 +76,6 @@ export interface HomepageActivityPayload {
   repos: HomepageRepoActivity[];
   fetchedAt: string;
   source: "github" | "fixture" | "empty";
+  historyDays: number;
+  defaultRangeDays: ActivityRangeDays;
 }

@@ -17,6 +17,20 @@ export const projectConfigs: ProjectConfig[] = [
     category: "ai",
     type: "platform",
     featured: true,
+    planetVisual: {
+      size: "xl",
+      shape: "sphere",
+      color: "#A78BFA",
+      rings: [
+        { opacity: 0.38, tilt: -22 },
+        { opacity: 0.22, tilt: 28 },
+      ],
+      moons: [
+        { label: "Temporal", kind: "stack" },
+        { label: "MCP", kind: "stack" },
+        { label: "khanai", kind: "live", href: "https://khanai.app" },
+      ],
+    },
     techStack: [
       "Python",
       "Temporal",
@@ -48,6 +62,17 @@ export const projectConfigs: ProjectConfig[] = [
     category: "ai",
     type: "platform",
     featured: true,
+    planetVisual: {
+      size: "xl",
+      shape: "hex",
+      color: "#A78BFA",
+      rings: [{ opacity: 0.32, tilt: -15 }],
+      moons: [
+        { label: "MCP", kind: "stack" },
+        { label: "SQLite", kind: "stack" },
+        { label: "OpenRouter", kind: "stack" },
+      ],
+    },
     techStack: [
       "Rust",
       "SQLite",
@@ -80,6 +105,20 @@ export const projectConfigs: ProjectConfig[] = [
     category: "ai",
     type: "platform",
     featured: true,
+    planetVisual: {
+      size: "lg",
+      shape: "cube",
+      color: "#A78BFA",
+      rings: [
+        { opacity: 0.35, tilt: -18 },
+        { opacity: 0.18, tilt: 24 },
+      ],
+      moons: [
+        { label: "pacehq", kind: "live", href: "https://pacehq.io" },
+        { label: "Stripe", kind: "stack" },
+        { label: "Grafana", kind: "stack" },
+      ],
+    },
     techStack: [
       "Rust",
       "Axum",
@@ -123,6 +162,16 @@ export const projectConfigs: ProjectConfig[] = [
     category: "ai",
     type: "platform",
     featured: true,
+    planetVisual: {
+      size: "lg",
+      shape: "diamond",
+      color: "#A78BFA",
+      moons: [
+        { label: "Deflect", kind: "subproject" },
+        { label: "Motion", kind: "subproject" },
+        { label: "Caesar", kind: "subproject" },
+      ],
+    },
     techStack: ["OpenRouter", "Guardrails", "Auto Router", "Python", "pytest"],
     private: false,
     highlights: [
@@ -145,6 +194,15 @@ export const projectConfigs: ProjectConfig[] = [
     category: "infra",
     type: "infra",
     featured: false,
+    planetVisual: {
+      size: "md",
+      shape: "hex",
+      color: "#F472B6",
+      moons: [
+        { label: "Traefik", kind: "stack" },
+        { label: "Tailscale", kind: "stack" },
+      ],
+    },
     techStack: ["Docker", "Swarm", "Traefik", "Cloudflare", "Tailscale"],
     private: true,
     highlights: [
@@ -491,6 +549,18 @@ export const projectConfigs: ProjectConfig[] = [
     category: "osint",
     type: "library",
     featured: false,
+    planetVisual: {
+      size: "md",
+      shape: "diamond",
+      color: "#FBBF24",
+      moons: [
+        {
+          label: "omhdb",
+          kind: "live",
+          href: "https://omhdb.luke-the-duke.com/#/",
+        },
+      ],
+    },
     liveUrl: "https://omhdb.luke-the-duke.com/#/",
     demoUrl: "https://omhdb.luke-the-duke.com/#/",
     embeddable: true,
@@ -609,6 +679,14 @@ export const projectConfigs: ProjectConfig[] = [
     category: "apps",
     type: "platform",
     featured: true,
+    planetVisual: {
+      size: "lg",
+      shape: "cube",
+      color: "#34D399",
+      moons: [
+        { label: "stratumhq", kind: "live", href: "https://stratumhq.app" },
+      ],
+    },
     embeddable: false,
     techStack: ["TypeScript", "Next.js", "Docker"],
     private: false,
