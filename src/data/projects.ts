@@ -11,7 +11,7 @@ export const projectConfigs: ProjectConfig[] = [
     repoName: "Khan",
     displayName: "Khan",
     tagline:
-      "Agent harness — Temporal workflows, OpenRouter routing, LiteLLM workers, risk scoring, MCP, Rust CLI",
+      "OpenRouter-native Agent Zero fork — Temporal, LiteLLM workers, risk scoring, MCP, Rust CLI",
     description:
       "Khan is a real agent harness built in a concentrated Aug 7–13 sprint: Temporal orchestration, OpenRouter-backed routing, LiteLLM workers, risk scoring, MCP tool surfaces, and a Rust CLI. Ships alongside khanai.app as the public face of the stack. Plugin-first, secret-first operations with a multi-agent coordination board — not a self-hosted GPU or local inference cluster.",
     category: "ai",
@@ -103,6 +103,28 @@ export const projectConfigs: ProjectConfig[] = [
       "Multi-host production — Hetzner compute, Railway app hosting, Cloudflare edge without a single-vendor lock-in",
       "Grafana-as-code — Treats dashboards and alerts as versioned infrastructure",
     ],
+  },
+  {
+    slug: "openrouter",
+    repoName: "",
+    displayName: "OpenRouter Demos",
+    tagline:
+      "Role-aligned application demos — Deflect, Motion, Bakeoff with eval-driven scoring",
+    description:
+      "Three OpenRouter application demos mapped to hiring roles: Deflect (support classify/deflect/escalate with Guardrails), Motion (GTM inbound → next action with Auto Router and presets), and Bakeoff (provider ops — latency, cost, quality bake-offs with launch-gate pass/fail). Grounded in daily OpenRouter operator workflows; live scores ship as demo repos go public.",
+    category: "ai",
+    type: "platform",
+    featured: true,
+    siteOnly: true,
+    techStack: ["OpenRouter", "Guardrails", "Auto Router", "Evals"],
+    private: false,
+    highlights: [
+      "Deflect — support routing with Guardrails and eval fixtures",
+      "Motion — GTM next-action with Auto Router and presets",
+      "Bakeoff — provider comparison and launch-gate scoring",
+    ],
+    architecture:
+      "OpenRouter routing → Role-specific eval harness → Guardrails / presets → Launch-gate scoring",
   },
   {
     slug: "homelab",
@@ -572,21 +594,19 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "stratum-hq",
     repoName: "stratumhq",
-    displayName: "Stratum",
-    tagline: "Product and platform home for Stratum — shell and roadmap",
+    displayName: "Stratum Engine",
+    tagline: "Stratum product engine — shell and roadmap at stratumhq.app",
     description:
-      "Stratum is the umbrella product surface for related apps and infrastructure. This entry covers the product shell and roadmap; it is not listed as a live deployment.",
+      "Stratum Engine is the umbrella product surface for related apps and infrastructure. The public shell at stratumhq.app may be offline; this dossier stays honest about availability while the roadmap evolves.",
     category: "apps",
     type: "platform",
-    featured: false,
-    liveUrl: "https://stratumhq.app",
-    demoUrl: "https://stratumhq.app",
+    featured: true,
     embeddable: false,
     techStack: ["TypeScript", "Next.js", "Docker"],
     private: false,
     highlights: [
-      "Product shell and roadmap for the Stratum brand surface",
-      "Aligned with the portfolio deployment story",
+      "Product engine and brand shell for the Stratum surface",
+      "Roadmap-aligned infrastructure story",
     ],
   },
   {

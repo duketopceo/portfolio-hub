@@ -29,7 +29,7 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 ### Environment
 
 - Copy `.env.example` to `.env.local` before first run.
-- `GITHUB_TOKEN` is optional. Without it the site still builds and runs; GitHub metadata enrichment (stars, language, last-push dates) will be degraded and `/now` may show empty commit dates.
+- `GITHUB_APP_*` or `GITHUB_TOKEN` optional — see `docs/GITHUB-APP.md`
 - `GITHUB_USER` defaults to `duketopceo` if not set.
 
 ### Known caveats

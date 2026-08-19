@@ -7,25 +7,26 @@ import {
   getAllSlugs,
   getEnrichedProjects,
   fetchReadme,
+  fetchShowcaseMd,
+  enrichProjectActivity,
 } from "@/lib/github";
 import {
   sortPortfolioOrbit,
   getOrbitAdjacent,
 } from "@/lib/project-completeness";
 import { isProjectLive } from "@/lib/deployments";
-import { formatDate, languageColors, catColors } from "@/lib/utils";
+import { formatDate, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
-import {
-  LockIcon,
-  ExternalIcon,
-  CheckIcon,
-} from "@/components/Icons";
+import { openRouterDemos } from "@/data/openrouter-demos";
+import { CheckIcon } from "@/components/Icons";
 import DemoEmbed from "@/components/DemoEmbed";
-import ProjectPreview from "@/components/ProjectPreview";
 import {
   DossierSection,
   ProjectHero,
   DossierFooterNav,
+  DossierServicesTable,
+  DossierActivityStrip,
+  DossierBackendSection,
 } from "@/components/dossier";
 
 export const revalidate = 3600;
@@ -48,6 +49,17 @@ export async function generateMetadata({
   };
 }
 
+function renderShowcaseMarkdown(text: string): string {
+  const escaped = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  return escaped
+    .split(/\n\n+/)
+    .map((p) => `<p>${p.replace(/\n/g, "<br />")}</p>`)
+    .join("");
+}
+
 export default async function ProjectDetailPage({
   params,
 }: {
@@ -58,34 +70,29 @@ export default async function ProjectDetailPage({
   const adjacent = getOrbitAdjacent(allProjects, slug);
   if (!adjacent) notFound();
 
-  const { project, prev: prevProject, next: nextProject } = adjacent;
+  const { project: baseProject, prev: prevProject, next: nextProject } =
+    adjacent;
 
-  const readme = !project.private ? await fetchReadme(project.repoName) : null;
+  const project = await enrichProjectActivity(baseProject);
+
+  const readme =
+    !project.private && !project.siteOnly
+      ? await fetchReadme(project.repoName)
+      : null;
+
+  const showcase =
+    project.private && !project.siteOnly
+      ? await fetchShowcaseMd(project.repoName)
+      : null;
 
   const meta = categoryMeta[project.category];
   const hasDemo = isProjectLive(project);
-  const embedUrl = (project.demoUrl || project.liveUrl) ?? "";
-  const showDemoSection = hasDemo && Boolean(embedUrl) && !project.private;
-  /** Click-to-load iframe only when host allows framing and demo is not marked offline. */
+  const embedUrl = project.liveUrl || project.demoUrl || "";
+  const isExternalEmbed =
+    hasDemo && embedUrl.startsWith("http") && !project.private;
   const useIframeEmbed =
-    showDemoSection &&
-    !project.demoOffline &&
-    project.embeddable === true;
-  const showPreview =
-    !showDemoSection &&
-    (project.architecture ||
-      (project.highlights && project.highlights.length > 0));
-  const demoHint =
-    showDemoSection && !useIframeEmbed
-      ? project.demoOffline
-        ? "Best viewed on the live site — opens in a new tab."
-        : project.embeddable !== true
-          ? "Embedding unavailable for this URL — opens in a new tab."
-          : "Opens in a new tab."
-      : null;
-  const langColor = project.language
-    ? languageColors[project.language] || "#6B7280"
-    : null;
+    isExternalEmbed && !project.demoOffline && project.embeddable === true;
+
   const accentColor = catColors[project.category] || "#2dd4bf";
 
   const relatedProjects = allProjects
@@ -100,68 +107,84 @@ export default async function ProjectDetailPage({
     <article className="dossier-page animate-fade-up" style={pageStyle}>
       <ProjectHero project={project} accentColor={accentColor} meta={meta} />
 
-      {showDemoSection && embedUrl && (
-        <section
-          className="cosmic-page"
-          style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)" }}
-        >
-          <div className="demo-frame">
-            <div className="demo-frame__header">
-              <div className="demo-frame__header-text">
-                <span className="demo-frame__url">
-                  {embedUrl.replace(/^https?:\/\//, "")}
-                </span>
-                {demoHint && (
-                  <span className="demo-frame__hint">{demoHint}</span>
-                )}
-              </div>
-              <a
-                href={embedUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="demo-frame__open"
-              >
-                open ↗
-              </a>
-            </div>
-            <DemoEmbed
-              url={embedUrl}
-              title={project.displayName}
-              embeddable={useIframeEmbed}
-            />
-          </div>
-        </section>
-      )}
-
-      {showPreview && (
-        <section
-          className="cosmic-page"
-          style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)" }}
-        >
-          <ProjectPreview project={project} />
-        </section>
-      )}
+      <div className="cosmic-page dossier-page__activity-wrap">
+        <DossierActivityStrip project={project} />
+      </div>
 
       <div className="cosmic-page dossier-page__two-col">
         <div className="dossier-page__main-stack">
+          <DossierSection
+            title="What it is"
+            id={`dossier-about-${slug}`}
+            surface="glass"
+          >
+            <p className="cosmic-readable">{project.description}</p>
+          </DossierSection>
+
+          <DossierSection
+            title="Backend"
+            id={`dossier-backend-${slug}`}
+            surface="glass"
+          >
+            <DossierBackendSection
+              project={project}
+              accentColor={accentColor}
+            />
+          </DossierSection>
+
+          <DossierSection
+            title="Production services"
+            id={`dossier-services-${slug}`}
+            surface="glass"
+          >
+            <DossierServicesTable slug={slug} />
+          </DossierSection>
+
+          {slug === "openrouter" && (
+            <DossierSection
+              title="Application demos"
+              id={`dossier-demos-${slug}`}
+              surface="glass"
+            >
+              <div className="openrouter-grid openrouter-grid--dossier">
+                {openRouterDemos.map((demo) => (
+                  <article key={demo.slug} className="openrouter-card">
+                    <h3 className="openrouter-card__title">{demo.name}</h3>
+                    <span className="openrouter-card__role">{demo.role}</span>
+                    <p className="openrouter-card__summary">{demo.summary}</p>
+                    <p className="openrouter-card__note">{demo.scoring}</p>
+                  </article>
+                ))}
+              </div>
+              <p className="mt-4">
+                <Link href="/openrouter" className="detail-nav-link">
+                  Full demo showcase →
+                </Link>
+              </p>
+            </DossierSection>
+          )}
+
           {project.private && (
             <div className="dossier-page__private">
               <div className="dossier-classified-banner">
-                <LockIcon className="w-3 h-3" aria-hidden />
-                Restricted · Recruitment dossier
+                Restricted · Recruitment dossier — source not exposed here
               </div>
 
               {project.businessContext && (
                 <div className="dossier-section">
                   <div className="dossier-section__label">Business Context</div>
-                  <p className="dossier-section__body">{project.businessContext}</p>
+                  <p className="dossier-section__body">
+                    {project.businessContext}
+                  </p>
                 </div>
               )}
 
               {project.scopeAndScale && (
                 <div className="dossier-section">
                   <div className="dossier-section__label">Scope &amp; Scale</div>
-                  <p className="dossier-section__body">{project.scopeAndScale}</p>
+                  <p className="dossier-section__body">
+                    {project.scopeAndScale}
+                  </p>
                 </div>
               )}
 
@@ -171,52 +194,19 @@ export default async function ProjectDetailPage({
                     <div className="dossier-section__label">
                       Engineering Decisions
                     </div>
-                    {project.engineeringDecisions.map((d, i) => {
-                      const dashIdx = d.indexOf(" — ");
-                      const decision = dashIdx !== -1 ? d.slice(0, dashIdx) : d;
-                      const rationale =
-                        dashIdx !== -1 ? d.slice(dashIdx + 3) : null;
-                      return (
-                        <div key={i} className="dossier-eng-decision">
-                          <span className="dossier-eng-decision__bullet" />
-                          <span>
-                            <strong
-                              style={{
-                                color: "var(--color-text)",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {decision}
-                            </strong>
-                            {rationale && ` — ${rationale}`}
-                          </span>
-                        </div>
-                      );
-                    })}
+                    {project.engineeringDecisions.map((d, i) => (
+                      <p key={i} className="dossier-section__body">
+                        {d}
+                      </p>
+                    ))}
                   </div>
                 )}
-
-              <div className="dossier-section">
-                <div className="dossier-section__label">Availability</div>
-                <p className="dossier-section__body">
-                  Source code is available upon request for interviews and
-                  technical discussions.
-                </p>
-              </div>
             </div>
           )}
 
-          <DossierSection
-            title="About This Project"
-            id={`dossier-about-${slug}`}
-            surface="glass"
-          >
-            <p className="cosmic-readable">{project.description}</p>
-          </DossierSection>
-
           {project.highlights && project.highlights.length > 0 && (
             <DossierSection
-              title="Key Features"
+              title="Key features"
               id={`dossier-features-${slug}`}
               surface="glass"
             >
@@ -229,37 +219,25 @@ export default async function ProjectDetailPage({
                     >
                       <CheckIcon className="w-3.5 h-3.5" />
                     </span>
-                    <span
-                      style={{
-                        fontSize: "var(--text-xs)",
-                        color: "var(--color-text-muted)",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {h}
-                    </span>
+                    <span className="detail-feature-card__text">{h}</span>
                   </div>
                 ))}
               </div>
             </DossierSection>
           )}
 
-          {project.architecture && (
+          {showcase && (
             <DossierSection
-              title="Architecture"
-              id={`dossier-arch-${slug}`}
+              title="Showcase"
+              id={`dossier-showcase-${slug}`}
               surface="glass"
             >
-              <div className="flex flex-wrap items-center gap-1.5">
-                {project.architecture.split(" → ").map((step, i, arr) => (
-                  <span key={i} className="flex items-center gap-1.5">
-                    <span className="detail-arch-step">{step}</span>
-                    {i < arr.length - 1 && (
-                      <span className="detail-arch-arrow">→</span>
-                    )}
-                  </span>
-                ))}
-              </div>
+              <div
+                className="prose-readme"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(renderShowcaseMarkdown(showcase)),
+                }}
+              />
             </DossierSection>
           )}
 
@@ -278,172 +256,32 @@ export default async function ProjectDetailPage({
         </div>
 
         <aside className="dossier-page__aside space-y-6">
-          {showDemoSection && (project.liveUrl || project.demoUrl) && (
-            <a
-              href={project.liveUrl || project.demoUrl || embedUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-card p-4 block transition-colors group"
-              style={{
-                textDecoration: "none",
-                border: "1px solid var(--color-accent-subtle)",
-              }}
-            >
-              <div
-                className="flex items-center gap-2 mb-1"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "10px",
-                  fontWeight: 500,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-live)",
-                }}
-              >
-                <span
-                  className="w-1.5 h-1.5 rounded-full animate-pulse"
-                  style={{ background: "var(--color-live)" }}
-                />
-                Live Application
-              </div>
-              <div
-                className="flex items-center gap-1.5 group-hover:text-[var(--color-accent)]"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-text)",
-                  transition: "color 150ms",
-                }}
-              >
-                {(project.liveUrl || project.demoUrl || embedUrl)
-                  .replace(/^https?:\/\//, "")
-                  .replace(/\/$/, "")}
-                <ExternalIcon className="w-3 h-3 opacity-50" />
-              </div>
-            </a>
-          )}
-
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-card p-4 block transition-colors group"
-              style={{
-                textDecoration: "none",
-                border: "1px solid var(--color-accent-subtle)",
-              }}
-            >
-              <div
-                className="flex items-center gap-2 mb-1"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "10px",
-                  fontWeight: 500,
-                  textTransform: "uppercase" as const,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-accent)",
-                }}
-              >
-                Source
-              </div>
-              <div
-                className="flex items-center gap-1.5 group-hover:text-[var(--color-accent)]"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--text-sm)",
-                  color: "var(--color-text)",
-                  transition: "color 150ms",
-                }}
-              >
-                {project.githubUrl.replace(/^https?:\/\//, "")}
-                <ExternalIcon className="w-3 h-3 opacity-50" />
-              </div>
-            </a>
-          )}
-
-          <div className="glass-card p-4">
-            <h2 className="detail-section-label">Tech Stack</h2>
-            <div className="flex flex-wrap gap-1.5">
-              {project.techStack.map((tech) => (
-                <span key={tech} className="detail-tech-chip">
-                  {tech}
-                </span>
-              ))}
+          {project.lastUpdated && (
+            <div className="glass-card p-4">
+              <h2 className="detail-section-label">Last activity</h2>
+              <p className="detail-meta-value">
+                {formatDate(project.lastUpdated)}
+              </p>
             </div>
-          </div>
-
-          <div className="glass-card p-4 space-y-3">
-            {project.language && (
-              <div className="detail-meta-row">
-                <div className="detail-meta-label">Language</div>
-                <div className="detail-meta-value flex items-center gap-1.5">
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: langColor || "#6B7280" }}
-                  />
-                  {project.language}
-                </div>
-              </div>
-            )}
-            {project.lastUpdated && (
-              <div className="detail-meta-row">
-                <div className="detail-meta-label">Updated</div>
-                <div className="detail-meta-value">
-                  {formatDate(project.lastUpdated)}
-                </div>
-              </div>
-            )}
-            {project.stars > 0 && (
-              <div className="detail-meta-row">
-                <div className="detail-meta-label">Stars</div>
-                <div
-                  className="detail-meta-value"
-                  style={{ color: "var(--color-accent)" }}
-                >
-                  {project.stars}
-                </div>
-              </div>
-            )}
-            <div className="detail-meta-row">
-              <div className="detail-meta-label">Type</div>
-              <div className="detail-meta-value capitalize">{project.type}</div>
-            </div>
-          </div>
+          )}
 
           {relatedProjects.length > 0 && (
             <div className="glass-card p-4">
-              <h2 className="detail-section-label">Related Projects</h2>
+              <h2 className="detail-section-label">Related projects</h2>
               <div className="space-y-1.5">
                 {relatedProjects.map((rp) => (
                   <Link
                     key={rp.slug}
                     href={`/projects/${rp.slug}`}
-                    className="flex items-center gap-2 py-1.5 px-2 -mx-1 rounded-md transition-colors hover:bg-[var(--glass-bg)]"
-                    style={{
-                      textDecoration: "none",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "11px",
-                    }}
+                    className="dossier-related-link"
                   >
                     <span
                       className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                       style={{ background: accentColor }}
                     />
-                    <span style={{ color: "var(--color-text-muted)" }}>
-                      {rp.displayName}
-                    </span>
+                    <span>{rp.displayName}</span>
                     {isProjectLive(rp) && (
-                      <span
-                        className="ml-auto"
-                        style={{
-                          fontSize: "9px",
-                          color: "var(--color-live)",
-                          opacity: 0.7,
-                        }}
-                      >
-                        live
-                      </span>
+                      <span className="dossier-related-link__live">live</span>
                     )}
                   </Link>
                 ))}
@@ -452,6 +290,23 @@ export default async function ProjectDetailPage({
           )}
         </aside>
       </div>
+
+      {useIframeEmbed && embedUrl && (
+        <section className="cosmic-page dossier-page__demo">
+          <div className="demo-frame">
+            <div className="demo-frame__header">
+              <span className="demo-frame__url">
+                {embedUrl.replace(/^https?:\/\//, "")}
+              </span>
+            </div>
+            <DemoEmbed
+              url={embedUrl}
+              title={project.displayName}
+              embeddable
+            />
+          </div>
+        </section>
+      )}
 
       <DossierFooterNav prev={prevProject} next={nextProject} />
     </article>

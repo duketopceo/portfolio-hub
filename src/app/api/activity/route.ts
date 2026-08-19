@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
+import { getGithubAccessToken } from "@/lib/github-app";
+import { GITHUB_ACCOUNT_LOGIN } from "@/lib/github-constants";
 
 export const revalidate = 300;
-
-const GITHUB_API = "https://api.github.com";
-const GITHUB_USER = process.env.GITHUB_USER || "duketopceo";
-const TOKEN = process.env.GITHUB_TOKEN;
 
 interface GitHubPushEvent {
   id: string;
@@ -26,34 +24,38 @@ export interface ActivityEvent {
   timestamp: string;
 }
 
-function authHeaders(): HeadersInit {
+async function authHeaders(): Promise<HeadersInit> {
   const h: HeadersInit = {
     Accept: "application/vnd.github.v3+json",
     "User-Agent": "portfolio-hub",
   };
-  if (TOKEN) {
-    h.Authorization = `Bearer ${TOKEN}`;
+  const token = await getGithubAccessToken();
+  if (token) {
+    h.Authorization = `Bearer ${token}`;
   }
   return h;
 }
 
 export async function GET() {
   try {
-    const primaryUrl = TOKEN
+    const token = await getGithubAccessToken();
+    const GITHUB_USER = GITHUB_ACCOUNT_LOGIN;
+    const GITHUB_API = "https://api.github.com";
+    const primaryUrl = token
       ? `${GITHUB_API}/users/${GITHUB_USER}/events?per_page=50`
       : `${GITHUB_API}/users/${GITHUB_USER}/events/public?per_page=50`;
 
     let res = await fetch(primaryUrl, {
-      headers: authHeaders(),
+      headers: await authHeaders(),
       next: { revalidate: 300 },
       signal: AbortSignal.timeout(10_000),
     });
 
-    if (!res.ok && TOKEN) {
+    if (!res.ok && token) {
       res = await fetch(
         `${GITHUB_API}/users/${GITHUB_USER}/events/public?per_page=50`,
         {
-          headers: authHeaders(),
+          headers: await authHeaders(),
           next: { revalidate: 300 },
           signal: AbortSignal.timeout(10_000),
         }

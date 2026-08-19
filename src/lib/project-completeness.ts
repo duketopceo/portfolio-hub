@@ -22,11 +22,13 @@ import { isProjectLive } from "@/lib/deployments";
 /** Forced front-runner in orbit + dossier prev/next order. */
 export const PORTFOLIO_LEAD_SLUG = "kurultai";
 
-/** Homepage solar orbit — lead systems only; full catalog stays on /projects. */
+/** Homepage solar orbit — top 5 featured systems (fixed order). */
 export const HOMEPAGE_FEATURED_SLUGS = [
   "khan",
   "kurultai",
   "pace-server",
+  "openrouter",
+  "stratum-hq",
 ] as const;
 
 const MS_DAY = 86_400_000;

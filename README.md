@@ -107,7 +107,7 @@ The **`portfolio-hub`** service is already connected to this GitHub repo. Mergin
 | Config in repo | `railway.json` + `Dockerfile` |
 | Health check | `/api/health` |
 | Private DNS | `luke-the-duke.railway.internal` |
-| Public URL | Not configured yet — see [docs/RAILWAY.md](docs/RAILWAY.md) to attach a Railway or custom domain |
+| Public URL | Not on Railway yet — reachable via **localhost + tunnel** today; attach custom domain in Railway when ready (see below) |
 
 **Variables** (Railway dashboard → **portfolio-hub** → **Variables**):
 

@@ -33,12 +33,23 @@ Set in Railway → **portfolio-hub** → **Variables** (never commit secrets):
 
 | Variable | Required | Notes |
 | --- | --- | --- |
-| `GITHUB_TOKEN` | Optional | Private repo metadata + `/now` commit dates |
+| `GITHUB_TOKEN` | Optional fallback | PAT if GitHub App not configured |
 | `GITHUB_USER` | Optional | Defaults to `duketopceo` |
+| `GITHUB_APP_ID` | Optional (preferred) | See [GITHUB-APP.md](./GITHUB-APP.md) |
+| `GITHUB_APP_INSTALLATION_ID` | With App | Installation on duketopceo |
+| `GITHUB_APP_PRIVATE_KEY` | With App | PEM private key |
 
-Optional: pass `GITHUB_TOKEN` as a **build** variable if you want GitHub data at build time; runtime variable covers ISR refreshes.
+Optional: pass `GITHUB_TOKEN` as a **build** variable if you want GitHub data at build time; runtime variables cover ISR refreshes.
 
-## Attach a public or custom domain
+## Public access today vs Railway DNS
+
+The service is **Online** on Railway private networking (`luke-the-duke.railway.internal`). **Public networking on Railway is not configured yet** — no generated domain, no custom domain.
+
+Luke currently reaches the site via **localhost + tunnel** for development/preview. When ready to cut over **luke-the-duke.com** to Railway:
+
+1. Railway → **portfolio-hub** → **Networking** → add custom domain.
+2. Copy the DNS target Railway displays — do **not** invent Cloudflare records.
+3. Add that record in Cloudflare (or your DNS provider), then confirm TLS in Railway.
 
 As of Aug 2026 the service has **no public endpoint**. To serve `luke-the-duke.com` (or a Railway subdomain) from this service:
 
