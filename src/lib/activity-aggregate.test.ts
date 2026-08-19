@@ -3,6 +3,7 @@ import type { ProjectActivityPayload } from "@/lib/github-activity-types";
 import {
   buildDaySeries,
   condenseProjectActivity,
+  filterActivityByWindow,
   formatTotalsLine,
 } from "./activity-aggregate";
 
@@ -150,12 +151,67 @@ describe("condenseProjectActivity", () => {
           items: [],
         },
       ],
-      anchor
+      anchor,
+      7
     );
     expect(series).toHaveLength(7);
     const aug18 = series.find((d) => d.date === "2026-08-18");
     expect(aug18?.merged).toBe(4);
     expect(series[0].merged).toBe(0);
+  });
+
+  it("filterActivityByWindow trims items outside range", () => {
+    const payload = makePayload({
+      items: [
+        {
+          id: "old",
+          kind: "pr_merged",
+          at: "2026-05-01T10:00:00.000Z",
+          label: "PR #1 merged",
+          ref: "1",
+        },
+        {
+          id: "new",
+          kind: "pr_merged",
+          at: "2026-08-18T10:00:00.000Z",
+          label: "PR #2 merged",
+          ref: "2",
+        },
+      ],
+      days: [
+        {
+          date: "2026-05-01",
+          prsOpened: 0,
+          prsMerged: 1,
+          reviews: 0,
+          releases: 0,
+          issuesOpened: 0,
+          issuesClosed: 0,
+          items: [],
+        },
+        {
+          date: "2026-08-18",
+          prsOpened: 0,
+          prsMerged: 1,
+          reviews: 0,
+          releases: 0,
+          issuesOpened: 0,
+          issuesClosed: 0,
+          items: [],
+        },
+      ],
+    });
+
+    const scoped = filterActivityByWindow(payload, 7, anchor);
+    expect(scoped.items).toHaveLength(1);
+    expect(scoped.items[0].ref).toBe("2");
+    expect(scoped.days).toHaveLength(1);
+  });
+
+  it("buildDaySeries uses weekly buckets for 90d", () => {
+    const series = buildDaySeries([], anchor, 90);
+    expect(series.length).toBeGreaterThanOrEqual(12);
+    expect(series.length).toBeLessThanOrEqual(14);
   });
 
   it("formatTotalsLine summarizes counts", () => {

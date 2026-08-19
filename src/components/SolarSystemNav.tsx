@@ -11,6 +11,7 @@ import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
+import { PlanetNode } from "@/components/planet/PlanetNode";
 
 /** Ellipse radii (rem) — widen slightly when orbit is crowded */
 function useOrbitRadiiRem(count: number) {
@@ -41,7 +42,6 @@ interface SolarSystemNavProps {
 
 export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
   const [focusIndex, setFocusIndex] = useState(0);
-  /** +1 = next (card enters from right), -1 = prev (from left) — drives 3D snap */
   const [flipDir, setFlipDir] = useState(1);
   const n = projects.length;
   const { rx, ry } = useOrbitRadiiRem(n);
@@ -67,7 +67,6 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
     [n]
   );
 
-  /** Orbit hover / keyboard: pick shortest path for card flip direction */
   const moveFocusTo = useCallback(
     (i: number) => {
       setFocusIndex((prev) => {
@@ -118,8 +117,9 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
           Featured systems
         </h2>
         <p className="solar-system__hint">
-          Top five worlds in the main orbit — arrow keys or ‹ › to cycle. Click a
-          planet or the dossier card for the full project page.
+          Top five worlds in the main orbit — arrow keys or ‹ › to cycle. Each
+          planet reflects scope, stack, and live surfaces. Click for the full
+          dossier.
         </p>
       </div>
 
@@ -163,7 +163,6 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
           {projects.map((p, i) => {
             const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
             const isFocused = i === safeFocusIndex;
-            const c = catColors[p.category] || "#2DD4BF";
             return (
               <div
                 key={p.slug}
@@ -173,17 +172,16 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
                   "--planet-index": i,
                 } as React.CSSProperties}
               >
-                <Link
+                <PlanetNode
+                  project={p}
+                  tier="primary"
                   href={`/projects/${p.slug}`}
-                  className={`solar-planet${isFocused ? " solar-planet--focused" : ""}`}
-                  style={{ "--planet-accent": c } as React.CSSProperties}
+                  focused={isFocused}
+                  index={i}
                   onMouseEnter={() => moveFocusTo(i)}
                   onFocus={() => moveFocusTo(i)}
                   tabIndex={isFocused ? 0 : -1}
-                >
-                  <span className="solar-planet__dot" aria-hidden />
-                  <span className="solar-planet__label">{p.displayName}</span>
-                </Link>
+                />
               </div>
             );
           })}

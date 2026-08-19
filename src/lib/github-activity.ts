@@ -2,6 +2,8 @@ import { projectConfigs } from "@/data/projects";
 import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
 import { scrubActivityText, scrubBranchRef } from "@/lib/activity-scrubber";
 import {
+  ACTIVITY_DEFAULT_RANGE,
+  ACTIVITY_HISTORY_DAYS,
   condenseProjectActivity,
   formatTotalsLine,
 } from "@/lib/activity-aggregate";
@@ -22,8 +24,11 @@ import { getGithubAccessToken } from "@/lib/github-app";
 import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 
 export const ACTIVITY_REVALIDATE_SECONDS = 3600;
-const WINDOW_MS = 7 * 86_400_000;
+const MS_DAY = 86_400_000;
+const HISTORY_MS = ACTIVITY_HISTORY_DAYS * MS_DAY;
 const HOMEPAGE_MAX_LINES = 4;
+const MAX_CLOSED_PULL_PAGES = 4;
+const MAX_REVIEW_PRS = 25;
 
 interface RepoTarget {
   slug: string;
@@ -105,7 +110,7 @@ async function ghGet<T>(path: string): Promise<T | null> {
         "User-Agent": "portfolio-hub",
       },
       next: { revalidate: ACTIVITY_REVALIDATE_SECONDS },
-      signal: AbortSignal.timeout(12_000),
+      signal: AbortSignal.timeout(18_000),
     });
     if (!res.ok) return null;
     return (await res.json()) as T;
@@ -137,15 +142,39 @@ function publicUrl(
   return htmlUrl;
 }
 
-async function fetchPulls(repoName: string): Promise<GhPull[]> {
+async function fetchPulls(
+  repoName: string,
+  sinceMs: number
+): Promise<GhPull[]> {
   const open =
     (await ghGet<GhPull[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=open&sort=updated&direction=desc&per_page=20`
+      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=open&sort=updated&direction=desc&per_page=50`
     )) ?? [];
-  const closed =
-    (await ghGet<GhPull[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=closed&sort=updated&direction=desc&per_page=30`
-    )) ?? [];
+
+  const closed: GhPull[] = [];
+  for (let page = 1; page <= MAX_CLOSED_PULL_PAGES; page++) {
+    const batch =
+      (await ghGet<GhPull[]>(
+        `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=closed&sort=updated&direction=desc&per_page=100&page=${page}`
+      )) ?? [];
+    if (batch.length === 0) break;
+    closed.push(...batch);
+    const oldest = batch[batch.length - 1];
+    if (
+      oldest &&
+      new Date(oldest.updated_at).getTime() < sinceMs &&
+      batch.length === 100
+    ) {
+      continue;
+    }
+    if (
+      oldest &&
+      new Date(oldest.updated_at).getTime() < sinceMs
+    ) {
+      break;
+    }
+  }
+
   const seen = new Set<number>();
   return [...open, ...closed].filter((p) => {
     if (seen.has(p.number)) return false;
@@ -157,7 +186,7 @@ async function fetchPulls(repoName: string): Promise<GhPull[]> {
 async function fetchReleases(repoName: string): Promise<GhRelease[]> {
   return (
     (await ghGet<GhRelease[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/releases?per_page=15`
+      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/releases?per_page=30`
     )) ?? []
   );
 }
@@ -165,7 +194,7 @@ async function fetchReleases(repoName: string): Promise<GhRelease[]> {
 async function fetchIssues(repoName: string, sinceIso: string): Promise<GhIssue[]> {
   const raw =
     (await ghGet<GhIssue[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/issues?state=all&since=${encodeURIComponent(sinceIso)}&sort=updated&direction=desc&per_page=30`
+      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/issues?state=all&since=${encodeURIComponent(sinceIso)}&sort=updated&direction=desc&per_page=100`
     )) ?? [];
   return raw.filter((i) => !i.pull_request);
 }
@@ -225,7 +254,7 @@ async function buildRepoActivity(
 ): Promise<ProjectActivityPayload | null> {
   const sinceIso = new Date(sinceMs).toISOString();
   const [pulls, releases, issues] = await Promise.all([
-    fetchPulls(target.repoName),
+    fetchPulls(target.repoName, sinceMs),
     fetchReleases(target.repoName),
     fetchIssues(target.repoName, sinceIso),
   ]);
@@ -242,24 +271,23 @@ async function buildRepoActivity(
   const items: ActivityTimelineItem[] = [];
   const dayMap = new Map<string, ActivityDayBucket>();
 
-  let weekMerged = 0;
-  let weekOpened = 0;
-  let weekReviews = 0;
-  let weekReleases = 0;
-  let weekIssuesOpened = 0;
-  let weekIssuesClosed = 0;
+  let periodMerged = 0;
+  let periodOpened = 0;
+  let periodReviews = 0;
+  let periodReleases = 0;
+  let periodIssuesOpened = 0;
+  let periodIssuesClosed = 0;
 
   const reviewFetchTargets = pulls.filter((pr) => {
     const openedInWindow = inWindow(pr.created_at, sinceMs);
     const mergedInWindow = pr.merged_at && inWindow(pr.merged_at, sinceMs);
     const closedInWindow =
       pr.closed_at && inWindow(pr.closed_at, sinceMs) && !pr.merged_at;
-    const updatedInWindow = inWindow(pr.updated_at, sinceMs);
-    return openedInWindow || mergedInWindow || closedInWindow || updatedInWindow;
+    return openedInWindow || mergedInWindow || closedInWindow;
   });
 
   const reviewResults = await Promise.all(
-    reviewFetchTargets.slice(0, 15).map(async (pr) => ({
+    reviewFetchTargets.slice(0, MAX_REVIEW_PRS).map(async (pr) => ({
       number: pr.number,
       reviews: await fetchReviews(target.repoName, pr.number),
     }))
@@ -278,7 +306,7 @@ async function buildRepoActivity(
     if (!mergedInWindow && !openedInWindow && !closedInWindow) continue;
 
     if (openedInWindow) {
-      weekOpened++;
+      periodOpened++;
       const dk = dayKey(pr.created_at);
       const bucket = bumpDay(dayMap, dk);
       bucket.prsOpened++;
@@ -298,7 +326,7 @@ async function buildRepoActivity(
     }
 
     if (mergedInWindow) {
-      weekMerged++;
+      periodMerged++;
       const dk = dayKey(pr.merged_at!);
       const bucket = bumpDay(dayMap, dk);
       bucket.prsMerged++;
@@ -345,7 +373,7 @@ async function buildRepoActivity(
       ) {
         continue;
       }
-      weekReviews++;
+      periodReviews++;
       const dk = dayKey(review.submitted_at);
       const bucket = bumpDay(dayMap, dk);
       bucket.reviews++;
@@ -369,7 +397,7 @@ async function buildRepoActivity(
       issue.closed_at && inWindow(issue.closed_at, sinceMs);
 
     if (openedInWindow) {
-      weekIssuesOpened++;
+      periodIssuesOpened++;
       const dk = dayKey(issue.created_at);
       const bucket = bumpDay(dayMap, dk);
       bucket.issuesOpened++;
@@ -388,7 +416,7 @@ async function buildRepoActivity(
     }
 
     if (closedInWindow) {
-      weekIssuesClosed++;
+      periodIssuesClosed++;
       const dk = dayKey(issue.closed_at!);
       const bucket = bumpDay(dayMap, dk);
       bucket.issuesClosed++;
@@ -409,7 +437,7 @@ async function buildRepoActivity(
 
   for (const rel of releases) {
     if (!rel.published_at || !inWindow(rel.published_at, sinceMs)) continue;
-    weekReleases++;
+    periodReleases++;
     const dk = dayKey(rel.published_at);
     const bucket = bumpDay(dayMap, dk);
     bucket.releases++;
@@ -431,12 +459,12 @@ async function buildRepoActivity(
   items.sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
 
   const headline = buildHeadline(
-    weekMerged,
-    weekOpened,
-    weekReviews,
-    weekReleases,
-    weekIssuesOpened,
-    weekIssuesClosed,
+    periodMerged,
+    periodOpened,
+    periodReviews,
+    periodReleases,
+    periodIssuesOpened,
+    periodIssuesClosed,
     items
   );
 
@@ -473,7 +501,7 @@ function buildHeadline(
         `${merged} PR${merged !== 1 ? "s" : ""} merged ${formatShortDate(latestMerge.at)}`
       );
     } else {
-      parts.push(`${merged} PR${merged !== 1 ? "s" : ""} merged this week`);
+      parts.push(`${merged} PR${merged !== 1 ? "s" : ""} merged recently`);
     }
   } else if (opened > 0) {
     const latest = items.find((i) => i.kind === "pr_opened");
@@ -495,7 +523,7 @@ function buildHeadline(
   if (issuesClosed > 0) {
     parts.push(`${issuesClosed} finished`);
   }
-  if (parts.length === 0) return "Quiet week — curated dossier below";
+  if (parts.length === 0) return "Quiet period — curated dossier below";
   return parts.join(" · ");
 }
 
@@ -505,8 +533,10 @@ function buildHomepageRepos(
   const sorted = [...summaries].sort((a, b) => b.items.length - a.items.length);
 
   return sorted.slice(0, HOMEPAGE_MAX_LINES).map((summary) => {
+    const anchorDate = new Date(summary.fetchedAt);
     const condensed = condenseProjectActivity(summary, {
-      anchorDate: new Date(summary.fetchedAt),
+      anchorDate,
+      windowDays: ACTIVITY_DEFAULT_RANGE,
     });
     return {
       slug: summary.slug,
@@ -514,6 +544,7 @@ function buildHomepageRepos(
       private: summary.private,
       href: `/projects/${summary.slug}`,
       headline: summary.headline,
+      activity: summary,
       condensed,
     };
   });
@@ -526,7 +557,7 @@ function buildHomepageDigest(
     slug: repo.slug,
     displayName: repo.displayName,
     private: repo.private,
-    line: formatTotalsLine(repo.condensed.totals) || repo.headline,
+    line: formatTotalsLine(repo.condensed.totals, ACTIVITY_DEFAULT_RANGE) || repo.headline,
     href: repo.href,
   }));
 }
@@ -553,7 +584,7 @@ export async function getProjectActivityTimeline(
     };
   }
 
-  const sinceMs = Date.now() - WINDOW_MS;
+  const sinceMs = Date.now() - HISTORY_MS;
   const activity = await buildRepoActivity(target, sinceMs);
   if (activity) return activity;
 
@@ -580,7 +611,7 @@ export async function getHomepageActivityShowcase(options?: {
     return fixtureHomepageActivity();
   }
 
-  const sinceMs = Date.now() - WINDOW_MS;
+  const sinceMs = Date.now() - HISTORY_MS;
   const targets = featuredRepoTargets();
   const summaries: ProjectActivityPayload[] = [];
 
@@ -602,6 +633,8 @@ export async function getHomepageActivityShowcase(options?: {
         repos: [],
         fetchedAt: new Date().toISOString(),
         source: "empty",
+        historyDays: ACTIVITY_HISTORY_DAYS,
+        defaultRangeDays: ACTIVITY_DEFAULT_RANGE,
       };
     }
     return {
@@ -609,6 +642,8 @@ export async function getHomepageActivityShowcase(options?: {
       repos: [],
       fetchedAt: new Date().toISOString(),
       source: "empty",
+      historyDays: ACTIVITY_HISTORY_DAYS,
+      defaultRangeDays: ACTIVITY_DEFAULT_RANGE,
     };
   }
 
@@ -620,6 +655,8 @@ export async function getHomepageActivityShowcase(options?: {
     repos,
     fetchedAt: new Date().toISOString(),
     source: "github",
+    historyDays: ACTIVITY_HISTORY_DAYS,
+    defaultRangeDays: ACTIVITY_DEFAULT_RANGE,
   };
 }
 

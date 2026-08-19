@@ -1,297 +1,127 @@
-# Luke Kimball — Cosmic Intelligence
+# Cosmic Intelligence — portfolio-hub
 
-Personal engineering portfolio at **[luke-the-duke.com](https://luke-the-duke.com)**. I build systems that compound — AI infrastructure, open-source tools, and the operational layer behind them.
+**Live site:** [luke-the-duke.com](https://luke-the-duke.com)  
+**Repo:** Next.js 16 app that powers Luke Kimball’s personal engineering portfolio.
 
-I am Luke Kimball, a systems builder, currently an IT Support and Data Specialist at Bartlett Roofing. This site is how hiring managers see the work: curated projects, dossiers, and a hire conversation.
+I build OpenRouter-native systems that compound — agent harnesses, knowledge layers, production platforms, and the ops layer behind them. This site is how hiring managers and collaborators see that work: curated dossiers, live activity, and a direct hire path.
 
-**Hire:** [luke-the-duke.com/hire](https://luke-the-duke.com/hire)
+| Link | Purpose |
+|------|---------|
+| [luke-the-duke.com](https://luke-the-duke.com) | Homepage — orbits + activity |
+| [/hire](https://luke-the-duke.com/hire) | Hire conversation |
+| [/resume](https://luke-the-duke.com/resume) | Web résumé |
+| [/projects](https://luke-the-duke.com/projects) | Full catalog grid |
 
-This repository is the Next.js app behind that site (`portfolio-hub`). Architecture, local setup, and Swarm notes follow below.
+---
 
-**Current release:** `v3.0.0` (see [CHANGELOG.md](CHANGELOG.md)). Docker: `ghcr.io/duketopceo/portfolio-hub:latest` and `:3.0.0` when the `v3.0.0` tag is pushed.
+## What Cosmic Intelligence is
 
-**Browser tab titles** lead with **Cosmic Intelligence** (see `layout.tsx` `title` / `title.template`). The same name is the in-app product brand (header, footer, hero).
+**Cosmic Intelligence** is the brand and design system for this portfolio — deep-space dark UI, teal accent, modular “worlds” on orbital rails, and dossier pages for each repository. It is the canonical hub; other projects in the ecosystem link back here.
 
-## Architecture
+The homepage is not a flat project list. It is a **solar map**:
 
-```
-portfolio-hub/
-├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── page.tsx            # / — Landing: hero, featured, categories
-│   │   ├── projects/
-│   │   │   ├── page.tsx        # /projects — All projects with filters
-│   │   │   └── [slug]/page.tsx # /projects/:slug — Project detail + README
-│   │   ├── about/page.tsx      # /about — who Luke is
-│   │   ├── contact/page.tsx    # /contact — mailto
-│   │   ├── hire/page.tsx       # /hire — hire intent + mailto
-│   │   ├── now/page.tsx        # /now — Recent activity + optional Spotify embed
-│   │   └── api/repos/route.ts  # /api/repos — JSON API
-│   ├── components/             # React components
-│   │   ├── dossier/            # Shared /projects/[slug] layout (hero, sections, footer nav)
-│   │   ├── Header.tsx          # Sticky nav (Cosmic Intelligence — dark theme only)
-│   │   ├── Footer.tsx
-│   │   ├── ProjectCard.tsx     # Reusable project card
-│   │   └── FilterBar.tsx       # Category/sort filter controls
-│   ├── data/
-│   │   ├── projects.ts         # Master project config (curated list)
-│   │   └── deployments.ts      # Subdomain + live URL mapping
-│   └── lib/
-│       ├── github.ts           # GitHub API integration + ISR caching
-│       ├── types.ts            # TypeScript interfaces
-│       └── utils.ts            # Date formatting, colors, helpers
-├── Dockerfile                  # Multi-stage Docker build
-├── docker-compose.yml          # Swarm + Traefik deployment
-├── scripts/                    # cluster-deploy.sh, diagnose-502.sh, audit-cloudflare.sh
-└── .github/workflows/deploy.yml # CI/CD pipeline
-```
+- **Primary orbit** — five featured systems (Khan, Kurultai, Pace Server, OpenRouter Demos, Stratum Engine)
+- **Secondary orbit** — ~20 smaller catalog worlds on offset double rings (same planet module, scaled down)
+- **Activity strip** — GitHub App history ingested (~90 days), displayed as condensed charts + grouped PRs with a **7d / 30d / 90d** range toggle
 
-## Layout (content rail)
+Each planet is a **modular visual** (size, shape, color, optional rings and moons) driven from catalog data — not identical dots.
 
-Header, footer, and main pages share the **`.cosmic-page`** rail from `src/app/globals.css`:
+---
 
-| CSS variable | Purpose |
-| --- | --- |
-| `--cosmic-page-max` | `min(90rem, 100%)` — wider than legacy 64rem, capped on ultra-wide |
-| `--cosmic-page-pad-x` | `clamp(1rem, 4vw, 3rem)` — fluid horizontal inset |
-| `--cosmic-page-pad-y` | `clamp(2.5rem, 5vw, 5rem)` — optional vertical rhythm |
+## Catalog & orbits
 
-Long copy uses **`.cosmic-readable`** or measured **`.prose-readme`** (`max-width: min(65ch, 100%)`).
+All projects live in **`src/data/projects.ts`** — the single source of truth. Nothing is auto-discovered from GitHub.
 
-## How Repo Discovery Works
+| Tier | Homepage | How to set |
+|------|----------|------------|
+| **Featured** | Primary orbit (5) | `featured: true` + listed in `HOMEPAGE_FEATURED_SLUGS` |
+| **Secondary** | Catalog orbit (~20) | Default for every other catalog entry |
+| **Catalog-only** | Grid + dossier only | `orbitTier: "catalog-only"` |
 
-1. **Curated, not automatic.** Only repos listed in `src/data/projects.ts` appear on the site. This keeps the portfolio clean — no empty repos or experiments.
+**Adding a repo:** follow **[docs/PROJECT-CATALOG-SOP.md](docs/PROJECT-CATALOG-SOP.md)** — slug, dossier copy, optional `planetVisual`, deployments, privacy rules.
 
-2. **GitHub API enrichment.** At build time (and via ISR every hour), the site fetches real-time metadata for each configured repo:
-   - Language, stars, forks, last push date
-   - README content (for public repos)
-   - Private repos show curated metadata only (no source code exposed)
+**Orbit helpers:** `src/lib/project-completeness.ts` (featured list, secondary sort) · `src/lib/planet-visual.ts` (planet appearance) · `src/components/planet/PlanetNode.tsx` (shared renderer).
 
-3. **Categories.** Each project is manually assigned a category: `finance`, `ai`, `osint`, `data`, `infra`, or `apps`. This drives the filter UI and category pages.
+**Activity pipeline:** GitHub App → `src/lib/github-activity.ts` (~90d ingest, ISR) → `src/lib/activity-aggregate.ts` (by day/week, by PR) → `ActivityCondensedPanel`.
 
-4. **To add a project:** Add an entry to `src/data/projects.ts` with the repo name, display name, tagline, category, and tech stack.
+---
 
-## Setup
+## Local development
 
 ```bash
-# Clone
 git clone https://github.com/duketopceo/portfolio-hub.git
 cd portfolio-hub
-
-# Install
-npm install
-
-# Configure
-cp .env.example .env.local
-# Edit .env.local and add your GITHUB_TOKEN
-
-# Dev
-npm run dev
-# → http://localhost:3000
+npm ci
+cp .env.example .env.local   # optional: GITHUB_APP_* or GITHUB_TOKEN
+npm run dev                  # http://localhost:3000
 ```
 
-**Secrets:** `GITHUB_TOKEN` is server-only (never `NEXT_PUBLIC_*`). Do not commit `.env` / `.env.local` — they stay gitignored. See **[docs/SECURITY-ENV.md](docs/SECURITY-ENV.md)** for Docker and token handling.
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Dev server (port 3000) |
+| `npm run test` | Vitest (helpers + orbit/activity) |
+| `npm run lint` | ESLint |
+| `npm run build` | Production build |
 
-## Deployment
+Fixtures for activity UI without GitHub: `ACTIVITY_USE_FIXTURES=1 npm run dev`.
 
-**Current deploy target:** [Railway](https://railway.app) — GitHub-connected service **`portfolio-hub`** (already provisioned). Pushes to the connected branch build via `Dockerfile` + `railway.json`. See **[docs/RAILWAY.md](docs/RAILWAY.md)** for service state, variables, and custom-domain steps. Set `GITHUB_TOKEN` in the Railway dashboard (never commit secrets). See `.env.example`.
+Secrets stay server-side — see **[docs/SECURITY-ENV.md](docs/SECURITY-ENV.md)** and **[docs/GITHUB-APP.md](docs/GITHUB-APP.md)**.
 
-Historical Swarm/cluster notes remain in **[docs/CLUSTER.md](docs/CLUSTER.md)** for reference; they are not the primary deploy path for this site.
+---
 
-### Railway (current)
+## Deployment (Railway)
 
-The **`portfolio-hub`** service is already connected to this GitHub repo. Merging to the watched branch triggers a deploy — no new Railway project required.
+**Production:** Railway GitHub-connected service **`portfolio-hub`**. Push to `main` → `Dockerfile` + `railway.json` build → healthcheck on `/api/health` → **luke-the-duke.com**.
 
 | Item | Detail |
-| --- | --- |
-| Config in repo | `railway.json` + `Dockerfile` |
-| Health check | `/api/health` |
-| Private DNS | `luke-the-duke.railway.internal` |
-| Public URL | Not on Railway yet — reachable via **localhost + tunnel** today; attach custom domain in Railway when ready (see below) |
+|------|--------|
+| Config | `railway.json`, `Dockerfile` |
+| Docs | **[docs/RAILWAY.md](docs/RAILWAY.md)** |
+| Variables | `GITHUB_APP_*` or `GITHUB_TOKEN`, optional `GITHUB_USER` |
 
-**Variables** (Railway dashboard → **portfolio-hub** → **Variables**):
+This is the primary deploy path for this repo. No Swarm step required for site updates.
 
-| Variable | Required | Description |
-| --- | --- | --- |
-| `GITHUB_TOKEN` | Optional | GitHub PAT for private repo metadata + `/now` commit dates |
-| `GITHUB_USER` | Optional | Defaults to `duketopceo` |
+**Legacy self-hosted Swarm** (homelab cluster1–3) is documented in **[docs/CLUSTER.md](docs/CLUSTER.md)** for reference only — not how luke-the-duke.com ships today.
 
-Full service snapshot, domain attachment, and optional CLI notes: **[docs/RAILWAY.md](docs/RAILWAY.md)**.
+---
 
-### Docker Swarm (legacy / self-hosted)
+## Repo layout (high level)
 
-Production was previously `docker stack deploy -c docker-compose.yml portfolio`. Node names, Tailscale, and cluster wiring live in **[docs/CLUSTER.md](docs/CLUSTER.md)**.
-
-Designed to run as Swarm stack `portfolio` behind Traefik + Cloudflare Tunnel. See **[docs/CLUSTER.md](docs/CLUSTER.md)** for the cluster.
-
-```bash
-# Build and push to GHCR
-docker build \
-  --build-arg GITHUB_TOKEN=$GITHUB_TOKEN \
-  -t ghcr.io/duketopceo/portfolio-hub:latest .
-docker push ghcr.io/duketopceo/portfolio-hub:latest
-
-# Deploy to Swarm
-docker stack deploy -c docker-compose.yml portfolio
+```
+src/
+├── app/                 # Next.js App Router (/, /projects, /about, /hire, …)
+├── components/
+│   ├── planet/          # PlanetNode — modular orbit worlds
+│   ├── activity/        # ActivityCondensedPanel, range toggle, day chart
+│   └── dossier/         # Project detail sections
+├── data/
+│   ├── projects.ts      # Catalog (28 repos)
+│   └── deployments.ts   # Live URL mapping
+└── lib/
+    ├── github-activity.ts
+    ├── activity-aggregate.ts
+    ├── planet-visual.ts
+    └── project-completeness.ts
 ```
 
-The `docker-compose.yml` includes:
-- 2 replicas with rolling updates
-- **No published host ports** — Traefik talks to the container on `traefik-public` (port 3000 internal only). Avoids Swarm errors like `port '3000' is already in use`.
-- Traefik routing for **`luke-the-duke.com`** and **`www.luke-the-duke.com`** (edit `docker-compose.yml` if you use another hostname)
-- Docker **`HEALTHCHECK`** and Traefik LB probe on **`/api/health`** (lightweight; image includes `wget`)
-- Connection to `traefik-public` overlay network
-
-**Traefik itself** must run as a **Swarm stack service** on **`traefik-public`** (same external overlay). A Traefik container that only sits on a compose **bridge** cannot reach Swarm backends → **502**. You cannot fix that with `docker network connect` if the overlay is non-attachable. See **[docs/AUDIT-502.md](docs/AUDIT-502.md) §2.A** for an example `docker stack deploy` fragment.
-
-**Local Docker with a host port:** `docker compose -f docker-compose.yml -f docker-compose.local.yml up --build` → http://localhost:3000
-
-### Cloudflare shows **502 Bad Gateway**
-
-Usually Traefik can’t reach the app container (wrong Docker network, unhealthy LB, or **Host** mismatch). **Confirm:** `docker inspect <traefik_container>` lists network **`traefik-public`** — not only a project bridge (e.g. `something_something`).
-
-**Cloudflare audit (API + optional tunnel):** with a read-only API token, run **`./scripts/audit-cloudflare.sh`** (see [docs/AUDIT-502.md §4](docs/AUDIT-502.md)) — DNS, SSL mode, paused zone, `cloudflared tunnel list` if installed.
-
-**Full Swarm + Traefik + origin probe:** on the manager, **`./scripts/diagnose-502.sh`** (save output: `tee /tmp/502-diagnostic.log`) — see [docs/AUDIT-502.md](docs/AUDIT-502.md) “Full stack terminal bundle”.
-
-1. **`traefik.docker.network=traefik-public`** — required in `docker-compose.yml` when the service joins `traefik-public`. Without it, Traefik often routes to the wrong interface → **502**. Redeploy after pulling latest: `./scripts/cluster-deploy.sh`.
-2. **Traefik `Host()` rule** must match the browser hostname (`luke-the-duke.com` / `www`).
-3. **Tasks running:** `docker service ps portfolio_portfolio --no-trunc` — want **Running**, not **Rejected**.
-4. **Reachability:** Swarm overlays are often **not attachable**, so `docker run --network traefik-public` may fail. Prefer **`docker exec` into a portfolio task:**  
-   `docker exec "$(docker ps -q -f name=portfolio_portfolio | head -1)" wget -qO- http://127.0.0.1:3000/api/health`  
-   Optional: from Traefik’s network namespace, curl the service **VIP** (not the hostname — Traefik often can’t resolve Swarm DNS):  
-   `VIP=$(docker service inspect portfolio_portfolio --format '{{(index .Endpoint.VirtualIPs 0).Addr}}' | cut -d/ -f1); docker run --rm --network container:$(docker ps -q -f name=traefik | head -1) curlimages/curl:latest -sS -o /dev/null -w "%{http_code}" "http://${VIP}:3000/api/health"`  
-   Expect **200**. See **[docs/AUDIT-502.md](docs/AUDIT-502.md)**.
-5. **Logs:** `docker service logs portfolio_portfolio --tail 80` and Traefik logs.
-6. **Cloudflare SSL/TLS:** **Full** or **Full (strict)** toward origin; try **DNS only** (grey cloud) briefly to see if the issue is Cloudflare-specific.
-7. If Traefik marks backends unhealthy, temporarily remove the **`traefik.http.services.portfolio.loadbalancer.healthcheck.*`** labels and redeploy to see if 502 clears (then re-add with a longer timeout).
-
-**Git on the server:** use `git pull --rebase origin main` or `git config pull.rebase true` once so pulls don’t ask how to reconcile branches.
-
-**Cluster / Docker:** put a `.env` next to `docker-compose.yml` (e.g. `~/portfolio-hub/.env`) with at least:
-
-```bash
-GITHUB_TOKEN=   # name only; set the value in a gitignored .env — never commit it
-```
-
-`docker compose` passes it into the build and runtime (see `docker-compose.yml`). Without it, the site still builds, but **`/now` may show no commit dates** and enrichment falls back to public API limits. Rebuild after changing `.env`:
-
-```bash
-docker compose build portfolio && docker push ghcr.io/duketopceo/portfolio-hub:latest && docker service update --force --with-registry-auth --image ghcr.io/duketopceo/portfolio-hub:latest portfolio_portfolio
-```
-
-### One-command deploy on the Swarm manager
-
-From the repo on the server (e.g. `~/portfolio-hub`), with `.env` beside `docker-compose.yml`:
-
-```bash
-chmod +x scripts/cluster-deploy.sh   # once
-./scripts/cluster-deploy.sh
-```
-
-If **`git fetch`** fails on the server (HTTPS / SSH), see **[docs/DEPLOY-GIT-AUTH.md](docs/DEPLOY-GIT-AUTH.md)**. To build and roll **without** pulling (emergency only): `SKIP_GIT=1 ./scripts/cluster-deploy.sh`.
-
-This **fetch + `reset --hard origin/main`**, **`docker compose build`**, **`docker push`** to **`ghcr.io/.../latest`** (so worker nodes can pull the image), **`docker stack deploy`**, then **`docker service update --force --with-registry-auth`** on **`portfolio_portfolio`** (retries if Swarm reports “update out of sequence”). Override **`STACK_NAME`** / **`SERVICE_NAME`** if your stack differs.
-
-**Multi-node Swarm — tasks fail with `No such image: ghcr.io/.../latest` on a worker:** the image only existed on the manager after `docker compose build`. Workers must pull from the registry — **`docker push`** on the manager (after **`docker login ghcr.io`** with a PAT that has `write:packages`). The script pushes by default. **`--with-registry-auth`** on `service update` forwards your registry login so workers can pull private images. To skip push (single-node / image already everywhere): `SKIP_PUSH=1 ./scripts/cluster-deploy.sh`.
-
-**Swarm message `image ... could not be accessed on a registry to record its digest`:** common during `docker stack deploy` even when **`docker push`** just succeeded. The manager sometimes doesn’t pin the digest in the spec; each node still resolves **`latest`** when starting tasks. Safe to ignore if push completed and **`docker service ps`** shows tasks **Running**.
-
-**If `docker stack deploy` fails with “port 3000 already in use”:** an old service (often named `portfolio`) is still publishing that port. List: `docker service ls`. Remove the stale one after confirming it’s safe: `docker service rm portfolio`, then run `./scripts/cluster-deploy.sh` again. With the current `docker-compose.yml` (no host `ports`), new deploys won’t grab `:3000` on the host.
-
-**502 Bad Gateway (full audit):** **[docs/AUDIT-502.md](docs/AUDIT-502.md)** — Traefik network, healthchecks, Cloudflare TLS, DNS vs tunnel.
-
-### Vercel (optional)
-
-```bash
-npm i -g vercel
-vercel --prod
-```
-
-Set `GITHUB_TOKEN` in Vercel's environment variables (Project Settings → Environment Variables).
-
-### Cloudflare Pages (optional)
-
-```bash
-# Build
-npm run build
-
-# Deploy via wrangler or Cloudflare dashboard
-# Point to the .next output
-```
-
-## Configuring Subdomains
-
-The `src/data/deployments.ts` file maps projects to their live URLs and subdomains.
-
-### DNS Setup (Cloudflare)
-
-For each deployed app, create an A or CNAME record in Cloudflare:
-
-| Type  | Name      | Content       | Proxy |
-|-------|-----------|---------------|-------|
-| A     | portfolio | `<swarm-ip>`  | Yes   |
-| A     | atlas     | `<swarm-ip>`  | Yes   |
-| A     | osint     | `<swarm-ip>`  | Yes   |
-| A     | skyguard  | `<swarm-ip>`  | Yes   |
-
-### Traefik Routing (Docker Swarm)
-
-Each service in your Swarm gets routing labels:
-
-```yaml
-deploy:
-  labels:
-    - "traefik.http.routers.myapp.rule=Host(`myapp.yourdomain.com`)"
-    - "traefik.http.routers.myapp.entrypoints=websecure"
-    - "traefik.http.routers.myapp.tls.certresolver=cloudflare"
-```
-
-### Vercel/Cloudflare Pages Subdomains
-
-Add custom domains in the platform dashboard, then point DNS CNAME records to the platform's hostname.
-
-## CI/CD
-
-The GitHub Actions workflow (`.github/workflows/deploy.yml`):
-
-1. **On push to `main`:** Builds Docker image → pushes to GHCR → SSH deploys to Swarm
-2. **Daily cron (6am UTC):** Rebuilds to refresh GitHub API data
-3. **Manual trigger:** Available via `workflow_dispatch`
-
-### Required GitHub Secrets
-
-| Secret         | Description                                |
-|---------------|--------------------------------------------|
-| `GH_PAT`      | GitHub PAT with `repo` scope (for private repos) |
-| `SWARM_HOST`   | Swarm manager IP/hostname                   |
-| `SWARM_USER`   | SSH user on Swarm manager                   |
-| `SWARM_SSH_KEY` | SSH private key for Swarm manager          |
+---
 
 ## API
 
-`GET /api/repos` returns JSON:
+`GET /api/repos` — JSON list of enriched catalog projects (ISR).  
+`GET /api/activity` — homepage activity showcase.  
+`GET /api/health` — Railway health probe.
 
-```json
-{
-  "count": 15,
-  "updated": "2026-03-10T20:00:00.000Z",
-  "projects": [
-    {
-      "slug": "trading-bot",
-      "name": "TradingBot",
-      "tagline": "AI-powered algorithmic trading system",
-      "category": "finance",
-      "type": "app",
-      "language": "Python",
-      "techStack": ["Python", "ML", "REST APIs"],
-      "stars": 0,
-      "forks": 0,
-      "lastUpdated": "2026-02-19T03:27:04Z",
-      "liveUrl": null,
-      "subdomain": null,
-      "private": true
-    }
-  ]
-}
-```
+---
+
+## Docs index
+
+| Doc | Topic |
+|-----|-------|
+| [PROJECT-CATALOG-SOP.md](docs/PROJECT-CATALOG-SOP.md) | Add repos, orbits, planet visuals |
+| [RAILWAY.md](docs/RAILWAY.md) | Production deploy |
+| [GITHUB-APP.md](docs/GITHUB-APP.md) | Activity + private repo access |
+| [CLUSTER.md](docs/CLUSTER.md) | Legacy Swarm (reference) |
+| [AGENTS.md](AGENTS.md) | Agent / cloud dev notes |
+
+**Version:** `3.1.0` (see [CHANGELOG.md](CHANGELOG.md)).

@@ -1,4 +1,4 @@
-import type { EnrichedProject } from "@/lib/types";
+import type { EnrichedProject, OrbitTier } from "@/lib/types";
 import { isProjectLive } from "@/lib/deployments";
 
 /**
@@ -115,8 +115,25 @@ export function getHomepageSecondaryOrbitProjects(
 ): EnrichedProject[] {
   const featured = new Set<string>(HOMEPAGE_FEATURED_SLUGS);
   return sortProjectsByCompleteness(
-    projects.filter((p) => !featured.has(p.slug))
+    projects.filter(
+      (p) =>
+        !featured.has(p.slug) &&
+        p.orbitTier !== "catalog-only"
+    )
   );
+}
+
+/** Resolve orbit tier from config (explicit field or featured flag). */
+export function resolveOrbitTier(project: {
+  slug: string;
+  featured: boolean;
+  orbitTier?: OrbitTier;
+}): OrbitTier {
+  if (project.orbitTier) return project.orbitTier;
+  if ((HOMEPAGE_FEATURED_SLUGS as readonly string[]).includes(project.slug)) {
+    return "featured";
+  }
+  return "secondary";
 }
 
 /**

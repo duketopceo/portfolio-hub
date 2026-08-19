@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { EnrichedProject } from "@/lib/types";
-import { catColors } from "@/lib/utils";
-import { LockIcon } from "@/components/Icons";
+import { PlanetNode } from "@/components/planet/PlanetNode";
 
 interface SecondaryOrbitRingsProps {
   projects: EnrichedProject[];
@@ -12,63 +11,87 @@ interface SecondaryOrbitRingsProps {
 
 type RingId = "inner" | "outer";
 
-function useRingRadii(ring: RingId) {
-  const [radii, setRadii] = useState(
-    ring === "inner" ? { rx: 26, ry: 13 } : { rx: 34, ry: 17 }
-  );
+interface RingLayout {
+  rx: number;
+  ry: number;
+  phase: number;
+  offset: { x: number; y: number };
+}
+
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
-    const apply = () => {
-      if (mq.matches) {
-        setRadii(
-          ring === "inner" ? { rx: 10.5, ry: 5.25 } : { rx: 13.5, ry: 6.75 }
-        );
-      } else {
-        setRadii(
-          ring === "inner" ? { rx: 26, ry: 13 } : { rx: 34, ry: 17 }
-        );
-      }
-    };
+    const apply = () => setMobile(mq.matches);
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
-  }, [ring]);
+  }, []);
 
-  return radii;
+  return mobile;
+}
+
+function ringLayout(
+  count: number,
+  ring: RingId,
+  mobile: boolean
+): RingLayout {
+  const n = Math.max(count, 1);
+  const spread = mobile ? 0.55 : 1;
+  const baseRx = mobile ? 11 : 30;
+  const perPlanet = mobile ? 0.35 : 0.65;
+  const rx = (baseRx + n * perPlanet) * spread;
+  const ry = rx * 0.46;
+
+  const phase =
+    ring === "inner"
+      ? -Math.PI / 2
+      : -Math.PI / 2 + Math.PI / Math.max(n, 1);
+
+  const offset =
+    ring === "inner"
+      ? { x: mobile ? 0.75 : 3, y: mobile ? 0.35 : 0.75 }
+      : { x: mobile ? -0.5 : -2.5, y: mobile ? 1.1 : 2.25 };
+
+  return { rx, ry, phase, offset };
 }
 
 function SecondaryRing({
   projects,
   ring,
-  offsetRem,
+  ringOffset,
 }: {
   projects: EnrichedProject[];
   ring: RingId;
-  offsetRem: { x: number; y: number };
+  ringOffset: number;
 }) {
+  const mobile = useIsMobile();
   const n = projects.length;
-  const { rx, ry } = useRingRadii(ring);
+  const layout = ringLayout(n, ring, mobile);
 
   const offsets = useMemo(() => {
     return Array.from({ length: n }, (_, i) => {
-      const theta = -Math.PI / 2 + (2 * Math.PI * i) / Math.max(n, 1);
+      const theta = layout.phase + (2 * Math.PI * i) / Math.max(n, 1);
       return {
-        x: rx * Math.cos(theta),
-        y: ry * Math.sin(theta),
+        x: layout.rx * Math.cos(theta),
+        y: layout.ry * Math.sin(theta),
+        labelAbove: Math.sin(theta) >= 0,
       };
     });
-  }, [n, rx, ry]);
+  }, [n, layout.phase, layout.rx, layout.ry]);
 
   if (n === 0) return null;
+
+  const svgRx = layout.rx * (mobile ? 14 : 5.8);
+  const svgRy = layout.ry * (mobile ? 14 : 5.8);
 
   return (
     <div
       className={`secondary-orbit__ring secondary-orbit__ring--${ring}`}
       style={{
-        transform: `translate(${offsetRem.x}rem, ${offsetRem.y}rem)`,
+        transform: `translate(${layout.offset.x}rem, ${layout.offset.y}rem)`,
       }}
-      aria-hidden={false}
     >
       <svg
         className="secondary-orbit__ellipse"
@@ -79,38 +102,33 @@ function SecondaryRing({
         <ellipse
           cx="200"
           cy="100"
-          rx={ring === "inner" ? 175 : 188}
-          ry={ring === "inner" ? 88 : 94}
+          rx={svgRx}
+          ry={svgRy}
           className="secondary-orbit__line"
         />
       </svg>
+
       <div className="secondary-orbit__planets">
         {projects.map((p, i) => {
-          const { x, y } = offsets[i] ?? { x: 0, y: 0 };
-          const accent = catColors[p.category] || "#2DD4BF";
+          const { x, y, labelAbove } = offsets[i] ?? {
+            x: 0,
+            y: 0,
+            labelAbove: true,
+          };
           return (
             <div
               key={p.slug}
               className="secondary-orbit__arm"
               style={{ transform: `translate(${x}rem, ${y}rem)` }}
             >
-              <Link
+              <PlanetNode
+                project={p}
+                tier="secondary"
                 href={`/projects/${p.slug}`}
-                className="secondary-orbit__planet"
-                style={{ "--planet-accent": accent } as React.CSSProperties}
-                title={p.displayName}
-              >
-                <span className="secondary-orbit__dot" aria-hidden />
-                <span className="secondary-orbit__label">
-                  {p.displayName}
-                  {p.private && (
-                    <LockIcon
-                      className="inline w-2.5 h-2.5 ml-0.5 opacity-50"
-                      aria-label="Private"
-                    />
-                  )}
-                </span>
-              </Link>
+                labelAbove={labelAbove}
+                index={ringOffset + i}
+                compactLabel
+              />
             </div>
           );
         })}
@@ -122,9 +140,9 @@ function SecondaryRing({
 export default function SecondaryOrbitRings({
   projects,
 }: SecondaryOrbitRingsProps) {
-  const split = Math.ceil(projects.length / 2);
-  const inner = projects.slice(0, split);
-  const outer = projects.slice(split);
+  const mid = Math.ceil(projects.length / 2);
+  const inner = projects.slice(0, mid);
+  const outer = projects.slice(mid);
 
   return (
     <section
@@ -133,11 +151,12 @@ export default function SecondaryOrbitRings({
     >
       <div className="cosmic-page secondary-orbit__intro">
         <h2 id="secondary-orbit-heading" className="secondary-orbit__heading">
-          Full catalog orbit
+          Catalog orbit
         </h2>
         <p className="secondary-orbit__hint">
-          {projects.length} more systems — smaller worlds, same dossiers. Tap any
-          planet or browse the{" "}
+          {projects.length} more worlds — same modular planet system, scaled
+          smaller and split across two offset rings. Tap for dossiers or browse
+          the{" "}
           <Link href="/projects" className="detail-nav-link">
             full grid
           </Link>
@@ -146,16 +165,8 @@ export default function SecondaryOrbitRings({
       </div>
 
       <div className="secondary-orbit__stage">
-        <SecondaryRing
-          projects={inner}
-          ring="inner"
-          offsetRem={{ x: 2.5, y: 0.5 }}
-        />
-        <SecondaryRing
-          projects={outer}
-          ring="outer"
-          offsetRem={{ x: -2, y: 1.25 }}
-        />
+        <SecondaryRing projects={inner} ring="inner" ringOffset={0} />
+        <SecondaryRing projects={outer} ring="outer" ringOffset={inner.length} />
       </div>
     </section>
   );

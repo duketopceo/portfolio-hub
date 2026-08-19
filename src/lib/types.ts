@@ -32,6 +32,40 @@ export type ProjectType =
   | "experiment"
   | "platform";
 
+/** Homepage placement — featured five, secondary orbit (~20), or grid-only. */
+export type OrbitTier = "featured" | "secondary" | "catalog-only";
+
+/** Visual scale for orbit planets — primary featured use lg/xl; secondary use xs–md. */
+export type PlanetSize = "xs" | "sm" | "md" | "lg" | "xl";
+
+export type PlanetShape = "sphere" | "hex" | "diamond" | "cube";
+
+export type PlanetMoonKind = "subproject" | "live" | "stack";
+
+/** Orbiting marker — sub-project link, live URL, or stack badge (real catalog data). */
+export interface PlanetMoonConfig {
+  label: string;
+  kind: PlanetMoonKind;
+  href?: string;
+}
+
+export interface PlanetRingConfig {
+  color?: string;
+  opacity?: number;
+  /** Ellipse tilt in degrees */
+  tilt?: number;
+}
+
+/** Per-world visual module config for homepage orbits. */
+export interface PlanetVisualConfig {
+  size?: PlanetSize;
+  shape?: PlanetShape;
+  /** Override category accent hex */
+  color?: string;
+  rings?: PlanetRingConfig[];
+  moons?: PlanetMoonConfig[];
+}
+
 export interface ProjectConfig {
   slug: string;
   repoName: string;
@@ -41,6 +75,13 @@ export interface ProjectConfig {
   category: ProjectCategory;
   type: ProjectType;
   featured: boolean;
+  /**
+   * Homepage orbit tier. Default: featured five → secondary orbit for the rest.
+   * Set `catalog-only` to keep a project off the homepage rings (grid/dossier only).
+   */
+  orbitTier?: OrbitTier;
+  /** Homepage planet appearance — size, shape, rings, moons (see SOP). */
+  planetVisual?: PlanetVisualConfig;
   liveUrl?: string;
   /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
   demoUrl?: string;

@@ -53,6 +53,9 @@ describe("github-activity fixtures", () => {
     const f = fixtureHomepageActivity();
     expect(f.repos.every((r) => r.href.startsWith("/projects/"))).toBe(true);
     expect(f.repos.every((r) => r.condensed.days.length === 7)).toBe(true);
+    expect(f.repos.every((r) => r.activity.items.length > 0)).toBe(true);
+    expect(f.historyDays).toBe(90);
+    expect(f.defaultRangeDays).toBe(7);
   });
 
   it("activityKindVerb covers all event kinds", () => {

@@ -148,7 +148,7 @@ export function ActivityCondensedPanel({
 
       {!hasActivity ? (
         <p className="dossier-activity__muted">
-          No GitHub events in the last 7 days — curated dossier below.
+          No GitHub events in this range — curated dossier below.
         </p>
       ) : (
         <>

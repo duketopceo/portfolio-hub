@@ -7,13 +7,17 @@ import { condenseProjectActivity } from "@/lib/activity-aggregate";
 const now = new Date("2026-08-19T12:00:00.000Z");
 
 function homepageRepo(summary: ProjectActivityPayload) {
-  const condensed = condenseProjectActivity(summary, { anchorDate: now });
+  const condensed = condenseProjectActivity(summary, {
+    anchorDate: now,
+    windowDays: 7,
+  });
   return {
     slug: summary.slug,
     displayName: summary.displayName,
     private: summary.private,
     href: `/projects/${summary.slug}`,
     headline: summary.headline,
+    activity: summary,
     condensed,
   };
 }
@@ -37,6 +41,8 @@ export function fixtureHomepageActivity(): HomepageActivityPayload {
       line: r.headline,
       href: r.href,
     })),
+    historyDays: 90,
+    defaultRangeDays: 7,
   };
 }
 
