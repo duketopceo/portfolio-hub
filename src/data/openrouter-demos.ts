@@ -62,4 +62,17 @@ export const openRouterDemos: OpenRouterDemo[] = [
       "Offline pytest passes on fixtures. Live evals need OPENROUTER_API_KEY.",
     status: "fixtures",
   },
+  {
+    slug: "caesar",
+    name: "Caesar",
+    role: "Model evaluation & debate",
+    summary:
+      "Two OpenRouter models debate; Caesar (a third model) scores each round and enforces real concessions. Dense JSON traces — not a dashboard wrapper.",
+    scoring:
+      "Concession rules plus trace schema — regex and Caesar must agree before a match ends.",
+    sourceUrl: demoSourcePath("caesar"),
+    sourceNote:
+      "Offline pytest passes on fixtures. Live evals need OPENROUTER_API_KEY.",
+    status: "fixtures",
+  },
 ];

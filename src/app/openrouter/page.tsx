@@ -20,9 +20,9 @@ export default function OpenRouterPage() {
         <p className="projects-page-header__eyebrow">OPENROUTER</p>
         <h1 className="projects-page-header__title">Application demos</h1>
         <p className="projects-page-header__sub">
-          Three eval-driven demos mapped to OpenRouter application roles —
+          Four eval-driven demos mapped to OpenRouter application roles —
           grounded in daily operator workflows (Auto Router, presets,
-          Guardrails, bake-offs). Source lives in{" "}
+          Guardrails, bake-offs, debate traces). Source lives in{" "}
           <a
             href={OPENROUTER_DEMOS_REPO_URL}
             target="_blank"

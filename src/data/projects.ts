@@ -76,46 +76,50 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Sustained production platform — Hetzner, Railway, Cloudflare, Grafana-as-code",
     description:
-      "Pace Server is the sustained production product: identity, billing, and AI in one operational surface for small-business operators. Runs across Hetzner, Railway, and Cloudflare with Grafana-as-code observability; Docker Swarm and Traefik remain part of the historical deployment story. Curated dossier for recruitment — source available on request.",
+      "Pace Server (Pace HQ) is the sustained production platform: Rust/Axum gateway, Go/Chi agent backend, and scaffolded Python/LangGraph reasoning on Supabase Postgres with RLS. Identity, billing (Stripe), and auth (Stytch) are live at pacehq.io and app.pacehq.io. Remaining ~20%: real tool execution and the Python reasoning service — not vapor.",
     category: "ai",
     type: "platform",
     featured: true,
     techStack: [
-      "TypeScript",
-      "Next.js",
+      "Rust",
+      "Axum",
+      "Go",
+      "Chi",
+      "Python",
+      "LangGraph",
+      "React",
+      "Supabase",
+      "Stripe",
       "Railway",
-      "Cloudflare",
-      "Grafana",
-      "Docker",
     ],
     private: true,
     highlights: [
-      "Production path across Hetzner, Railway, and Cloudflare",
-      "Grafana-as-code observability",
-      "Unified login, billing, and AI product surface",
-      "Swarm/Traefik heritage for self-hosted workloads",
+      "Platform live — gateway, auth, Stripe billing at pacehq.io",
+      "Tenant-aware agent pipeline with TierGate and tool registry",
+      "Multi-language stack: Rust gateway, Go agents, Python reasoning",
+      "Grafana-as-code observability on Railway and Hetzner",
     ],
     architecture:
-      "Product shell → Auth & billing → AI services → Hetzner/Railway/Cloudflare data plane → Grafana observability",
+      "React shell → Rust/Axum gateway → Go/Chi agent backend → Python/LangGraph reasoning → Supabase Postgres + RLS",
     businessContext:
-      "Small businesses need cloud productivity without enterprise complexity. Pace packages identity, billing, and AI into one operator-controlled story — deployed on real production infra, not a demo cluster.",
+      "Small businesses need cloud productivity without enterprise complexity. Pace packages identity, billing, and AI into one operator-controlled story on real production infra.",
     scopeAndScale:
-      "Production-stage platform with multi-tenant architecture; observability and edge routing are first-class.",
+      "Production-stage multi-tenant platform; public surfaces at pacehq.io, app.pacehq.io, observe.pacehq.io, and status.pacehq.io.",
     engineeringDecisions: [
-      "Multi-host production — Hetzner compute, Railway app hosting, Cloudflare edge without a single-vendor lock-in",
-      "Grafana-as-code — Treats dashboards and alerts as versioned infrastructure",
+      "Multi-host production — Hetzner compute, Railway app hosting, Cloudflare edge",
+      "Grafana-as-code — dashboards and alerts as versioned infrastructure",
     ],
     finishLine:
-      "In production across Hetzner, Railway, and Cloudflare with Grafana-as-code and public surfaces at pacehq.io, app.pacehq.io, observe.pacehq.io, and status.pacehq.io. Remaining ~20%: Python reasoning path hardening and operator UX for edge cases — hire is for last-mile finishing, not vapor.",
+      "Gateway, auth, and Stripe billing are live (pacehq.io, app.pacehq.io). Remaining ~20%: real tool execution and Python reasoning service hardening — hire is for last-mile finishing.",
   },
   {
     slug: "openrouter",
     repoName: "openrouter-demos",
     displayName: "OpenRouter Demos",
     tagline:
-      "Role-aligned application demos — Deflect, Motion, Bakeoff with eval-driven scoring",
+      "Role-aligned application demos — Deflect, Motion, Bakeoff, Caesar",
     description:
-      "Three OpenRouter application demos in the public openrouter-demos repo: Deflect (support classify/deflect/escalate with Guardrails), Motion (GTM inbound → next action with Auto Router and presets), and Bakeoff (provider ops — latency, cost, quality bake-offs with launch-gate pass/fail). Offline pytest passes on fixtures; live evals require OPENROUTER_API_KEY.",
+      "Four OpenRouter application demos in github.com/duketopceo/openrouter-demos: Deflect (support classify/deflect/escalate with Guardrails), Motion (GTM inbound → next action with Auto Router), Bakeoff (provider ops — latency, cost, quality launch gate), and Caesar (two-model debate with concession traces). Offline pytest passes on fixtures; live evals require OPENROUTER_API_KEY.",
     category: "ai",
     type: "platform",
     featured: true,
@@ -125,6 +129,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Deflect — support routing with Guardrails and eval fixtures",
       "Motion — GTM next-action with Auto Router and presets",
       "Bakeoff — provider comparison and launch-gate scoring",
+      "Caesar — debate traces with concession rules",
     ],
     architecture:
       "OpenRouter routing → Role-specific eval harness → Guardrails / presets → Launch-gate scoring",
@@ -192,21 +197,21 @@ export const projectConfigs: ProjectConfig[] = [
     repoName: "ai-debate-arena",
     displayName: "AI Debate Arena",
     tagline:
-      "Two AI agents debate any topic — Venn prompts, Ollama + OpenRouter, rich terminal UI",
+      "Two AI agents debate any topic — OpenRouter routing and rich terminal UI",
     description:
-      "Open-source terminal experience where two AI agents debate a topic using a Venn-diagram prompt system. Supports local Ollama models and OpenRouter for cloud models, with a rich terminal UI for following arguments, rebuttals, and synthesis.",
+      "Open-source terminal experience where two AI agents debate a topic using a Venn-diagram prompt system. Routes models through OpenRouter with a rich terminal UI for arguments, rebuttals, and synthesis.",
     category: "ai",
     type: "experiment",
     featured: false,
-    techStack: ["Python", "Ollama", "OpenRouter", "Terminal UI"],
+    techStack: ["Python", "OpenRouter", "Terminal UI"],
     private: false,
     highlights: [
       "Dual-agent debate with structured Venn prompts",
-      "Ollama local + OpenRouter cloud model paths",
+      "OpenRouter model routing for cloud models",
       "Rich terminal UI for following the exchange",
     ],
     architecture:
-      "CLI → Prompt orchestrator → Ollama/OpenRouter → Dual agent turns → Terminal renderer",
+      "CLI → Prompt orchestrator → OpenRouter → Dual agent turns → Terminal renderer",
   },
   {
     slug: "luke-the-duke-show",

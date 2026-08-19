@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { MenuIcon, CloseIcon } from "./Icons";
-import { siteNavItems as navItems } from "@/data/site-nav";
+import { headerNavItems as navItems } from "@/data/site-nav";
 
 export default function Header() {
   const pathname = usePathname();
@@ -35,7 +35,7 @@ export default function Header() {
       }}
     >
       <div className="cosmic-page">
-        <div className="flex items-center justify-between" style={{ height: "44px" }}>
+        <div className="site-header__bar flex items-center justify-between">
           {/* Logo */}
           <Link
             href="/"
@@ -66,46 +66,18 @@ export default function Header() {
               <path d="M4 40 L4 44 L8 44" stroke="currentColor" strokeWidth="0.75" opacity="0.2" fill="none"/>
               <path d="M40 44 L44 44 L44 40" stroke="currentColor" strokeWidth="0.75" opacity="0.2" fill="none"/>
             </svg>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "14px",
-                fontWeight: 600,
-                color: "var(--color-text)",
-                letterSpacing: "0.08em",
-              }}
-            >
-              COSMIC INTELLIGENCE
-            </span>
+            <span className="site-header__brand">Cosmic Intelligence</span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="site-header__nav hidden md:flex items-center">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="relative px-2.5 py-1 rounded-md transition-colors duration-150"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  color: isActive(item.href)
-                    ? "var(--color-accent)"
-                    : "var(--color-text-faint)",
-                  letterSpacing: "0.02em",
-                  textDecoration: "none",
-                }}
+                className={`site-header__link${isActive(item.href) ? " site-header__link--active" : ""}`}
               >
                 {item.label}
-                {isActive(item.href) && (
-                  <span
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px rounded-full"
-                    style={{
-                      width: "14px",
-                      background: "var(--color-accent)",
-                    }}
-                  />
-                )}
               </Link>
             ))}
 

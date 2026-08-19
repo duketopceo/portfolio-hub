@@ -28,8 +28,8 @@ export const skills = [
   {
     name: "Multi-Model Routing & Cost",
     detail:
-      "OpenRouter as primary router. Routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model. Self-hosts open-weight LLMs locally via Ollama for cost-sensitive and offline work.",
-    keywords: ["OpenRouter", "model routing", "cost optimization", "Ollama", "frontier models"],
+      "OpenRouter as primary router. Routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model.",
+    keywords: ["OpenRouter", "model routing", "cost optimization", "frontier models"],
   },
   {
     name: "Agent Harnesses",
@@ -116,9 +116,9 @@ export const work = [
     startDate: "2025",
     endDate: "Present",
     location: "UT / ID",
-    summary: "Lead IT across UT + ID for a ~200-person org; 200+ active projects.",
+    summary: "Lead IT across UT + ID for a ~200-person org.",
     highlights: [
-      "Promoted to lead IT across UT + ID within 4 months; 200+ active projects for a ~200-person org.",
+      "Promoted to lead IT across UT + ID within 4 months for a ~200-person roofing org.",
       "Containerized services (Snipe-IT, MeshCentral, Vaultwarden) on bare-metal Linux; built a helpdesk dashboard and web-app pitch decks instead of buying SaaS or making PDFs.",
       "Built read/write internal APIs for the IT team, gated behind authentication; Python automations and a Next.js dashboard cut manual follow-up and reporting.",
       "Asked to train the IT team on AI tooling in month one — runs Claude Code, Cursor, and OpenRouter routing daily across the org.",

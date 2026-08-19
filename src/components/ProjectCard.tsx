@@ -108,7 +108,9 @@ export default function ProjectCard({
         </div>
       </Link>
 
-      {project.githubUrl && <GithubLink url={project.githubUrl} />}
+      {project.githubUrl && !project.private && (
+        <GithubLink url={project.githubUrl} />
+      )}
       {hasDemo && demoUrl && <DemoLink url={demoUrl} />}
     </article>
   );

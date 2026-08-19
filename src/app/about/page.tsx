@@ -35,6 +35,10 @@ export default function AboutPage() {
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.7 }}>
           If you are hiring for someone who can ship, operate, and explain
           systems, start at{" "}
+          <Link href="/resume" className="detail-nav-link">
+            /resume
+          </Link>{" "}
+          or{" "}
           <Link href="/hire" className="detail-nav-link">
             /hire
           </Link>
