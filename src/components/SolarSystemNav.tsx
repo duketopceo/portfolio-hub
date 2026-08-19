@@ -36,6 +36,7 @@ function useOrbitRadiiRem(count: number) {
 
 interface SolarSystemNavProps {
   projects: EnrichedProject[];
+  variant?: "primary";
 }
 
 export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
@@ -107,18 +108,18 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
 
   return (
     <section
-      className="solar-system solar-section home-solar"
+      className="solar-system solar-section home-solar solar-system--primary"
       tabIndex={0}
       onKeyDown={onKeyDown}
       aria-labelledby="solar-system-heading"
     >
       <div className="cosmic-page solar-system__intro">
         <h2 id="solar-system-heading" className="solar-system__heading">
-          Systems in orbit
+          Featured systems
         </h2>
         <p className="solar-system__hint">
-          Arrow keys or ‹ › to cycle. Click a world or the dossier card to open the
-          full project dossier.
+          Top five worlds in the main orbit — arrow keys or ‹ › to cycle. Click a
+          planet or the dossier card for the full project page.
         </p>
       </div>
 

@@ -105,7 +105,7 @@ export function ProjectHero({ project, accentColor, meta }: ProjectHeroProps) {
                     </a>
                   )
                 )}
-                {project.githubUrl && (
+                {project.githubUrl && !project.private && (
                   <a
                     href={project.githubUrl}
                     target="_blank"

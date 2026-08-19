@@ -1,24 +1,28 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
-import { getHomepageOrbitProjects } from "@/lib/project-completeness";
+import {
+  getHomepageOrbitProjects,
+  getHomepageSecondaryOrbitProjects,
+} from "@/lib/project-completeness";
 import { getHomepageActivityShowcase } from "@/lib/github-activity";
 import { isProjectLive } from "@/lib/deployments";
 import SolarSystemNav from "@/components/SolarSystemNav";
+import SecondaryOrbitRings from "@/components/SecondaryOrbitRings";
 import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
 
 export const revalidate = 3600;
 
 export default async function Home() {
   const all = await getEnrichedProjects();
-  const ordered = getHomepageOrbitProjects(all);
+  const primaryOrbit = getHomepageOrbitProjects(all);
+  const secondaryOrbit = getHomepageSecondaryOrbitProjects(all);
   const activity = await getHomepageActivityShowcase();
   const liveCount = all.filter(isProjectLive).length;
   const categories = new Set(all.map((p) => p.category));
-  const lead = ordered[0];
+  const lead = primaryOrbit[0];
 
   return (
     <div>
-      {/* ── Home: compact hero + full-viewport solar universe ── */}
       <div className="home-universe">
         <section className="cosmic-hero cosmic-hero--compact">
           <div className="cosmic-hero__inner">
@@ -52,7 +56,16 @@ export default async function Home() {
           </div>
         </section>
 
-        <SolarSystemNav key={lead?.slug ?? "orbit"} projects={ordered} />
+        <div className="orbit-universe">
+          <SolarSystemNav
+            key={lead?.slug ?? "orbit"}
+            projects={primaryOrbit}
+            variant="primary"
+          />
+          {secondaryOrbit.length > 0 && (
+            <SecondaryOrbitRings projects={secondaryOrbit} />
+          )}
+        </div>
       </div>
 
       {/* ── Activity strip — below orbit, full width ── */}

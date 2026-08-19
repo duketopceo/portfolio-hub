@@ -99,7 +99,7 @@ export function sortProjectsByCompleteness(
 }
 
 /**
- * Projects shown in the homepage solar orbit (fixed trio, catalog order).
+ * Projects shown in the homepage primary solar orbit (fixed order).
  */
 export function getHomepageOrbitProjects(
   projects: EnrichedProject[]
@@ -107,6 +107,16 @@ export function getHomepageOrbitProjects(
   return HOMEPAGE_FEATURED_SLUGS.map((slug) =>
     projects.find((p) => p.slug === slug)
   ).filter((p): p is EnrichedProject => p !== undefined);
+}
+
+/** Remaining catalog entries for secondary homepage orbit(s). */
+export function getHomepageSecondaryOrbitProjects(
+  projects: EnrichedProject[]
+): EnrichedProject[] {
+  const featured = new Set<string>(HOMEPAGE_FEATURED_SLUGS);
+  return sortProjectsByCompleteness(
+    projects.filter((p) => !featured.has(p.slug))
+  );
 }
 
 /**
