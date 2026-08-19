@@ -48,6 +48,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${base}/resume`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
+      url: `${base}/resume.json`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
+    },
+    {
+      url: `${base}/resume.md`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${base}/llms.txt`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
     ...projectPages,
   ];
 }
