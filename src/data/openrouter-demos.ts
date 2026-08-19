@@ -10,8 +10,8 @@ export type OpenRouterDemo = {
 };
 
 /**
- * OpenRouter application demos — curated for role-aligned evaluation.
- * Live scores ship with demo repos; placeholders are honest until wired.
+ * OpenRouter application demos — grounded in daily operator workflows
+ * (Auto Router, presets, Guardrails, bake-offs). Live scores ship with demo repos.
  */
 export const openRouterDemos: OpenRouterDemo[] = [
   {
@@ -19,11 +19,12 @@ export const openRouterDemos: OpenRouterDemo[] = [
     name: "Deflect",
     role: "Applied AI Engineer (Support)",
     summary:
-      "Classifies inbound support tickets, deflects with grounded replies, or escalates with a structured handoff.",
+      "Routes inbound support tickets through OpenRouter with Guardrails — classify, deflect with grounded replies, or escalate with a structured handoff.",
     scoring:
-      "Eval suite on classify / deflect / escalate accuracy, guardrail violations, and escalation precision.",
+      "Eval fixtures on classify/deflect/escalate accuracy, guardrail violation rate, and escalation precision.",
     sourceUrl: "/openrouter",
-    sourceNote: "Source ships with the Deflect demo repo on GitHub.",
+    sourceNote:
+      "Source ships with the Deflect demo repo on GitHub when public.",
     status: "placeholder",
   },
   {
@@ -31,11 +32,12 @@ export const openRouterDemos: OpenRouterDemo[] = [
     name: "Motion",
     role: "Applied AI Engineer (GTM)",
     summary:
-      "Turns inbound GTM signals into a ranked next action with rationale tied to pipeline context.",
+      "Uses OpenRouter Auto Router and presets to turn inbound GTM signals into a ranked next action with rationale.",
     scoring:
-      "Eval suite on next-action relevance, coverage of inbound intents, and consistency across fixtures.",
+      "Eval suite on next-action relevance, preset consistency, and coverage across inbound intent fixtures.",
     sourceUrl: "/openrouter",
-    sourceNote: "Source ships with the Motion demo repo on GitHub.",
+    sourceNote:
+      "Source ships with the Motion demo repo on GitHub when public.",
     status: "placeholder",
   },
   {
@@ -43,11 +45,12 @@ export const openRouterDemos: OpenRouterDemo[] = [
     name: "Bakeoff",
     role: "AI Provider Operations",
     summary:
-      "Compares models and endpoints on latency, cost, and quality to gate provider launches.",
+      "Daily-style model and endpoint bake-offs on OpenRouter — latency, cost, and quality compared before a launch gate.",
     scoring:
-      "Launch-gate pass/fail on latency SLOs, cost ceilings, and quality benchmarks per endpoint.",
+      "Pass/fail launch gate on latency SLOs, cost ceilings, and quality benchmarks per endpoint.",
     sourceUrl: "/openrouter",
-    sourceNote: "Source ships with the Bakeoff demo repo on GitHub.",
+    sourceNote:
+      "Source ships with the Bakeoff demo repo on GitHub when public.",
     status: "placeholder",
   },
 ];

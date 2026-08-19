@@ -10,13 +10,10 @@ Inherits from [luke-agents/AGENTS.md](https://github.com/duketopceo/luke-agents/
 
 Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database, no external services required for local dev. Project data is curated in `src/data/projects.ts` and optionally enriched via the GitHub API.
 
-### Production hosting (self-hosted)
+### Production hosting
 
-- **Self-hosted** on Tailscale Swarm nodes **cluster1** (`cluster-1-master`), **cluster2**, and **cluster3** — not Vercel as the primary path.
-- Deploy from the manager with `./scripts/cluster-deploy.sh` (see `docs/CLUSTER.md`, `README.md` Deployment).
-- Public edge: Cloudflare Tunnel → Traefik → `portfolio` stack on `traefik-public`.
-
-### Quick reference
+- **Primary:** Railway GitHub-connected service **`portfolio-hub`** — deploys on push via `Dockerfile` + `railway.json` (see `docs/RAILWAY.md`, `README.md` Deployment).
+- **Legacy:** Tailscale Swarm nodes **cluster1–cluster3** with `./scripts/cluster-deploy.sh` (see `docs/CLUSTER.md`).
 
 | Action | Command |
 |--------|---------|
@@ -26,7 +23,8 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 | Test | `npm run test` (Vitest; `src/**/*.test.ts` helpers) |
 | Build | `npm run build` |
 | Prod server | `npm run start` |
-| Swarm deploy (manager) | `./scripts/cluster-deploy.sh` |
+| Railway deploy | Push to GitHub-connected branch (service already exists) |
+| Swarm deploy (legacy) | `./scripts/cluster-deploy.sh` |
 
 ### Environment
 

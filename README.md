@@ -94,29 +94,29 @@ npm run dev
 
 ## Deployment
 
-**Current deploy target:** [Railway](https://railway.app) — `railway up` or GitHub integration using the repo `Dockerfile` and `railway.json`. Set `GITHUB_TOKEN` in the Railway service environment (never commit secrets). See `.env.example`.
+**Current deploy target:** [Railway](https://railway.app) — GitHub-connected service **`portfolio-hub`** (already provisioned). Pushes to the connected branch build via `Dockerfile` + `railway.json`. See **[docs/RAILWAY.md](docs/RAILWAY.md)** for service state, variables, and custom-domain steps. Set `GITHUB_TOKEN` in the Railway dashboard (never commit secrets). See `.env.example`.
 
-Historical Swarm/cluster notes remain in **[docs/CLUSTER.md](docs/CLUSTER.md)** for reference; they are not the primary production path.
+Historical Swarm/cluster notes remain in **[docs/CLUSTER.md](docs/CLUSTER.md)** for reference; they are not the primary deploy path for this site.
 
-### Railway (recommended)
+### Railway (current)
 
-```bash
-# Install CLI: https://docs.railway.app/develop/cli
-railway login
-railway link          # link to your Railway project
-railway up            # build from Dockerfile + deploy
-```
+The **`portfolio-hub`** service is already connected to this GitHub repo. Merging to the watched branch triggers a deploy — no new Railway project required.
 
-**Environment variables** (Railway dashboard → Variables):
+| Item | Detail |
+| --- | --- |
+| Config in repo | `railway.json` + `Dockerfile` |
+| Health check | `/api/health` |
+| Private DNS | `luke-the-duke.railway.internal` |
+| Public URL | Not configured yet — see [docs/RAILWAY.md](docs/RAILWAY.md) to attach a Railway or custom domain |
 
-| Variable       | Required | Description |
-|----------------|----------|-------------|
+**Variables** (Railway dashboard → **portfolio-hub** → **Variables**):
+
+| Variable | Required | Description |
+| --- | --- | --- |
 | `GITHUB_TOKEN` | Optional | GitHub PAT for private repo metadata + `/now` commit dates |
-| `GITHUB_USER`  | Optional | Defaults to `duketopceo` |
+| `GITHUB_USER` | Optional | Defaults to `duketopceo` |
 
-**Build:** Railway uses `railway.json` → `Dockerfile` multi-stage build. Pass `GITHUB_TOKEN` as a build variable if you want GitHub API data baked at build time; runtime `GITHUB_TOKEN` covers ISR refreshes.
-
-**Health check:** `/api/health` (configured in `railway.json`).
+Full service snapshot, domain attachment, and optional CLI notes: **[docs/RAILWAY.md](docs/RAILWAY.md)**.
 
 ### Docker Swarm (legacy / self-hosted)
 

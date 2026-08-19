@@ -7,7 +7,7 @@ import {
 export const metadata = {
   title: "OpenRouter Applications",
   description:
-    "Role-aligned OpenRouter application demos — support deflection, GTM motion, and provider bakeoffs with eval-driven scoring.",
+    "Role-aligned OpenRouter application demos — Guardrails deflection, GTM motion with Auto Router, and provider bake-offs with eval-driven scoring.",
 };
 
 export default function OpenRouterPage() {
@@ -20,8 +20,10 @@ export default function OpenRouterPage() {
         <p className="projects-page-header__eyebrow">OPENROUTER</p>
         <h1 className="projects-page-header__title">Application demos</h1>
         <p className="projects-page-header__sub">
-          Three eval-driven demos mapped to OpenRouter application roles. Scores
-          and live runs land as repos ship — placeholders below are intentional.
+          Three eval-driven demos mapped to OpenRouter application roles —
+          grounded in daily operator workflows (Auto Router, presets,
+          Guardrails, bake-offs). Scores land as repos ship; placeholders below
+          are intentional.
         </p>
       </header>
 
@@ -84,8 +86,9 @@ export default function OpenRouterPage() {
 
       <section className="openrouter-footer cosmic-readable max-w-2xl">
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.7 }}>
-          Demos are built on OpenRouter for model routing and eval loops. Owner
-          repos live under{" "}
+          These demos reflect how OpenRouter is used day to day — routing,
+          presets, guardrails, and bake-offs — not a self-hosted inference
+          cluster. Owner repos live under{" "}
           <a
             href={openRouterOwnerUrl}
             target="_blank"
