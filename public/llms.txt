@@ -1,0 +1,35 @@
+# Luke Kimball — Cosmic Intelligence
+
+> Luke Kimball is a systems builder and applied AI engineer based in Provo, UT. He ships internal agentic tooling instead of buying SaaS, runs production AI systems (a live voice-agent platform and a designed tenant-aware agent harness), and is a daily OpenRouter user who optimizes multi-model routing for cost and quality. Direct support/GTM fluency from years in inside sales, ticketing, and CRM work.
+
+This is his engineering portfolio. Recruiter- and AI-friendly: every page is crawlable and the resume is available as a PDF.
+
+## Links
+
+- [Home](https://luke-the-duke.com)
+- [Projects](https://luke-the-duke.com/projects)
+- [Hire / Contact](https://luke-the-duke.com/hire)
+- [Resume (PDF)](https://luke-the-duke.com/resume.pdf)
+- [GitHub](https://github.com/duketopceo)
+
+## Selected Projects
+
+### Stratum Engine
+Production-deployed AI operations platform for home-service contractors. A 24/7 Retell voice agent handles missed-call recovery, follow-ups, and review requests. FastAPI + SQLModel backend, Supabase Postgres, React/Vite SPA on Fly.io; Stripe integration, Supabase Auth; Sentry + structlog observability; 334+ test suite; 48+ API routes.
+Repo: https://github.com/duketopceo/stratum-engine — Live: https://stratumhq.app
+
+### Pace Server (Pace HQ)
+Private business cloud for SMBs. Designed a tenant-aware agent harness: 8-step agentrun pipeline, TierGate autonomy tiers (1–5), tool registry, audit trail, approval gates, and an outbound allowlist for SSRF prevention. Multi-tenant RLS isolation, Redis Streams event bus, Stripe metering, Stytch B2B SSO. Model routing via OpenRouter. Platform services are live; agent execution scaffold is being wired to first real tool execution.
+Repo: https://github.com/duketopceo/Pace-Server — Live: https://pacehq.io
+
+### Khan — Agent Zero fork
+Private fork of Agent Zero extended into a workflow-specific harness with first-class plugins, secret-first operations, a Perplexity-powered research layer, and Hermes-style memory/skills. A multi-agent board (cursor, grok, droid, hermes) coordinates through a live presence board.
+Repo: https://github.com/duketopceo/Khan
+
+### Open Military Hardware Database (OMHDB)
+Open-source, production-stable military hardware database. v2.5, Docker-deployed.
+Live: https://omhdb.luke-the-duke.com
+
+## Currently
+
+Open to full-time applied AI / infrastructure engineering roles. Best reach: kimballluke@gmail.com.
