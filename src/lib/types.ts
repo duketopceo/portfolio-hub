@@ -62,16 +62,24 @@ export interface ProjectConfig {
   scopeAndScale?: string;
   /** Private project dossier — "Decision — Rationale" strings */
   engineeringDecisions?: string[];
+  /** On-site showcase only — no GitHub repo (e.g. OpenRouter demos page) */
+  siteOnly?: boolean;
+  /** Private dossier — shipped vs remaining finish-line (recruiter-facing) */
+  finishLine?: string;
 }
 
 export interface EnrichedProject extends ProjectConfig {
   repo: GitHubRepo | null;
   lastUpdated: string;
   language: string | null;
+  /** All languages from GitHub when API available (percentages omitted client-side) */
+  languages: string[];
   stars: number;
   forks: number;
   /** Open issues count from GitHub when token can read the repo */
   openIssuesCount: number;
+  /** Combined CI status when checks API available */
+  ciStatus: "success" | "failure" | "pending" | "unknown" | null;
   /**
    * Public GitHub URL from curated `private` + repoName.
    * Null for catalog-private rows even if GitHub later reports public.

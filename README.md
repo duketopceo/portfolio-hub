@@ -94,9 +94,33 @@ npm run dev
 
 ## Deployment
 
-Production is already `docker stack deploy -c docker-compose.yml portfolio`. Node names, Tailscale, and cluster wiring live in **[docs/CLUSTER.md](docs/CLUSTER.md)** — do not copy them here. Vercel / Cloudflare Pages below are optional alternatives, not the primary live site.
+**Current deploy target:** [Railway](https://railway.app) — GitHub-connected service **`portfolio-hub`** (already provisioned). Pushes to the connected branch build via `Dockerfile` + `railway.json`. See **[docs/RAILWAY.md](docs/RAILWAY.md)** for service state, variables, and custom-domain steps. Set `GITHUB_TOKEN` in the Railway dashboard (never commit secrets). See `.env.example`.
 
-### Option A: Docker Swarm (Recommended)
+Historical Swarm/cluster notes remain in **[docs/CLUSTER.md](docs/CLUSTER.md)** for reference; they are not the primary deploy path for this site.
+
+### Railway (current)
+
+The **`portfolio-hub`** service is already connected to this GitHub repo. Merging to the watched branch triggers a deploy — no new Railway project required.
+
+| Item | Detail |
+| --- | --- |
+| Config in repo | `railway.json` + `Dockerfile` |
+| Health check | `/api/health` |
+| Private DNS | `luke-the-duke.railway.internal` |
+| Public URL | Not on Railway yet — reachable via **localhost + tunnel** today; attach custom domain in Railway when ready (see below) |
+
+**Variables** (Railway dashboard → **portfolio-hub** → **Variables**):
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `GITHUB_TOKEN` | Optional | GitHub PAT for private repo metadata + `/now` commit dates |
+| `GITHUB_USER` | Optional | Defaults to `duketopceo` |
+
+Full service snapshot, domain attachment, and optional CLI notes: **[docs/RAILWAY.md](docs/RAILWAY.md)**.
+
+### Docker Swarm (legacy / self-hosted)
+
+Production was previously `docker stack deploy -c docker-compose.yml portfolio`. Node names, Tailscale, and cluster wiring live in **[docs/CLUSTER.md](docs/CLUSTER.md)**.
 
 Designed to run as Swarm stack `portfolio` behind Traefik + Cloudflare Tunnel. See **[docs/CLUSTER.md](docs/CLUSTER.md)** for the cluster.
 
@@ -177,7 +201,7 @@ This **fetch + `reset --hard origin/main`**, **`docker compose build`**, **`dock
 
 **502 Bad Gateway (full audit):** **[docs/AUDIT-502.md](docs/AUDIT-502.md)** — Traefik network, healthchecks, Cloudflare TLS, DNS vs tunnel.
 
-### Option B: Vercel
+### Vercel (optional)
 
 ```bash
 npm i -g vercel
@@ -186,7 +210,7 @@ vercel --prod
 
 Set `GITHUB_TOKEN` in Vercel's environment variables (Project Settings → Environment Variables).
 
-### Option C: Cloudflare Pages
+### Cloudflare Pages (optional)
 
 ```bash
 # Build

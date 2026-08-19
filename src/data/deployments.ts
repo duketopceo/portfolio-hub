@@ -1,40 +1,133 @@
+import type { ProjectConfig } from "@/lib/types";
+
 /**
- * Subdomain + Live Deployment Configuration
+ * Production URLs and hosting targets per curated project.
  *
- * Single source of truth for live URLs and subdomain routing.
- * Merged onto projectConfigs in getEnrichedProjects().
+ * Railway is the current portfolio-hub deploy target; Swarm entries are legacy.
+ * Multiple rows may share a slug (e.g. Pace prod + observe + status).
  *
- * `online: false` → demoOffline (still listed, not counted as "live").
- * Update this file when Swarm / external hosts change.
+ * `online: false` → not counted as live; UI stays honest when unknown/offline.
  */
 
+export type DeploymentHost =
+  | "railway"
+  | "cloudflare"
+  | "hetzner"
+  | "swarm"
+  | "vercel"
+  | "firebase"
+  | "other";
+
 export interface DeploymentConfig {
-  /** Project slug (must match projectConfigs) */
+  /** Project slug (must match projectConfigs, or `portfolio-hub` for this site) */
   slug: string;
   /** Full live URL */
   url: string;
-  /** Subdomain (e.g., "omhdb" → omhdb.luke-the-duke.com) */
+  /** Subdomain when applicable */
   subdomain?: string;
-  /** Deployment target */
-  host: "swarm" | "vercel" | "cloudflare" | "firebase" | "railway" | "other";
-  /** Brief role description */
+  /** Hosting / edge target */
+  host: DeploymentHost;
+  /** Brief role label for the services table */
   role: string;
-  /** Health check endpoint (relative) */
+  /** Optional health check path (relative to url origin) */
   healthCheck?: string;
-  /**
-   * Whether the deployment currently answers.
-   * false → treat as demoOffline in the portfolio UI.
-   */
+  /** Whether this endpoint is expected to answer today */
   online: boolean;
 }
 
 export const deployments: DeploymentConfig[] = [
+  // ── Lead systems (Aug 2026) ─────────────────────────────────────
+  {
+    slug: "khan",
+    url: "https://khanai.app",
+    host: "railway",
+    role: "Khan public app surface",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "khan",
+    url: "https://khanai.app",
+    host: "cloudflare",
+    role: "Edge / DNS for khanai.app",
+    online: true,
+  },
+  {
+    slug: "kurultai",
+    url: "https://github.com/duketopceo/kurultai",
+    host: "other",
+    role: "Public source — local knowledge brain",
+    online: true,
+  },
+  {
+    slug: "pace-server",
+    url: "https://pacehq.io",
+    host: "cloudflare",
+    role: "Pace marketing / product home",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "pace-server",
+    url: "https://app.pacehq.io",
+    host: "railway",
+    role: "Pace application",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "pace-server",
+    url: "https://observe.pacehq.io",
+    host: "hetzner",
+    role: "Grafana observability (as-code)",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "pace-server",
+    url: "https://status.pacehq.io",
+    host: "hetzner",
+    role: "Status page",
+    healthCheck: "/",
+    online: true,
+  },
+  {
+    slug: "openrouter",
+    url: "/openrouter",
+    host: "railway",
+    role: "OpenRouter demos showcase — Deflect, Motion, Bakeoff (this site)",
+    online: true,
+  },
+  {
+    slug: "openrouter",
+    url: "https://github.com/duketopceo/openrouter-demos",
+    host: "other",
+    role: "Public source — deflect/, motion/, bakeoff/",
+    online: true,
+  },
+  {
+    slug: "stratum-hq",
+    url: "https://stratumhq.app",
+    host: "other",
+    role: "Stratum Engine product shell",
+    healthCheck: "/",
+    online: false,
+  },
+  {
+    slug: "portfolio-hub",
+    url: "https://luke-the-duke.com",
+    host: "railway",
+    role: "Cosmic Intelligence portfolio (this repo) — public via tunnel until Railway DNS",
+    healthCheck: "/api/health",
+    online: false,
+  },
+  // ── Other live / catalog deployments ────────────────────────────
   {
     slug: "military-hardware-db",
     url: "https://omhdb.luke-the-duke.com/#/",
     subdomain: "omhdb",
     host: "swarm",
-    role: "Open military hardware database — 183 platforms across air, land, sea, and munitions",
+    role: "Open military hardware database",
     healthCheck: "/api/health",
     online: true,
   },
@@ -42,7 +135,7 @@ export const deployments: DeploymentConfig[] = [
     slug: "republic-atlas",
     url: "https://republicatlas.com",
     host: "other",
-    role: "Political data platform — election analytics and civic mapping",
+    role: "Political data platform",
     healthCheck: "/",
     online: true,
   },
@@ -50,17 +143,9 @@ export const deployments: DeploymentConfig[] = [
     slug: "nanoclaw",
     url: "https://nanoclaw.dev",
     host: "other",
-    role: "Lightweight multi-channel agentic AI container",
+    role: "Multi-channel agentic AI container",
     healthCheck: "/",
     online: true,
-  },
-  {
-    slug: "stratum-hq",
-    url: "https://stratumhq.app",
-    host: "other",
-    role: "Stratum product shell and roadmap",
-    healthCheck: "/",
-    online: false,
   },
   {
     slug: "chronicle-weaver",
@@ -74,16 +159,16 @@ export const deployments: DeploymentConfig[] = [
     slug: "finance-frenzy",
     url: "https://devpost.com/software/finance-frenzy/",
     host: "other",
-    role: "Hackathon finance simulation — Devpost write-up",
+    role: "Hackathon finance simulation — Devpost",
     online: true,
   },
-  // ── Swarm subdomains currently offline ──────────────────────────
+  // ── Legacy Swarm subdomains (offline) ───────────────────────────
   {
     slug: "alphahedge",
     url: "https://alphahedge.luke-the-duke.com",
     subdomain: "alphahedge",
     host: "swarm",
-    role: "Hedge fund simulation with real-time market dynamics and portfolio analytics",
+    role: "Hedge fund simulation",
     healthCheck: "/",
     online: false,
   },
@@ -92,7 +177,7 @@ export const deployments: DeploymentConfig[] = [
     url: "https://dixi.luke-the-duke.com",
     subdomain: "dixi",
     host: "swarm",
-    role: "AI projection system — computer vision, gesture recognition, real-time AI canvas",
+    role: "AI projection system",
     healthCheck: "/",
     online: false,
   },
@@ -101,7 +186,7 @@ export const deployments: DeploymentConfig[] = [
     url: "https://quiz.luke-the-duke.com",
     subdomain: "quiz",
     host: "swarm",
-    role: "AI-powered study companion — flashcards, quizzes, and summaries",
+    role: "AI study companion",
     healthCheck: "/",
     online: false,
   },
@@ -110,7 +195,7 @@ export const deployments: DeploymentConfig[] = [
     url: "https://blog.luke-the-duke.com",
     subdomain: "blog",
     host: "swarm",
-    role: "Personal blog platform with AI-assisted content and dark mode",
+    role: "Technical blog",
     healthCheck: "/",
     online: false,
   },
@@ -119,7 +204,7 @@ export const deployments: DeploymentConfig[] = [
     url: "https://essay.luke-the-duke.com",
     subdomain: "essay",
     host: "swarm",
-    role: "Collaborative writing platform with PR-based editing and AI assistance",
+    role: "Collaborative writing",
     healthCheck: "/",
     online: false,
   },
@@ -128,7 +213,7 @@ export const deployments: DeploymentConfig[] = [
     url: "https://ibkr.luke-the-duke.com",
     subdomain: "ibkr",
     host: "swarm",
-    role: "Interactive Brokers portfolio dashboard with real-time charts",
+    role: "IBKR portfolio dashboard",
     healthCheck: "/",
     online: false,
   },
@@ -137,7 +222,7 @@ export const deployments: DeploymentConfig[] = [
     url: "https://skyguard.luke-the-duke.com",
     subdomain: "skyguard",
     host: "swarm",
-    role: "SkyGuard AI — roofing operations assistant powered by Gemini",
+    role: "Roofing operations assistant",
     healthCheck: "/",
     online: false,
   },
@@ -164,14 +249,27 @@ export const deployments: DeploymentConfig[] = [
     url: "https://nem.luke-the-duke.com",
     subdomain: "nem",
     host: "swarm",
-    role: "NEM stock pitch — Perplexity Computer competition",
+    role: "NEM stock pitch",
     healthCheck: "/",
     online: false,
   },
 ];
 
+export function getDeploymentsBySlug(slug: string): DeploymentConfig[] {
+  return deployments.filter((d) => d.slug === slug);
+}
+
+/** @deprecated Prefer getDeploymentsBySlug — returns first row for a slug */
 export function getDeploymentBySlug(
   slug: string
 ): DeploymentConfig | undefined {
-  return deployments.find((d) => d.slug === slug);
+  return getDeploymentsBySlug(slug)[0];
+}
+
+/** Primary deployment for liveUrl overlay (first online, else first row). */
+export function getPrimaryDeployment(
+  slug: string
+): DeploymentConfig | undefined {
+  const rows = getDeploymentsBySlug(slug);
+  return rows.find((d) => d.online) ?? rows[0];
 }

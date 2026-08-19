@@ -1,12 +1,9 @@
 import { projectConfigs } from "@/data/projects";
-import {
-  GITHUB_ACCOUNT_LOGIN,
-  GITHUB_API_BASE,
-  githubAuthHeaders,
-} from "@/lib/github";
+import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
+import { getGithubAccessToken } from "@/lib/github-app";
 
 export const curatedRepoNames = new Set(
-  projectConfigs.map((p) => p.repoName)
+  projectConfigs.filter((p) => !p.siteOnly).map((p) => p.repoName)
 );
 
 export const repoNameToMeta = new Map(
@@ -91,9 +88,16 @@ async function ghFetch<T>(
   | { ok: true; data: T }
   | { ok: false; status: number; timeout?: boolean }
 > {
+  const token = await getGithubAccessToken();
+  const headers: HeadersInit = {
+    Accept: "application/vnd.github.v3+json",
+    "User-Agent": "portfolio-hub",
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
   try {
     const res = await fetch(`${GITHUB_API_BASE}${path}`, {
-      headers: githubAuthHeaders(),
+      headers,
       next: { revalidate: revalidateSeconds },
       signal: AbortSignal.timeout(15_000),
     });
@@ -285,7 +289,9 @@ export async function fetchAllOpenPullsAggregated(): Promise<
   const owner = GITHUB_ACCOUNT_LOGIN;
   const uniqueNames = [
     ...new Set(
-      projectConfigs.filter((p) => !p.private).map((p) => p.repoName)
+      projectConfigs
+        .filter((p) => !p.siteOnly && p.repoName)
+        .map((p) => p.repoName)
     ),
   ];
 
