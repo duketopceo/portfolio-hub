@@ -29,6 +29,8 @@ export interface ActivityDayBucket {
   prsMerged: number;
   reviews: number;
   releases: number;
+  issuesOpened: number;
+  issuesClosed: number;
   items: ActivityTimelineItem[];
 }
 

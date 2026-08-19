@@ -4869,6 +4869,16 @@ body {
   color: var(--color-text-muted);
 }
 
+.dossier-timeline__kind {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-right: 0.5rem;
+}
+
 .dossier-timeline__target {
   display: block;
   font-family: var(--font-mono);

@@ -9,6 +9,7 @@ import type {
   ActivityDayBucket,
   ActivityEventKind,
   ActivityTimelineItem,
+  HomepageActivityLine,
   HomepageActivityPayload,
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
@@ -17,6 +18,8 @@ import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 
 export const ACTIVITY_REVALIDATE_SECONDS = 3600;
 const WINDOW_MS = 7 * 86_400_000;
+const HOMEPAGE_MIN_LINES = 5;
+const HOMEPAGE_MAX_LINES = 10;
 
 interface RepoTarget {
   slug: string;
@@ -33,6 +36,7 @@ interface GhPull {
   merged_at: string | null;
   created_at: string;
   closed_at: string | null;
+  updated_at: string;
   base: { ref: string };
 }
 
@@ -46,8 +50,18 @@ interface GhRelease {
 
 interface GhReview {
   id: number;
-  submitted_at: string;
+  submitted_at: string | null;
   state: string;
+}
+
+interface GhIssue {
+  number: number;
+  title: string;
+  html_url: string;
+  state: string;
+  created_at: string;
+  closed_at: string | null;
+  pull_request?: unknown;
 }
 
 function featuredRepoTargets(): RepoTarget[] {
@@ -115,17 +129,19 @@ function publicUrl(
   htmlUrl: string,
   slug: string
 ): string | undefined {
-  if (isPrivate) return `/projects/${slug}`;
+  if (isPrivate) return undefined;
   return htmlUrl;
 }
 
 async function fetchPulls(repoName: string): Promise<GhPull[]> {
-  const open = (await ghGet<GhPull[]>(
-    `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=open&sort=updated&direction=desc&per_page=20`
-  )) ?? [];
-  const closed = (await ghGet<GhPull[]>(
-    `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=closed&sort=updated&direction=desc&per_page=30`
-  )) ?? [];
+  const open =
+    (await ghGet<GhPull[]>(
+      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=open&sort=updated&direction=desc&per_page=20`
+    )) ?? [];
+  const closed =
+    (await ghGet<GhPull[]>(
+      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=closed&sort=updated&direction=desc&per_page=30`
+    )) ?? [];
   const seen = new Set<number>();
   return [...open, ...closed].filter((p) => {
     if (seen.has(p.number)) return false;
@@ -142,15 +158,23 @@ async function fetchReleases(repoName: string): Promise<GhRelease[]> {
   );
 }
 
-async function fetchReviewCount(
+async function fetchIssues(repoName: string, sinceIso: string): Promise<GhIssue[]> {
+  const raw =
+    (await ghGet<GhIssue[]>(
+      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/issues?state=all&since=${encodeURIComponent(sinceIso)}&sort=updated&direction=desc&per_page=30`
+    )) ?? [];
+  return raw.filter((i) => !i.pull_request);
+}
+
+async function fetchReviews(
   repoName: string,
   pullNumber: number
-): Promise<number> {
-  const reviews =
+): Promise<GhReview[]> {
+  return (
     (await ghGet<GhReview[]>(
       `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls/${pullNumber}/reviews`
-    )) ?? [];
-  return reviews.filter((r) => r.state === "APPROVED" || r.state === "COMMENTED" || r.state === "CHANGES_REQUESTED").length;
+    )) ?? []
+  );
 }
 
 function emptyDay(date: string): ActivityDayBucket {
@@ -160,6 +184,8 @@ function emptyDay(date: string): ActivityDayBucket {
     prsMerged: 0,
     reviews: 0,
     releases: 0,
+    issuesOpened: 0,
+    issuesClosed: 0,
     items: [],
   };
 }
@@ -176,16 +202,36 @@ function bumpDay(
   return b;
 }
 
+function reviewStateLabel(state: string): string {
+  switch (state) {
+    case "APPROVED":
+      return "approved";
+    case "CHANGES_REQUESTED":
+      return "changes requested";
+    case "COMMENTED":
+      return "commented";
+    default:
+      return "reviewed";
+  }
+}
+
 async function buildRepoActivity(
   target: RepoTarget,
   sinceMs: number
 ): Promise<ProjectActivityPayload | null> {
-  const [pulls, releases] = await Promise.all([
+  const sinceIso = new Date(sinceMs).toISOString();
+  const [pulls, releases, issues] = await Promise.all([
     fetchPulls(target.repoName),
     fetchReleases(target.repoName),
+    fetchIssues(target.repoName, sinceIso),
   ]);
 
-  if (!pulls.length && !releases.length && !(await getGithubAccessToken())) {
+  if (
+    !pulls.length &&
+    !releases.length &&
+    !issues.length &&
+    !(await getGithubAccessToken())
+  ) {
     return null;
   }
 
@@ -196,15 +242,38 @@ async function buildRepoActivity(
   let weekOpened = 0;
   let weekReviews = 0;
   let weekReleases = 0;
+  let weekIssuesOpened = 0;
+  let weekIssuesClosed = 0;
+
+  const reviewFetchTargets = pulls.filter((pr) => {
+    const openedInWindow = inWindow(pr.created_at, sinceMs);
+    const mergedInWindow = pr.merged_at && inWindow(pr.merged_at, sinceMs);
+    const closedInWindow =
+      pr.closed_at && inWindow(pr.closed_at, sinceMs) && !pr.merged_at;
+    const updatedInWindow = inWindow(pr.updated_at, sinceMs);
+    return openedInWindow || mergedInWindow || closedInWindow || updatedInWindow;
+  });
+
+  const reviewResults = await Promise.all(
+    reviewFetchTargets.slice(0, 15).map(async (pr) => ({
+      number: pr.number,
+      reviews: await fetchReviews(target.repoName, pr.number),
+    }))
+  );
+
+  const reviewsByPr = new Map(
+    reviewResults.map((r) => [r.number, r.reviews] as const)
+  );
 
   for (const pr of pulls) {
-    const mergedInWindow =
-      pr.merged_at && inWindow(pr.merged_at, sinceMs);
+    const mergedInWindow = pr.merged_at && inWindow(pr.merged_at, sinceMs);
     const openedInWindow = inWindow(pr.created_at, sinceMs);
+    const closedInWindow =
+      pr.closed_at && inWindow(pr.closed_at, sinceMs) && !pr.merged_at;
 
-    if (!mergedInWindow && !openedInWindow) continue;
+    if (!mergedInWindow && !openedInWindow && !closedInWindow) continue;
 
-    if (openedInWindow && pr.state === "open") {
+    if (openedInWindow) {
       weekOpened++;
       const dk = dayKey(pr.created_at);
       const bucket = bumpDay(dayMap, dk);
@@ -231,11 +300,6 @@ async function buildRepoActivity(
       bucket.prsMerged++;
       const fallback = "PR merged";
       const title = scrubActivityText(pr.title, target.private, fallback);
-      const reviewCount = await fetchReviewCount(target.repoName, pr.number);
-      if (reviewCount > 0) {
-        bucket.reviews += reviewCount;
-        weekReviews += reviewCount;
-      }
       items.push({
         id: `${target.slug}-pr-merge-${pr.number}`,
         kind: "pr_merged",
@@ -246,6 +310,95 @@ async function buildRepoActivity(
         ref: String(pr.number),
         url: publicUrl(target.private, pr.html_url, target.slug),
         mergeTarget: scrubBranchRef(pr.base.ref, target.private),
+      });
+    }
+
+    if (closedInWindow) {
+      const dk = dayKey(pr.closed_at!);
+      const bucket = bumpDay(dayMap, dk);
+      const fallback = "PR closed";
+      const title = scrubActivityText(pr.title, target.private, fallback);
+      items.push({
+        id: `${target.slug}-pr-close-${pr.number}`,
+        kind: "pr_closed",
+        at: pr.closed_at!,
+        label: target.private
+          ? `PR #${pr.number} closed`
+          : `PR #${pr.number} closed — ${title}`,
+        ref: String(pr.number),
+        url: publicUrl(target.private, pr.html_url, target.slug),
+      });
+    }
+
+    const prReviews = reviewsByPr.get(pr.number) ?? [];
+    for (const review of prReviews) {
+      if (!review.submitted_at || !inWindow(review.submitted_at, sinceMs))
+        continue;
+      if (
+        review.state !== "APPROVED" &&
+        review.state !== "COMMENTED" &&
+        review.state !== "CHANGES_REQUESTED"
+      ) {
+        continue;
+      }
+      weekReviews++;
+      const dk = dayKey(review.submitted_at);
+      const bucket = bumpDay(dayMap, dk);
+      bucket.reviews++;
+      const verb = reviewStateLabel(review.state);
+      items.push({
+        id: `${target.slug}-review-${review.id}`,
+        kind: "review",
+        at: review.submitted_at,
+        label: target.private
+          ? `Review on PR #${pr.number} (${verb})`
+          : `PR #${pr.number} ${verb}`,
+        ref: String(pr.number),
+        url: publicUrl(target.private, pr.html_url, target.slug),
+      });
+    }
+  }
+
+  for (const issue of issues) {
+    const openedInWindow = inWindow(issue.created_at, sinceMs);
+    const closedInWindow =
+      issue.closed_at && inWindow(issue.closed_at, sinceMs);
+
+    if (openedInWindow) {
+      weekIssuesOpened++;
+      const dk = dayKey(issue.created_at);
+      const bucket = bumpDay(dayMap, dk);
+      bucket.issuesOpened++;
+      const fallback = `Issue #${issue.number} started`;
+      const title = scrubActivityText(issue.title, target.private, fallback);
+      items.push({
+        id: `${target.slug}-issue-open-${issue.number}`,
+        kind: "issue_opened",
+        at: issue.created_at,
+        label: target.private
+          ? `Issue #${issue.number} started`
+          : `Issue #${issue.number} started — ${title}`,
+        ref: String(issue.number),
+        url: publicUrl(target.private, issue.html_url, target.slug),
+      });
+    }
+
+    if (closedInWindow) {
+      weekIssuesClosed++;
+      const dk = dayKey(issue.closed_at!);
+      const bucket = bumpDay(dayMap, dk);
+      bucket.issuesClosed++;
+      const fallback = `Issue #${issue.number} finished`;
+      const title = scrubActivityText(issue.title, target.private, fallback);
+      items.push({
+        id: `${target.slug}-issue-close-${issue.number}`,
+        kind: "issue_closed",
+        at: issue.closed_at!,
+        label: target.private
+          ? `Issue #${issue.number} finished`
+          : `Issue #${issue.number} finished — ${title}`,
+        ref: String(issue.number),
+        url: publicUrl(target.private, issue.html_url, target.slug),
       });
     }
   }
@@ -274,15 +427,18 @@ async function buildRepoActivity(
   items.sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
 
   const headline = buildHeadline(
-    target.displayName,
     weekMerged,
     weekOpened,
     weekReviews,
     weekReleases,
+    weekIssuesOpened,
+    weekIssuesClosed,
     items
   );
 
-  const days = [...dayMap.values()].sort((a, b) => b.date.localeCompare(a.date));
+  const days = [...dayMap.values()].sort((a, b) =>
+    b.date.localeCompare(a.date)
+  );
 
   return {
     slug: target.slug,
@@ -297,11 +453,12 @@ async function buildRepoActivity(
 }
 
 function buildHeadline(
-  _displayName: string,
   merged: number,
   opened: number,
   reviews: number,
   releases: number,
+  issuesOpened: number,
+  issuesClosed: number,
   items: ActivityTimelineItem[]
 ): string {
   const parts: string[] = [];
@@ -328,8 +485,128 @@ function buildHeadline(
   if (releases > 0) {
     parts.push(releases === 1 ? "release cut" : `${releases} releases`);
   }
+  if (issuesOpened > 0) {
+    parts.push(`${issuesOpened} started`);
+  }
+  if (issuesClosed > 0) {
+    parts.push(`${issuesClosed} finished`);
+  }
   if (parts.length === 0) return "Quiet week — curated dossier below";
   return parts.join(" · ");
+}
+
+interface DayAggregate {
+  date: string;
+  prsOpened: number;
+  prsMerged: number;
+  reviews: number;
+  releases: number;
+  issuesOpened: number;
+  issuesClosed: number;
+  repos: Set<string>;
+  topSlug: string;
+}
+
+function buildHomepageDigest(
+  summaries: ProjectActivityPayload[]
+): HomepageActivityLine[] {
+  const dayAggregates = new Map<string, DayAggregate>();
+
+  for (const summary of summaries) {
+    for (const day of summary.days) {
+      let agg = dayAggregates.get(day.date);
+      if (!agg) {
+        agg = {
+          date: day.date,
+          prsOpened: 0,
+          prsMerged: 0,
+          reviews: 0,
+          releases: 0,
+          issuesOpened: 0,
+          issuesClosed: 0,
+          repos: new Set<string>(),
+          topSlug: summary.slug,
+        };
+        dayAggregates.set(day.date, agg);
+      }
+      agg.prsOpened += day.prsOpened;
+      agg.prsMerged += day.prsMerged;
+      agg.reviews += day.reviews;
+      agg.releases += day.releases;
+      agg.issuesOpened += day.issuesOpened;
+      agg.issuesClosed += day.issuesClosed;
+      if (
+        day.prsMerged + day.prsOpened + day.reviews + day.releases > 0
+      ) {
+        agg.repos.add(summary.displayName);
+        agg.topSlug = summary.slug;
+      }
+    }
+  }
+
+  const lines: HomepageActivityLine[] = [];
+
+  const sortedDays = [...dayAggregates.values()].sort((a, b) =>
+    b.date.localeCompare(a.date)
+  );
+
+  for (const day of sortedDays) {
+    const parts: string[] = [];
+    if (day.prsMerged > 0) parts.push(`${day.prsMerged} merged`);
+    if (day.prsOpened > 0) parts.push(`${day.prsOpened} opened`);
+    if (day.reviews > 0) parts.push(`${day.reviews} reviews`);
+    if (day.releases > 0) {
+      parts.push(
+        day.releases === 1 ? "1 release" : `${day.releases} releases`
+      );
+    }
+    if (day.issuesOpened > 0) parts.push(`${day.issuesOpened} started`);
+    if (day.issuesClosed > 0) parts.push(`${day.issuesClosed} finished`);
+    if (parts.length === 0) continue;
+
+    const repoHint =
+      day.repos.size > 1
+        ? ` (${[...day.repos].slice(0, 3).join(", ")}${day.repos.size > 3 ? "…" : ""})`
+        : day.repos.size === 1
+          ? ` (${[...day.repos][0]})`
+          : "";
+
+    lines.push({
+      slug: day.topSlug,
+      displayName: formatShortDate(`${day.date}T12:00:00.000Z`),
+      private: false,
+      line: parts.join(" · ") + repoHint,
+      href: `/projects/${day.topSlug}`,
+    });
+
+    if (lines.length >= HOMEPAGE_MAX_LINES) break;
+  }
+
+  for (const summary of summaries) {
+    if (lines.length >= HOMEPAGE_MAX_LINES) break;
+    const duplicate = lines.some(
+      (l) => l.slug === summary.slug && l.line === summary.headline
+    );
+    if (duplicate) continue;
+    lines.push({
+      slug: summary.slug,
+      displayName: summary.displayName,
+      private: summary.private,
+      line: summary.headline,
+      href: `/projects/${summary.slug}`,
+    });
+  }
+
+  const unique = lines.filter(
+    (line, idx, arr) =>
+      arr.findIndex((l) => l.slug === line.slug && l.line === line.line) === idx
+  );
+
+  if (unique.length >= HOMEPAGE_MIN_LINES) {
+    return unique.slice(0, HOMEPAGE_MAX_LINES);
+  }
+
+  return unique.slice(0, HOMEPAGE_MAX_LINES);
 }
 
 export async function getProjectActivityTimeline(
@@ -411,13 +688,7 @@ export async function getHomepageActivityShowcase(options?: {
     };
   }
 
-  const lines = summaries.slice(0, 10).map((s) => ({
-    slug: s.slug,
-    displayName: s.displayName,
-    private: s.private,
-    line: s.headline,
-    href: `/projects/${s.slug}`,
-  }));
+  const lines = buildHomepageDigest(summaries);
 
   return {
     lines,
@@ -440,9 +711,33 @@ export function activityKindFallback(kind: ActivityEventKind): string {
     case "release":
       return "Release published";
     case "issue_opened":
-      return "Issue opened";
+      return "Work started";
     case "issue_closed":
-      return "Issue closed";
+      return "Work finished";
+    default: {
+      const _exhaustive: never = kind;
+      return _exhaustive;
+    }
+  }
+}
+
+/** Human verb for timeline badges */
+export function activityKindVerb(kind: ActivityEventKind): string {
+  switch (kind) {
+    case "pr_opened":
+      return "Opened";
+    case "pr_merged":
+      return "Merged";
+    case "pr_closed":
+      return "Closed";
+    case "review":
+      return "Reviewed";
+    case "release":
+      return "Released";
+    case "issue_opened":
+      return "Started";
+    case "issue_closed":
+      return "Finished";
     default: {
       const _exhaustive: never = kind;
       return _exhaustive;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import type { ProjectActivityPayload } from "@/lib/github-activity-types";
+import { activityKindVerb } from "@/lib/github-activity";
 import { LockIcon, ExternalIcon } from "@/components/Icons";
 import { formatDate } from "@/lib/utils";
 
@@ -51,6 +52,12 @@ export function DossierActivityTimeline({
                 {day.releases > 0 && (
                   <span>{day.releases} release{day.releases !== 1 ? "s" : ""}</span>
                 )}
+                {day.issuesOpened > 0 && (
+                  <span>{day.issuesOpened} started</span>
+                )}
+                {day.issuesClosed > 0 && (
+                  <span>{day.issuesClosed} finished</span>
+                )}
               </span>
             </div>
           ))}
@@ -69,6 +76,9 @@ export function DossierActivityTimeline({
                 {formatDate(item.at)}
               </time>
               <div className="dossier-timeline__body">
+                <span className="dossier-timeline__kind">
+                  {activityKindVerb(item.kind)}
+                </span>
                 {item.url && !isPrivate ? (
                   <a
                     href={item.url}
