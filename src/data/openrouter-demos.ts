@@ -6,12 +6,21 @@ export type OpenRouterDemo = {
   scoring: string;
   sourceUrl: string;
   sourceNote?: string;
-  status: "placeholder" | "live";
+  /** fixtures = offline pytest on fixtures; live = requires OPENROUTER_API_KEY */
+  status: "fixtures" | "live";
 };
 
+export const OPENROUTER_DEMOS_REPO_URL =
+  "https://github.com/duketopceo/openrouter-demos";
+
+export const openRouterOwnerUrl = "https://github.com/duketopceo";
+
+function demoSourcePath(folder: string): string {
+  return `${OPENROUTER_DEMOS_REPO_URL}/tree/main/${folder}`;
+}
+
 /**
- * OpenRouter application demos — grounded in daily operator workflows
- * (Auto Router, presets, Guardrails, bake-offs). Live scores ship with demo repos.
+ * OpenRouter application demos — public repo: duketopceo/openrouter-demos
  */
 export const openRouterDemos: OpenRouterDemo[] = [
   {
@@ -21,11 +30,11 @@ export const openRouterDemos: OpenRouterDemo[] = [
     summary:
       "Routes inbound support tickets through OpenRouter with Guardrails — classify, deflect with grounded replies, or escalate with a structured handoff.",
     scoring:
-      "Eval fixtures on classify/deflect/escalate accuracy, guardrail violation rate, and escalation precision.",
-    sourceUrl: "/openrouter",
+      "Eval harness on classify / deflect / escalate and guardrail violations — fixture-based, no live accuracy claims here.",
+    sourceUrl: demoSourcePath("deflect"),
     sourceNote:
-      "Source ships with the Deflect demo repo on GitHub when public.",
-    status: "placeholder",
+      "Offline pytest passes on fixtures. Live evals need OPENROUTER_API_KEY.",
+    status: "fixtures",
   },
   {
     slug: "motion",
@@ -34,11 +43,11 @@ export const openRouterDemos: OpenRouterDemo[] = [
     summary:
       "Uses OpenRouter Auto Router and presets to turn inbound GTM signals into a ranked next action with rationale.",
     scoring:
-      "Eval suite on next-action relevance, preset consistency, and coverage across inbound intent fixtures.",
-    sourceUrl: "/openrouter",
+      "Eval harness on next-action relevance and preset consistency across inbound fixtures.",
+    sourceUrl: demoSourcePath("motion"),
     sourceNote:
-      "Source ships with the Motion demo repo on GitHub when public.",
-    status: "placeholder",
+      "Offline pytest passes on fixtures. Live evals need OPENROUTER_API_KEY.",
+    status: "fixtures",
   },
   {
     slug: "bakeoff",
@@ -47,12 +56,10 @@ export const openRouterDemos: OpenRouterDemo[] = [
     summary:
       "Daily-style model and endpoint bake-offs on OpenRouter — latency, cost, and quality compared before a launch gate.",
     scoring:
-      "Pass/fail launch gate on latency SLOs, cost ceilings, and quality benchmarks per endpoint.",
-    sourceUrl: "/openrouter",
+      "Launch-gate pass/fail on latency, cost, and quality fixtures per endpoint.",
+    sourceUrl: demoSourcePath("bakeoff"),
     sourceNote:
-      "Source ships with the Bakeoff demo repo on GitHub when public.",
-    status: "placeholder",
+      "Offline pytest passes on fixtures. Live evals need OPENROUTER_API_KEY.",
+    status: "fixtures",
   },
 ];
-
-export const openRouterOwnerUrl = "https://github.com/duketopceo";

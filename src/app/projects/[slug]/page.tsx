@@ -17,7 +17,7 @@ import {
 import { isProjectLive } from "@/lib/deployments";
 import { formatDate, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
-import { openRouterDemos } from "@/data/openrouter-demos";
+import { openRouterDemos, OPENROUTER_DEMOS_REPO_URL } from "@/data/openrouter-demos";
 import { CheckIcon } from "@/components/Icons";
 import DemoEmbed from "@/components/DemoEmbed";
 import {
@@ -153,12 +153,29 @@ export default async function ProjectDetailPage({
                     <span className="openrouter-card__role">{demo.role}</span>
                     <p className="openrouter-card__summary">{demo.summary}</p>
                     <p className="openrouter-card__note">{demo.scoring}</p>
+                    <a
+                      href={demo.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="detail-nav-link"
+                    >
+                      Source: {demo.slug}/ ↗
+                    </a>
                   </article>
                 ))}
               </div>
               <p className="mt-4">
+                <a
+                  href={OPENROUTER_DEMOS_REPO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="detail-nav-link"
+                >
+                  Full repo on GitHub ↗
+                </a>
+                {" · "}
                 <Link href="/openrouter" className="detail-nav-link">
-                  Full demo showcase →
+                  Demo showcase page →
                 </Link>
               </p>
             </DossierSection>

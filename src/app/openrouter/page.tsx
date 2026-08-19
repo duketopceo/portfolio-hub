@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   openRouterDemos,
-  openRouterOwnerUrl,
+  OPENROUTER_DEMOS_REPO_URL,
 } from "@/data/openrouter-demos";
 
 export const metadata = {
@@ -22,8 +22,16 @@ export default function OpenRouterPage() {
         <p className="projects-page-header__sub">
           Three eval-driven demos mapped to OpenRouter application roles —
           grounded in daily operator workflows (Auto Router, presets,
-          Guardrails, bake-offs). Scores land as repos ship; placeholders below
-          are intentional.
+          Guardrails, bake-offs). Source lives in{" "}
+          <a
+            href={OPENROUTER_DEMOS_REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-nav-link"
+          >
+            openrouter-demos
+          </a>
+          ; offline pytest is green on fixtures.
         </p>
       </header>
 
@@ -50,8 +58,10 @@ export default function OpenRouterPage() {
               <div>
                 <dt>Status</dt>
                 <dd>
-                  {demo.status === "placeholder" ? (
-                    <span className="openrouter-card__badge">Placeholder</span>
+                  {demo.status === "fixtures" ? (
+                    <span className="openrouter-card__badge">
+                      Fixtures (offline)
+                    </span>
                   ) : (
                     <span className="openrouter-card__badge openrouter-card__badge--live">
                       Live
@@ -88,16 +98,17 @@ export default function OpenRouterPage() {
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.7 }}>
           These demos reflect how OpenRouter is used day to day — routing,
           presets, guardrails, and bake-offs — not a self-hosted inference
-          cluster. Owner repos live under{" "}
+          cluster. Run offline tests from{" "}
           <a
-            href={openRouterOwnerUrl}
+            href={OPENROUTER_DEMOS_REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="detail-nav-link"
           >
-            github.com/duketopceo
+            github.com/duketopceo/openrouter-demos
           </a>
-          . When a demo repo goes public, this page will link directly to it.
+          . Live evals require <code>OPENROUTER_API_KEY</code> — this page does
+          not publish live accuracy numbers.
         </p>
         <p>
           <Link href="/projects" className="detail-nav-link">

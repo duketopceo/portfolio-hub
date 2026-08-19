@@ -106,17 +106,16 @@ export const projectConfigs: ProjectConfig[] = [
   },
   {
     slug: "openrouter",
-    repoName: "",
+    repoName: "openrouter-demos",
     displayName: "OpenRouter Demos",
     tagline:
       "Role-aligned application demos — Deflect, Motion, Bakeoff with eval-driven scoring",
     description:
-      "Three OpenRouter application demos mapped to hiring roles: Deflect (support classify/deflect/escalate with Guardrails), Motion (GTM inbound → next action with Auto Router and presets), and Bakeoff (provider ops — latency, cost, quality bake-offs with launch-gate pass/fail). Grounded in daily OpenRouter operator workflows; live scores ship as demo repos go public.",
+      "Three OpenRouter application demos in the public openrouter-demos repo: Deflect (support classify/deflect/escalate with Guardrails), Motion (GTM inbound → next action with Auto Router and presets), and Bakeoff (provider ops — latency, cost, quality bake-offs with launch-gate pass/fail). Offline pytest passes on fixtures; live evals require OPENROUTER_API_KEY.",
     category: "ai",
     type: "platform",
     featured: true,
-    siteOnly: true,
-    techStack: ["OpenRouter", "Guardrails", "Auto Router", "Evals"],
+    techStack: ["OpenRouter", "Guardrails", "Auto Router", "Python", "pytest"],
     private: false,
     highlights: [
       "Deflect — support routing with Guardrails and eval fixtures",

@@ -95,7 +95,14 @@ export const deployments: DeploymentConfig[] = [
     slug: "openrouter",
     url: "/openrouter",
     host: "railway",
-    role: "OpenRouter demos — Deflect, Motion, Bakeoff (this site)",
+    role: "OpenRouter demos showcase — Deflect, Motion, Bakeoff (this site)",
+    online: true,
+  },
+  {
+    slug: "openrouter",
+    url: "https://github.com/duketopceo/openrouter-demos",
+    host: "other",
+    role: "Public source — deflect/, motion/, bakeoff/",
     online: true,
   },
   {
