@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
-import { sortPortfolioOrbit } from "@/lib/project-completeness";
+import { getHomepageOrbitProjects } from "@/lib/project-completeness";
 import { isProjectLive } from "@/lib/deployments";
 import SolarSystemNav from "@/components/SolarSystemNav";
 import ActivityFeed from "@/components/ActivityFeed";
@@ -9,7 +9,7 @@ export const revalidate = 3600;
 
 export default async function Home() {
   const all = await getEnrichedProjects();
-  const ordered = sortPortfolioOrbit(all);
+  const ordered = getHomepageOrbitProjects(all);
   const liveCount = all.filter(isProjectLive).length;
   const categories = new Set(all.map((p) => p.category));
   const lead = ordered[0];

@@ -6,7 +6,7 @@
     "watchPatterns": ["src/**", "public/**", "next.config.ts", "package.json"]
   },
   "deploy": {
-    "healthcheckPath": "/",
+    "healthcheckPath": "/api/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10

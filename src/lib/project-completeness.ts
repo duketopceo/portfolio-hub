@@ -22,6 +22,13 @@ import { isProjectLive } from "@/lib/deployments";
 /** Forced front-runner in orbit + dossier prev/next order. */
 export const PORTFOLIO_LEAD_SLUG = "kurultai";
 
+/** Homepage solar orbit — lead systems only; full catalog stays on /projects. */
+export const HOMEPAGE_FEATURED_SLUGS = [
+  "khan",
+  "kurultai",
+  "pace-server",
+] as const;
+
 const MS_DAY = 86_400_000;
 
 function recencyScore(isoDate: string): number {
@@ -87,6 +94,17 @@ export function sortProjectsByCompleteness(
     if (db !== da) return db - da;
     return a.displayName.localeCompare(b.displayName);
   });
+}
+
+/**
+ * Projects shown in the homepage solar orbit (fixed trio, catalog order).
+ */
+export function getHomepageOrbitProjects(
+  projects: EnrichedProject[]
+): EnrichedProject[] {
+  return HOMEPAGE_FEATURED_SLUGS.map((slug) =>
+    projects.find((p) => p.slug === slug)
+  ).filter((p): p is EnrichedProject => p !== undefined);
 }
 
 /**

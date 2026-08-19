@@ -94,9 +94,33 @@ npm run dev
 
 ## Deployment
 
-Production is already `docker stack deploy -c docker-compose.yml portfolio`. Node names, Tailscale, and cluster wiring live in **[docs/CLUSTER.md](docs/CLUSTER.md)** — do not copy them here. Vercel / Cloudflare Pages below are optional alternatives, not the primary live site.
+**Current deploy target:** [Railway](https://railway.app) — `railway up` or GitHub integration using the repo `Dockerfile` and `railway.json`. Set `GITHUB_TOKEN` in the Railway service environment (never commit secrets). See `.env.example`.
 
-### Option A: Docker Swarm (Recommended)
+Historical Swarm/cluster notes remain in **[docs/CLUSTER.md](docs/CLUSTER.md)** for reference; they are not the primary production path.
+
+### Railway (recommended)
+
+```bash
+# Install CLI: https://docs.railway.app/develop/cli
+railway login
+railway link          # link to your Railway project
+railway up            # build from Dockerfile + deploy
+```
+
+**Environment variables** (Railway dashboard → Variables):
+
+| Variable       | Required | Description |
+|----------------|----------|-------------|
+| `GITHUB_TOKEN` | Optional | GitHub PAT for private repo metadata + `/now` commit dates |
+| `GITHUB_USER`  | Optional | Defaults to `duketopceo` |
+
+**Build:** Railway uses `railway.json` → `Dockerfile` multi-stage build. Pass `GITHUB_TOKEN` as a build variable if you want GitHub API data baked at build time; runtime `GITHUB_TOKEN` covers ISR refreshes.
+
+**Health check:** `/api/health` (configured in `railway.json`).
+
+### Docker Swarm (legacy / self-hosted)
+
+Production was previously `docker stack deploy -c docker-compose.yml portfolio`. Node names, Tailscale, and cluster wiring live in **[docs/CLUSTER.md](docs/CLUSTER.md)**.
 
 Designed to run as Swarm stack `portfolio` behind Traefik + Cloudflare Tunnel. See **[docs/CLUSTER.md](docs/CLUSTER.md)** for the cluster.
 
@@ -177,7 +201,7 @@ This **fetch + `reset --hard origin/main`**, **`docker compose build`**, **`dock
 
 **502 Bad Gateway (full audit):** **[docs/AUDIT-502.md](docs/AUDIT-502.md)** — Traefik network, healthchecks, Cloudflare TLS, DNS vs tunnel.
 
-### Option B: Vercel
+### Vercel (optional)
 
 ```bash
 npm i -g vercel
@@ -186,7 +210,7 @@ vercel --prod
 
 Set `GITHUB_TOKEN` in Vercel's environment variables (Project Settings → Environment Variables).
 
-### Option C: Cloudflare Pages
+### Cloudflare Pages (optional)
 
 ```bash
 # Build
