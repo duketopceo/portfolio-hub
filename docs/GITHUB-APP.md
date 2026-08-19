@@ -4,13 +4,20 @@ Server-only authentication for GitHub API calls. **Visitors never OAuth.** There
 
 ## Why
 
-The site enriches curated project dossiers with **metadata** (last push, language, CI/checks) for public and private repos Luke installs the app on. Private file trees, READMEs, and diffs stay off the client except **`SHOWCASE.md`** at repo root (allowlisted server fetch).
+The site enriches curated project dossiers and a **live/daily activity showcase** with metadata for public and private repos Luke installs the app on:
+
+- **Homepage:** compact last-7-days highlights across featured projects (PR merges, reviews, releases)
+- **Dossiers:** per-repo timelines with day counts — public repos link to GitHub; private repos show scrubbed summaries only
+
+Private file trees, READMEs, diffs, and commit bodies stay off the client except **`SHOWCASE.md`** at repo root (allowlisted server fetch).
 
 ## Fallback order
 
 1. **GitHub App** — `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_INSTALLATION_ID`
 2. **`GITHUB_TOKEN`** — classic/fine-grained PAT (existing behavior)
-3. **Curated-only** — no live GitHub enrichment
+3. **Curated-only** — pages still render; activity sections show empty/fixture in tests
+
+Activity responses are cached via Next.js ISR (`revalidate: 3600` — hourly).
 
 ## Create the app (Luke — one-time)
 
@@ -20,7 +27,9 @@ The site enriches curated project dossiers with **metadata** (last push, languag
 4. **Webhook:** inactive (not required for metadata reads)
 5. **Permissions (repository):**
    - **Metadata:** Read
-   - **Contents:** Read (for `SHOWCASE.md` allowlist only)
+   - **Contents:** Read (public README + private `SHOWCASE.md` allowlist only)
+   - **Pull requests:** Read (activity timelines)
+   - **Issues:** Read (optional issue events)
    - **Checks:** Read (CI summary on dossiers)
 6. **Where can this app be installed?** Only on this account
 7. Create the app → note **App ID**
@@ -29,7 +38,7 @@ The site enriches curated project dossiers with **metadata** (last push, languag
 ## Install on `duketopceo`
 
 1. App settings → **Install App** → select **duketopceo**
-2. **Repository access:** select portfolio repos (Khan, Pace-Server, kurultai, etc.)
+2. **Repository access:** select portfolio repos (Khan, Pace-Server, kurultai, openrouter-demos, etc.)
 3. Note **Installation ID** from the URL:  
    `https://github.com/settings/installations/<INSTALLATION_ID>`
 
@@ -45,9 +54,16 @@ Set in Railway → **portfolio-hub** → **Variables** (see `.env.example`):
 
 Optional legacy fallback: `GITHUB_TOKEN`, `GITHUB_USER` (defaults to `duketopceo`).
 
+Test-only: `ACTIVITY_USE_FIXTURES=1` forces fixture activity data (used in Vitest).
+
 ## Security rules (code-enforced)
 
 - Tokens and private keys never sent to the browser
-- Private repo README / file trees not rendered client-side
+- Private repo README / file trees / commit message dumps not rendered client-side
+- Activity titles run through `src/lib/activity-scrubber.ts` (emails, tokens, Bartlett identifiers, secret paths)
+- Private repos: no GitHub PR deep-links — dossier links only
 - Only **`SHOWCASE.md`** at repository root may be fetched for private repos
-- Dossier activity strip exposes metadata summaries only
+
+## PR #18 note
+
+Open PR [#18](https://github.com/duketopceo/portfolio-hub/pull/18) modularizes the catalog into `src/data/projects/catalog/*`. **This branch keeps the monolithic `projects.ts`** and supersedes #18 for dossier + activity work until Luke merges one path deliberately. Do not auto-merge #18 from cloud agents.

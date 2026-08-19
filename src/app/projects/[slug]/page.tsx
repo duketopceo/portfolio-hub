@@ -25,9 +25,10 @@ import {
   ProjectHero,
   DossierFooterNav,
   DossierServicesTable,
-  DossierActivityStrip,
+  DossierActivityTimeline,
   DossierBackendSection,
 } from "@/components/dossier";
+import { getProjectActivityTimeline } from "@/lib/github-activity";
 
 export const revalidate = 3600;
 
@@ -74,6 +75,7 @@ export default async function ProjectDetailPage({
     adjacent;
 
   const project = await enrichProjectActivity(baseProject);
+  const githubActivity = await getProjectActivityTimeline(slug);
 
   const readme =
     !project.private && !project.siteOnly
@@ -107,9 +109,10 @@ export default async function ProjectDetailPage({
     <article className="dossier-page animate-fade-up" style={pageStyle}>
       <ProjectHero project={project} accentColor={accentColor} meta={meta} />
 
-      <div className="cosmic-page dossier-page__activity-wrap">
-        <DossierActivityStrip project={project} />
-      </div>
+      <DossierActivityTimeline
+        project={project}
+        activity={githubActivity}
+      />
 
       <div className="cosmic-page dossier-page__two-col">
         <div className="dossier-page__main-stack">
@@ -178,6 +181,16 @@ export default async function ProjectDetailPage({
                   Demo showcase page →
                 </Link>
               </p>
+            </DossierSection>
+          )}
+
+          {project.finishLine && (
+            <DossierSection
+              title="Finish line"
+              id={`dossier-finish-${slug}`}
+              surface="glass"
+            >
+              <p className="cosmic-readable">{project.finishLine}</p>
             </DossierSection>
           )}
 

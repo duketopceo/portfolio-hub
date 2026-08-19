@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
 import { getHomepageOrbitProjects } from "@/lib/project-completeness";
+import { getHomepageActivityShowcase } from "@/lib/github-activity";
 import { isProjectLive } from "@/lib/deployments";
 import SolarSystemNav from "@/components/SolarSystemNav";
-import ActivityFeed from "@/components/ActivityFeed";
+import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
 
 export const revalidate = 3600;
 
 export default async function Home() {
   const all = await getEnrichedProjects();
   const ordered = getHomepageOrbitProjects(all);
+  const activity = await getHomepageActivityShowcase();
   const liveCount = all.filter(isProjectLive).length;
   const categories = new Set(all.map((p) => p.category));
   const lead = ordered[0];
@@ -55,7 +57,7 @@ export default async function Home() {
 
       {/* ── Activity strip — below orbit, full width ── */}
       <div className="home-activity-strip">
-        <ActivityFeed variant="strip" />
+        <HomeActivityShowcase data={activity} />
       </div>
 
       <section

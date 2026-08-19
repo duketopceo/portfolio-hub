@@ -34,6 +34,8 @@ export const projectConfigs: ProjectConfig[] = [
     ],
     architecture:
       "Temporal workflows → OpenRouter/LiteLLM workers → Risk scoring → MCP tools → Rust CLI + khanai.app",
+    finishLine:
+      "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Rust CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild.",
   },
   {
     slug: "kurultai",
@@ -103,6 +105,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Multi-host production — Hetzner compute, Railway app hosting, Cloudflare edge without a single-vendor lock-in",
       "Grafana-as-code — Treats dashboards and alerts as versioned infrastructure",
     ],
+    finishLine:
+      "In production across Hetzner, Railway, and Cloudflare with Grafana-as-code and public surfaces at pacehq.io, app.pacehq.io, observe.pacehq.io, and status.pacehq.io. Remaining ~20%: Python reasoning path hardening and operator UX for edge cases — hire is for last-mile finishing, not vapor.",
   },
   {
     slug: "openrouter",

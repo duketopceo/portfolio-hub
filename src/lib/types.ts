@@ -64,6 +64,8 @@ export interface ProjectConfig {
   engineeringDecisions?: string[];
   /** On-site showcase only — no GitHub repo (e.g. OpenRouter demos page) */
   siteOnly?: boolean;
+  /** Private dossier — shipped vs remaining finish-line (recruiter-facing) */
+  finishLine?: string;
 }
 
 export interface EnrichedProject extends ProjectConfig {
