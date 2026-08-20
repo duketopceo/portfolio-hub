@@ -20,6 +20,7 @@ import { categoryMeta } from "@/data/projects";
 import { openRouterDemos, OPENROUTER_DEMOS_REPO_URL } from "@/data/openrouter-demos";
 import { CheckIcon } from "@/components/Icons";
 import DemoEmbed from "@/components/DemoEmbed";
+import ProjectDemoVideo from "@/components/ProjectDemoVideo";
 import {
   DossierSection,
   ProjectHero,
@@ -108,6 +109,18 @@ export default async function ProjectDetailPage({
   return (
     <article className="dossier-page animate-fade-up" style={pageStyle}>
       <ProjectHero project={project} accentColor={accentColor} meta={meta} />
+
+      {project.demoVideoUrl && !project.private && (
+        <section
+          className="cosmic-page"
+          style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)" }}
+        >
+          <ProjectDemoVideo
+            src={project.demoVideoUrl}
+            title={project.displayName}
+          />
+        </section>
+      )}
 
       <DossierActivityTimeline
         project={project}
