@@ -50,10 +50,10 @@
   --text-3xl: 2.5rem;
   --text-hero: clamp(3rem, 0.5rem + 7vw, 5rem);
 
-  /* ── Fonts ─────────────────────────────── */
-  --font-display: var(--font-space-grotesk), 'Bricolage Grotesque', system-ui, sans-serif;
-  --font-body: var(--font-inter), 'DM Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', 'SF Mono', monospace;
+  /* ── Fonts (Supabase DESIGN.md via VoltAgent — Inter ↔ Circular, Source Code Pro mono) ── */
+  --font-display: var(--font-inter), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: var(--font-inter), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-source-mono), 'Source Code Pro', 'Office Code Pro', Menlo, monospace;
 
   /* ── Radius ────────────────────────────── */
   --radius-sm: 4px;

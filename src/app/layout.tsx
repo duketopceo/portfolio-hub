@@ -1,28 +1,23 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Inter, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import WelcomeIntro from "@/components/WelcomeIntro";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 
-const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const dmSans = DM_Sans({
+/** Supabase DESIGN.md (VoltAgent): Inter substitutes licensed Circular at w500 display / w400 body */
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const sourceCodePro = Source_Code_Pro({
   subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-source-mono",
   display: "swap",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -63,7 +58,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${bricolageGrotesque.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.variable} ${sourceCodePro.variable} antialiased`}
       >
         <SiteBackground />
         <WelcomeIntro />
