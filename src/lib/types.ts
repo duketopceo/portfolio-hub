@@ -85,6 +85,8 @@ export interface ProjectConfig {
   liveUrl?: string;
   /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
   demoUrl?: string;
+  /** Hosted walkthrough video (e.g. R2 mp4) for project dossier */
+  demoVideoUrl?: string;
   /** If true, liveUrl can be iframed on the detail page */
   embeddable?: boolean;
   /** If true, the demo subdomain is offline — show ProjectPreview instead of iframe */

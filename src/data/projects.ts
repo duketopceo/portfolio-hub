@@ -174,6 +174,8 @@ export const projectConfigs: ProjectConfig[] = [
     },
     techStack: ["OpenRouter", "Guardrails", "Auto Router", "Python", "pytest"],
     private: false,
+    demoVideoUrl:
+      "https://pub-9e45e5f7be6f4c9989852b4989e83a23.r2.dev/demos/openrouter-demos-walkthrough.mp4",
     highlights: [
       "Deflect — support routing with Guardrails and eval fixtures",
       "Motion — GTM next-action with Auto Router and presets",
