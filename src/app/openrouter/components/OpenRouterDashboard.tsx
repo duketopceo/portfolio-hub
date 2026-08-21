@@ -262,8 +262,14 @@ export default function OpenRouterDashboard() {
                           <button
                             className="openrouter-full-task__head"
                             onClick={() => setExpandedTask(isTaskOpen ? null : task)}
+                            aria-expanded={isTaskOpen}
                           >
-                            <code>{task}</code>
+                            <span className="openrouter-full-task__name">
+                              <span className="openrouter-full-task__chev">
+                                {isTaskOpen ? "▾" : "▸"}
+                              </span>
+                              <code>{task}</code>
+                            </span>
                             <span>{runs.length} runs · avg {Math.round(runs.filter(r=>!("error" in r)).reduce((a,b)=>a+b.latency_ms,0)/Math.max(1,runs.filter(r=>!("error" in r)).length))}ms</span>
                           </button>
                           {isTaskOpen && (

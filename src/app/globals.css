@@ -4738,6 +4738,27 @@ body {
   color: var(--color-accent, #2dd4bf);
 }
 
+.openrouter-full-task__head:hover {
+  border-color: var(--color-accent, #2dd4bf);
+  background: #131c30;
+}
+
+.openrouter-full-task__name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.openrouter-full-task__chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  color: var(--color-accent, #2dd4bf);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
 .openrouter-full-task__head span:last-child {
   font-family: var(--font-mono);
   font-size: 11px;
