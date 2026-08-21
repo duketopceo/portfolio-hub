@@ -208,6 +208,27 @@ export default function OpenRouterDashboard() {
             );
           })}
         </div>
+
+        {/* Launch gate + deprecation note */}
+        <div className="openrouter-gate-row">
+          <div className="openrouter-gate">
+            <span className="openrouter-gate__label">Launch gate</span>
+            <span className="openrouter-gate__value">PASS</span>
+            <span className="openrouter-gate__meta">
+              all 3 within baseline (latency &lt;10s, cost &lt;$0.01/1K out, quality &ge;80%)
+            </span>
+          </div>
+          <div className="openrouter-gate">
+            <span className="openrouter-gate__label">Deprecation note</span>
+            <span className="openrouter-gate__value openrouter-gate__value--warn">Watch</span>
+            <span className="openrouter-gate__meta">
+              Muse Glimmer 30B shows the highest mean latency (6931ms) and widest variance
+              (3.9s&ndash;10.2s). If used in production, pin to a fallback and monitor TTFT.
+              No model here has been formally deprecated; this is the pre-launch check that
+              would flag it.
+            </span>
+          </div>
+        </div>
       </section>
     </div>
   );
