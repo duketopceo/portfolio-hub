@@ -4,6 +4,7 @@ import {
   OPENROUTER_DEMOS_REPO_URL,
 } from "@/data/openrouter-demos";
 import OpenRouterDashboard from "./components/OpenRouterDashboard";
+import BdhDossier from "./components/BdhDossier";
 
 export const metadata = {
   title: "OpenRouter Applications",
@@ -38,6 +39,9 @@ export default function OpenRouterPage() {
 
       {/* Interactive dashboard: baked bakeoff + session-key live tests */}
       <OpenRouterDashboard />
+
+      {/* BDH research dossier */}
+      <BdhDossier />
 
       <div className="openrouter-grid" role="list">
         {openRouterDemos.map((demo) => (

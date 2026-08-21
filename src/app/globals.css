@@ -4620,6 +4620,43 @@ body {
   background: #0a0f1a;
 }
 
+/* ── BDH research dossier ─────────────────────────────────────── */
+.openrouter-section--bdh {
+  border-color: rgba(148, 163, 184, 0.25);
+  background: linear-gradient(180deg, #0c121e 0%, #0a0f1a 100%);
+}
+
+.bdh-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.bdh-head h2 {
+  margin-bottom: 0.15rem;
+}
+
+.bdh-sub {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.bdh-list {
+  margin: 0.25rem 0 0;
+  padding-left: 1.1rem;
+  line-height: 1.6;
+}
+
+.bdh-list li {
+  margin-bottom: 0.35rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .openrouter-card {
     transition: none;
