@@ -5,6 +5,7 @@ import {
 } from "@/data/openrouter-demos";
 import OpenRouterDashboard from "./components/OpenRouterDashboard";
 import BdhDossier from "./components/BdhDossier";
+import FailOnPurpose from "./components/FailOnPurpose";
 
 export const metadata = {
   title: "OpenRouter Applications",
@@ -42,6 +43,9 @@ export default function OpenRouterPage() {
 
       {/* BDH research dossier */}
       <BdhDossier />
+
+      {/* Fail-on-purpose: reliability & guardrails */}
+      <FailOnPurpose />
 
       <div className="openrouter-grid" role="list">
         {openRouterDemos.map((demo) => (

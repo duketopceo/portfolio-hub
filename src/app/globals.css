@@ -4657,6 +4657,73 @@ body {
   margin-bottom: 0.35rem;
 }
 
+/* ── Fail-on-purpose: reliability & guardrails ────────────────── */
+.openrouter-section--fails {
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+.openrouter-fail-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.openrouter-fail-tab {
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #1e293b);
+  background: #0a0f1a;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.openrouter-fail-tab.is-active {
+  color: var(--color-text);
+  background: #0f172a;
+}
+
+.openrouter-fail-trace {
+  border: 1px solid var(--color-border, #1e293b);
+  border-radius: 10px;
+  background: #0a0f1a;
+  overflow: hidden;
+}
+
+.openrouter-fail-trace-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--color-border, #1e293b);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.openrouter-fail-trace pre {
+  margin: 0;
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--color-text-muted);
+}
+
+.openrouter-fail-why {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .openrouter-card {
     transition: none;
