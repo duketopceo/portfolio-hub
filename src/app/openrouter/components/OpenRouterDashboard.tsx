@@ -1,0 +1,214 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+
+/**
+ * OpenRouter Interactive Dashboard
+ * - Baked 3-model bakeoff (Qwen 3.8-27b vs Muse Glimmer 30B vs Gemma 4 31B) shown as-if-run.
+ * - Session-only API key (sessionStorage, auto-cleared on tab close, never persisted server-side).
+ * - Live test runner for the 4 demos + Caesar using the user's own key.
+ */
+
+type BakeoffEntry = {
+  latency_ms: number;
+  content: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  quality: string;
+  run: number;
+};
+
+type ModelKey = "qwen/qwen3.8-27b" | "meta/muse-glimmer-30b" | "google/gemma-4-31b-it";
+
+const MODELS: { id: ModelKey; label: string; vendor: string }[] = [
+  { id: "qwen/qwen3.8-27b", label: "Qwen 3.8 27B", vendor: "Qwen" },
+  { id: "meta/muse-glimmer-30b", label: "Muse Glimmer 30B", vendor: "Meta" },
+  { id: "google/gemma-4-31b-it", label: "Gemma 4 31B", vendor: "Google" },
+];
+
+const SESSION_KEY = "openrouter_demo_key";
+
+// Client component fetches baked data from a public JSON route.
+export default function OpenRouterDashboard() {
+  const [bakeoff, setBakeoff] = useState<Record<ModelKey, Record<string, BakeoffEntry[]>> | null>(null);
+  const [key, setKey] = useState<string>("");
+  const [showKey, setShowKey] = useState(false);
+  const [liveResult, setLiveResult] = useState<string>("");
+  const [liveModel, setLiveModel] = useState<ModelKey>(MODELS[0].id);
+  const [livePrompt, setLivePrompt] = useState<string>(
+    "Write a Python function that reverses a string without using built-in reverse. Return only code."
+  );
+  const [running, setRunning] = useState(false);
+
+  // Load baked data (public route, no key)
+  useEffect(() => {
+    fetch("/openrouter/api/bakeoff")
+      .then((r) => r.json())
+      .then((d) => setBakeoff(d))
+      .catch(() => setBakeoff(null));
+
+    // Restore key from sessionStorage if present (auto-cleared on tab close)
+    const saved = sessionStorage.getItem(SESSION_KEY);
+    if (saved) setKey(saved);
+  }, []);
+
+  // Session-only key: write to sessionStorage only (deleted on refresh/tab close)
+  const handleKeyChange = useCallback((val: string) => {
+    setKey(val);
+    if (val) sessionStorage.setItem(SESSION_KEY, val);
+    else sessionStorage.removeItem(SESSION_KEY);
+  }, []);
+
+  const runLive = useCallback(async () => {
+    if (!key) {
+      setLiveResult("Enter your OpenRouter API key to run a live test.");
+      return;
+    }
+    setRunning(true);
+    setLiveResult("Running live test…");
+    const started = performance.now();
+    try {
+      const resp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+        body: JSON.stringify({
+          model: liveModel,
+          messages: [{ role: "user", content: livePrompt }],
+          max_tokens: 600,
+          temperature: 0,
+        }),
+      });
+      const elapsed = (performance.now() - started).toFixed(0);
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => null);
+        setLiveResult(
+          `✗ ${resp.status} — ${err?.error?.message || "request failed"} · ${elapsed}ms`
+        );
+        return;
+      }
+      const data = await resp.json();
+      const content = data.choices?.[0]?.message?.content?.trim() || "(empty)";
+      const usage = data.usage || {};
+      setLiveResult(
+        `✓ ${elapsed}ms · ${usage.prompt_tokens ?? "?"} in / ${usage.completion_tokens ?? "?"} out\n\n${content.slice(0, 400)}`
+      );
+    } catch (e) {
+      setLiveResult(`✗ ${(e as Error).message}`);
+    } finally {
+      setRunning(false);
+    }
+  }, [key, liveModel, livePrompt]);
+
+  // Compute aggregate stats for baked bakeoff
+  const aggregate = useCallback(
+    (model: ModelKey) => {
+      const entries = bakeoff?.[model] ?? {};
+      const lats: number[] = [];
+      let defs = 0,
+        total = 0;
+      for (const task of Object.values(entries)) {
+        for (const r of task) {
+          total++;
+          if ("error" in r) continue;
+          lats.push(r.latency_ms);
+          if (r.quality === "has_def") defs++;
+        }
+      }
+      if (!lats.length) return null;
+      const avg = lats.reduce((a, b) => a + b, 0) / lats.length;
+      return {
+        avg: Math.round(avg),
+        calls: total,
+        code: `${defs}/${total}`,
+      };
+    },
+    [bakeoff]
+  );
+
+  return (
+    <div className="openrouter-dashboard cosmic-page cosmic-page--shell">
+      {/* Session API key */}
+      <section className="openrouter-section">
+        <h2>Run live against your own key</h2>
+        <p className="muted" style={{ color: "var(--color-text-muted)", fontSize: 14 }}>
+          Your key lives only in this tab&apos;s session — it is cleared on refresh, never stored
+          on the server, and used only for the request you trigger.
+        </p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <input
+            type={showKey ? "text" : "password"}
+            value={key}
+            onChange={(e) => handleKeyChange(e.target.value)}
+            placeholder="sk-or-v1-… (session-only)"
+            style={{ flex: 1, minWidth: 240 }}
+          />
+          <button onClick={() => setShowKey((s) => !s)}>{showKey ? "Hide" : "Show"}</button>
+        </div>
+      </section>
+
+      {/* Live runner */}
+      <section className="openrouter-section">
+        <h2>Live test</h2>
+        <div style={{ display: "grid", gap: 10 }}>
+          <select value={liveModel} onChange={(e) => setLiveModel(e.target.value as ModelKey)}>
+            {MODELS.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.label} — {m.vendor}
+              </option>
+            ))}
+          </select>
+          <textarea
+            value={livePrompt}
+            onChange={(e) => setLivePrompt(e.target.value)}
+            rows={2}
+            placeholder="Prompt to send the selected model"
+          />
+          <button onClick={runLive} disabled={running}>
+            {running ? "Running…" : "Run live test"}
+          </button>
+          {liveResult && <pre className="openrouter-live-result">{liveResult}</pre>}
+        </div>
+      </section>
+
+      {/* Baked 3-model bakeoff (no key needed) */}
+      <section className="openrouter-section">
+        <h2>Pre-baked bakeoff — 3 dense ~30B models</h2>
+        <p className="muted" style={{ color: "var(--color-text-muted)", fontSize: 14 }}>
+          Qwen 3.8-27b vs Muse Glimmer 30B vs Gemma 4 31B. Live on OpenRouter; results shown
+          here were captured across multiple runs. No API key needed to view.
+        </p>
+        <div className="openrouter-bakeoff-grid">
+          {MODELS.map((m) => {
+            const agg = aggregate(m.id);
+            return (
+              <div key={m.id} className="openrouter-card openrouter-card--bakeoff">
+                <div className="openrouter-card__head">
+                  <h3>{m.label}</h3>
+                  <span className="openrouter-card__role">{m.vendor}</span>
+                </div>
+                {agg ? (
+                  <dl className="openrouter-card__meta">
+                    <div>
+                      <dt>Avg latency</dt>
+                      <dd>{agg.avg} ms</dd>
+                    </div>
+                    <div>
+                      <dt>Runs</dt>
+                      <dd>{agg.calls}</dd>
+                    </div>
+                    <div>
+                      <dt>Valid code</dt>
+                      <dd>{agg.code}</dd>
+                    </div>
+                  </dl>
+                ) : (
+                  <p className="muted">Baked data loading…</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}

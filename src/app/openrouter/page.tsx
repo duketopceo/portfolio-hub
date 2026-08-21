@@ -3,6 +3,7 @@ import {
   openRouterDemos,
   OPENROUTER_DEMOS_REPO_URL,
 } from "@/data/openrouter-demos";
+import OpenRouterDashboard from "./components/OpenRouterDashboard";
 
 export const metadata = {
   title: "OpenRouter Applications",
@@ -34,6 +35,9 @@ export default function OpenRouterPage() {
           ; offline pytest is green on fixtures.
         </p>
       </header>
+
+      {/* Interactive dashboard: baked bakeoff + session-key live tests */}
+      <OpenRouterDashboard />
 
       <div className="openrouter-grid" role="list">
         {openRouterDemos.map((demo) => (
