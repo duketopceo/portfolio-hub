@@ -39,6 +39,8 @@ export default function OpenRouterDashboard() {
     "Write a Python function that reverses a string without using built-in reverse. Return only code."
   );
   const [running, setRunning] = useState(false);
+  const [expandedModel, setExpandedModel] = useState<ModelKey | null>(null);
+  const [expandedTask, setExpandedTask] = useState<string | null>(null);
 
   // Load baked data (public route, no key)
   useEffect(() => {
@@ -228,6 +230,73 @@ export default function OpenRouterDashboard() {
               would flag it.
             </span>
           </div>
+        </div>
+
+        {/* Full baked test data (every case, not just aggregates) */}
+        <div className="openrouter-full-data">
+          <h3 className="openrouter-full-data__title">Full baked data — every case</h3>
+          <p className="muted" style={{ color: "var(--color-text-muted)", fontSize: 13 }}>
+            All 138 runs across 3 models × 5 tasks × 5 runs. Expand a model, then a task, to
+            see latency, tokens, cost, and the actual model output.
+          </p>
+          {MODELS.map((m) => {
+            const modelData = bakeoff?.[m.id] ?? {};
+            const taskKeys = Object.keys(modelData);
+            const isOpen = expandedModel === m.id;
+            return (
+              <div key={m.id} className="openrouter-full-model">
+                <button
+                  className="openrouter-full-model__head"
+                  onClick={() => setExpandedModel(isOpen ? null : m.id)}
+                >
+                  <span>{m.label} ({m.vendor})</span>
+                  <span>{isOpen ? "▾" : "▸"} {taskKeys.length} tasks</span>
+                </button>
+                {isOpen && (
+                  <div className="openrouter-full-model__body">
+                    {taskKeys.map((task) => {
+                      const runs = modelData[task] ?? [];
+                      const isTaskOpen = expandedTask === task;
+                      return (
+                        <div key={task} className="openrouter-full-task">
+                          <button
+                            className="openrouter-full-task__head"
+                            onClick={() => setExpandedTask(isTaskOpen ? null : task)}
+                          >
+                            <code>{task}</code>
+                            <span>{runs.length} runs · avg {Math.round(runs.filter(r=>!("error" in r)).reduce((a,b)=>a+b.latency_ms,0)/Math.max(1,runs.filter(r=>!("error" in r)).length))}ms</span>
+                          </button>
+                          {isTaskOpen && (
+                            <div className="openrouter-full-task__runs">
+                              {runs.map((r, i) => (
+                                <div key={i} className="openrouter-full-run">
+                                  <div className="openrouter-full-run__meta">
+                                    <span>run {r.run}</span>
+                                    <span>{r.latency_ms?.toFixed(0)} ms</span>
+                                    <span>{r.prompt_tokens ?? "?"} in</span>
+                                    <span>{r.completion_tokens ?? "?"} out</span>
+                                    <span className={r.quality === "has_def" ? "ok" : "err"}>
+                                      {r.quality === "has_def" ? "code" : "no-code"}
+                                    </span>
+                                  </div>
+                                  {r.content && (
+                                    <pre className="openrouter-full-run__code">{r.content}</pre>
+                                  )}
+                                  {"error" in r && (
+                                    <div className="err">✗ {String(r.error)}</div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>
