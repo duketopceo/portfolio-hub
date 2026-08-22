@@ -98,7 +98,7 @@ jobs:
     if: hashFiles('Dockerfile', 'docker-compose.yml') != ''
     steps:
       - uses: actions/checkout@v4
-      - uses: aquasecurity/trivy-action@master
+      - uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0 (SHA-pinned, immutable)
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -118,7 +118,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: anchore/sbom-action@v0
+      - uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0 (SHA-pinned, immutable)
         with:
           format: 'cyclonedx'
           output-file: 'sbom.json'
