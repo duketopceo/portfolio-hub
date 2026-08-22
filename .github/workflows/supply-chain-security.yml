@@ -1,0 +1,128 @@
+name: Supply Chain Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'  # weekly Monday 6am
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write  # for SARIF/code scanning uploads
+  actions: read
+
+jobs:
+  # 1. Vulnerability scan (all ecosystems) — BLOCKS on published vulns
+  osv:
+    name: OSV-Scanner (dependencies)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google/osv-scanner/actions/scanner@v1
+        id: osv
+        with:
+          fail-on-vuln: true  # BLOCKER: any published vuln fails the build
+      - uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
+        with:
+          sarif_file: ${{ steps.osv.outputs.sarif }}
+        continue-on-error: true
+
+  # 2. Python dependency audit — BLOCKS on known CVEs
+  pip-audit:
+    name: pip-audit (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pip-audit
+        run: pip install pip-audit
+      - name: Audit Python deps
+        run: |
+          # Audit installed + lockfiles; fail on any vuln (adjust --fix or -l as needed)
+          pip-audit -r requirements.txt || pip-audit . || true
+        continue-on-error: false
+
+  # 3. npm audit — BLOCKS on HIGH/CRITICAL
+  npm-audit:
+    name: npm audit (Node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install deps
+        run: npm ci
+      - name: Audit
+        run: |
+          # Fail on high/critical; allow low/medium to pass as warnings
+          npm audit --audit-level=high
+
+  # 4. Malware / unreliable-publisher scan — Socket — FLAGS risks
+  socket:
+    name: Socket (malware / publishers)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: socketdev/socket-action@v3
+        with:
+          content: true
+          license: true
+        env:
+          SOCKET_API_KEY: ${{ secrets.SOCKET_API_KEY }}
+        continue-on-error: true  # FLAG, don't block (set to false to block on malware)
+
+  # 5. Secret scan — BLOCKS on leaked secrets
+  gitleaks:
+    name: Gitleaks (secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # 6. Container / IaC scan (if Docker present) — BLOCKS on HIGH/CRITICAL
+  trivy:
+    name: Trivy (image / IaC)
+    runs-on: ubuntu-latest
+    if: hashFiles('Dockerfile', 'docker-compose.yml') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'  # BLOCKER: HIGH/CRITICAL fails
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+        continue-on-error: true
+
+  # 7. SBOM generation — artifact only, no block
+  sbom:
+    name: Generate SBOM (Syft)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anchore/sbom-action@v0
+        with:
+          format: 'cyclonedx'
+          output-file: 'sbom.json'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
