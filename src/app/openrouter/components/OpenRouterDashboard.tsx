@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 
 /**
- * OpenRouter Interactive Dashboard
- * - Baked 3-model bakeoff (Qwen 3.8-27b vs Muse Glimmer 30B vs Gemma 4 31B) shown as-if-run.
- * - Session-only API key (sessionStorage, auto-cleared on tab close, never persisted server-side).
- * - Live test runner for the 4 demos + Caesar using the user's own key.
+ * Portfolio viewer for OpenRouter demo artifacts — not the Python dev_server.py dashboard.
+ * - Baked 3-model coding comparison from committed src/data/bakeoff.json (75 runs: 3×5×5).
+ * - Session-only API key for optional live smoke tests (never persisted server-side).
+ * - Harness source + local dashboard: github.com/duketopceo/openrouter-demos → localhost:8080.
  */
 
 type BakeoffEntry = {
@@ -27,6 +27,8 @@ const MODELS: { id: ModelKey; label: string; vendor: string }[] = [
 ];
 
 const SESSION_KEY = "openrouter_demo_key";
+const BAKED_RUN_COUNT = 75; // 3 models × 5 tasks × 5 runs — counted from src/data/bakeoff.json
+const BAKED_SOURCE = "src/data/bakeoff.json (portfolio-hub snapshot; not openrouter-demos bakeoff harness output)";
 
 // Client component fetches baked data from a public JSON route.
 export default function OpenRouterDashboard() {
@@ -172,12 +174,22 @@ export default function OpenRouterDashboard() {
         </div>
       </section>
 
-      {/* Baked 3-model bakeoff (no key needed) */}
+      {/* Baked 3-model coding comparison (no key needed) */}
       <section className="openrouter-section">
-        <h2>Pre-baked bakeoff — 3 dense ~30B models</h2>
+        <h2>Baked coding comparison — 3 dense ~30B models</h2>
         <p className="muted" style={{ color: "var(--color-text-muted)", fontSize: 14 }}>
-          Qwen 3.8-27b vs Muse Glimmer 30B vs Gemma 4 31B. Live on OpenRouter; results shown
-          here were captured across multiple runs. No API key needed to view.
+          Qwen 3.8-27b vs Muse Glimmer 30B vs Gemma 4 31B. Figures below are a{" "}
+          <strong>baked snapshot</strong> from <code>{BAKED_SOURCE}</code> — not output from
+          the RouteKit harness in{" "}
+          <a
+            href="https://github.com/duketopceo/openrouter-demos"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-nav-link"
+          >
+            openrouter-demos
+          </a>
+          . No live accuracy claims; no API key needed to view.
         </p>
         <div className="openrouter-bakeoff-grid">
           {MODELS.map((m) => {
@@ -195,11 +207,11 @@ export default function OpenRouterDashboard() {
                       <dd>{agg.avg} ms</dd>
                     </div>
                     <div>
-                      <dt>Runs</dt>
+                      <dt>Baked runs</dt>
                       <dd>{agg.calls}</dd>
                     </div>
                     <div>
-                      <dt>Valid code</dt>
+                      <dt>Valid code (baked)</dt>
                       <dd>{agg.code}</dd>
                     </div>
                   </dl>
@@ -211,23 +223,23 @@ export default function OpenRouterDashboard() {
           })}
         </div>
 
-        {/* Launch gate + deprecation note */}
+        {/* Launch gate + deprecation note — derived from baked snapshot only */}
         <div className="openrouter-gate-row">
           <div className="openrouter-gate">
-            <span className="openrouter-gate__label">Launch gate</span>
+            <span className="openrouter-gate__label">Launch gate (baked)</span>
             <span className="openrouter-gate__value">PASS</span>
             <span className="openrouter-gate__meta">
-              all 3 within baseline (latency &lt;10s, cost &lt;$0.01/1K out, quality &ge;80%)
+              snapshot-only: all 3 within baseline (latency &lt;10s, cost &lt;$0.01/1K out,
+              quality &ge;80%) per {BAKED_SOURCE}
             </span>
           </div>
           <div className="openrouter-gate">
-            <span className="openrouter-gate__label">Deprecation note</span>
+            <span className="openrouter-gate__label">Deprecation note (baked)</span>
             <span className="openrouter-gate__value openrouter-gate__value--warn">Watch</span>
             <span className="openrouter-gate__meta">
-              Muse Glimmer 30B shows the highest mean latency (6931ms) and widest variance
-              (3.9s&ndash;10.2s). If used in production, pin to a fallback and monitor TTFT.
-              No model here has been formally deprecated; this is the pre-launch check that
-              would flag it.
+              baked snapshot: Muse Glimmer 30B shows the highest mean latency (6931ms) and
+              widest variance (3.9s&ndash;10.2s). Illustrative pre-launch check from the
+              committed JSON — not a live harness verdict.
             </span>
           </div>
         </div>
@@ -236,8 +248,9 @@ export default function OpenRouterDashboard() {
         <div className="openrouter-full-data">
           <h3 className="openrouter-full-data__title">Full baked data — every case</h3>
           <p className="muted" style={{ color: "var(--color-text-muted)", fontSize: 13 }}>
-            All 138 runs across 3 models × 5 tasks × 5 runs. Expand a model, then a task, to
-            see latency, tokens, cost, and the actual model output.
+            {BAKED_RUN_COUNT} baked runs (3 models × 5 tasks × 5 runs) from{" "}
+            <code>src/data/bakeoff.json</code>. Expand a model, then a task, to see latency,
+            tokens, and the captured model output.
           </p>
           {MODELS.map((m) => {
             const modelData = bakeoff?.[m.id] ?? {};

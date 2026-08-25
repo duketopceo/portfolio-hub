@@ -4,8 +4,9 @@ import path from "path";
 
 /**
  * GET /openrouter/api/bakeoff
- * Serves the pre-baked 3-model bakeoff results (Qwen 3.8-27b / Muse Glimmer 30B / Gemma 4 31B).
- * Public — no API key required. Reads a committed JSON snapshot so it works standalone on Railway.
+ * Serves the committed 3-model coding comparison snapshot (Qwen / Muse / Gemma).
+ * Source: src/data/bakeoff.json in portfolio-hub — not openrouter-demos harness output.
+ * Public — no API key required.
  */
 export async function GET(_req: NextRequest) {
   const p = path.join(process.cwd(), "src", "data", "bakeoff.json");

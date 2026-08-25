@@ -28,7 +28,7 @@ const BDH = {
   // The eval criteria you'd apply if it landed — this is the craft.
   gatingPlaybook: [
     "Smoke: cURL against Chat Completions-compatible endpoint, verify TTFT / shape.",
-    "Fixture eval: run the 5-task coding set (reverse-string, fizzbuzz, two-sum, palindrome, factorial) used across the bakeoff.",
+    "Fixture eval: run the 5-task coding set (reverse-string, fizzbuzz, two-sum, palindrome, factorial) — same task names as the portfolio baked snapshot in src/data/bakeoff.json.",
     "Compare: latency, cost, and code-quality vs the dense ~30B class (Qwen 3.8-27b, Muse Glimmer 30B, Gemma 4 31B).",
     "Memory/reasoning probe: test whether continual-learning claims hold beyond a single turn.",
     "Gate: pass/fail on latency + cost + quality thresholds before any launch note.",
