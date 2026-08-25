@@ -4922,6 +4922,32 @@ body {
   color: var(--color-text-muted);
 }
 
+/* ── Kurultai also-live chip (job packet, not a fifth demo card) ─ */
+.openrouter-also-live {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  margin-top: 1.25rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  background: rgba(45, 212, 191, 0.06);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.openrouter-also-live__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
 /* ── BDH research dossier ─────────────────────────────────────── */
 .openrouter-section--bdh {
   border-color: rgba(148, 163, 184, 0.25);

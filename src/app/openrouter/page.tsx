@@ -3,6 +3,8 @@ import {
   openRouterDemos,
   OPENROUTER_DEMOS_REPO_URL,
 } from "@/data/openrouter-demos";
+
+const KURULTAI_REPO_URL = "https://github.com/duketopceo/kurultai";
 import OpenRouterDashboard from "./components/OpenRouterDashboard";
 import BdhDossier from "./components/BdhDossier";
 
@@ -119,6 +121,27 @@ export default function OpenRouterPage() {
             </article>
           ))}
         </div>
+
+        <p className="openrouter-also-live">
+          <span className="openrouter-also-live__label">Also live</span>
+          <span>
+            Kurultai — a separate Rust knowledge product — uses OpenRouter for
+            embeddings and search/rerank (
+            <code>OPENROUTER_API_KEY</code>; FTS works without a key).{" "}
+            <a
+              href={KURULTAI_REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="detail-nav-link"
+            >
+              github.com/duketopceo/kurultai
+            </a>
+            {" · "}
+            <Link href="/projects/kurultai" className="detail-nav-link">
+              portfolio dossier
+            </Link>
+          </span>
+        </p>
       </section>
 
       {/* BDH research dossier — secondary “also on my radar” */}
@@ -147,7 +170,11 @@ export default function OpenRouterPage() {
             localhost:8080
           </a>
           ). Live evals require <code>OPENROUTER_API_KEY</code> — this page does not publish
-          live accuracy numbers.
+          live accuracy numbers. Beyond these demos,{" "}
+          <Link href="/projects/kurultai" className="detail-nav-link">
+            Kurultai
+          </Link>{" "}
+          also consumes OpenRouter for embeddings and search/rerank in production.
         </p>
         <p>
           <Link href="/projects" className="detail-nav-link">
