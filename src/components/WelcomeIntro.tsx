@@ -28,7 +28,14 @@ export default function WelcomeIntro() {
     try { localStorage.setItem("lk_welcomed", "1"); } catch {}
   }
 
-  if (!mounted || gone || pathname?.startsWith("/podcast")) return null;
+  if (
+    !mounted ||
+    gone ||
+    pathname?.startsWith("/podcast") ||
+    pathname?.startsWith("/openrouter")
+  ) {
+    return null;
+  }
 
   return (
     <div

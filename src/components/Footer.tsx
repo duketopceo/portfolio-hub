@@ -1,92 +1,99 @@
 import Link from "next/link";
 import { ExternalIcon } from "@/components/Icons";
-import { siteNavItems } from "@/data/site-nav";
 
-const liveLinks = [
+type FeaturedProject = {
+  label: string;
+  dossierHref: string;
+  liveHref?: string;
+  liveLabel?: string;
+};
+
+const featuredProjects: FeaturedProject[] = [
   {
-    label: "Chronicle Weaver",
-    href: "https://chronicleweaver.com",
+    label: "Khan",
+    dossierHref: "/projects/khan",
+    liveHref: "https://khanai.app",
+    liveLabel: "khanai.app",
   },
   {
-    label: "Republic Atlas",
-    href: "https://republicatlas.com",
+    label: "Kurultai",
+    dossierHref: "/projects/kurultai",
+    liveHref: "https://github.com/duketopceo/kurultai",
+    liveLabel: "GitHub",
   },
   {
-    label: "Military Hardware DB",
-    href: "https://omhdb.luke-the-duke.com/#/",
+    label: "Pace Server",
+    dossierHref: "/projects/pace-server",
+    liveHref: "https://pacehq.io",
+    liveLabel: "pacehq.io",
   },
+  {
+    label: "OpenRouter demos",
+    dossierHref: "/openrouter",
+  },
+  {
+    label: "Stratum",
+    dossierHref: "/projects/stratum-hq",
+    liveHref: "https://stratumhq.app",
+    liveLabel: "stratumhq.app",
+  },
+];
+
+const siteLinks = [
+  { href: "/projects", label: "All projects" },
+  { href: "/now", label: "Now" },
+  { href: "/about", label: "About" },
+  { href: "/hire", label: "Hire" },
+  { href: "/resume", label: "Resume" },
 ];
 
 export default function Footer() {
   return (
     <footer className="cosmic-footer">
       <div className="cosmic-page">
-        {/* ── Link columns ──────────────────────── */}
-        <div className="cosmic-footer__grid">
-          {/* Navigation */}
-          <div>
-            <h3 className="cosmic-footer__heading">
-              Navigation
-            </h3>
-            <ul className="space-y-1">
-              {siteNavItems.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href} className="cosmic-footer__link">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <div className="cosmic-footer__shop">
+          <div className="cosmic-footer__brand">
+            <p className="cosmic-footer__brand-name">Cosmic Intelligence</p>
+            <p className="cosmic-footer__brand-tag">luke-the-duke.com</p>
           </div>
 
-          {/* Live Projects */}
-          <div>
-            <h3 className="cosmic-footer__heading">
-              Live projects
-            </h3>
-            <ul className="cosmic-footer__live-list space-y-2">
-              {liveLinks.map((item) => (
-                <li key={item.href}>
+          <div className="cosmic-footer__buttons" role="list">
+            {featuredProjects.map((project) => (
+              <div key={project.dossierHref} className="cosmic-footer__btn-wrap" role="listitem">
+                <Link href={project.dossierHref} className="cosmic-footer__btn">
+                  {project.label}
+                </Link>
+                {project.liveHref && project.liveLabel ? (
                   <a
-                    href={item.href}
+                    href={project.liveHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="cosmic-footer__link cosmic-footer__live-row inline-flex items-center gap-2"
+                    className="cosmic-footer__btn-live"
+                    aria-label={`${project.label} live at ${project.liveLabel}`}
                   >
-                    <span
-                      className="cosmic-footer__planet"
-                      aria-hidden
-                    />
-                    <span>{item.label}</span>
-                    <ExternalIcon className="w-2.5 h-2.5 opacity-50 shrink-0" />
+                    {project.liveLabel}
+                    <ExternalIcon className="cosmic-footer__btn-icon" />
                   </a>
-                </li>
-              ))}
-            </ul>
+                ) : null}
+              </div>
+            ))}
           </div>
 
-          {/* Stack */}
-          <div>
-            <h3 className="cosmic-footer__heading">
-              Stack
-            </h3>
-            <ul className="space-y-1">
-              <li className="cosmic-footer__text">
-                Built with Next.js
-              </li>
-              <li className="cosmic-footer__text">
-                Deployed on Railway
-              </li>
-              <li className="cosmic-footer__text">
-                luke-the-duke.com
-              </li>
-            </ul>
-          </div>
+          <nav className="cosmic-footer__nav" aria-label="Site">
+            {siteLinks.map((item) => (
+              <Link key={item.href} href={item.href} className="cosmic-footer__nav-link">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
 
-        {/* ── Bottom bar ──────────────────────────── */}
         <div className="cosmic-footer__bottom">
-          &copy; {new Date().getFullYear()} Cosmic Intelligence
+          <span>&copy; {new Date().getFullYear()} Cosmic Intelligence</span>
+          <span className="cosmic-footer__bottom-sep" aria-hidden>
+            ·
+          </span>
+          <span>Next.js on Railway</span>
         </div>
       </div>
     </footer>

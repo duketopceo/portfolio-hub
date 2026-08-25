@@ -37,7 +37,8 @@ const BDH = {
 
 export default function BdhDossier() {
   return (
-    <section className="openrouter-section openrouter-section--bdh">
+    <section className="openrouter-section openrouter-section--bdh openrouter-section--secondary">
+      <p className="openrouter-section__eyebrow">Also on my radar</p>
       <div className="bdh-head">
         <div>
           <h2>{BDH.name}</h2>
@@ -49,10 +50,10 @@ export default function BdhDossier() {
       </div>
 
       <p className="openrouter-card__summary" style={{ marginTop: "0.5rem" }}>
-        Post-transformer architecture that fuses memory, reasoning, and
-        adaptation into one fabric — a candidate for future OpenRouter
-        onboarding. Not yet runnable; shown here as a{" "}
-        <em>launch-gate evaluation playbook</em>, not a benchmark.
+        Biological neural network research from Pathway — interesting
+        post-transformer architecture worth tracking. Not runnable on
+        OpenRouter yet; this is an honest{" "}
+        <em>launch-gate evaluation playbook</em>, not a benchmark or live score.
       </p>
 
       <div className="openrouter-card__meta" style={{ marginTop: "1rem" }}>
