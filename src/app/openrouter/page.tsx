@@ -51,67 +51,78 @@ export default function OpenRouterPage() {
       {/* Portfolio viewer: baked JSON snapshot + optional session-key live smoke test */}
       <OpenRouterDashboard />
 
-      {/* BDH research dossier */}
+      <section className="openrouter-section" aria-labelledby="openrouter-demos-heading">
+        <h2 id="openrouter-demos-heading">The job packet</h2>
+        <p
+          className="muted"
+          style={{ color: "var(--color-text-muted)", fontSize: 14, marginBottom: "1.25rem" }}
+        >
+          Four role-aligned demos — Deflect, Motion, Bakeoff, Caesar — with
+          fixture evals and honest offline status.
+        </p>
+
+        <div className="openrouter-grid" role="list">
+          {openRouterDemos.map((demo) => (
+            <article
+              key={demo.slug}
+              className="openrouter-card"
+              role="listitem"
+              style={{ "--card-accent": "#2DD4BF" } as React.CSSProperties}
+            >
+              <div className="openrouter-card__head">
+                <h3 className="openrouter-card__title">{demo.name}</h3>
+                <span className="openrouter-card__role">{demo.role}</span>
+              </div>
+
+              <p className="openrouter-card__summary">{demo.summary}</p>
+
+              <dl className="openrouter-card__meta">
+                <div>
+                  <dt>Scoring</dt>
+                  <dd>{demo.scoring}</dd>
+                </div>
+                <div>
+                  <dt>Status</dt>
+                  <dd>
+                    {demo.status === "fixtures" ? (
+                      <span className="openrouter-card__badge">
+                        Fixtures (offline)
+                      </span>
+                    ) : (
+                      <span className="openrouter-card__badge openrouter-card__badge--live">
+                        Live
+                      </span>
+                    )}
+                  </dd>
+                </div>
+              </dl>
+
+              <footer className="openrouter-card__footer">
+                {demo.sourceUrl.startsWith("http") ? (
+                  <a
+                    href={demo.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="detail-nav-link"
+                  >
+                    View source ↗
+                  </a>
+                ) : (
+                  <Link href={demo.sourceUrl} className="detail-nav-link">
+                    On this site
+                  </Link>
+                )}
+                {demo.sourceNote && (
+                  <p className="openrouter-card__note">{demo.sourceNote}</p>
+                )}
+              </footer>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* BDH research dossier — secondary “also on my radar” */}
       <BdhDossier />
-
-      <div className="openrouter-grid" role="list">
-        {openRouterDemos.map((demo) => (
-          <article
-            key={demo.slug}
-            className="openrouter-card"
-            role="listitem"
-            style={{ "--card-accent": "#2DD4BF" } as React.CSSProperties}
-          >
-            <div className="openrouter-card__head">
-              <h2 className="openrouter-card__title">{demo.name}</h2>
-              <span className="openrouter-card__role">{demo.role}</span>
-            </div>
-
-            <p className="openrouter-card__summary">{demo.summary}</p>
-
-            <dl className="openrouter-card__meta">
-              <div>
-                <dt>Scoring</dt>
-                <dd>{demo.scoring}</dd>
-              </div>
-              <div>
-                <dt>Status</dt>
-                <dd>
-                  {demo.status === "fixtures" ? (
-                    <span className="openrouter-card__badge">
-                      Fixtures (offline)
-                    </span>
-                  ) : (
-                    <span className="openrouter-card__badge openrouter-card__badge--live">
-                      Live
-                    </span>
-                  )}
-                </dd>
-              </div>
-            </dl>
-
-            <footer className="openrouter-card__footer">
-              {demo.sourceUrl.startsWith("http") ? (
-                <a
-                  href={demo.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="detail-nav-link"
-                >
-                  View source ↗
-                </a>
-              ) : (
-                <Link href={demo.sourceUrl} className="detail-nav-link">
-                  On this site
-                </Link>
-              )}
-              {demo.sourceNote && (
-                <p className="openrouter-card__note">{demo.sourceNote}</p>
-              )}
-            </footer>
-          </article>
-        ))}
-      </div>
 
       <section className="openrouter-footer cosmic-readable max-w-2xl">
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.7 }}>
