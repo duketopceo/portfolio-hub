@@ -5,12 +5,11 @@ import {
 } from "@/data/openrouter-demos";
 import OpenRouterDashboard from "./components/OpenRouterDashboard";
 import BdhDossier from "./components/BdhDossier";
-import FailOnPurpose from "./components/FailOnPurpose";
 
 export const metadata = {
   title: "OpenRouter Applications",
   description:
-    "Role-aligned OpenRouter application demos — Guardrails deflection, GTM motion with Auto Router, and provider bake-offs with eval-driven scoring.",
+    "Portfolio viewer for OpenRouter application demos — fixture summaries, baked coding comparison, and optional live smoke tests. Harness source in openrouter-demos.",
 };
 
 export default function OpenRouterPage() {
@@ -23,29 +22,37 @@ export default function OpenRouterPage() {
         <p className="projects-page-header__eyebrow">OPENROUTER</p>
         <h1 className="projects-page-header__title">Application demos</h1>
         <p className="projects-page-header__sub">
-          Four eval-driven demos mapped to OpenRouter application roles —
-          grounded in daily operator workflows (Auto Router, presets,
-          Guardrails, bake-offs, debate traces). Source lives in{" "}
+          Portfolio viewer for four eval-driven demos mapped to OpenRouter application
+          roles — deflection, GTM motion, provider bake-offs, and debate traces. This page
+          is <em>not</em> the Python <code>dev_server.py</code> dashboard. Harness source,
+          offline pytest, and the local run UI live in{" "}
           <a
             href={OPENROUTER_DEMOS_REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="detail-nav-link"
           >
-            openrouter-demos
+            github.com/duketopceo/openrouter-demos
+          </a>{" "}
+          (<code>python3 dev_server.py</code> →{" "}
+          <a
+            href="http://localhost:8080"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-nav-link"
+          >
+            localhost:8080
           </a>
-          ; offline pytest is green on fixtures.
+          ). Offline pytest is green on fixtures; live evals need{" "}
+          <code>OPENROUTER_API_KEY</code>.
         </p>
       </header>
 
-      {/* Interactive dashboard: baked bakeoff + session-key live tests */}
+      {/* Portfolio viewer: baked JSON snapshot + optional session-key live smoke test */}
       <OpenRouterDashboard />
 
       {/* BDH research dossier */}
       <BdhDossier />
-
-      {/* Fail-on-purpose: reliability & guardrails */}
-      <FailOnPurpose />
 
       <div className="openrouter-grid" role="list">
         {openRouterDemos.map((demo) => (
@@ -108,9 +115,9 @@ export default function OpenRouterPage() {
 
       <section className="openrouter-footer cosmic-readable max-w-2xl">
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.7 }}>
-          These demos reflect how OpenRouter is used day to day — routing,
-          presets, guardrails, and bake-offs — not a self-hosted inference
-          cluster. Run offline tests from{" "}
+          This page is a portfolio viewer — it surfaces fixture status, a baked coding
+          comparison snapshot, and an optional live smoke test. It does not replace the
+          RouteKit harness dashboard. Run offline tests and the full local UI from{" "}
           <a
             href={OPENROUTER_DEMOS_REPO_URL}
             target="_blank"
@@ -118,9 +125,18 @@ export default function OpenRouterPage() {
             className="detail-nav-link"
           >
             github.com/duketopceo/openrouter-demos
+          </a>{" "}
+          (<code>dev_server.py</code> on{" "}
+          <a
+            href="http://localhost:8080"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-nav-link"
+          >
+            localhost:8080
           </a>
-          . Live evals require <code>OPENROUTER_API_KEY</code> — this page does
-          not publish live accuracy numbers.
+          ). Live evals require <code>OPENROUTER_API_KEY</code> — this page does not publish
+          live accuracy numbers.
         </p>
         <p>
           <Link href="/projects" className="detail-nav-link">
