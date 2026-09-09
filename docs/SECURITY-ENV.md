@@ -4,7 +4,8 @@
 
 - **Used only on the server** (`src/lib/github.ts` via `process.env.GITHUB_TOKEN`). It is **not** prefixed with `NEXT_PUBLIC_`, so it is **never** bundled for the browser.
 - **Local dev:** `npm run dev` loads `.env`, `.env.local`, etc. from the repo root (see [Next.js env loading](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables)).
-- **Docker build:** The token is passed as a **build-arg** from `docker-compose.yml` / CI — it is **not** copied from disk into the image context because **`.env*` is listed in `.dockerignore`**. That avoids baking secrets into layer metadata from accidental `COPY`.
+- **Docker build (local):** `GITHUB_TOKEN` may be passed as a **build-arg** from `docker-compose.yml` — it is **not** copied from disk into the image context because **`.env*` is listed in `.dockerignore`**. That avoids baking secrets into layer metadata from accidental `COPY`.
+- **CI build:** No token is passed at build time; the image builds without a GitHub token and falls back to curated/public data.
 - **Docker runtime:** Set `GITHUB_TOKEN` in the environment of the running container (e.g. `environment:` in Compose, Swarm secrets, or your host `~/portfolio-hub/.env` read by Compose when you deploy).
 
 ## Other names (values never in git)
@@ -12,7 +13,6 @@
 | Name | Where it is used |
 |------|------------------|
 | `GITHUB_USER` | Server GitHub login fallback (`src/lib/github.ts`) |
-| `GH_PAT` | CI build-arg / GitHub Actions secret name only |
 | `SWARM_HOST` | Deploy workflow |
 | `SWARM_USER` | Deploy workflow |
 | `SWARM_SSH_KEY` | Deploy workflow |
