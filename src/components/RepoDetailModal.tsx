@@ -87,24 +87,16 @@ export default function RepoDetailModal({
 }: RepoDetailModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
-  const [mounted, setMounted] = useState(false);
+  const [mounted] = useState(() => typeof window !== "undefined");
   const [data, setData] = useState<SummaryResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!open) {
-      setData(null);
-      setError(null);
-      return;
-    }
+    if (!open) return;
     const ac = new AbortController();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    setError(null);
     const url = `/api/github/repo/${encodeURIComponent(project.repoName)}/summary`;
     fetch(url, { signal: ac.signal })
       .then((r) => {

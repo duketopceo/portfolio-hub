@@ -16,6 +16,19 @@ interface ConstellationNavProps {
   projects: EnrichedProject[];
 }
 
+function fallbackPosition(slug: string): { x: number; y: number } {
+  let x = 0;
+  let y = 0;
+  for (let i = 0; i < slug.length; i++) {
+    x += slug.charCodeAt(i);
+    y += slug.charCodeAt(i) * (i + 1);
+  }
+  return {
+    x: ((x % 17) - 8) / 10,
+    y: ((y % 17) - 8) / 10,
+  };
+}
+
 export default function ConstellationNav({ projects }: ConstellationNavProps) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -24,7 +37,7 @@ export default function ConstellationNav({ projects }: ConstellationNavProps) {
 
   const positioned = useMemo(() => {
     return projects.map((p) => {
-      const pos = quadrantPositions[p.slug] || { x: 0, y: 0 };
+      const pos = quadrantPositions[p.slug] ?? fallbackPosition(p.slug);
       return { ...p, qx: pos.x, qy: pos.y };
     });
   }, [projects]);
