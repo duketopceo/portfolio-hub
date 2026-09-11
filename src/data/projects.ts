@@ -1,4 +1,5 @@
 import { ProjectConfig } from "@/lib/types";
+import { projectExtensionConfigs } from "./projects-ext";
 
 /**
  * Master project configuration — curated for recruiter/professional viewing.
@@ -378,6 +379,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "finance-frenzy",
     repoName: "FinanceFrenzy",
+    siteOnly: true,
     displayName: "Finance Frenzy",
     tagline:
       "Finance simulation game — Hackathon winner (Best Finance Hack & Top 6)",
@@ -401,6 +403,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "nem-stock-pitch",
     repoName: "nem-stock-pitch",
+    siteOnly: true,
     displayName: "NEM Stock Pitch",
     tagline:
       "Institutional-grade equity research — LONG Newmont, built entirely with Perplexity Computer",
@@ -497,6 +500,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "nanoclaw",
     repoName: "nanoclaw",
+    siteOnly: true,
     displayName: "NanoClaw",
     tagline:
       "Lightweight agentic AI container that connects to WhatsApp, Telegram, Slack, Discord, Gmail",
@@ -677,6 +681,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "stratum-hq",
     repoName: "stratumhq",
+    siteOnly: true,
     displayName: "Stratum Engine",
     tagline: "Stratum product engine — shell and roadmap at stratumhq.app",
     description:
@@ -789,6 +794,8 @@ export const projectConfigs: ProjectConfig[] = [
       "36 passing backend tests with CI pipeline",
     ],
   },
+
+  ...projectExtensionConfigs,
 ];
 
 /**

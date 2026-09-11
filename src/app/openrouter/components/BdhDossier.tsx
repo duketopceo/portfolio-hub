@@ -72,7 +72,7 @@ export default function BdhDossier() {
           <dd style={{ color: "var(--color-text-faint)" }}>{BDH.readiness}</dd>
         </div>
         <div>
-          <dt>How I'd gate it if it landed</dt>
+          <dt>How I&apos;d gate it if it landed</dt>
           <dd>
             <ol className="bdh-list">
               {BDH.gatingPlaybook.map((s) => (

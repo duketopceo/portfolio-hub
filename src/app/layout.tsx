@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
-import { Inter, Source_Code_Pro } from "next/font/google";
+import { Exo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import WelcomeIntro from "@/components/WelcomeIntro";
-import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
+import { SiteFooter } from "@/components/SiteChrome";
 
-/** Supabase DESIGN.md (VoltAgent): Inter substitutes licensed Circular at w500 display / w400 body */
-const inter = Inter({
+const exo = Exo({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-exo",
   display: "swap",
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const sourceCodePro = Source_Code_Pro({
+const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-source-mono",
+  variable: "--font-jetbrains",
   display: "swap",
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +29,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/brand/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/brand/favicon-16.png", sizes: "32x32", type: "image/png" },
     ],
     shortcut: "/brand/favicon.ico",
     apple: "/brand/apple-touch-icon.png",
@@ -58,13 +56,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${sourceCodePro.variable} antialiased`}
+        className={`${exo.variable} ${jetbrains.variable} antialiased`}
+        style={{
+          "--font-display": "var(--font-exo)",
+          "--font-body": "var(--font-exo)",
+          "--font-mono": "var(--font-jetbrains)",
+        } as React.CSSProperties}
       >
-        <SiteBackground />
-        <WelcomeIntro />
-
         <Header />
-        <main className="flex-1 relative animate-page-in">{children}</main>
+        <main className="flex-1 relative pt-16">{children}</main>
         <SiteFooter />
       </body>
     </html>
