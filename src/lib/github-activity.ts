@@ -34,6 +34,7 @@ interface RepoTarget {
   slug: string;
   displayName: string;
   repoName: string;
+  repoOwner: string;
   private: boolean;
 }
 
@@ -82,6 +83,7 @@ function featuredRepoTargets(): RepoTarget[] {
       slug,
       displayName: cfg.displayName,
       repoName: cfg.repoName,
+      repoOwner: cfg.repoOwner ?? GITHUB_ACCOUNT_LOGIN,
       private: cfg.private,
     });
   }
@@ -95,6 +97,7 @@ function repoTargetForSlug(slug: string): RepoTarget | null {
     slug,
     displayName: cfg.displayName,
     repoName: cfg.repoName,
+    repoOwner: cfg.repoOwner ?? GITHUB_ACCOUNT_LOGIN,
     private: cfg.private,
   };
 }
@@ -143,19 +146,20 @@ function publicUrl(
 }
 
 async function fetchPulls(
+  repoOwner: string,
   repoName: string,
   sinceMs: number
 ): Promise<GhPull[]> {
   const open =
     (await ghGet<GhPull[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=open&sort=updated&direction=desc&per_page=50`
+      `/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/pulls?state=open&sort=updated&direction=desc&per_page=50`
     )) ?? [];
 
   const closed: GhPull[] = [];
   for (let page = 1; page <= MAX_CLOSED_PULL_PAGES; page++) {
     const batch =
       (await ghGet<GhPull[]>(
-        `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls?state=closed&sort=updated&direction=desc&per_page=100&page=${page}`
+        `/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/pulls?state=closed&sort=updated&direction=desc&per_page=100&page=${page}`
       )) ?? [];
     if (batch.length === 0) break;
     closed.push(...batch);
@@ -183,29 +187,37 @@ async function fetchPulls(
   });
 }
 
-async function fetchReleases(repoName: string): Promise<GhRelease[]> {
+async function fetchReleases(
+  repoOwner: string,
+  repoName: string
+): Promise<GhRelease[]> {
   return (
     (await ghGet<GhRelease[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/releases?per_page=30`
+      `/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/releases?per_page=30`
     )) ?? []
   );
 }
 
-async function fetchIssues(repoName: string, sinceIso: string): Promise<GhIssue[]> {
+async function fetchIssues(
+  repoOwner: string,
+  repoName: string,
+  sinceIso: string
+): Promise<GhIssue[]> {
   const raw =
     (await ghGet<GhIssue[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/issues?state=all&since=${encodeURIComponent(sinceIso)}&sort=updated&direction=desc&per_page=100`
+      `/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/issues?state=all&since=${encodeURIComponent(sinceIso)}&sort=updated&direction=desc&per_page=100`
     )) ?? [];
   return raw.filter((i) => !i.pull_request);
 }
 
 async function fetchReviews(
+  repoOwner: string,
   repoName: string,
   pullNumber: number
 ): Promise<GhReview[]> {
   return (
     (await ghGet<GhReview[]>(
-      `/repos/${GITHUB_ACCOUNT_LOGIN}/${encodeURIComponent(repoName)}/pulls/${pullNumber}/reviews`
+      `/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/pulls/${pullNumber}/reviews`
     )) ?? []
   );
 }
@@ -254,9 +266,9 @@ async function buildRepoActivity(
 ): Promise<ProjectActivityPayload | null> {
   const sinceIso = new Date(sinceMs).toISOString();
   const [pulls, releases, issues] = await Promise.all([
-    fetchPulls(target.repoName, sinceMs),
-    fetchReleases(target.repoName),
-    fetchIssues(target.repoName, sinceIso),
+    fetchPulls(target.repoOwner, target.repoName, sinceMs),
+    fetchReleases(target.repoOwner, target.repoName),
+    fetchIssues(target.repoOwner, target.repoName, sinceIso),
   ]);
 
   if (
@@ -289,7 +301,7 @@ async function buildRepoActivity(
   const reviewResults = await Promise.all(
     reviewFetchTargets.slice(0, MAX_REVIEW_PRS).map(async (pr) => ({
       number: pr.number,
-      reviews: await fetchReviews(target.repoName, pr.number),
+      reviews: await fetchReviews(target.repoOwner, target.repoName, pr.number),
     }))
   );
 

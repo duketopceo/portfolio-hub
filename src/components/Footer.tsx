@@ -28,19 +28,19 @@ const featuredProjects: FeaturedProject[] = [
     liveLabel: "pacehq.io",
   },
   {
-    label: "OpenRouter demos",
-    dossierHref: "/openrouter",
-  },
-  {
-    label: "Stratum",
+    label: "Stratum Engine",
     dossierHref: "/projects/stratum-hq",
     liveHref: "https://stratumhq.app",
     liveLabel: "stratumhq.app",
   },
+  {
+    label: "OpenRouter demos",
+    dossierHref: "/openrouter",
+  },
 ];
 
 const siteLinks = [
-  { href: "/projects", label: "All projects" },
+  { href: "/projects", label: "Registry" },
   { href: "/now", label: "Now" },
   { href: "/about", label: "About" },
   { href: "/hire", label: "Hire" },
@@ -54,12 +54,17 @@ export default function Footer() {
         <div className="cosmic-footer__shop">
           <div className="cosmic-footer__brand">
             <p className="cosmic-footer__brand-name">Cosmic Intelligence</p>
-            <p className="cosmic-footer__brand-tag">luke-the-duke.com</p>
+            <p className="cosmic-footer__brand-tag">
+              luke-the-duke.com — field registry
+            </p>
           </div>
 
-          <div className="cosmic-footer__buttons" role="list">
-            {featuredProjects.map((project) => (
-              <div key={project.dossierHref} className="cosmic-footer__btn-wrap" role="listitem">
+          <div className="cosmic-footer__index" role="list" aria-label="Lead systems">
+            {featuredProjects.map((project, i) => (
+              <div key={project.dossierHref} className="cosmic-footer__index-row" role="listitem">
+                <span className="reg-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <Link href={project.dossierHref} className="cosmic-footer__btn">
                   {project.label}
                 </Link>
@@ -94,6 +99,10 @@ export default function Footer() {
             ·
           </span>
           <span>Next.js on Railway</span>
+          <span className="cosmic-footer__bottom-sep" aria-hidden>
+            ·
+          </span>
+          <span>40.7608°N 111.8910°W</span>
         </div>
       </div>
     </footer>

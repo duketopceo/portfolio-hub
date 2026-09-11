@@ -7,6 +7,8 @@ import { PlanetNode } from "@/components/planet/PlanetNode";
 
 interface SecondaryOrbitRingsProps {
   projects: EnrichedProject[];
+  /** Registry numbers aligned to `projects` — source-order catalog position. */
+  registryIndexOf?: number[];
 }
 
 type RingId = "inner" | "outer";
@@ -60,11 +62,11 @@ function ringLayout(
 function SecondaryRing({
   projects,
   ring,
-  ringOffset,
+  registryIndexOf,
 }: {
   projects: EnrichedProject[];
   ring: RingId;
-  ringOffset: number;
+  registryIndexOf?: number[];
 }) {
   const mobile = useIsMobile();
   const n = projects.length;
@@ -126,7 +128,7 @@ function SecondaryRing({
                 tier="secondary"
                 href={`/projects/${p.slug}`}
                 labelAbove={labelAbove}
-                index={ringOffset + i}
+                index={registryIndexOf?.[i] ?? i}
                 compactLabel
               />
             </div>
@@ -139,6 +141,7 @@ function SecondaryRing({
 
 export default function SecondaryOrbitRings({
   projects,
+  registryIndexOf,
 }: SecondaryOrbitRingsProps) {
   const mid = Math.ceil(projects.length / 2);
   const inner = projects.slice(0, mid);
@@ -151,22 +154,29 @@ export default function SecondaryOrbitRings({
     >
       <div className="cosmic-page secondary-orbit__intro">
         <h2 id="secondary-orbit-heading" className="secondary-orbit__heading">
-          Catalog orbit
+          <span className="reg-label reg-label--accent">Fig. 02</span> — Catalog belt
         </h2>
         <p className="secondary-orbit__hint">
-          {projects.length} more worlds — same modular planet system, scaled
-          smaller and split across two offset rings. Tap for dossiers or browse
-          the{" "}
+          {projects.length} additional bodies on offset survey rings. Select a
+          marker for its survey file, or open the{" "}
           <Link href="/projects" className="detail-nav-link">
-            full grid
+            full registry
           </Link>
           .
         </p>
       </div>
 
       <div className="secondary-orbit__stage">
-        <SecondaryRing projects={inner} ring="inner" ringOffset={0} />
-        <SecondaryRing projects={outer} ring="outer" ringOffset={inner.length} />
+        <SecondaryRing
+          projects={inner}
+          ring="inner"
+          registryIndexOf={registryIndexOf?.slice(0, mid)}
+        />
+        <SecondaryRing
+          projects={outer}
+          ring="outer"
+          registryIndexOf={registryIndexOf?.slice(mid)}
+        />
       </div>
     </section>
   );

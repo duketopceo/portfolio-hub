@@ -69,6 +69,8 @@ export interface PlanetVisualConfig {
 export interface ProjectConfig {
   slug: string;
   repoName: string;
+  /** GitHub owner/org — defaults to the portfolio account login (GITHUB_USER). */
+  repoOwner?: string;
   displayName: string;
   tagline: string;
   description: string;

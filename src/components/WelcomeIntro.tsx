@@ -47,22 +47,22 @@ export default function WelcomeIntro() {
         ×
       </button>
 
-      <p className="welcome-intro__eyebrow">Luke Kimball</p>
+      <p className="welcome-intro__eyebrow">CI — Field registry</p>
       <p className="welcome-intro__headline">Systems that compound.</p>
       <p className="welcome-intro__body">
-        AI infrastructure, trading tech &amp; open-source. Orbit the projects
-        below, or navigate the sections.
+        AI infrastructure, trading tech &amp; open-source — surveyed as an
+        orbital registry. Read the chart, or jump to a section.
       </p>
 
       <div className="welcome-intro__nav">
         <Link href="/" className="welcome-intro__chip" onClick={dismiss}>
-          Orbit ↺
+          Chart ↺
         </Link>
         <Link href="/projects" className="welcome-intro__chip" onClick={dismiss}>
-          Catalog →
+          Registry →
         </Link>
         <Link href="/now" className="welcome-intro__chip" onClick={dismiss}>
-          Activity →
+          Transmissions →
         </Link>
         <Link href="/about" className="welcome-intro__chip" onClick={dismiss}>
           About →

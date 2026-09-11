@@ -15,27 +15,15 @@ export default async function ProjectsPage() {
 
   return (
     <div className="cosmic-page cosmic-page--shell">
-      <header className="projects-page-header mb-12">
-        <div className="projects-page-header__orbit" aria-hidden="true">
-          <svg viewBox="0 0 200 200" fill="none" width="220" height="220">
-            <ellipse
-              cx="100" cy="100" rx="90" ry="45"
-              stroke="var(--color-accent)" strokeWidth="0.5" opacity="0.08"
-              transform="rotate(-20 100 100)"
-            />
-            <ellipse
-              cx="100" cy="100" rx="65" ry="30"
-              stroke="var(--color-accent)" strokeWidth="0.5" opacity="0.12"
-              transform="rotate(15 100 100)"
-            />
-            <circle cx="100" cy="100" r="4" fill="var(--color-accent)" opacity="0.2" />
-          </svg>
+      <header className="reg-page-head">
+        <div className="reg-page-head__margin" aria-hidden="true">
+          <span>CI / System Registry</span>
+          <span>{projects.length} bodies cataloged</span>
+          <span>Sheet 02</span>
         </div>
-        <p className="projects-page-header__eyebrow">CATALOG</p>
-        <h1 className="projects-page-header__title">All Projects</h1>
-        <p className="projects-page-header__sub">
-          <span className="projects-page-header__stat">{projects.length}</span>{" "}
-          repositories across finance, AI, OSINT, infrastructure, and web.
+        <h1 className="reg-page-head__title">System Registry</h1>
+        <p className="reg-page-head__sub">
+          All surveyed bodies — finance, AI, OSINT, infrastructure, web.
         </p>
       </header>
 
@@ -47,11 +35,11 @@ export default async function ProjectsPage() {
         aria-labelledby="domain-map-heading"
       >
         <h2 id="domain-map-heading" className="detail-section-label">
-          Explore by domain
+          <span className="reg-label reg-label--accent">Fig. 02</span> — Sector map
         </h2>
         <p className="cosmic-section-subline">
-          A 2D quadrant map of how work clusters — distinct from the home solar
-          ordering by completeness.
+          A 2D chart of how bodies cluster by domain — distinct from the home
+          orbit ordering by completeness.
         </p>
         <ConstellationNav projects={projects} />
       </section>

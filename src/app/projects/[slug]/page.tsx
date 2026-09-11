@@ -68,7 +68,9 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const allProjects = sortPortfolioOrbit(await getEnrichedProjects());
+  const sourceProjects = await getEnrichedProjects();
+  const registryIndex = sourceProjects.findIndex((p) => p.slug === slug);
+  const allProjects = sortPortfolioOrbit(sourceProjects);
   const adjacent = getOrbitAdjacent(allProjects, slug);
   if (!adjacent) notFound();
 
@@ -80,12 +82,12 @@ export default async function ProjectDetailPage({
 
   const readme =
     !project.private && !project.siteOnly
-      ? await fetchReadme(project.repoName)
+      ? await fetchReadme(project.repoName, project.repoOwner)
       : null;
 
   const showcase =
     project.private && !project.siteOnly
-      ? await fetchShowcaseMd(project.repoName)
+      ? await fetchShowcaseMd(project.repoName, project.repoOwner)
       : null;
 
   const meta = categoryMeta[project.category];
@@ -108,7 +110,12 @@ export default async function ProjectDetailPage({
 
   return (
     <article className="dossier-page animate-fade-up" style={pageStyle}>
-      <ProjectHero project={project} accentColor={accentColor} meta={meta} />
+      <ProjectHero
+        project={project}
+        accentColor={accentColor}
+        meta={meta}
+        registryIndex={registryIndex}
+      />
 
       {project.demoVideoUrl && !project.private && (
         <section
@@ -210,7 +217,7 @@ export default async function ProjectDetailPage({
           {project.private && (
             <div className="dossier-page__private">
               <div className="dossier-classified-banner">
-                Restricted · Recruitment dossier — source not exposed here
+                Restricted — classified survey file · source withheld
               </div>
 
               {project.businessContext && (

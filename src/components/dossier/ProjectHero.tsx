@@ -7,6 +7,7 @@ import {
   projectLiveHref,
   formatDeploymentUrl,
 } from "@/lib/deployments";
+import DossierArcField from "@/components/DossierArcField";
 
 type CategoryMeta = { label: string; icon: string };
 
@@ -14,18 +15,24 @@ interface ProjectHeroProps {
   project: EnrichedProject;
   accentColor: string;
   meta: CategoryMeta | undefined;
+  /** Stable registry index — position in projects.ts source order. */
+  registryIndex?: number;
 }
 
-export function ProjectHero({ project, accentColor, meta }: ProjectHeroProps) {
+export function ProjectHero({ project, accentColor, meta, registryIndex }: ProjectHeroProps) {
   const liveHref = projectLiveHref(project);
   const hasDemo = isProjectLive(project) && Boolean(liveHref);
   const isRelativeLive = liveHref?.startsWith("/");
+  const fileId =
+    typeof registryIndex === "number" && registryIndex >= 0
+      ? `CI-${String(registryIndex + 1).padStart(2, "0")}`
+      : null;
 
   return (
     <>
       <div className="cosmic-page detail-breadcrumb">
         <nav className="detail-breadcrumb__nav" aria-label="Breadcrumb">
-          <Link href="/projects">← Catalog</Link>
+          <Link href="/projects">← Registry</Link>
           <ChevronIcon className="w-3 h-3 opacity-50 shrink-0" aria-hidden />
           <span className="detail-breadcrumb__current truncate">
             {project.displayName}
@@ -37,10 +44,22 @@ export function ProjectHero({ project, accentColor, meta }: ProjectHeroProps) {
         className="dossier-page__hero-band"
         style={{ "--dossier-accent": accentColor } as CSSProperties}
       >
-        <div className="cosmic-page">
+        <DossierArcField />
+        <div className="cosmic-page dossier-hero__content">
+          <div className="dossier-hero__margin" aria-hidden="true">
+            <span>{fileId ? `Survey file ${fileId}` : "Survey file"}</span>
+            <span className="hidden sm:inline">
+              {meta?.label || project.category} sector
+            </span>
+            {project.private ? (
+              <span className="dossier-hero__classified">Restricted</span>
+            ) : (
+              <span>Public record</span>
+            )}
+          </div>
           <div className="flex items-start gap-4 sm:gap-5">
             <div
-              className="dossier-page__hero-icon flex-shrink-0 rounded-xl flex items-center justify-center"
+              className="dossier-page__hero-icon flex-shrink-0 flex items-center justify-center"
               style={{ color: accentColor }}
             >
               {getCategoryIcon(meta?.icon || "globe", "w-6 h-6")}
@@ -59,9 +78,9 @@ export function ProjectHero({ project, accentColor, meta }: ProjectHeroProps) {
                 </span>
 
                 {project.private ? (
-                  <span className="dossier-page__pill dossier-page__pill--muted">
+                  <span className="dossier-page__pill dossier-page__pill--classified">
                     <LockIcon className="w-3 h-3" />
-                    Private
+                    Classified
                   </span>
                 ) : (
                   <span className="dossier-page__pill dossier-page__pill--public">

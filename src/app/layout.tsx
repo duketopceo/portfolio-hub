@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Inter, Source_Code_Pro } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import WelcomeIntro from "@/components/WelcomeIntro";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 
-/** Supabase DESIGN.md (VoltAgent): Inter substitutes licensed Circular at w500 display / w400 body */
-const inter = Inter({
+/** Star Chart system: Archivo industrial grotesk (display + body), JetBrains Mono for all meta/labels */
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-archivo",
   display: "swap",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const sourceCodePro = Source_Code_Pro({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-source-mono",
+  variable: "--font-jbmono",
   display: "swap",
-  weight: ["400", "500"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -58,7 +58,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${sourceCodePro.variable} antialiased`}
+        className={`${archivo.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <SiteBackground />
         <WelcomeIntro />

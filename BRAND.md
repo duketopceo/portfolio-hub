@@ -1,6 +1,10 @@
 # Cosmic Intelligence — Brand Guidelines
 
-Luke Kimball's portfolio system. Applied across `luke-the-duke.com` and its subdomains.
+Luke Kimball's portfolio system. Applied across `luke-the-duke.com`.
+
+**Design system:** *Star Chart* — a neo-industrial survey instrument. The site
+reads as a field registry / engineering survey sheet: cataloged bodies, sector
+maps, survey files, and telemetry — not a generic space theme.
 
 ---
 
@@ -9,207 +13,148 @@ Luke Kimball's portfolio system. Applied across `luke-the-duke.com` and its subd
 | Context | Usage |
 |---|---|
 | Full name | **Cosmic Intelligence** |
-| Short | **CI** (system/code references only) |
+| Short | **CI** (registry references: `CI-01`, `CI / SYSTEM REGISTRY`) |
 | Author | **Luke Kimball** |
 | Tagline | *Systems that compound.* |
-| Voice | Precise, confident, terse. No hype, no filler. |
+| Voice | Precise, confident, terse. Instrument language: survey, registry, dossier, sector, transmission, uplink. No hype, no filler. |
+
+### Terminology
+
+| Concept | Term |
+|---|---|
+| Project | "Body" / "system" in the registry |
+| Project detail page | "Dossier" / "survey file" (`CI-NN`) |
+| Project catalog | "System registry" / "sector map" |
+| Activity feed | "Transmissions" |
+| Contact | "Engage" / "open channel" |
+| Loading state | "Establishing uplink" |
+| Private project | "Classified" / "restricted" (orange marks) |
+| 404 | "Signal lost" / "off-chart record" |
 
 ---
 
 ## Color Palette
 
-All colors are CSS custom properties defined in `src/app/globals.css`.
+All colors are CSS custom properties in `src/app/globals.css`. Near-monochrome
+dark survey plate; a single teal carries signal.
 
-### Core
+### Surfaces & Lines
 
 | Token | Hex | Role |
 |---|---|---|
-| `--color-bg` | `#080C14` | Deep space background |
-| `--color-surface` | `#0C121E` | Card / panel base |
-| `--color-surface-2` | `#111827` | Raised surface |
-| `--color-surface-3` | `#1A2236` | Elevated element |
-| `--color-accent` | `#2DD4BF` | Primary teal accent |
-| `--color-live` | `#34D399` | Live / online indicator |
+| `--color-bg` | `#07090B` | Survey-plate background |
+| `--color-surface` | `#0B0F13` | Panel base |
+| `--color-surface-2` | `#0F151B` | Raised surface |
+| `--color-surface-3` | `#151D24` | Elevated element |
+| `--color-border` | `rgba(228,234,240,0.09)` | Hairline rules |
+| `--color-border-strong` | `rgba(228,234,240,0.16)` | Plate edges |
+| `--color-divider` | `rgba(228,234,240,0.07)` | Section dividers |
 
 ### Text
 
 | Token | Value | Use |
 |---|---|---|
-| `--color-text` | `#E4E4E7` | Primary copy |
-| `--color-text-muted` | `#94A3B8` | Secondary / body |
-| `--color-text-faint` | `#475569` | Labels, timestamps, hints |
+| `--color-text` | `#E9ECEF` | Primary copy |
+| `--color-text-muted` | `#9AA3AC` | Secondary / body |
+| `--color-text-faint` | `#5B6570` | Marginalia, registry IDs |
 
-### Accent Variants
+### Signal Colors
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-accent` | `#2DD4BF` | Signal teal — live + interactive only |
+| `--color-signal` | `#FF5C1A` | Classification / restricted / alert marks |
+| `--color-live` | `#34D399` | Live-status indicators |
+
+Rules: teal for interactive elements and live states; orange strictly for
+classified/restricted treatments; green only for actual live status.
+
+### Chart Overlays
 
 | Token | Value |
 |---|---|
-| `--color-accent-muted` | `rgba(45,212,191,0.12)` |
-| `--color-accent-subtle` | `rgba(45,212,191,0.06)` |
-| `--color-accent-glow` | `rgba(45,212,191,0.15)` |
+| `--chart-grid` | `rgba(228,234,240,0.035)` |
+| `--chart-grid-major` | `rgba(228,234,240,0.06)` |
+| `--chart-tick` | `rgba(228,234,240,0.28)` |
 
-### Nebula (background only)
+---
 
-| Name | Value |
-|---|---|
-| Nebula blue | `rgba(30,60,120,0.4)` |
-| Nebula purple | `rgba(60,30,90,0.3)` |
-| Nebula teal | `rgba(20,90,85,0.25)` |
+## Surfaces
+
+No glassmorphism. Panels are **solid, squared, hairline-bordered plates**:
+
+```css
+background: var(--color-surface);
+border: 1px solid var(--color-border-strong);
+border-radius: var(--radius-lg); /* 3px */
+```
+
+Hover states use a 1px teal inset ring (`--glass-shadow-hover`), not glow.
 
 ---
 
 ## Typography
 
-| Role | Font | Weight | Token |
-|---|---|---|---|
-| Display / headings | Space Grotesk | 600–700 | `--font-display` |
-| Body | Inter | 400–500 | `--font-body` |
-| Mono / labels / code | JetBrains Mono | 400–600 | `--font-mono` |
+| Role | Font | Token |
+|---|---|---|
+| Display / body | Archivo (grotesk) | `--font-display`, `--font-body` |
+| Mono / marginalia / code | JetBrains Mono | `--font-mono` |
 
-### Type Scale
+Rules:
+- Headlines: Archivo, heavy weight, tight tracking, uppercase-capable
+- Marginalia/labels/registry IDs: JetBrains Mono, ALL CAPS, `letter-spacing: 0.14–0.2em`, `9–10px`
+- Mono inline "chips" for handles, paths, and technical strings inside body copy
+
+---
+
+## Geometry
+
+Squared engineering geometry:
 
 | Token | Value |
 |---|---|
-| `--text-xs` | `0.75rem` |
-| `--text-sm` | `0.875rem` (→ `0.9375rem` on lg) |
-| `--text-base` | `1rem` |
-| `--text-lg` | `1.125rem` |
-| `--text-xl` | `1.5rem` |
-| `--text-2xl` | `2rem` |
-| `--text-3xl` | `2.5rem` |
-| `--text-hero` | `clamp(3rem, 0.5rem + 7vw, 5rem)` |
+| `--radius-sm` | `1px` |
+| `--radius-md` | `2px` |
+| `--radius-lg` | `3px` |
+| `--radius-xl` | `4px` |
 
-### Rules
-- Headings: Space Grotesk, `letter-spacing: -0.02em`
-- Labels / eyebrows: JetBrains Mono, ALL CAPS, `letter-spacing: 0.08–0.14em`
-- Body: Inter, `line-height: 1.55`
-- Code: JetBrains Mono, `font-size: 0.85em` relative
+Corner ticks (`corner-ticks` utility), hairline grids, crosshair/reticle
+markers in place of glowing planets, figure numbers (`FIG. 01`), margin
+strips, and drafting title blocks are the signature motifs.
 
 ---
 
-## Glass System
+## Motion & Canvas Layers
 
-All surface components use the glass system for depth.
+WebGL/canvas layers are progressive enhancement via
+`@designcodeio/threeui` — each is a client component that skips mounting
+under `prefers-reduced-motion`:
 
-```css
-/* Standard glass card */
-background: rgba(12, 18, 30, 0.70);
-backdrop-filter: blur(16px) saturate(150%);
-border: 1px solid rgba(45, 212, 191, 0.08);
-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-border-radius: 14px;
-
-/* Hover state */
-border-color: rgba(45, 212, 191, 0.18);
-box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(45,212,191,0.05);
-```
-
----
-
-## Logo
-
-File: `public/brand/logo-cosmic.svg`
-
-The logo is an SVG orrery — overlapping elliptical orbits with a central star dot. Rendered in `--color-accent` (`#2DD4BF`) on dark backgrounds.
-
-**Minimum size:** 24×24px  
-**Clear space:** equal to the logo's inner circle radius on all sides  
-**Never:** recolor to anything other than `--color-accent` or white; stretch or skew
-
----
-
-## Favicon / App Icons
-
-| File | Size | Use |
+| Piece | Component | Where |
 |---|---|---|
-| `favicon.ico` | multi | Browser tab fallback |
-| `favicon-16.png` | 16×16 | Small tab |
-| `favicon-32.png` | 32×32 | Standard tab |
-| `apple-touch-icon.png` | 180×180 | iOS home screen |
-| `og-image.png` | 1200×630 | Social share card |
+| Living constellation field | `StarChartField` (`constellation-field`) | Site background, under grid/noise/vignette |
+| Surveyed terrain | `SectorTerrain` (`topo-field`) | `/projects` sector map |
+| Surveyed body | `OrbitalBody` (`orbital-sphere`) | Home primary-orbit center |
+| Telemetry arcs | `DossierArcField` (`predictive-arc`) | Dossier hero band |
+| Hyperspace streaks | `WarpFieldLayer` (`warp-field/hyperspace`) | 404 plate |
+| Uplink loader | `UplinkLoader` | Route transitions (`loading.tsx`) |
 
----
-
-## Animation Principles
-
-- **Easing:** `cubic-bezier(0.16, 1, 0.3, 1)` for entrances (spring-like)
-- **Duration:** 150–200ms micro, 350–500ms page transitions, 4–14s ambient
-- **Stars:** 3 independent CSS layers (`--near` 5.2s, `--mid` 8.4s, `--far` 13s) create staggered twinkle without JS
-- **Nebula:** Two blob layers drift at 52s / 68s alternate; scale 1→1.05
-- **Reduced motion:** All ambient animations off; entrance transitions intact
-
----
-
-## Spacing
-
-| Token | Value |
-|---|---|
-| `--space-xs` | `clamp(0.25rem, 0.5vw, 0.5rem)` |
-| `--space-sm` | `clamp(0.5rem, 1vw, 0.75rem)` |
-| `--space-md` | `clamp(0.75rem, 1.5vw, 1.25rem)` |
-| `--space-lg` | `clamp(1.25rem, 2.5vw, 2rem)` |
-| `--space-xl` | `clamp(2rem, 4vw, 3rem)` |
-| `--space-2xl` | `clamp(3rem, 6vw, 5rem)` |
-
-Page rail: `max-width: min(90rem, 100%)`, `padding: clamp(1rem, 4vw, 3rem)`
-
----
-
-## Border Radius
-
-| Token | Value | Use |
-|---|---|---|
-| `--radius-sm` | `4px` | Chips, code, tiny elements |
-| `--radius-md` | `8px` | Buttons, inputs |
-| `--radius-lg` | `14px` | Cards, panels |
-| `--radius-xl` | `18px` | Large cards, modals |
-
----
-
-## Subdomains & Sections
-
-| URL | Purpose | Brand notes |
-|---|---|---|
-| `luke-the-duke.com` | Main portfolio | Full cosmic theme |
-| `luke-the-duke.com/projects` | Project catalog + quadrant map | Same theme |
-| `luke-the-duke.com/now` | Live GitHub activity | Same theme |
-| `luke-the-duke.com/podcast` | EP009 podcast page | Cosmic variant — `ep009.js`, `cosmic-pod.css`, carousel UI, TradingView, OpenRouter chat |
-
-### Podcast sub-brand (`/podcast`)
-
-- Inherits all core colors and fonts
-- Adds: TradingView ticker, mosaic tile grid, star canvas (`initStars()`), OpenRouter AI chat
-- Custom CSS: `public/podcast/cosmic-pod.css` (overrides/extends globals)
-- No site header/footer (standalone experience)
-
----
-
-## Component Inventory
-
-| Component | File | Description |
-|---|---|---|
-| Site background | `SiteChrome.tsx` | Fixed nebula + 5 star layers |
-| Header | `Header.tsx` | Sticky nav, glass on scroll |
-| Solar system nav | `SolarSystemNav.tsx` | Orbit-style project navigator |
-| Activity feed | `ActivityFeed.tsx` | GitHub commit feed widget |
-| Welcome intro | `WelcomeIntro.tsx` | First-visit toast (localStorage) |
-| Project card | `ProjectCard.tsx` | Glass card, lang border, live strip |
-| Quadrant graph | `QuadrantGraph.tsx` | 2-axis scatter of projects |
-| Pull requests panel | `PullRequestsPanel.tsx` | Public-only open PRs |
-| Repo detail modal | `RepoDetailModal.tsx` | Expanded project info |
+Canvas layers never carry meaning — semantic HTML, labels, and keyboard
+paths work with every layer disabled.
 
 ---
 
 ## Do / Don't
 
 **Do:**
-- Dark backgrounds always — no light mode
-- Teal accent sparingly for interactive elements and highlights
-- Mono font for all technical strings, labels, timestamps, stats
-- Glass surfaces with backdrop-blur for floating UI
+- Dark survey plate always — no light mode
+- Solid panels, hairline borders, squared corners
+- Mono microcopy for labels, IDs, and marginalia
+- Teal sparingly for interactive/live signal
+- `prefers-reduced-motion` guards on every canvas layer
 
 **Don't:**
-- Use accent color for large background fills
-- Introduce new colors outside the palette without updating this file
-- Add light mode variants
-- Use emoji in production UI unless explicitly part of content (podcast tiles OK)
-- Skip `prefers-reduced-motion` guards on ambient animations
+- Glassmorphism, backdrop-blur panels, soft glows, or rounded "SaaS" cards
+- Orange outside classification/alert contexts
+- Emoji in production UI
+- Canvas/WebGL as the only carrier of meaning

@@ -20,55 +20,76 @@ export default async function Home() {
   const liveCount = all.filter(isProjectLive).length;
   const categories = new Set(all.map((p) => p.category));
   const lead = primaryOrbit[0];
+  const registryIndex = all.map((p) => p.slug);
+  const indexOf = (list: typeof all) =>
+    list.map((p) => Math.max(registryIndex.indexOf(p.slug), 0));
 
   return (
     <div>
-      <div className="home-universe">
-        <section className="cosmic-hero cosmic-hero--compact">
-          <div className="cosmic-hero__inner">
-            <div className="cosmic-hero__orbits" aria-hidden="true">
-              <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", color: "var(--color-accent)" }}>
-                <ellipse cx="200" cy="200" rx="180" ry="90" stroke="currentColor" strokeWidth="1"/>
-                <ellipse cx="200" cy="200" rx="140" ry="60" stroke="currentColor" strokeWidth="0.75"/>
-                <ellipse cx="200" cy="200" rx="100" ry="140" stroke="currentColor" strokeWidth="0.5"/>
-              </svg>
-            </div>
-
-            <p className="cosmic-hero__eyebrow">Luke Kimball</p>
-            <h1 className="cosmic-hero__title">
-              Cosmic<br />Intelligence
-            </h1>
-            <p className="cosmic-hero__tagline">
-              Systems that <span className="cosmic-hero__accent">compound.</span>
-            </p>
-            {lead && (
-              <p className="cosmic-hero__lead">
-                Lead system · {lead.displayName}
-              </p>
-            )}
-            <div className="cosmic-hero__stats" aria-label="Portfolio summary">
-              <span>{all.length} repositories</span>
-              <span className="cosmic-hero__dot">·</span>
-              <span>{categories.size} domains</span>
-              <span className="cosmic-hero__dot">·</span>
-              <span>{liveCount} live</span>
-            </div>
+      {/* ── Master survey sheet — the first viewport is the chart plate ── */}
+      <section className="sheet" aria-label="Mission control — orbital survey">
+        <div className="sheet__plate corner-ticks">
+          {/* Sheet margins — registry marginalia */}
+          <div className="sheet__margins" aria-hidden="true">
+            <span>CI — ORBITAL REGISTRY</span>
+            <span className="hidden sm:inline">40.7608°N — 111.8910°W</span>
+            <span className="hidden md:inline">SURVEY 2026.09</span>
+            <span>SHEET 01 / 01</span>
           </div>
-        </section>
 
-        <div className="orbit-universe">
-          <SolarSystemNav
-            key={lead?.slug ?? "orbit"}
-            projects={primaryOrbit}
-            variant="primary"
-          />
-          {secondaryOrbit.length > 0 && (
-            <SecondaryOrbitRings projects={secondaryOrbit} />
-          )}
+          <header className="sheet__head">
+            <p className="reg-label reg-label--accent sheet__eyebrow">
+              Engineering portfolio — Luke Kimball
+            </p>
+            <h1 className="sheet__title">
+              Cosmic
+              <br />
+              Intelligence
+            </h1>
+            <p className="sheet__tagline">Systems that compound.</p>
+          </header>
+
+          {/* The chart — primary orbit */}
+          <div className="sheet__chart">
+            <SolarSystemNav
+              key={lead?.slug ?? "orbit"}
+              projects={primaryOrbit}
+              registryIndexOf={indexOf(primaryOrbit)}
+              variant="primary"
+            />
+            {secondaryOrbit.length > 0 && (
+              <SecondaryOrbitRings
+                projects={secondaryOrbit}
+                registryIndexOf={indexOf(secondaryOrbit)}
+              />
+            )}
+          </div>
+
+          {/* Drafting title block — engineering convention, lower right */}
+          <dl className="sheet__titleblock" aria-label="Survey summary">
+            <div className="sheet__tb-row">
+              <dt>Bodies cataloged</dt>
+              <dd>{all.length}</dd>
+            </div>
+            <div className="sheet__tb-row">
+              <dt>Sectors</dt>
+              <dd>{categories.size}</dd>
+            </div>
+            <div className="sheet__tb-row">
+              <dt>Live surfaces</dt>
+              <dd className="sheet__tb-live">{liveCount}</dd>
+            </div>
+            {lead && (
+              <div className="sheet__tb-row">
+                <dt>Lead system</dt>
+                <dd>{lead.displayName}</dd>
+              </div>
+            )}
+          </dl>
         </div>
-      </div>
+      </section>
 
-      {/* ── Activity strip — below orbit, full width ── */}
+      {/* ── Transmissions — live activity strip ── */}
       <div className="home-activity-strip">
         <HomeActivityShowcase data={activity} />
       </div>
@@ -78,7 +99,7 @@ export default async function Home() {
         aria-label="Domain map in catalog"
       >
         <Link href="/projects#domain-map" className="detail-nav-link">
-          Explore domain quadrant map →
+          Open sector map →
         </Link>
       </section>
     </div>

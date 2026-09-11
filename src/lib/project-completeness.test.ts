@@ -10,10 +10,14 @@ import { projectConfigs } from "@/data/projects";
 describe("homepage orbit split", () => {
   const enriched = projectConfigs.map((p) => ({
     ...p,
-    repo: p.repoName,
+    repo: null,
     stars: 0,
     language: null,
-    lastUpdated: null,
+    languages: [] as string[],
+    forks: 0,
+    openIssuesCount: 0,
+    ciStatus: null,
+    lastUpdated: "",
     githubUrl: p.private ? null : `https://github.com/duketopceo/${p.repoName}`,
   }));
 

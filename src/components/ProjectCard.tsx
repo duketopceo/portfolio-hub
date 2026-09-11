@@ -9,10 +9,13 @@ import GithubLink from "./GithubLink";
 
 interface ProjectCardProps {
   project: EnrichedProject;
+  /** Stable registry index — position in projects.ts source order. */
+  registryIndex?: number;
 }
 
 export default function ProjectCard({
   project,
+  registryIndex,
 }: ProjectCardProps) {
   const meta = categoryMeta[project.category];
   const hasDemo = isProjectLive(project);
@@ -49,11 +52,18 @@ export default function ProjectCard({
               )}
             </div>
           </div>
-          {project.lastUpdated && (
-            <time className="cosmic-card-date" dateTime={project.lastUpdated}>
-              {formatDate(project.lastUpdated)}
-            </time>
-          )}
+          <span className="cosmic-project-card__meta-right">
+            {typeof registryIndex === "number" && registryIndex >= 0 && (
+              <span className="reg-num" aria-hidden="true">
+                CI-{String(registryIndex + 1).padStart(2, "0")}
+              </span>
+            )}
+            {project.lastUpdated && (
+              <time className="cosmic-card-date" dateTime={project.lastUpdated}>
+                {formatDate(project.lastUpdated)}
+              </time>
+            )}
+          </span>
         </header>
 
         <h3
@@ -102,7 +112,7 @@ export default function ProjectCard({
             )}
           </div>
           <span className="cosmic-project-card__chevron" aria-hidden>
-            Details
+            Survey file
             <span className="cosmic-project-card__chevron-arrow">→</span>
           </span>
         </div>

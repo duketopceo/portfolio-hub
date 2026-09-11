@@ -9,6 +9,7 @@ import {
   axisLabels,
 } from "@/data/quadrant-positions";
 import { catColors } from "@/lib/utils";
+import SectorTerrain from "@/components/SectorTerrain";
 import { categoryMeta } from "@/data/projects";
 import { projectIconMap } from "./ProjectIcons";
 
@@ -114,6 +115,9 @@ export default function ConstellationNav({ projects }: ConstellationNavProps) {
       {/* ── Graph ──────────────────────────────────── */}
       <div className="q-graph-outer">
         <div className="q-graph" ref={graphRef}>
+          {/* Surveyed terrain — animated topo contours */}
+          <SectorTerrain />
+
           {/* Constellation edges — SVG layer */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none"

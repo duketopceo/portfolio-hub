@@ -12,6 +12,7 @@ import type { EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import { PlanetNode } from "@/components/planet/PlanetNode";
+import OrbitalBody from "@/components/OrbitalBody";
 
 /** Ellipse radii (rem) — widen slightly when orbit is crowded */
 function useOrbitRadiiRem(count: number) {
@@ -37,10 +38,12 @@ function useOrbitRadiiRem(count: number) {
 
 interface SolarSystemNavProps {
   projects: EnrichedProject[];
+  /** Registry numbers aligned to `projects` — source-order catalog position. */
+  registryIndexOf?: number[];
   variant?: "primary";
 }
 
-export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
+export default function SolarSystemNav({ projects, registryIndexOf }: SolarSystemNavProps) {
   const [focusIndex, setFocusIndex] = useState(0);
   const [flipDir, setFlipDir] = useState(1);
   const n = projects.length;
@@ -114,12 +117,11 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
     >
       <div className="cosmic-page solar-system__intro">
         <h2 id="solar-system-heading" className="solar-system__heading">
-          Featured systems
+          <span className="reg-label reg-label--accent">Fig. 01</span> — Primary orbit
         </h2>
         <p className="solar-system__hint">
-          Top five worlds in the main orbit — arrow keys or ‹ › to cycle. Each
-          planet reflects scope, stack, and live surfaces. Click for the full
-          dossier.
+          Five lead bodies under survey. Arrow keys or ‹ › to cycle —
+          select a marker for the survey file.
         </p>
       </div>
 
@@ -154,6 +156,8 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
           </svg>
         </div>
 
+        <OrbitalBody />
+
         <div className="solar-sun-stack" aria-hidden>
           <div className="solar-sun solar-sun--halo" />
           <div className="solar-sun solar-sun--core" />
@@ -177,7 +181,7 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
                   tier="primary"
                   href={`/projects/${p.slug}`}
                   focused={isFocused}
-                  index={i}
+                  index={registryIndexOf?.[i] ?? i}
                   onMouseEnter={() => moveFocusTo(i)}
                   onFocus={() => moveFocusTo(i)}
                   tabIndex={isFocused ? 0 : -1}
@@ -204,15 +208,20 @@ export default function SolarSystemNav({ projects }: SolarSystemNavProps) {
           >
             <Link
               href={`/projects/${focused.slug}`}
-              className="solar-focus-card"
+              className="solar-focus-card corner-ticks corner-ticks--accent"
               style={{ "--focus-accent": accent } as React.CSSProperties}
             >
-              <span className="solar-focus-card__eyebrow">
-                {meta?.label ?? focused.category}
+              <span className="solar-focus-card__top">
+                <span className="solar-focus-card__eyebrow">
+                  {meta?.label ?? focused.category}
+                </span>
+                <span className="solar-focus-card__id">
+                  CI-{String((registryIndexOf?.[safeFocusIndex] ?? safeFocusIndex) + 1).padStart(2, "0")}
+                </span>
               </span>
               <span className="solar-focus-card__title">{focused.displayName}</span>
               <span className="solar-focus-card__tagline">{focused.tagline}</span>
-              <span className="solar-focus-card__cta">View dossier →</span>
+              <span className="solar-focus-card__cta">Open survey file →</span>
             </Link>
           </div>
 

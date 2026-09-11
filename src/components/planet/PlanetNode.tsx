@@ -139,13 +139,18 @@ export function PlanetNode({
         )}
       </span>
       <span className="planet-node__label">
-        {label}
-        {project.private && (
-          <LockIcon
-            className="inline w-2.5 h-2.5 ml-0.5 opacity-60"
-            aria-label="Private"
-          />
-        )}
+        <span className="planet-node__id" aria-hidden="true">
+          CI-{String(index + 1).padStart(2, "0")}
+        </span>
+        <span className="planet-node__name">
+          {label}
+          {project.private && (
+            <LockIcon
+              className="inline w-2.5 h-2.5 ml-0.5 opacity-60"
+              aria-label="Private"
+            />
+          )}
+        </span>
       </span>
     </Link>
   );

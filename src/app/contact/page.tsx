@@ -7,9 +7,13 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <div className="cosmic-page cosmic-page--shell contact-page">
-      <header className="contact-page__header">
-        <p className="projects-page-header__eyebrow">CONTACT</p>
-        <h1 className="projects-page-header__title">Get in touch</h1>
+      <header className="reg-page-head contact-page__header">
+        <div className="reg-page-head__margin" aria-hidden="true">
+          <span>CI / Uplink</span>
+          <span className="hidden sm:inline">Provo, UT — remote US</span>
+          <span>Sheet 06</span>
+        </div>
+        <h1 className="reg-page-head__title">Open channel</h1>
         <p className="contact-page__lede">
           Email is the hire path. GitHub and LinkedIn are the public work.
         </p>

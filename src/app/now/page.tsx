@@ -15,11 +15,15 @@ export default async function NowPage() {
 
   return (
     <div className="cosmic-page cosmic-page--shell">
-      <header className="projects-page-header max-w-xl" style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}>
-        <p className="projects-page-header__eyebrow">MISSION LOG</p>
-        <h1 className="projects-page-header__title">Recent Activity</h1>
-        <p className="projects-page-header__sub">
-          Most recently active projects. Updated from GitHub.
+      <header className="reg-page-head max-w-xl">
+        <div className="reg-page-head__margin" aria-hidden="true">
+          <span>CI / Mission log</span>
+          <span className="hidden sm:inline">via GitHub feed</span>
+          <span>Sheet 04</span>
+        </div>
+        <h1 className="reg-page-head__title">Transmissions</h1>
+        <p className="reg-page-head__sub">
+          Most recently active bodies. Updated from GitHub.
         </p>
       </header>
 

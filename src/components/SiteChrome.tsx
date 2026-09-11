@@ -1,7 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
+
+const StarChartField = dynamic(() => import("@/components/StarChartField"), {
+  ssr: false,
+});
 
 export function SiteFooter() {
   const pathname = usePathname();
@@ -14,11 +19,11 @@ export function SiteBackground() {
   if (pathname?.startsWith("/podcast")) return null;
   return (
     <div className="cosmic-bg" aria-hidden="true">
-      <div className="cosmic-bg__nebula" />
-      <div className="cosmic-bg__nebula cosmic-bg__nebula--accent" />
-      <div className="cosmic-bg__stars cosmic-bg__stars--near" />
-      <div className="cosmic-bg__stars cosmic-bg__stars--mid" />
+      <StarChartField />
+      <div className="cosmic-bg__grid" />
       <div className="cosmic-bg__stars cosmic-bg__stars--far" />
+      <div className="cosmic-bg__noise" />
+      <div className="cosmic-bg__vignette" />
     </div>
   );
 }

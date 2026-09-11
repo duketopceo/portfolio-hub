@@ -676,11 +676,13 @@ export const projectConfigs: ProjectConfig[] = [
   },
   {
     slug: "stratum-hq",
-    repoName: "stratumhq",
+    repoName: "stratum-engine",
+    repoOwner: "Herzog-LLC",
     displayName: "Stratum Engine",
-    tagline: "Stratum product engine — shell and roadmap at stratumhq.app",
+    tagline:
+      "AI-powered operations backend for home service contractors — live at stratumhq.app",
     description:
-      "Stratum Engine is the umbrella product surface for related apps and infrastructure. The public shell at stratumhq.app may be offline; this dossier stays honest about availability while the roadmap evolves.",
+      "Stratum Engine is the operations backend for home service contractors — AI-powered intake, dispatch, and workflow. The public shell lives at stratumhq.app; source stays private under Herzog-LLC.",
     category: "apps",
     type: "platform",
     featured: true,
@@ -694,8 +696,9 @@ export const projectConfigs: ProjectConfig[] = [
     },
     embeddable: false,
     techStack: ["TypeScript", "Next.js", "Docker"],
-    private: false,
+    private: true,
     highlights: [
+      "AI-powered operations backend for home service contractors",
       "Product engine and brand shell for the Stratum surface",
       "Roadmap-aligned infrastructure story",
     ],

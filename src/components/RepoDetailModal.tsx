@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
@@ -87,24 +87,29 @@ export default function RepoDetailModal({
 }: RepoDetailModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
   const [data, setData] = useState<SummaryResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Reset stale data when the modal re-opens or the target repo changes —
+  // derived-state-during-render, per React docs (avoids sync setState in effect).
+  const [prevKey, setPrevKey] = useState<string | null>(null);
+  const fetchKey = open ? project.repoName : null;
+  if (prevKey !== fetchKey) {
+    setPrevKey(fetchKey);
+    setData(null);
+    setError(null);
+    setLoading(fetchKey !== null);
+  }
 
   useEffect(() => {
-    if (!open) {
-      setData(null);
-      setError(null);
-      return;
-    }
+    if (!open) return;
     const ac = new AbortController();
-    setLoading(true);
-    setError(null);
     const url = `/api/github/repo/${encodeURIComponent(project.repoName)}/summary`;
     fetch(url, { signal: ac.signal })
       .then((r) => {

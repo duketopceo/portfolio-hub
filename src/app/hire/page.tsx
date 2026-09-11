@@ -9,9 +9,13 @@ export const metadata = {
 export default function HirePage() {
   return (
     <div className="cosmic-page cosmic-page--shell hire-page">
-      <header className="hire-page__header">
-        <p className="projects-page-header__eyebrow">HIRE</p>
-        <h1 className="projects-page-header__title">Let&apos;s work</h1>
+      <header className="reg-page-head hire-page__header">
+        <div className="reg-page-head__margin" aria-hidden="true">
+          <span>CI / Engagement</span>
+          <span className="hidden sm:inline">Full-time · applied AI</span>
+          <span>Sheet 07</span>
+        </div>
+        <h1 className="reg-page-head__title">Engage</h1>
         <p className="hire-page__lede">
           Open to full-time engineering roles where applied AI, infrastructure,
           and product-minded operations meet. Public work lives here and on
