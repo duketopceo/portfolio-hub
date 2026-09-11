@@ -44,10 +44,11 @@ This standard is built with `ui-ux-pro-max` (HUD/Sci-Fi FUI) and `ce-frontend-de
 
 ## Landing page map
 
-1. **Hero** — brand line, H1, one-line promise, two CTAs, dominant black-hole visual
-2. **Selected systems** — 6 lead projects as a plain list/grid with category and live status
-3. **Contact CTA** — one bordered panel, copy, single action
-4. **Footer** — brand, site map, lead systems
+1. **Hero** — name + role line, H1, one-line promise, two CTAs, dominant black-hole visual
+2. **Featured systems** — 6 lead projects as a plain list with category and status labels
+3. **About** — one paragraph of positioning
+4. **Final CTA** — one bordered panel, copy, single action
+5. **Full catalog** — `src/app/projects/page.tsx` with every non-catalog system, ranked
 
 ## Motion
 
@@ -62,6 +63,7 @@ This standard is built with `ui-ux-pro-max` (HUD/Sci-Fi FUI) and `ce-frontend-de
 - No gradients for backgrounds
 - No abstract decorative blobs
 - No shadows except the black-hole glow
+- 0px border radius on components; circular visual anchors (black hole, live dot) are intentional exceptions
 - No emoji, no generic marketing copy
 - Semantic HTML: `nav`, `main`, `section`, `article`, `footer`
 - Focus rings on every interactive element
@@ -72,4 +74,5 @@ This standard is built with `ui-ux-pro-max` (HUD/Sci-Fi FUI) and `ce-frontend-de
 - **Button secondary:** `border border-foreground text-foreground px-5 py-2.5 text-sm font-semibold uppercase tracking-widest hover:border-primary hover:text-primary`
 - **Link:** `text-muted-foreground hover:text-foreground transition-colors`
 - **List item:** `border-b border-border py-6 group hover:border-primary transition-colors`
+- **Status label:** `text-[10px] uppercase tracking-[0.1em] text-primary border border-primary px-1.5 py-0.5`
 - **Header:** minimal sticky bar, brand left, nav right, `bg-background/90 backdrop-blur` on scroll
