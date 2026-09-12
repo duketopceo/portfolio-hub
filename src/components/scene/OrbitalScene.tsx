@@ -1,11 +1,17 @@
 "use client";
 
-import { useMemo, useRef, type ReactNode } from "react";
+import {
+  useMemo,
+  useRef,
+  type ComponentRef,
+  type ReactNode,
+} from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html, Line } from "@react-three/drei";
 import { easing } from "maath";
 import * as THREE from "three";
 import type { EnrichedProject } from "@/lib/types";
+import { useSceneOverlay } from "@/components/scene/SceneFrame";
 
 interface OrbitalSceneProps {
   projects: EnrichedProject[];
@@ -93,13 +99,22 @@ function FocusBeacon({ target }: { target: THREE.Vector3 }) {
 
 /** Sighting line from the origin to the focused body. */
 function SightingLine({ target }: { target: THREE.Vector3 }) {
-  const ref = useRef<THREE.Vector3>(new THREE.Vector3());
+  const lineRef = useRef<ComponentRef<typeof Line>>(null);
+  const tip = useRef(new THREE.Vector3());
   useFrame((_, dt) => {
-    easing.damp3(ref.current, target, 0.28, dt);
+    easing.damp3(tip.current, target, 0.28, dt);
+    const line = lineRef.current;
+    if (!line) return;
+    line.geometry.setPositions([0, 0, 0, tip.current.x, tip.current.y, tip.current.z]);
+    line.computeLineDistances();
   });
   return (
     <Line
-      points={[[0, 0, 0], ref.current.toArray()]}
+      ref={lineRef}
+      points={[
+        [0, 0, 0],
+        [0, 0, 0],
+      ]}
       color={TEAL}
       lineWidth={1}
       dashed
@@ -109,6 +124,21 @@ function SightingLine({ target }: { target: THREE.Vector3 }) {
       opacity={0.5}
     />
   );
+}
+
+/**
+ * Scales the orbit group to fit the stage — at narrow viewports the fixed
+ * rem radii would push focusable markers off-screen. Shrink the whole
+ * composition instead: DOM markers stay in-frame and reachable.
+ */
+function FitScale({ rx, children }: { rx: number; children: ReactNode }) {
+  const { viewport, size } = useThree();
+  // Marker labels are DOM px regardless of scene scale — reserve their
+  // half-width (plus breathing room) as world units before fitting.
+  const marginPx = 48;
+  const marginWorld = marginPx * (viewport.width / Math.max(size.width, 1));
+  const s = Math.min(1, (viewport.width / 2 - marginWorld) / rx);
+  return <group scale={Math.max(s, 0.2)}>{children}</group>;
 }
 
 /** Subtle pointer parallax on the camera. */
@@ -133,6 +163,7 @@ export default function OrbitalScene({
   rz,
   renderMarker,
 }: OrbitalSceneProps) {
+  const overlay = useSceneOverlay();
   const positions = useMemo(() => {
     const n = projects.length;
     return projects.map((_, i) => {
@@ -146,25 +177,29 @@ export default function OrbitalScene({
   return (
     <>
       <CameraDrift />
-      <SurveySphere />
-      <FocusBeacon target={focused} />
-      <SightingLine target={focused} />
+      <FitScale rx={rx}>
+        <SurveySphere />
+        <FocusBeacon target={focused} />
+        <SightingLine target={focused} />
 
-      {/* Orbit rings — outer survey path, dashed telemetry path, inner ring */}
-      <Line points={ellipsePoints(rx + 2.5, rz + 1.4)} color={HAIRLINE} transparent opacity={0.14} lineWidth={1} />
-      <Line points={ellipsePoints(rx, rz)} color={TEAL} transparent opacity={0.3} lineWidth={1} dashed dashSize={0.5} gapSize={0.55} />
-      <Line points={ellipsePoints(rx - 4.5, rz - 2.6)} color={HAIRLINE} transparent opacity={0.08} lineWidth={1} dashed dashSize={1.2} gapSize={0.8} />
+        {/* Orbit rings — outer survey path, dashed telemetry path, inner ring */}
+        <Line points={ellipsePoints(rx + 2.5, rz + 1.4)} color={HAIRLINE} transparent opacity={0.14} lineWidth={1} />
+        <Line points={ellipsePoints(rx, rz)} color={TEAL} transparent opacity={0.3} lineWidth={1} dashed dashSize={0.5} gapSize={0.55} />
+        <Line points={ellipsePoints(rx - 4.5, rz - 2.6)} color={HAIRLINE} transparent opacity={0.08} lineWidth={1} dashed dashSize={1.2} gapSize={0.8} />
 
-      {/* Bodies — real DOM markers anchored to orbit points */}
-      {projects.map((p, i) => (
-        <Html
-          key={p.slug}
-          position={positions[i].toArray()}
-          zIndexRange={[12, 4]}
-        >
-          {renderMarker(p, i)}
-        </Html>
-      ))}
+        {/* Bodies — real DOM markers anchored to orbit points */}
+        {projects.map((p, i) => (
+          <Html
+            key={p.slug}
+            position={positions[i].toArray()}
+            center
+            portal={overlay ? { current: overlay } : undefined}
+            zIndexRange={[12, 4]}
+          >
+            {renderMarker(p, i)}
+          </Html>
+        ))}
+      </FitScale>
     </>
   );
 }

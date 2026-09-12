@@ -30,9 +30,7 @@ function useOrbitRadiiRem(count: number) {
     const apply = () => {
       const crowded = count > 18;
       if (mq.matches) {
-        setRadii(
-          crowded ? { rx: 14.5, ry: 7.25 } : { rx: 13.5, ry: 6.75 }
-        );
+        setRadii(crowded ? { rx: 10, ry: 5.5 } : { rx: 8.5, ry: 4.5 });
       } else {
         setRadii(crowded ? { rx: 25, ry: 12.5 } : { rx: 23, ry: 11.5 });
       }
@@ -183,7 +181,7 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
                       className="solar-planet-arm"
                       style={
                         {
-                          transform: `translate(${x}rem, ${y}rem)`,
+                          transform: `translate(${x.toFixed(4)}rem, ${y.toFixed(4)}rem)`,
                           "--planet-index": i,
                         } as React.CSSProperties
                       }

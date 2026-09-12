@@ -218,14 +218,14 @@ body {
   color: var(--color-text-faint);
 }
 
-/* Living constellation layer (ThreeUI canvas, lazy-mounted client-side) */
+/* Living constellation layer (R3F canvas, lazy-mounted client-side) */
 .cosmic-bg__field {
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
 
-.cosmic-bg__field iframe {
+.cosmic-bg__field canvas {
   pointer-events: none;
 }
 
@@ -2795,22 +2795,13 @@ body {
   pointer-events: none;
 }
 
-/* ── Surveyed body — rotating particle sphere at orbit origin ── */
-.solar-body {
+/* drei <Html> markers portal here — sibling of the canvas container,
+   outside the aria-hidden canvas subtree */
+.scene-overlay {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(60vw, 34rem);
-  height: min(60vw, 34rem);
-  transform: translate(-50%, -50%);
-  z-index: 1;
+  inset: 0;
   pointer-events: none;
-  mask-image: radial-gradient(closest-side, black 55%, transparent 78%);
-  -webkit-mask-image: radial-gradient(closest-side, black 55%, transparent 78%);
-}
-
-.solar-body iframe {
-  pointer-events: none;
+  overflow: hidden;
 }
 
 /* ── Survey reticle (replaces the sun) — crosshair origin marker ── */
@@ -3306,9 +3297,9 @@ body {
   }
 
   .solar-orbit-decor {
-    width: min(100vw, 42rem);
-    height: min(58vw, 24rem);
-    max-height: 55vh;
+    width: 19rem;
+    height: 10.5rem;
+    max-height: none;
   }
 
   .solar-system__hint {
@@ -3334,16 +3325,50 @@ body {
     min-width: 0;
   }
 
-  .solar-planet {
+  /* Markers shrink to core + registry id on phones — names would push
+     the link boxes off-stage. Name stays in the a11y name (clipped, not
+     display:none) and resurfaces as a chip on hover/focus. */
+  .planet-node {
+    position: relative;
     min-height: 44px;
     min-width: 44px;
-    padding: 0.5rem;
+    padding: 0.4rem;
     justify-content: center;
   }
 
-  .solar-planet__label {
-    font-size: 0.6rem;
-    max-width: 5rem;
+  .planet-node__name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .planet-node:hover .planet-node__name,
+  .planet-node:focus-visible .planet-node__name,
+  .planet-node--focused .planet-node__name {
+    width: auto;
+    height: auto;
+    clip-path: none;
+    overflow: visible;
+    left: 50%;
+    top: calc(100% - 0.35rem);
+    transform: translateX(-50%);
+    padding: 0.15rem 0.45rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    z-index: 6;
+    white-space: nowrap;
+  }
+
+  .planet-node__label {
+    gap: 0.2rem;
+  }
+
+  .planet-node__id {
+    font-size: 0.55rem;
   }
 }
 
@@ -6485,6 +6510,18 @@ body {
   max-width: min(72rem, 100%);
   margin-inline: auto;
   padding-inline: var(--cosmic-page-pad-x);
+}
+
+/* FIG. 02 belt — R3F dust annulus behind the DOM rings */
+.belt-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.belt-scene canvas {
+  pointer-events: none;
 }
 
 .secondary-orbit__ring {

@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import type { EnrichedProject } from "@/lib/types";
 import { PlanetNode } from "@/components/planet/PlanetNode";
+
+const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
+  ssr: false,
+});
+const BeltScene = dynamic(() => import("@/components/scene/BeltScene"), {
+  ssr: false,
+});
 
 interface SecondaryOrbitRingsProps {
   projects: EnrichedProject[];
@@ -92,7 +100,7 @@ function SecondaryRing({
     <div
       className={`secondary-orbit__ring secondary-orbit__ring--${ring}`}
       style={{
-        transform: `translate(${layout.offset.x}rem, ${layout.offset.y}rem)`,
+        transform: `translate(${layout.offset.x.toFixed(4)}rem, ${layout.offset.y.toFixed(4)}rem)`,
       }}
     >
       <svg
@@ -121,7 +129,7 @@ function SecondaryRing({
             <div
               key={p.slug}
               className="secondary-orbit__arm"
-              style={{ transform: `translate(${x}rem, ${y}rem)` }}
+              style={{ transform: `translate(${x.toFixed(4)}rem, ${y.toFixed(4)}rem)` }}
             >
               <PlanetNode
                 project={p}
@@ -167,6 +175,12 @@ export default function SecondaryOrbitRings({
       </div>
 
       <div className="secondary-orbit__stage">
+        <SceneFrame
+          className="belt-scene"
+          camera={{ position: [0, 11, 34], fov: 42 }}
+        >
+          <BeltScene />
+        </SceneFrame>
         <SecondaryRing
           projects={inner}
           ring="inner"
