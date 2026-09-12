@@ -95,63 +95,67 @@ export function PlanetNode({
         : " planet-node--label-below";
 
   return (
-    <Link
-      href={href}
-      className={`planet-node planet-node--${tier} planet-node--${visual.size}${labelPlacement}${
-        focused ? " planet-node--focused" : ""
-      } ${className}`.trim()}
+    <span
+      className="planet-node-wrap"
       style={planetVisualStyle(visual, index)}
-      title={project.displayName}
-      onMouseEnter={onMouseEnter}
-      onFocus={onFocus}
-      tabIndex={tabIndex}
     >
-      <span className="planet-node__body">
-        {visual.rings.map((ring, i) => (
+      <Link
+        href={href}
+        className={`planet-node planet-node--${tier} planet-node--${visual.size}${labelPlacement}${
+          focused ? " planet-node--focused" : ""
+        } ${className}`.trim()}
+        title={project.displayName}
+        onMouseEnter={onMouseEnter}
+        onFocus={onFocus}
+        tabIndex={tabIndex}
+      >
+        <span className="planet-node__body">
+          {visual.rings.map((ring, i) => (
+            <span
+              key={`ring-${i}`}
+              className="planet-node__ring"
+              style={
+                {
+                  "--ring-color": ring.color ?? visual.color,
+                  "--ring-opacity": ring.opacity ?? 0.3,
+                  "--ring-tilt": `${ring.tilt ?? 0}deg`,
+                } as React.CSSProperties
+              }
+              aria-hidden
+            />
+          ))}
           <span
-            key={`ring-${i}`}
-            className="planet-node__ring"
-            style={
-              {
-                "--ring-color": ring.color ?? visual.color,
-                "--ring-opacity": ring.opacity ?? 0.3,
-                "--ring-tilt": `${ring.tilt ?? 0}deg`,
-              } as React.CSSProperties
-            }
+            className={`planet-node__core ${shapeClass(visual.shape)}`}
             aria-hidden
           />
-        ))}
-        <span
-          className={`planet-node__core ${shapeClass(visual.shape)}`}
-          aria-hidden
-        />
-        {visual.moons.length > 0 && (
-          <span className="planet-node__moons" aria-hidden>
-            {visual.moons.map((moon, mi) => (
-              <MoonChip
-                key={`${moon.label}-${mi}`}
-                moon={moon}
-                orbitIndex={mi}
-                moonIndex={mi}
-              />
-            ))}
+        </span>
+        <span className="planet-node__label">
+          <span className="planet-node__id" aria-hidden="true">
+            CI-{String(index + 1).padStart(2, "0")}
           </span>
-        )}
-      </span>
-      <span className="planet-node__label">
-        <span className="planet-node__id" aria-hidden="true">
-          CI-{String(index + 1).padStart(2, "0")}
+          <span className="planet-node__name">
+            {label}
+            {project.private && (
+              <LockIcon
+                className="inline w-2.5 h-2.5 ml-0.5 opacity-60"
+                aria-label="Private"
+              />
+            )}
+          </span>
         </span>
-        <span className="planet-node__name">
-          {label}
-          {project.private && (
-            <LockIcon
-              className="inline w-2.5 h-2.5 ml-0.5 opacity-60"
-              aria-label="Private"
+      </Link>
+      {visual.moons.length > 0 && (
+        <span className="planet-node__moons">
+          {visual.moons.map((moon, mi) => (
+            <MoonChip
+              key={`${moon.label}-${mi}`}
+              moon={moon}
+              orbitIndex={mi}
+              moonIndex={mi}
             />
-          )}
+          ))}
         </span>
-      </span>
-    </Link>
+      )}
+    </span>
   );
 }

@@ -7,12 +7,20 @@ import {
   useMemo,
   type KeyboardEvent,
 } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import { PlanetNode } from "@/components/planet/PlanetNode";
-import OrbitalBody from "@/components/OrbitalBody";
+
+const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
+  ssr: false,
+});
+const OrbitalScene = dynamic(
+  () => import("@/components/scene/OrbitalScene"),
+  { ssr: false }
+);
 
 /** Ellipse radii (rem) — widen slightly when orbit is crowded */
 function useOrbitRadiiRem(count: number) {
@@ -126,70 +134,96 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
       </div>
 
       <div className="solar-system__stage solar-system__stage--universe">
-        <div className="solar-orbit-decor" aria-hidden>
-          <svg
-            className="solar-orbit-decor__svg"
-            viewBox="0 0 400 260"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <ellipse
-              className="solar-orbit-line solar-orbit-line--a"
-              cx="200"
-              cy="130"
-              rx="188"
-              ry="94"
-            />
-            <ellipse
-              className="solar-orbit-line solar-orbit-line--b"
-              cx="200"
-              cy="130"
-              rx="148"
-              ry="74"
-            />
-            <ellipse
-              className="solar-orbit-line solar-orbit-line--c"
-              cx="200"
-              cy="130"
-              rx="108"
-              ry="54"
-            />
-          </svg>
-        </div>
-
-        <OrbitalBody />
-
-        <div className="solar-sun-stack" aria-hidden>
-          <div className="solar-sun solar-sun--halo" />
-          <div className="solar-sun solar-sun--core" />
-        </div>
-
-        <div className="solar-planets" aria-hidden={false}>
-          {projects.map((p, i) => {
-            const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
-            const isFocused = i === safeFocusIndex;
-            return (
-              <div
-                key={p.slug}
-                className="solar-planet-arm"
-                style={{
-                  transform: `translate(${x}rem, ${y}rem)`,
-                  "--planet-index": i,
-                } as React.CSSProperties}
-              >
-                <PlanetNode
-                  project={p}
-                  tier="primary"
-                  href={`/projects/${p.slug}`}
-                  focused={isFocused}
-                  index={registryIndexOf?.[i] ?? i}
-                  onMouseEnter={() => moveFocusTo(i)}
-                  onFocus={() => moveFocusTo(i)}
-                  tabIndex={isFocused ? 0 : -1}
-                />
+        <SceneFrame
+          className="solar-scene"
+          camera={{ position: [0, 16, 30], fov: 32 }}
+          fallback={
+            <>
+              {/* Static plate — reduced motion / no WebGL */}
+              <div className="solar-orbit-decor" aria-hidden>
+                <svg
+                  className="solar-orbit-decor__svg"
+                  viewBox="0 0 400 260"
+                  preserveAspectRatio="xMidYMid meet"
+                >
+                  <ellipse
+                    className="solar-orbit-line solar-orbit-line--a"
+                    cx="200"
+                    cy="130"
+                    rx="188"
+                    ry="94"
+                  />
+                  <ellipse
+                    className="solar-orbit-line solar-orbit-line--b"
+                    cx="200"
+                    cy="130"
+                    rx="148"
+                    ry="74"
+                  />
+                  <ellipse
+                    className="solar-orbit-line solar-orbit-line--c"
+                    cx="200"
+                    cy="130"
+                    rx="108"
+                    ry="54"
+                  />
+                </svg>
               </div>
-            );
-          })}
-        </div>
+              <div className="solar-sun-stack" aria-hidden>
+                <div className="solar-sun solar-sun--halo" />
+                <div className="solar-sun solar-sun--core" />
+              </div>
+              <div className="solar-planets" aria-hidden={false}>
+                {projects.map((p, i) => {
+                  const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
+                  const isFocused = i === safeFocusIndex;
+                  return (
+                    <div
+                      key={p.slug}
+                      className="solar-planet-arm"
+                      style={
+                        {
+                          transform: `translate(${x}rem, ${y}rem)`,
+                          "--planet-index": i,
+                        } as React.CSSProperties
+                      }
+                    >
+                      <PlanetNode
+                        project={p}
+                        tier="primary"
+                        href={`/projects/${p.slug}`}
+                        focused={isFocused}
+                        index={registryIndexOf?.[i] ?? i}
+                        onMouseEnter={() => moveFocusTo(i)}
+                        onFocus={() => moveFocusTo(i)}
+                        tabIndex={isFocused ? 0 : -1}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          }
+        >
+          <OrbitalScene
+            projects={projects}
+            focusIndex={safeFocusIndex}
+            rx={rx}
+            rz={ry}
+            renderMarker={(p, i) => (
+              <PlanetNode
+                project={p}
+                tier="primary"
+                href={`/projects/${p.slug}`}
+                focused={i === safeFocusIndex}
+                index={registryIndexOf?.[i] ?? i}
+                onMouseEnter={() => moveFocusTo(i)}
+                onFocus={() => moveFocusTo(i)}
+                tabIndex={i === safeFocusIndex ? 0 : -1}
+              />
+            )}
+          />
+        </SceneFrame>
 
         <div className="solar-center solar-center--deck">
           <button

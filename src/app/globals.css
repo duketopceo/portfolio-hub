@@ -2783,6 +2783,18 @@ body {
   100% { stroke-opacity: 0.35; stroke-dashoffset: 0; }
 }
 
+/* ── R3F orbital scene — canvas layer inside the stage ── */
+.solar-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.solar-scene canvas {
+  pointer-events: none;
+}
+
 /* ── Surveyed body — rotating particle sphere at orbit origin ── */
 .solar-body {
   position: absolute;
@@ -6687,6 +6699,12 @@ body {
    PLANET NODE — modular orbit worlds (primary + secondary)
    ═══════════════════════════════════════════════════════ */
 
+.planet-node-wrap {
+  position: relative;
+  display: inline-block;
+  transform: translate(-50%, -50%);
+}
+
 .planet-node {
   --planet-base: 12px;
   --planet-size: calc(var(--planet-base) * var(--planet-scale, 1));
@@ -6698,7 +6716,6 @@ body {
   max-width: 7.5rem;
   text-decoration: none;
   color: var(--color-text-muted);
-  transform: translate(-50%, -50%);
   padding: 0.35rem;
   border-radius: var(--radius-md);
   transition: color var(--transition);
@@ -6820,8 +6837,17 @@ body {
 
 .planet-node__moons {
   position: absolute;
-  inset: 0;
+  top: 0.35rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--planet-size) * 2.8);
+  height: calc(var(--planet-size) * 2.8);
   pointer-events: none;
+}
+
+.planet-node--secondary .planet-node__moons,
+.planet-node-wrap:has(.planet-node--secondary) .planet-node__moons {
+  top: 0.2rem;
 }
 
 .planet-node__moon-link {
@@ -6871,9 +6897,9 @@ body {
   transition: opacity var(--transition);
 }
 
-.planet-node:hover .planet-node__moon-label,
-.planet-node:focus-visible .planet-node__moon-label,
-.planet-node--focused .planet-node__moon-label {
+.planet-node-wrap:hover .planet-node__moon-label,
+.planet-node:focus-visible ~ .planet-node__moons .planet-node__moon-label,
+.planet-node-wrap:has(.planet-node--focused) .planet-node__moon-label {
   opacity: 0.9;
 }
 
