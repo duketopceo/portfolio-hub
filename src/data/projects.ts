@@ -1,4 +1,5 @@
 import { ProjectConfig } from "@/lib/types";
+import { projectExtensionConfigs } from "./projects-ext";
 
 /**
  * Master project configuration — curated for recruiter/professional viewing.
@@ -792,6 +793,8 @@ export const projectConfigs: ProjectConfig[] = [
       "36 passing backend tests with CI pipeline",
     ],
   },
+
+  ...projectExtensionConfigs,
 ];
 
 /**

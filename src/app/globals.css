@@ -1,4 +1,29 @@
 @import "tailwindcss";
+@import "./space-theme.css";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-3: var(--brand-3);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-spin-slow: spin-slow 12s linear infinite;
+  --animate-pulse-glow: pulse-glow 4s ease-in-out infinite;
+}
 
 /* ── Design System: STAR CHART — Cosmic Intelligence v4 (dark only) ───
    Neo-industrial orbital survey. Near-monochrome, hairline grids,
@@ -109,8 +134,8 @@ body {
   display: flex;
   flex-direction: column;
   font-family: var(--font-body);
-  color: var(--color-text);
-  background: var(--color-bg);
+  color: var(--foreground);
+  background: var(--background);
   line-height: 1.6;
   font-size: var(--text-base);
 }
