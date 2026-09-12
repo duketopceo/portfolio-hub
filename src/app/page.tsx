@@ -13,10 +13,12 @@ import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
 export const revalidate = 3600;
 
 export default async function Home() {
-  const all = await getEnrichedProjects();
+  const [all, activity] = await Promise.all([
+    getEnrichedProjects(),
+    getHomepageActivityShowcase(),
+  ]);
   const primaryOrbit = getHomepageOrbitProjects(all);
   const secondaryOrbit = getHomepageSecondaryOrbitProjects(all);
-  const activity = await getHomepageActivityShowcase();
   const liveCount = all.filter(isProjectLive).length;
   const categories = new Set(all.map((p) => p.category));
   const lead = primaryOrbit[0];
@@ -55,7 +57,6 @@ export default async function Home() {
               key={lead?.slug ?? "orbit"}
               projects={primaryOrbit}
               registryIndexOf={indexOf(primaryOrbit)}
-              variant="primary"
             />
             {secondaryOrbit.length > 0 && (
               <SecondaryOrbitRings

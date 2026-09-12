@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { Canvas, type CameraProps, type RootState } from "@react-three/fiber";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
  * Sibling overlay that drei <Html> markers portal into — outside the
@@ -68,19 +69,11 @@ export default function SceneFrame({
 }: SceneFrameProps) {
   const [hostEl, setHostEl] = useState<HTMLDivElement | null>(null);
   const [overlayEl, setOverlayEl] = useState<HTMLDivElement | null>(null);
-  const [motionOK, setMotionOK] = useState(false);
+  const motionOK = !useMediaQuery("(prefers-reduced-motion: reduce)", true);
   // Optimistic: run the frame loop immediately. IO only ever downgrades to
   // paused when the surface scrolls out — hidden tabs throttle rAF anyway.
   const [inView, setInView] = useState(true);
   const [ctxLost, setCtxLost] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const apply = () => setMotionOK(!mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
 
   useEffect(() => {
     if (!hostEl || !motionOK) return;
@@ -115,11 +108,7 @@ export default function SceneFrame({
   const live = motionOK && !ctxLost;
 
   return (
-    <div
-      ref={setHostEl}
-      className={className}
-      data-scene-state={!motionOK ? "plate" : ctxLost ? "plate" : inView ? "live" : "idle"}
-    >
+    <div ref={setHostEl} className={className}>
       {live ? (
         <SceneOverlayContext.Provider value={overlayEl}>
           <SceneBoundary plate={fallback}>

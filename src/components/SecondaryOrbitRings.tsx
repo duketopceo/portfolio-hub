@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { EnrichedProject } from "@/lib/types";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { PlanetNode } from "@/components/planet/PlanetNode";
 
 const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
@@ -26,20 +27,6 @@ interface RingLayout {
   ry: number;
   phase: number;
   offset: { x: number; y: number };
-}
-
-function useIsMobile() {
-  const [mobile, setMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    const apply = () => setMobile(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-
-  return mobile;
 }
 
 function ringLayout(
@@ -70,13 +57,14 @@ function ringLayout(
 function SecondaryRing({
   projects,
   ring,
+  mobile,
   registryIndexOf,
 }: {
   projects: EnrichedProject[];
   ring: RingId;
+  mobile: boolean;
   registryIndexOf?: number[];
 }) {
-  const mobile = useIsMobile();
   const n = projects.length;
   const layout = ringLayout(n, ring, mobile);
 
@@ -151,6 +139,7 @@ export default function SecondaryOrbitRings({
   projects,
   registryIndexOf,
 }: SecondaryOrbitRingsProps) {
+  const mobile = useMediaQuery("(max-width: 640px)");
   const mid = Math.ceil(projects.length / 2);
   const inner = projects.slice(0, mid);
   const outer = projects.slice(mid);
@@ -184,11 +173,13 @@ export default function SecondaryOrbitRings({
         <SecondaryRing
           projects={inner}
           ring="inner"
+          mobile={mobile}
           registryIndexOf={registryIndexOf?.slice(0, mid)}
         />
         <SecondaryRing
           projects={outer}
           ring="outer"
+          mobile={mobile}
           registryIndexOf={registryIndexOf?.slice(mid)}
         />
       </div>

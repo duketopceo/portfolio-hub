@@ -1,22 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { WarpFieldBackground } from "@designcodeio/threeui/components/WarpFieldBackground";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
  * Hyperspace streaks for the 404 plate — the "off-chart" visual.
  * Disabled under reduced motion; static chart grid remains.
  */
 export default function WarpFieldLayer() {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const apply = () => setEnabled(!mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
+  const enabled = !useMediaQuery("(prefers-reduced-motion: reduce)", true);
 
   if (!enabled) return null;
 

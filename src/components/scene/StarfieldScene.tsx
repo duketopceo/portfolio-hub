@@ -3,23 +3,15 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { seededRandom } from "@/components/scene/random";
 
 const STARLIGHT = new THREE.Color("#E9ECEF");
-
-/** Deterministic pseudo-random from seed — stable across renders. */
-function rand(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s * 16807) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
-}
 
 export default function StarfieldScene() {
   const group = useRef<THREE.Group>(null);
 
   const { positions, segmentPositions } = useMemo(() => {
-    const r = rand(20260911);
+    const r = seededRandom(20260911);
     const n = 90;
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i < n; i++) {
@@ -40,7 +32,7 @@ export default function StarfieldScene() {
     const seg: number[] = [];
     for (let i = 0; i < n; i++) {
       const dists = pts
-        .map((p, j) => ({ j, d: pts[i].distanceTo(p) }))
+        .map((p, j) => ({ j, d: pts[i].distanceToSquared(p) }))
         .filter(({ j }) => j !== i)
         .sort((a, b) => a.d - b.d);
       for (const { j } of dists.slice(0, 2)) {

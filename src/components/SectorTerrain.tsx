@@ -1,22 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ConstellationField } from "@designcodeio/threeui/components/ConstellationField";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
  * Animated topographic terrain under the sector map — the "surveyed ground"
  * the project nodes are plotted against. Static under reduced motion.
  */
 export default function SectorTerrain() {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const apply = () => setEnabled(!mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
+  const enabled = !useMediaQuery("(prefers-reduced-motion: reduce)", true);
 
   if (!enabled) return null;
 

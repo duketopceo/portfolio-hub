@@ -3,7 +3,6 @@
 import {
   useState,
   useCallback,
-  useEffect,
   useMemo,
   type KeyboardEvent,
 } from "react";
@@ -12,6 +11,7 @@ import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { PlanetNode } from "@/components/planet/PlanetNode";
 
 const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
@@ -24,29 +24,16 @@ const OrbitalScene = dynamic(
 
 /** Ellipse radii (rem) — widen slightly when orbit is crowded */
 function useOrbitRadiiRem(count: number) {
-  const [radii, setRadii] = useState({ rx: 23, ry: 11.5 });
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    const apply = () => {
-      const crowded = count > 18;
-      if (mq.matches) {
-        setRadii(crowded ? { rx: 10, ry: 5.5 } : { rx: 8.5, ry: 4.5 });
-      } else {
-        setRadii(crowded ? { rx: 25, ry: 12.5 } : { rx: 23, ry: 11.5 });
-      }
-    };
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, [count]);
-  return radii;
+  const mobile = useMediaQuery("(max-width: 640px)");
+  const crowded = count > 18;
+  if (mobile) return crowded ? { rx: 10, ry: 5.5 } : { rx: 8.5, ry: 4.5 };
+  return crowded ? { rx: 25, ry: 12.5 } : { rx: 23, ry: 11.5 };
 }
 
 interface SolarSystemNavProps {
   projects: EnrichedProject[];
   /** Registry numbers aligned to `projects` — source-order catalog position. */
   registryIndexOf?: number[];
-  variant?: "primary";
 }
 
 export default function SolarSystemNav({ projects, registryIndexOf }: SolarSystemNavProps) {
@@ -137,7 +124,6 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
           camera={{ position: [0, 16, 30], fov: 32 }}
           fallback={
             <>
-              {/* Static plate — reduced motion / no WebGL */}
               <div className="solar-orbit-decor" aria-hidden>
                 <svg
                   className="solar-orbit-decor__svg"
@@ -171,7 +157,7 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
                 <div className="solar-sun solar-sun--halo" />
                 <div className="solar-sun solar-sun--core" />
               </div>
-              <div className="solar-planets" aria-hidden={false}>
+              <div className="solar-planets">
                 {projects.map((p, i) => {
                   const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
                   const isFocused = i === safeFocusIndex;

@@ -3,15 +3,7 @@
 import { useMemo, useRef, type ReactNode } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-
-/** Deterministic pseudo-random — stable across renders and reloads. */
-function rand(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s * 16807) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
-}
+import { seededRandom } from "@/components/scene/random";
 
 const BELT_R = 22; // follows the outer catalog ring
 
@@ -19,7 +11,7 @@ const BELT_R = 22; // follows the outer catalog ring
 function BeltFit({ children }: { children: ReactNode }) {
   const { viewport } = useThree();
   const s = Math.min(1, viewport.width / 56);
-  return <group scale={Math.max(s, 0.25)}>{children}</group>;
+  return <group scale={THREE.MathUtils.clamp(s, 0.25, 1)}>{children}</group>;
 }
 
 /**
@@ -30,7 +22,7 @@ export default function BeltScene() {
   const ref = useRef<THREE.Points>(null);
 
   const positions = useMemo(() => {
-    const r = rand(20260214);
+    const r = seededRandom(20260214);
     const n = 900;
     const arr = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) {
