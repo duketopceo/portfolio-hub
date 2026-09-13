@@ -23,7 +23,9 @@ const OrbitalScene = dynamic(
   { ssr: false }
 );
 
-/** Ellipse radii (rem) — widen slightly when orbit is crowded */
+/** Ellipse radii (rem) for the live scene — widen slightly when orbit is
+ *  crowded. The SSR plate mirrors these values via CSS --orbit-rx/--orbit-ry
+ *  on .solar-planets in globals.css — keep the two in sync. */
 function useOrbitRadiiRem(count: number) {
   const mobile = useMediaQuery("(max-width: 640px)");
   const crowded = count > 18;
@@ -80,11 +82,21 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
     [n]
   );
 
+  // Live overlay marker matching a plate link's href (null until drei
+  // <Html> portal content lands — a commit or two after the first frame).
+  const findLiveMarker = useCallback((href: string | null | undefined) => {
+    if (!href) return null;
+    return (
+      plateRef.current?.parentElement?.querySelector<HTMLElement>(
+        `.scene-overlay a[href="${href}"]`
+      ) ?? null
+    );
+  }, []);
+
   // Plate -> scene swap: hide the plate only once live overlay markers
-  // exist in the DOM (drei <Html> portal content lands a commit or two
-  // after the first painted frame). If focus is inside the plate at swap
-  // time, move it to the same project's live marker before hiding; if no
-  // matching marker exists, defer hiding until focus leaves the plate.
+  // exist in the DOM. If focus is inside the plate at swap time, move it
+  // to the same project's live marker before hiding; if that focus can't
+  // land, defer hiding until focus leaves the plate.
   const handleReadyChange = useCallback((ready: boolean) => {
     if (!ready) {
       setSceneReady(false);
@@ -101,20 +113,15 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
     const commit = () => {
       const active = document.activeElement as HTMLElement | null;
       if (active && plate.contains(active)) {
-        const href = active.closest("a")?.getAttribute("href");
-        const liveMarker = href
-          ? stage.querySelector<HTMLElement>(
-              `.scene-overlay a[href="${href}"]`
-            )
-          : null;
-        if (liveMarker) {
-          liveMarker.focus();
-          // If the live marker refused focus, keep the plate until focus
-          // leaves rather than hiding a focused element.
-          if (document.activeElement === liveMarker) {
-            setSceneReady(true);
-            return;
-          }
+        const liveMarker = findLiveMarker(
+          active.closest("a")?.getAttribute("href")
+        );
+        liveMarker?.focus();
+        // If the marker refused (or was absent), keep the plate until
+        // focus leaves rather than hiding a focused element.
+        if (document.activeElement === liveMarker) {
+          setSceneReady(true);
+          return;
         }
         const onFocusOut = () => {
           if (!plate.contains(document.activeElement)) {
@@ -141,7 +148,7 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
       requestAnimationFrame(poll);
     };
     requestAnimationFrame(poll);
-  }, []);
+  }, [findLiveMarker]);
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
@@ -167,6 +174,21 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
   const focused = projects[safeFocusIndex];
   const meta = categoryMeta[focused.category];
   const accent = catColors[focused.category] || "#2DD4BF";
+
+  // Same node in the SSR plate and the live overlay — identical semantics
+  // so the plate→scene swap is invisible to focus and tab order.
+  const renderPlanet = (p: EnrichedProject, i: number) => (
+    <PlanetNode
+      project={p}
+      tier="primary"
+      href={`/projects/${p.slug}`}
+      focused={i === safeFocusIndex}
+      index={registryIndexOf?.[i] ?? i}
+      onMouseEnter={() => moveFocusTo(i)}
+      onFocus={() => moveFocusTo(i)}
+      tabIndex={i === safeFocusIndex ? 0 : -1}
+    />
+  );
 
   return (
     <section
@@ -202,15 +224,9 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
             // to the same project's live marker instead of letting it die
             // on a hidden element.
             if (!sceneReady) return;
-            const href = (e.target as HTMLElement)
-              .closest("a")
-              ?.getAttribute("href");
-            const live = href
-              ? plateRef.current?.parentElement?.querySelector<HTMLElement>(
-                  `.scene-overlay a[href="${href}"]`
-                )
-              : null;
-            live?.focus();
+            findLiveMarker(
+              (e.target as HTMLElement).closest("a")?.getAttribute("href")
+            )?.focus();
           }}
         >
           <div className="solar-orbit-decor" aria-hidden>
@@ -249,7 +265,6 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
           <div className="solar-planets">
             {projects.map((p, i) => {
               const { x, y } = orbitDirs[i] ?? { x: 0, y: 0 };
-              const isFocused = i === safeFocusIndex;
               return (
                 <div
                   key={p.slug}
@@ -262,16 +277,7 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
                     } as React.CSSProperties
                   }
                 >
-                  <PlanetNode
-                    project={p}
-                    tier="primary"
-                    href={`/projects/${p.slug}`}
-                    focused={isFocused}
-                    index={registryIndexOf?.[i] ?? i}
-                    onMouseEnter={() => moveFocusTo(i)}
-                    onFocus={() => moveFocusTo(i)}
-                    tabIndex={isFocused ? 0 : -1}
-                  />
+                  {renderPlanet(p, i)}
                 </div>
               );
             })}
@@ -288,18 +294,7 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
             focusIndex={safeFocusIndex}
             rx={rx}
             rz={ry}
-            renderMarker={(p, i) => (
-              <PlanetNode
-                project={p}
-                tier="primary"
-                href={`/projects/${p.slug}`}
-                focused={i === safeFocusIndex}
-                index={registryIndexOf?.[i] ?? i}
-                onMouseEnter={() => moveFocusTo(i)}
-                onFocus={() => moveFocusTo(i)}
-                tabIndex={i === safeFocusIndex ? 0 : -1}
-              />
-            )}
+            renderMarker={renderPlanet}
           />
         </SceneFrame>
 
