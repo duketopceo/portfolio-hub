@@ -329,7 +329,7 @@ async function buildRepoActivity(
         kind: "pr_opened",
         at: pr.created_at,
         label: target.private
-          ? `PR #${pr.number} opened${title !== fallback ? ` — ${title}` : ""}`
+          ? `PR #${pr.number} opened`
           : `PR #${pr.number} opened — ${title}`,
         ref: String(pr.number),
         url: publicUrl(target.private, pr.html_url, target.slug),

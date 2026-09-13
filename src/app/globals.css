@@ -4222,8 +4222,8 @@ body {
 
 .cosmic-pr-status--review_requested {
   color: color-mix(in srgb, var(--color-accent) 45%, var(--color-text-muted) 55%);
-  border-color: color-mix(in srgb, var(--color-nebula-purple) 45%, var(--color-border));
-  background: color-mix(in srgb, var(--color-nebula-purple) 14%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-text-muted) 45%, var(--color-border));
+  background: color-mix(in srgb, var(--color-text-muted) 14%, var(--color-surface));
 }
 
 .cosmic-pr-status--approved {

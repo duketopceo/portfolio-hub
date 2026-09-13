@@ -3,9 +3,12 @@
 import {
   useState,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
+  Component,
   type KeyboardEvent,
+  type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -22,6 +25,23 @@ const OrbitalScene = dynamic(
   () => import("@/components/scene/OrbitalScene"),
   { ssr: false }
 );
+
+/** Contains a failed scene chunk load. SceneFrame's own boundary only sees
+ *  errors thrown by an already-loaded scene, so without this a rejected
+ *  dynamic import reaches the segment boundary and replaces the page. On
+ *  failure we render nothing and leave the SSR plate in place. */
+class SceneLoadBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
 
 /** Ellipse radii (rem) for the live scene — widen slightly when orbit is
  *  crowded. The SSR plate mirrors these values via CSS --orbit-rx/--orbit-ry
@@ -43,6 +63,10 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
   const [focus, setFocus] = useState({ index: 0, dir: 1 });
   const [sceneReady, setSceneReady] = useState(false);
   const plateRef = useRef<HTMLDivElement | null>(null);
+  // Teardown for a deferred swap: the focusout listener waiting for focus to
+  // leave the plate. Cleared when the scene reports not-ready and on unmount,
+  // so a scene that dies mid-handoff can never re-hide the plate over itself.
+  const pendingSwapRef = useRef<(() => void) | null>(null);
   const n = projects.length;
   const { rx, ry } = useOrbitRadiiRem(n);
 
@@ -97,58 +121,71 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
   // exist in the DOM. If focus is inside the plate at swap time, move it
   // to the same project's live marker before hiding; if that focus can't
   // land, defer hiding until focus leaves the plate.
-  const handleReadyChange = useCallback((ready: boolean) => {
-    if (!ready) {
-      setSceneReady(false);
-      return;
-    }
-    const plate = plateRef.current;
-    const stage = plate?.parentElement;
-    if (!plate || !stage) {
-      setSceneReady(true);
-      return;
-    }
-    const overlayHasMarkers = () =>
-      !!stage.querySelector('.scene-overlay a[href^="/projects/"]');
-    const commit = () => {
-      const active = document.activeElement as HTMLElement | null;
-      if (active && plate.contains(active)) {
-        const liveMarker = findLiveMarker(
-          active.closest("a")?.getAttribute("href")
-        );
-        liveMarker?.focus();
-        // If the marker refused (or was absent), keep the plate until
-        // focus leaves rather than hiding a focused element.
-        if (document.activeElement === liveMarker) {
-          setSceneReady(true);
-          return;
-        }
-        const onFocusOut = () => {
-          if (!plate.contains(document.activeElement)) {
-            plate.removeEventListener("focusout", onFocusOut);
-            setSceneReady(true);
-          }
-        };
-        plate.addEventListener("focusout", onFocusOut);
+  const clearPendingSwap = useCallback(() => {
+    pendingSwapRef.current?.();
+    pendingSwapRef.current = null;
+  }, []);
+
+  useEffect(() => clearPendingSwap, [clearPendingSwap]);
+
+  const handleReadyChange = useCallback(
+    (ready: boolean) => {
+      clearPendingSwap();
+      if (!ready) {
+        setSceneReady(false);
         return;
       }
-      setSceneReady(true);
-    };
-    if (overlayHasMarkers()) {
-      commit();
-      return;
-    }
-    let tries = 0;
-    const poll = () => {
+      const plate = plateRef.current;
+      const stage = plate?.parentElement;
+      if (!plate || !stage) {
+        setSceneReady(true);
+        return;
+      }
+      const overlayHasMarkers = () =>
+        !!stage.querySelector('.scene-overlay a[href^="/projects/"]');
+      const commit = () => {
+        const active = document.activeElement as HTMLElement | null;
+        if (active && plate.contains(active)) {
+          const liveMarker = findLiveMarker(
+            active.closest("a")?.getAttribute("href")
+          );
+          liveMarker?.focus();
+          // If the marker refused (or was absent), keep the plate until
+          // focus leaves rather than hiding a focused element.
+          if (document.activeElement === liveMarker) {
+            setSceneReady(true);
+            return;
+          }
+          const onFocusOut = () => {
+            if (!plate.contains(document.activeElement)) {
+              clearPendingSwap();
+              setSceneReady(true);
+            }
+          };
+          plate.addEventListener("focusout", onFocusOut);
+          pendingSwapRef.current = () =>
+            plate.removeEventListener("focusout", onFocusOut);
+          return;
+        }
+        setSceneReady(true);
+      };
       if (overlayHasMarkers()) {
         commit();
         return;
       }
-      if (++tries > 120) return; // markers never mounted: keep the plate
+      let tries = 0;
+      const poll = () => {
+        if (overlayHasMarkers()) {
+          commit();
+          return;
+        }
+        if (++tries > 120) return; // markers never mounted: keep the plate
+        requestAnimationFrame(poll);
+      };
       requestAnimationFrame(poll);
-    };
-    requestAnimationFrame(poll);
-  }, [findLiveMarker]);
+    },
+    [clearPendingSwap, findLiveMarker]
+  );
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
@@ -284,19 +321,21 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
           </div>
         </div>
 
-        <SceneFrame
-          className={`solar-scene${sceneReady ? " solar-scene--ready" : ""}`}
-          camera={{ position: [0, 16, 30], fov: 32 }}
-          onReadyChange={handleReadyChange}
-        >
-          <OrbitalScene
-            projects={projects}
-            focusIndex={safeFocusIndex}
-            rx={rx}
-            rz={ry}
-            renderMarker={renderPlanet}
-          />
-        </SceneFrame>
+        <SceneLoadBoundary>
+          <SceneFrame
+            className={`solar-scene${sceneReady ? " solar-scene--ready" : ""}`}
+            camera={{ position: [0, 16, 30], fov: 32 }}
+            onReadyChange={handleReadyChange}
+          >
+            <OrbitalScene
+              projects={projects}
+              focusIndex={safeFocusIndex}
+              rx={rx}
+              rz={ry}
+              renderMarker={renderPlanet}
+            />
+          </SceneFrame>
+        </SceneLoadBoundary>
 
         <div className="solar-center solar-center--deck">
           <button
