@@ -13,8 +13,10 @@ export const basics = {
     "OpenRouter-Native Multi-Model Routing · Agent Harnesses · Build-Over-Buy Internal Tools",
   summary:
     "OpenRouter-native operator-builder who ships internal agentic tooling instead of buying software built for the masses. Multi-model daily driver: routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model. Forked Agent Zero into a personal, OpenRouter-native harness and designed a tenant-aware agent platform with security and evals built in. Support/GTM fluency from sales, ticketing, CRM, and ops.",
-  phone: "559-789-7214",
-  email: "kimballluke@gmail.com",
+  // Public contact address is an alias routed through Cloudflare Email
+  // Routing (luke-the-duke.com) — never the personal mailbox. No phone:
+  // it is unrotatable and this data is explicitly offered to AI crawlers.
+  email: "hello@luke-the-duke.com",
   url: SITE,
   location: { city: "Provo", region: "UT", countryCode: "US", remote: true },
   profiles: [

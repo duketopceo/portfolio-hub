@@ -22,7 +22,6 @@ const jsonLd = {
   description: basics.summary,
   url: basics.url,
   email: `mailto:${basics.email}`,
-  telephone: `+1${basics.phone.replace(/[^0-9]/g, "")}`,
   address: {
     "@type": "PostalAddress",
     addressLocality: basics.location.city,

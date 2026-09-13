@@ -8,7 +8,7 @@ function md() {
   L.push(`# ${basics.name} — ${basics.label}`, "");
   L.push(`*${basics.headline}*`, "");
   L.push(
-    `${basics.phone} · ${basics.email} · ${basics.location.city}, ${basics.location.region} (Remote, US)`,
+    `${basics.email} · ${basics.location.city}, ${basics.location.region} (Remote, US)`,
   );
   L.push("");
   L.push(`- LinkedIn: ${basics.profiles[0].url}`);

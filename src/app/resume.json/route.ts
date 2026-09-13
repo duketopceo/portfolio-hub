@@ -12,7 +12,6 @@ function jsonResume() {
       name: basics.name,
       label: basics.label,
       summary: basics.summary,
-      phone: basics.phone,
       email: basics.email,
       url: basics.url,
       location: {

@@ -21,7 +21,6 @@ export function ResumeDocument() {
           <li>
             <a href={`mailto:${basics.email}`}>{basics.email}</a>
           </li>
-          <li>{basics.phone}</li>
           <li>
             {basics.location.city}, {basics.location.region} · Remote, US
           </li>

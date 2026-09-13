@@ -1,7 +1,7 @@
 export const metadata = {
   title: "Contact",
   description:
-    "Contact Luke Kimball — kimballluke@gmail.com, Provo UT. GitHub and LinkedIn links.",
+    "Contact Luke Kimball — hello@luke-the-duke.com, Provo UT. GitHub and LinkedIn links.",
 };
 
 export default function ContactPage() {
@@ -22,14 +22,8 @@ export default function ContactPage() {
       <div className="contact-page__grid">
         <div className="contact-page__card">
           <h2>Email</h2>
-          <a href="mailto:kimballluke@gmail.com" className="detail-cta">
-            kimballluke@gmail.com
-          </a>
-        </div>
-        <div className="contact-page__card">
-          <h2>Phone</h2>
-          <a href="tel:+15597897214" className="detail-nav-link">
-            559-789-7214
+          <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
+            hello@luke-the-duke.com
           </a>
         </div>
         <div className="contact-page__card">
