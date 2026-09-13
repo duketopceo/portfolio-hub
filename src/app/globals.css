@@ -6372,12 +6372,6 @@ body {
    DUAL ORBIT — primary featured + secondary catalog rings
    ═══════════════════════════════════════════════════════ */
 
-.orbit-universe {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.5rem, 4vw, 3rem);
-}
-
 .solar-system--primary {
   z-index: 2;
 }
@@ -6528,7 +6522,7 @@ body {
 }
 
 .activity-range__btn:hover {
-  color: var(--color-text-primary);
+  color: var(--color-text);
 }
 
 .activity-range__btn--active {
@@ -6613,7 +6607,7 @@ body {
 
 .planet-node:hover,
 .planet-node:focus-visible {
-  color: var(--color-text-primary);
+  color: var(--color-text);
   outline: none;
 }
 

@@ -34,6 +34,6 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 
 ### Known caveats
 
-- **Pre-existing lint error:** `SolarSystemNav.tsx` has a `react-hooks/set-state-in-effect` violation (`npm run lint` exits 1). This is a known issue in the codebase, not introduced by environment setup.
+- **Lint status:** `npm run lint` currently exits 0 with warnings only (41 as of 2026-09-12). An older caveat claiming a `react-hooks/set-state-in-effect` error in `SolarSystemNav.tsx` was stale and has been removed.
 - **metadataBase warning:** During `npm run build`, Next.js warns about missing `metadataBase` for social OG images. This is cosmetic and does not affect the build.
 - **Tests:** Vitest covers pure helpers under `src/**/*.test.ts`. App gates remain lint, `npm run build`, and manual browser testing.

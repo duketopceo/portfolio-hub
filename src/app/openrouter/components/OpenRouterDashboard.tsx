@@ -130,7 +130,7 @@ export default function OpenRouterDashboard() {
   );
 
   return (
-    <div className="openrouter-dashboard cosmic-page cosmic-page--shell">
+    <div className="openrouter-dashboard">
       {/* Session API key */}
       <section className="openrouter-section">
         <h2>Run live against your own key</h2>
