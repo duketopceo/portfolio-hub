@@ -4,6 +4,7 @@ import {
   useState,
   useCallback,
   useMemo,
+  useRef,
   type KeyboardEvent,
 } from "react";
 import dynamic from "next/dynamic";
@@ -37,44 +38,110 @@ interface SolarSystemNavProps {
 }
 
 export default function SolarSystemNav({ projects, registryIndexOf }: SolarSystemNavProps) {
-  const [focusIndex, setFocusIndex] = useState(0);
-  const [flipDir, setFlipDir] = useState(1);
+  const [focus, setFocus] = useState({ index: 0, dir: 1 });
+  const [sceneReady, setSceneReady] = useState(false);
+  const plateRef = useRef<HTMLDivElement | null>(null);
   const n = projects.length;
   const { rx, ry } = useOrbitRadiiRem(n);
 
-  const orbitOffsets = useMemo(() => {
+  // Unitless direction cosines — SSR-stable (pure function of index/count);
+  // the plate multiplies them by CSS --orbit-rx/--orbit-ry so its geometry
+  // is viewport-correct without hydration.
+  const orbitDirs = useMemo(() => {
     return Array.from({ length: n }, (_, i) => {
       const theta = -Math.PI / 2 + (2 * Math.PI * i) / Math.max(n, 1);
-      return {
-        x: rx * Math.cos(theta),
-        y: ry * Math.sin(theta),
-      };
+      return { x: Math.cos(theta), y: Math.sin(theta) };
     });
-  }, [n, rx, ry]);
+  }, [n]);
 
-  const safeFocusIndex = n === 0 ? 0 : ((focusIndex % n) + n) % n;
+  const safeFocusIndex = n === 0 ? 0 : ((focus.index % n) + n) % n;
+  const flipDir = focus.dir;
 
   const go = useCallback(
     (delta: number) => {
       if (n === 0) return;
-      setFlipDir(delta > 0 ? 1 : -1);
-      setFocusIndex((i) => (i + delta + n) % n);
+      setFocus((f) => ({
+        index: (f.index + delta + n) % n,
+        dir: delta > 0 ? 1 : -1,
+      }));
     },
     [n]
   );
 
   const moveFocusTo = useCallback(
     (i: number) => {
-      setFocusIndex((prev) => {
-        if (i === prev) return prev;
-        const forward = (i - prev + n) % n;
-        const backward = (prev - i + n) % n;
-        setFlipDir(forward <= backward ? 1 : -1);
-        return i;
+      setFocus((f) => {
+        if (i === f.index) return f;
+        const forward = (i - f.index + n) % n;
+        const backward = (f.index - i + n) % n;
+        return { index: i, dir: forward <= backward ? 1 : -1 };
       });
     },
     [n]
   );
+
+  // Plate -> scene swap: hide the plate only once live overlay markers
+  // exist in the DOM (drei <Html> portal content lands a commit or two
+  // after the first painted frame). If focus is inside the plate at swap
+  // time, move it to the same project's live marker before hiding; if no
+  // matching marker exists, defer hiding until focus leaves the plate.
+  const handleReadyChange = useCallback((ready: boolean) => {
+    if (!ready) {
+      setSceneReady(false);
+      return;
+    }
+    const plate = plateRef.current;
+    const stage = plate?.parentElement;
+    if (!plate || !stage) {
+      setSceneReady(true);
+      return;
+    }
+    const overlayHasMarkers = () =>
+      !!stage.querySelector('.scene-overlay a[href^="/projects/"]');
+    const commit = () => {
+      const active = document.activeElement as HTMLElement | null;
+      if (active && plate.contains(active)) {
+        const href = active.closest("a")?.getAttribute("href");
+        const liveMarker = href
+          ? stage.querySelector<HTMLElement>(
+              `.scene-overlay a[href="${href}"]`
+            )
+          : null;
+        if (liveMarker) {
+          liveMarker.focus();
+          // If the live marker refused focus, keep the plate until focus
+          // leaves rather than hiding a focused element.
+          if (document.activeElement === liveMarker) {
+            setSceneReady(true);
+            return;
+          }
+        }
+        const onFocusOut = () => {
+          if (!plate.contains(document.activeElement)) {
+            plate.removeEventListener("focusout", onFocusOut);
+            setSceneReady(true);
+          }
+        };
+        plate.addEventListener("focusout", onFocusOut);
+        return;
+      }
+      setSceneReady(true);
+    };
+    if (overlayHasMarkers()) {
+      commit();
+      return;
+    }
+    let tries = 0;
+    const poll = () => {
+      if (overlayHasMarkers()) {
+        commit();
+        return;
+      }
+      if (++tries > 120) return; // markers never mounted: keep the plate
+      requestAnimationFrame(poll);
+    };
+    requestAnimationFrame(poll);
+  }, []);
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
@@ -113,81 +180,108 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
           <span className="reg-label reg-label--accent">Fig. 01</span> — Primary orbit
         </h2>
         <p className="solar-system__hint">
-          Five lead bodies under survey. Arrow keys or ‹ › to cycle —
+          {n} lead bodies under survey. Arrow keys or ‹ › to cycle —
           select a marker for the survey file.
         </p>
       </div>
 
-      <div className="solar-system__stage solar-system__stage--universe">
-        <SceneFrame
-          className="solar-scene"
-          camera={{ position: [0, 16, 30], fov: 32 }}
-          fallback={
-            <>
-              <div className="solar-orbit-decor" aria-hidden>
-                <svg
-                  className="solar-orbit-decor__svg"
-                  viewBox="0 0 400 260"
-                  preserveAspectRatio="xMidYMid meet"
+      <div
+        className={`solar-system__stage solar-system__stage--universe${
+          n > 18 ? " solar-system__stage--crowded" : ""
+        }`}
+      >
+        {/* Server-rendered static plate — present in SSR HTML before the
+            scene chunk resolves; hidden once the live scene reports its
+            first frame, re-shown if the scene is later lost. */}
+        <div
+          ref={plateRef}
+          className={`solar-plate${sceneReady ? " solar-plate--hidden" : ""}`}
+          onFocusCapture={(e) => {
+            // The --hidden visibility transition keeps the plate focusable
+            // for ~300ms after the swap; relocate any late-arriving focus
+            // to the same project's live marker instead of letting it die
+            // on a hidden element.
+            if (!sceneReady) return;
+            const href = (e.target as HTMLElement)
+              .closest("a")
+              ?.getAttribute("href");
+            const live = href
+              ? plateRef.current?.parentElement?.querySelector<HTMLElement>(
+                  `.scene-overlay a[href="${href}"]`
+                )
+              : null;
+            live?.focus();
+          }}
+        >
+          <div className="solar-orbit-decor" aria-hidden>
+            <svg
+              className="solar-orbit-decor__svg"
+              viewBox="0 0 400 260"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <ellipse
+                className="solar-orbit-line solar-orbit-line--a"
+                cx="200"
+                cy="130"
+                rx="188"
+                ry="94"
+              />
+              <ellipse
+                className="solar-orbit-line solar-orbit-line--b"
+                cx="200"
+                cy="130"
+                rx="148"
+                ry="74"
+              />
+              <ellipse
+                className="solar-orbit-line solar-orbit-line--c"
+                cx="200"
+                cy="130"
+                rx="108"
+                ry="54"
+              />
+            </svg>
+          </div>
+          <div className="solar-sun-stack" aria-hidden>
+            <div className="solar-sun solar-sun--halo" />
+            <div className="solar-sun solar-sun--core" />
+          </div>
+          <div className="solar-planets">
+            {projects.map((p, i) => {
+              const { x, y } = orbitDirs[i] ?? { x: 0, y: 0 };
+              const isFocused = i === safeFocusIndex;
+              return (
+                <div
+                  key={p.slug}
+                  className="solar-planet-arm"
+                  style={
+                    {
+                      "--orbit-x": x.toFixed(4),
+                      "--orbit-y": y.toFixed(4),
+                      "--planet-index": i,
+                    } as React.CSSProperties
+                  }
                 >
-                  <ellipse
-                    className="solar-orbit-line solar-orbit-line--a"
-                    cx="200"
-                    cy="130"
-                    rx="188"
-                    ry="94"
+                  <PlanetNode
+                    project={p}
+                    tier="primary"
+                    href={`/projects/${p.slug}`}
+                    focused={isFocused}
+                    index={registryIndexOf?.[i] ?? i}
+                    onMouseEnter={() => moveFocusTo(i)}
+                    onFocus={() => moveFocusTo(i)}
+                    tabIndex={isFocused ? 0 : -1}
                   />
-                  <ellipse
-                    className="solar-orbit-line solar-orbit-line--b"
-                    cx="200"
-                    cy="130"
-                    rx="148"
-                    ry="74"
-                  />
-                  <ellipse
-                    className="solar-orbit-line solar-orbit-line--c"
-                    cx="200"
-                    cy="130"
-                    rx="108"
-                    ry="54"
-                  />
-                </svg>
-              </div>
-              <div className="solar-sun-stack" aria-hidden>
-                <div className="solar-sun solar-sun--halo" />
-                <div className="solar-sun solar-sun--core" />
-              </div>
-              <div className="solar-planets">
-                {projects.map((p, i) => {
-                  const { x, y } = orbitOffsets[i] ?? { x: 0, y: 0 };
-                  const isFocused = i === safeFocusIndex;
-                  return (
-                    <div
-                      key={p.slug}
-                      className="solar-planet-arm"
-                      style={
-                        {
-                          transform: `translate(${x.toFixed(4)}rem, ${y.toFixed(4)}rem)`,
-                          "--planet-index": i,
-                        } as React.CSSProperties
-                      }
-                    >
-                      <PlanetNode
-                        project={p}
-                        tier="primary"
-                        href={`/projects/${p.slug}`}
-                        focused={isFocused}
-                        index={registryIndexOf?.[i] ?? i}
-                        onMouseEnter={() => moveFocusTo(i)}
-                        onFocus={() => moveFocusTo(i)}
-                        tabIndex={isFocused ? 0 : -1}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          }
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <SceneFrame
+          className={`solar-scene${sceneReady ? " solar-scene--ready" : ""}`}
+          camera={{ position: [0, 16, 30], fov: 32 }}
+          onReadyChange={handleReadyChange}
         >
           <OrbitalScene
             projects={projects}

@@ -1,29 +1,4 @@
 @import "tailwindcss";
-@import "./space-theme.css";
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-border: var(--border);
-  --color-ring: var(--ring);
-  --color-brand: var(--brand);
-  --color-brand-2: var(--brand-2);
-  --color-brand-3: var(--brand-3);
-
-  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
-  --animate-spin-slow: spin-slow 12s linear infinite;
-  --animate-pulse-glow: pulse-glow 4s ease-in-out infinite;
-}
 
 /* ── Design System: STAR CHART — Cosmic Intelligence v4 (dark only) ───
    Neo-industrial orbital survey. Near-monochrome, hairline grids,
@@ -127,6 +102,8 @@ html {
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
   scroll-padding-top: 3rem;
+  /* Orbital/chart elements bleed off-viewport by design — clip, don't scroll */
+  overflow-x: clip;
 }
 
 body {
@@ -134,10 +111,12 @@ body {
   display: flex;
   flex-direction: column;
   font-family: var(--font-body);
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--color-text);
+  background: var(--color-bg);
   line-height: 1.6;
   font-size: var(--text-base);
+  /* Orbital/chart elements bleed off-viewport by design — clip, don't scroll */
+  overflow-x: clip;
 }
 
 /* ── Star chart background — survey plate, grid, sharp stars, grain ── */
@@ -2055,14 +2034,14 @@ body {
 
 @media (min-width: 640px) {
   .catalog-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.75rem 2rem;
   }
 }
 
 @media (min-width: 1024px) {
   .catalog-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2rem 2.25rem;
   }
 }
@@ -2771,6 +2750,13 @@ body {
   inset: 0;
   z-index: 2;
   overflow: hidden;
+  /* Fades in over the still-visible SSR plate — no empty-stage flash */
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.solar-scene--ready {
+  opacity: 1;
 }
 
 .solar-scene canvas {
@@ -2865,6 +2851,15 @@ body {
   z-index: 3;
   /* Planets stay clickable; center deck sits above and wins overlaps */
   pointer-events: none;
+  /* Orbit radii in rem — switched by media query so the server-rendered
+     plate is viewport-correct before hydration */
+  --orbit-rx: 23rem;
+  --orbit-ry: 11.5rem;
+}
+
+.solar-system__stage--crowded .solar-planets {
+  --orbit-rx: 25rem;
+  --orbit-ry: 12.5rem;
 }
 
 .solar-planet-arm {
@@ -2875,6 +2870,27 @@ body {
   height: 0;
   transform-origin: center center;
   pointer-events: none;
+  /* --orbit-x/--orbit-y are unitless direction cosines set inline per arm */
+  transform: translate(
+    calc(var(--orbit-x, 0) * var(--orbit-rx)),
+    calc(var(--orbit-y, 0) * var(--orbit-ry))
+  );
+}
+
+/* Server-rendered FIG.01 plate — sibling of the scene layer. Visible in
+   SSR HTML and before hydration; visibility:hidden pulls its links out of
+   tab order and the a11y tree once the live scene is ready. */
+.solar-plate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.solar-plate--hidden {
+  visibility: hidden;
+  /* Delay the flip so the scene finishes its fade-in over the plate */
+  transition: visibility 0s linear 0.3s;
 }
 
 .solar-center {
@@ -3209,6 +3225,17 @@ body {
     width: 19rem;
     height: 10.5rem;
     max-height: none;
+  }
+
+  /* Plate orbit radii — matches useOrbitRadiiRem's mobile values */
+  .solar-planets {
+    --orbit-rx: 8.5rem;
+    --orbit-ry: 4.5rem;
+  }
+
+  .solar-system__stage--crowded .solar-planets {
+    --orbit-rx: 10rem;
+    --orbit-ry: 5.5rem;
   }
 
   .solar-system__hint {
@@ -6381,6 +6408,8 @@ body {
   z-index: 1;
   padding-bottom: clamp(2rem, 5vw, 3rem);
   margin-top: clamp(-1rem, -2vw, -0.25rem);
+  /* Belt arms bleed off-viewport by design — clip, don't scroll */
+  overflow-x: clip;
 }
 
 .secondary-orbit__intro {

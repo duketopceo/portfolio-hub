@@ -6,10 +6,11 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
-import { Canvas, type CameraProps, type RootState } from "@react-three/fiber";
+import { Canvas, useFrame, type CameraProps, type RootState } from "@react-three/fiber";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
@@ -33,19 +34,42 @@ interface SceneFrameProps {
   className?: string;
   camera?: CameraProps;
   dpr?: [number, number];
+  /**
+   * Called once with `true` on the first rendered frame after the scene's
+   * children (overlay markers included) have mounted, and with `false` if
+   * the live scene is later lost (context loss or render error). Used by
+   * surfaces whose static plate is server-rendered as a sibling so they
+   * can swap visibility — never latch; re-shows on failure.
+   */
+  onReadyChange?: (ready: boolean) => void;
 }
 
 class SceneBoundary extends Component<
-  { plate: ReactNode; children: ReactNode },
+  { plate: ReactNode; children: ReactNode; onError?: (error: Error) => void },
   { failed: boolean }
 > {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
   }
+  componentDidCatch(error: Error) {
+    this.props.onError?.(error);
+  }
   render() {
     return this.state.failed ? this.props.plate : this.props.children;
   }
+}
+
+/** Fires once on the first frame after this component's siblings mount. */
+function FirstFrameSignal({ onFirstFrame }: { onFirstFrame: () => void }) {
+  const fired = useRef(false);
+  useFrame(() => {
+    if (!fired.current) {
+      fired.current = true;
+      onFirstFrame();
+    }
+  });
+  return null;
 }
 
 /**
@@ -66,6 +90,7 @@ export default function SceneFrame({
   className,
   camera,
   dpr = [1, 2],
+  onReadyChange,
 }: SceneFrameProps) {
   const [hostEl, setHostEl] = useState<HTMLDivElement | null>(null);
   const [overlayEl, setOverlayEl] = useState<HTMLDivElement | null>(null);
@@ -107,11 +132,20 @@ export default function SceneFrame({
 
   const live = motionOK && !ctxLost;
 
+  // A live scene that dies (context loss, boundary error) must hand the
+  // stage back to the SSR plate — report the drop so the host un-hides it.
+  useEffect(() => {
+    if (!live) onReadyChange?.(false);
+  }, [live, onReadyChange]);
+
+  const onFirstFrame = useCallback(() => onReadyChange?.(true), [onReadyChange]);
+  const onSceneError = useCallback(() => onReadyChange?.(false), [onReadyChange]);
+
   return (
     <div ref={setHostEl} className={className}>
       {live ? (
         <SceneOverlayContext.Provider value={overlayEl}>
-          <SceneBoundary plate={fallback}>
+          <SceneBoundary plate={fallback} onError={onSceneError}>
             <Canvas
               frameloop={inView ? "always" : "never"}
               dpr={dpr}
@@ -121,7 +155,12 @@ export default function SceneFrame({
               eventSource={hostEl ?? undefined}
               onCreated={onCreated}
             >
-              {overlayEl ? children : null}
+              {overlayEl ? (
+                <>
+                  {children}
+                  <FirstFrameSignal onFirstFrame={onFirstFrame} />
+                </>
+              ) : null}
             </Canvas>
           </SceneBoundary>
           <div ref={setOverlayEl} className="scene-overlay" />
