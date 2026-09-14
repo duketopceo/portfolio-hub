@@ -12,7 +12,26 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Minified bundle with no page referencing it. The other scripts in
+    // public/podcast/ are hand-authored and loaded by live pages, so they
+    // stay in scope — only this artifact is ignored.
+    "public/podcast/app.js",
   ]),
+  {
+    rules: {
+      // The base rule is enabled with no options; this adds the underscore
+      // convention for parameters a signature requires but a body never uses.
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

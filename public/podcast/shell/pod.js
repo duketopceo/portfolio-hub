@@ -2,12 +2,6 @@
   'use strict';
 
   /* ── Configuration ───────────────────────────────────────── */
-  var EPISODE = {
-    number: 'OP009',
-    title: 'The Signal Stack',
-    date: '2026-04-28',
-  };
-
   var SLIDES = [
     { id: 'slide-cold', label: 'Cold open' },
     { id: 'slide-market', label: 'Market' },
@@ -160,7 +154,7 @@
 
     // Resize TradingView if market slide
     if (SLIDES[currentSlide].id === 'slide-market' && window.__tvWidget) {
-      try { window.__tvWidget.resize(); } catch (e) {}
+      try { window.__tvWidget.resize(); } catch {}
     }
   }
 
@@ -402,7 +396,7 @@
       btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
       btn.textContent = collapsed ? 'Show chart' : 'Hide chart';
       if (window.__tvWidget && typeof window.__tvWidget.resize === 'function') {
-        try { window.__tvWidget.resize(); } catch (e) {}
+        try { window.__tvWidget.resize(); } catch {}
       }
     }
     if (collapsed) apply();
@@ -420,7 +414,7 @@
       if (q.get('descript') === '1' || localStorage.getItem('mc_descript') === '1') {
         document.body.classList.add('mc-descript');
       }
-    } catch (e) {}
+    } catch {}
   }
 
   /* ── Broadcast Mode ──────────────────────────────────────── */
@@ -430,7 +424,7 @@
       if (q.get('broadcast') === '1' || q.get('descript') === '1') {
         document.body.classList.add('broadcast');
       }
-    } catch (e) {}
+    } catch {}
   }
 
   function autoExpandBroadcastContent() {

@@ -136,11 +136,7 @@ function formatShortDate(iso: string): string {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-function publicUrl(
-  isPrivate: boolean,
-  htmlUrl: string,
-  slug: string
-): string | undefined {
+function publicUrl(isPrivate: boolean, htmlUrl: string): string | undefined {
   if (isPrivate) return undefined;
   return htmlUrl;
 }
@@ -332,7 +328,7 @@ async function buildRepoActivity(
           ? `PR #${pr.number} opened`
           : `PR #${pr.number} opened — ${title}`,
         ref: String(pr.number),
-        url: publicUrl(target.private, pr.html_url, target.slug),
+        url: publicUrl(target.private, pr.html_url),
         mergeTarget: scrubBranchRef(pr.base.ref, target.private),
       });
     }
@@ -352,14 +348,16 @@ async function buildRepoActivity(
           ? `PR #${pr.number} merged`
           : `PR #${pr.number} merged — ${title}`,
         ref: String(pr.number),
-        url: publicUrl(target.private, pr.html_url, target.slug),
+        url: publicUrl(target.private, pr.html_url),
         mergeTarget: scrubBranchRef(pr.base.ref, target.private),
       });
     }
 
     if (closedInWindow) {
       const dk = dayKey(pr.closed_at!);
-      const bucket = bumpDay(dayMap, dk);
+      // No prsClosed counter exists on the day bucket; the call is kept for
+      // its side effect of registering the day in the series.
+      bumpDay(dayMap, dk);
       const fallback = "PR closed";
       const title = scrubActivityText(pr.title, target.private, fallback);
       items.push({
@@ -370,7 +368,7 @@ async function buildRepoActivity(
           ? `PR #${pr.number} closed`
           : `PR #${pr.number} closed — ${title}`,
         ref: String(pr.number),
-        url: publicUrl(target.private, pr.html_url, target.slug),
+        url: publicUrl(target.private, pr.html_url),
       });
     }
 
@@ -398,7 +396,7 @@ async function buildRepoActivity(
           ? `Review on PR #${pr.number} (${verb})`
           : `PR #${pr.number} ${verb}`,
         ref: String(pr.number),
-        url: publicUrl(target.private, pr.html_url, target.slug),
+        url: publicUrl(target.private, pr.html_url),
       });
     }
   }
@@ -423,7 +421,7 @@ async function buildRepoActivity(
           ? `Issue #${issue.number} started`
           : `Issue #${issue.number} started — ${title}`,
         ref: String(issue.number),
-        url: publicUrl(target.private, issue.html_url, target.slug),
+        url: publicUrl(target.private, issue.html_url),
       });
     }
 
@@ -442,7 +440,7 @@ async function buildRepoActivity(
           ? `Issue #${issue.number} finished`
           : `Issue #${issue.number} finished — ${title}`,
         ref: String(issue.number),
-        url: publicUrl(target.private, issue.html_url, target.slug),
+        url: publicUrl(target.private, issue.html_url),
       });
     }
   }
@@ -464,7 +462,7 @@ async function buildRepoActivity(
         ? `Release ${tag}`
         : `Release ${tag} — ${name}`,
       ref: tag,
-      url: publicUrl(target.private, rel.html_url, target.slug),
+      url: publicUrl(target.private, rel.html_url),
     });
   }
 
