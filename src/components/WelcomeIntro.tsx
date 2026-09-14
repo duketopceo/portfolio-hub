@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -10,6 +10,19 @@ export default function WelcomeIntro() {
   const [visible, setVisible] = useState(false);
   const [gone, setGone] = useState(true);
 
+  // Declared before the effect that schedules it, and stable across renders,
+  // so the effect can depend on it honestly instead of suppressing the rule.
+  const dismiss = useCallback(() => {
+    setVisible(false);
+    setTimeout(() => setGone(true), 440);
+    try { localStorage.setItem("lk_welcomed", "1"); } catch {}
+  }, []);
+
+  /* eslint-disable react-hooks/set-state-in-effect --
+     This effect is inherently effect-time: the overlay renders nothing on the
+     server and may only read localStorage on the client, so the mount gate and
+     the welcome check both set state here. Rewriting it to the
+     useSyncExternalStore hydration idiom is follow-up work, not a lint pass. */
   useEffect(() => {
     setMounted(true);
     try {
@@ -19,14 +32,8 @@ export default function WelcomeIntro() {
     const show = setTimeout(() => setVisible(true), 900);
     const hide = setTimeout(() => dismiss(), 18000);
     return () => { clearTimeout(show); clearTimeout(hide); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function dismiss() {
-    setVisible(false);
-    setTimeout(() => setGone(true), 440);
-    try { localStorage.setItem("lk_welcomed", "1"); } catch {}
-  }
+  }, [dismiss]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (
     !mounted ||
