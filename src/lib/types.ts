@@ -1,5 +1,8 @@
 export interface GitHubRepo {
   name: string;
+  /** Owner login. Required to key repos by owner+name — a name-only key lets a
+   *  same-name repository from another owner replace the configured one. */
+  owner: { login: string };
   description: string | null;
   language: string | null;
   topics: string[];

@@ -220,7 +220,11 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   const allRepos = await fetchAllRepos();
   const repoMap = new Map<string, GitHubRepo>();
   for (const repo of allRepos) {
-    repoMap.set(repo.name, repo);
+    // Keyed by owner+name, lowercased: /user/repos includes collaborator and
+    // org-member repos, so a name-only key would let another owner's same-name
+    // repository stand in for the configured one.
+    if (!repo.owner?.login) continue;
+    repoMap.set(`${repo.owner.login}/${repo.name}`.toLowerCase(), repo);
   }
 
   const enriched = await Promise.all(
@@ -245,7 +249,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
       const owner = withDeploy.repoOwner ?? GITHUB_ACCOUNT_LOGIN;
       const repo =
         owner === GITHUB_ACCOUNT_LOGIN
-          ? repoMap.get(withDeploy.repoName) || null
+          ? repoMap.get(`${owner}/${withDeploy.repoName}`.toLowerCase()) || null
           : null;
       const githubUrl = publicGithubUrl(
         withDeploy.private || repo?.private === true,
@@ -263,7 +267,9 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
       return {
         ...withDeploy,
         githubUrl,
-        private: repo?.private ?? withDeploy.private,
+        // Monotonic: a configured-private project is never downgraded to public
+        // by whatever the API reports for a same-name repository.
+        private: withDeploy.private || repo?.private === true,
         repo: null,
         lastUpdated: repo?.pushed_at || "",
         language: repo?.language || null,
