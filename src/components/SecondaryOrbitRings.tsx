@@ -1,12 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { useMemo } from "react";
 import type { EnrichedProject } from "@/lib/types";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { PlanetNode } from "@/components/planet/PlanetNode";
+
+const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
+  ssr: false,
+});
+const BeltScene = dynamic(() => import("@/components/scene/BeltScene"), {
+  ssr: false,
+});
 
 interface SecondaryOrbitRingsProps {
   projects: EnrichedProject[];
+  /** Registry numbers aligned to `projects` — source-order catalog position. */
+  registryIndexOf?: number[];
 }
 
 type RingId = "inner" | "outer";
@@ -16,20 +27,6 @@ interface RingLayout {
   ry: number;
   phase: number;
   offset: { x: number; y: number };
-}
-
-function useIsMobile() {
-  const [mobile, setMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    const apply = () => setMobile(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-
-  return mobile;
 }
 
 function ringLayout(
@@ -60,13 +57,14 @@ function ringLayout(
 function SecondaryRing({
   projects,
   ring,
-  ringOffset,
+  mobile,
+  registryIndexOf,
 }: {
   projects: EnrichedProject[];
   ring: RingId;
-  ringOffset: number;
+  mobile: boolean;
+  registryIndexOf?: number[];
 }) {
-  const mobile = useIsMobile();
   const n = projects.length;
   const layout = ringLayout(n, ring, mobile);
 
@@ -90,7 +88,7 @@ function SecondaryRing({
     <div
       className={`secondary-orbit__ring secondary-orbit__ring--${ring}`}
       style={{
-        transform: `translate(${layout.offset.x}rem, ${layout.offset.y}rem)`,
+        transform: `translate(${layout.offset.x.toFixed(4)}rem, ${layout.offset.y.toFixed(4)}rem)`,
       }}
     >
       <svg
@@ -119,14 +117,14 @@ function SecondaryRing({
             <div
               key={p.slug}
               className="secondary-orbit__arm"
-              style={{ transform: `translate(${x}rem, ${y}rem)` }}
+              style={{ transform: `translate(${x.toFixed(4)}rem, ${y.toFixed(4)}rem)` }}
             >
               <PlanetNode
                 project={p}
                 tier="secondary"
                 href={`/projects/${p.slug}`}
                 labelAbove={labelAbove}
-                index={ringOffset + i}
+                index={registryIndexOf?.[i] ?? i}
                 compactLabel
               />
             </div>
@@ -139,7 +137,9 @@ function SecondaryRing({
 
 export default function SecondaryOrbitRings({
   projects,
+  registryIndexOf,
 }: SecondaryOrbitRingsProps) {
+  const mobile = useMediaQuery("(max-width: 640px)");
   const mid = Math.ceil(projects.length / 2);
   const inner = projects.slice(0, mid);
   const outer = projects.slice(mid);
@@ -151,22 +151,37 @@ export default function SecondaryOrbitRings({
     >
       <div className="cosmic-page secondary-orbit__intro">
         <h2 id="secondary-orbit-heading" className="secondary-orbit__heading">
-          Catalog orbit
+          <span className="reg-label reg-label--accent">Fig. 02</span> — Catalog belt
         </h2>
         <p className="secondary-orbit__hint">
-          {projects.length} more worlds — same modular planet system, scaled
-          smaller and split across two offset rings. Tap for dossiers or browse
-          the{" "}
+          {projects.length} additional bodies on offset survey rings. Select a
+          marker for its survey file, or open the{" "}
           <Link href="/projects" className="detail-nav-link">
-            full grid
+            full registry
           </Link>
           .
         </p>
       </div>
 
       <div className="secondary-orbit__stage">
-        <SecondaryRing projects={inner} ring="inner" ringOffset={0} />
-        <SecondaryRing projects={outer} ring="outer" ringOffset={inner.length} />
+        <SceneFrame
+          className="belt-scene"
+          camera={{ position: [0, 11, 34], fov: 42 }}
+        >
+          <BeltScene />
+        </SceneFrame>
+        <SecondaryRing
+          projects={inner}
+          ring="inner"
+          mobile={mobile}
+          registryIndexOf={registryIndexOf?.slice(0, mid)}
+        />
+        <SecondaryRing
+          projects={outer}
+          ring="outer"
+          mobile={mobile}
+          registryIndexOf={registryIndexOf?.slice(mid)}
+        />
       </div>
     </section>
   );

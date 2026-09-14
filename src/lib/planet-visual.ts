@@ -7,8 +7,6 @@ import type {
   PlanetRingConfig,
   PlanetShape,
   PlanetSize,
-  PlanetVisualConfig,
-  ProjectType,
 } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 

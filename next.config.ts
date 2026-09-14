@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // three.js stack needs transpilation under Turbopack
+  transpilePackages: ["three", "@react-three/fiber", "@react-three/drei"],
+
   // Enable standalone output for Docker deployment
   output: "standalone",
 

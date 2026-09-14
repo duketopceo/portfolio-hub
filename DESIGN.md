@@ -1,5 +1,13 @@
 # Cosmic Intelligence — Design Standard
 
+> **Divergence note (2026-09-12):** this file documents the HUD standard as
+> written on `main`. The `feat/star-chart-redesign` branch ships the
+> Star Chart survey system (neo-industrial orbital registry — teal accent,
+> Archivo display type, FIG.01/FIG.02 orbital canvases), which this document's
+> Authority clause technically overrules. Reconciling the two directions is a
+> merge-time product decision; until then this file describes the HUD baseline,
+> not what the branch renders.
+
 ## Visual thesis
 
 A deep-space HUD interface: star-white type on a near-black void, one launch-blue accent, precise geometric type, and a single dominant visual anchor. The interface should feel like a mission-control dossier, not a marketing template.

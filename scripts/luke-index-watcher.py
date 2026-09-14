@@ -23,7 +23,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 INDEX_PATH = REPO_ROOT / "INDEX.md"
@@ -158,7 +158,7 @@ def parse_existing_index() -> Dict[str, Dict[str, str]]:
 
 
 def discover_files() -> List[Path]:
-    files = git_tracked_files()
+    files = [p for p in git_tracked_files() if p != INDEX_PATH]
     files.sort()
     return files
 
@@ -182,9 +182,9 @@ def humanize(cell: str, max_len: int = 80) -> str:
     return cell
 
 
-def build_index_content() -> str:
+def build_index_content(synced_at: Optional[str] = None) -> str:
     version = repo_version()
-    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    now = synced_at or datetime.datetime.now(datetime.timezone.utc).isoformat()
     files = discover_files()
     existing = parse_existing_index()
     mtimes = build_file_mtime_index(files)
@@ -268,11 +268,15 @@ def generate() -> None:
 
 
 def check() -> bool:
-    generated = build_index_content()
     if not INDEX_PATH.exists():
         print("INDEX.md is missing. Run: python scripts/luke-index-watcher.py")
         return False
     existing = INDEX_PATH.read_text()
+    synced_at = None
+    match = re.search(r"^> \*\*Last synced:\*\* `(.+)`", existing, re.MULTILINE)
+    if match:
+        synced_at = match.group(1)
+    generated = build_index_content(synced_at)
     if generated == existing:
         print("INDEX.md is up to date.")
         return True

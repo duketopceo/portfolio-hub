@@ -578,7 +578,7 @@
       var q = new URLSearchParams(window.location.search);
       if (q.get("descript") === "1" || localStorage.getItem("mc_descript") === "1")
         document.body.classList.add("mc-descript");
-    } catch (e) {}
+    } catch {}
   }
 
   function initStars() {

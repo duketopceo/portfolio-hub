@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -10,23 +10,44 @@ export default function WelcomeIntro() {
   const [visible, setVisible] = useState(false);
   const [gone, setGone] = useState(true);
 
+  // Every timer is tracked so a manual dismiss cancels the pending show and
+  // auto-dismiss instead of racing them, and so nothing fires after unmount.
+  const showRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hideRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const exitRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearTimers = useCallback(() => {
+    if (showRef.current) clearTimeout(showRef.current);
+    if (hideRef.current) clearTimeout(hideRef.current);
+    if (exitRef.current) clearTimeout(exitRef.current);
+    showRef.current = hideRef.current = exitRef.current = null;
+  }, []);
+
+  // Declared before the effect that schedules it, and stable across renders,
+  // so the effect can depend on it honestly instead of suppressing the rule.
+  const dismiss = useCallback(() => {
+    clearTimers();
+    setVisible(false);
+    exitRef.current = setTimeout(() => setGone(true), 440);
+    try { localStorage.setItem("lk_welcomed", "1"); } catch {}
+  }, [clearTimers]);
+
+  /* eslint-disable react-hooks/set-state-in-effect --
+     This effect is inherently effect-time: the overlay renders nothing on the
+     server and may only read localStorage on the client, so the mount gate and
+     the welcome check both set state here. Rewriting it to the
+     useSyncExternalStore hydration idiom is follow-up work, not a lint pass. */
   useEffect(() => {
     setMounted(true);
     try {
       if (localStorage.getItem("lk_welcomed")) return;
     } catch {}
     setGone(false);
-    const show = setTimeout(() => setVisible(true), 900);
-    const hide = setTimeout(() => dismiss(), 18000);
-    return () => { clearTimeout(show); clearTimeout(hide); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function dismiss() {
-    setVisible(false);
-    setTimeout(() => setGone(true), 440);
-    try { localStorage.setItem("lk_welcomed", "1"); } catch {}
-  }
+    showRef.current = setTimeout(() => setVisible(true), 900);
+    hideRef.current = setTimeout(() => dismiss(), 18000);
+    return clearTimers;
+  }, [dismiss, clearTimers]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (
     !mounted ||
@@ -47,22 +68,22 @@ export default function WelcomeIntro() {
         ×
       </button>
 
-      <p className="welcome-intro__eyebrow">Luke Kimball</p>
+      <p className="welcome-intro__eyebrow">CI — Field registry</p>
       <p className="welcome-intro__headline">Systems that compound.</p>
       <p className="welcome-intro__body">
-        AI infrastructure, trading tech &amp; open-source. Orbit the projects
-        below, or navigate the sections.
+        AI infrastructure, trading tech &amp; open-source — surveyed as an
+        orbital registry. Read the chart, or jump to a section.
       </p>
 
       <div className="welcome-intro__nav">
         <Link href="/" className="welcome-intro__chip" onClick={dismiss}>
-          Orbit ↺
+          Chart ↺
         </Link>
         <Link href="/projects" className="welcome-intro__chip" onClick={dismiss}>
-          Catalog →
+          Registry →
         </Link>
         <Link href="/now" className="welcome-intro__chip" onClick={dismiss}>
-          Activity →
+          Transmissions →
         </Link>
         <Link href="/about" className="welcome-intro__chip" onClick={dismiss}>
           About →

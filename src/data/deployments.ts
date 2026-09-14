@@ -1,5 +1,3 @@
-import type { ProjectConfig } from "@/lib/types";
-
 /**
  * Production URLs and hosting targets per curated project.
  *

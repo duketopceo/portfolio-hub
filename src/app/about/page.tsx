@@ -11,13 +11,14 @@ const externalLink = "detail-nav-link";
 export default function AboutPage() {
   return (
     <div className="cosmic-page cosmic-page--shell">
-      <header
-        className="projects-page-header max-w-xl"
-        style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}
-      >
-        <p className="projects-page-header__eyebrow">WHO</p>
-        <h1 className="projects-page-header__title">Luke Kimball</h1>
-        <p className="projects-page-header__sub">
+      <header className="reg-page-head max-w-xl">
+        <div className="reg-page-head__margin" aria-hidden="true">
+          <span>CI / Operator file</span>
+          <span className="hidden sm:inline">Provo, UT</span>
+          <span>Sheet 05</span>
+        </div>
+        <h1 className="reg-page-head__title">Luke Kimball</h1>
+        <p className="reg-page-head__sub">
           OpenRouter-native systems builder · Provo, UT
         </p>
       </header>

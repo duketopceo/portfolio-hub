@@ -1,101 +1,108 @@
 import Link from "next/link";
+import { ExternalIcon } from "@/components/Icons";
+
+type FeaturedProject = {
+  label: string;
+  dossierHref: string;
+  liveHref?: string;
+  liveLabel?: string;
+};
+
+const featuredProjects: FeaturedProject[] = [
+  {
+    label: "Khan",
+    dossierHref: "/projects/khan",
+    liveHref: "https://khanai.app",
+    liveLabel: "khanai.app",
+  },
+  {
+    label: "Kurultai",
+    dossierHref: "/projects/kurultai",
+    liveHref: "https://github.com/duketopceo/kurultai",
+    liveLabel: "GitHub",
+  },
+  {
+    label: "Pace Server",
+    dossierHref: "/projects/pace-server",
+    liveHref: "https://pacehq.io",
+    liveLabel: "pacehq.io",
+  },
+  {
+    label: "Stratum Engine",
+    dossierHref: "/projects/stratum-hq",
+    liveHref: "https://stratumhq.app",
+    liveLabel: "stratumhq.app",
+  },
+  {
+    label: "OpenRouter demos",
+    dossierHref: "/openrouter",
+  },
+];
 
 const siteLinks = [
-  { href: "/projects", label: "Projects" },
+  { href: "/projects", label: "Registry" },
+  { href: "/now", label: "Now" },
   { href: "/about", label: "About" },
   { href: "/hire", label: "Hire" },
   { href: "/resume", label: "Resume" },
-  { href: "/now", label: "Now" },
-  { href: "/contact", label: "Contact" },
-];
-
-const leadSystems = [
-  { href: "/projects/khan", label: "Khan" },
-  { href: "/projects/kurultai", label: "Kurultai" },
-  { href: "/projects/pace-server", label: "Pace Server" },
-  { href: "/openrouter", label: "OpenRouter" },
-  { href: "/projects/stratum-hq", label: "Stratum" },
 ];
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
-    <footer className="border-t border-border bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid gap-12 md:grid-cols-3">
-          <div className="space-y-4">
-            <p
-              className="text-lg font-semibold tracking-tight text-foreground"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Cosmic Intelligence
-            </p>
-            <p
-              className="text-sm text-muted-foreground leading-relaxed max-w-xs"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              Engineering portfolio for systems that compound across AI,
-              trading, OSINT, and production infrastructure.
-            </p>
-            <p
-              className="text-xs text-muted-foreground"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              Luke Kimball · luke-the-duke.com
+    <footer className="cosmic-footer">
+      <div className="cosmic-page">
+        <div className="cosmic-footer__shop">
+          <div className="cosmic-footer__brand">
+            <p className="cosmic-footer__brand-name">Cosmic Intelligence</p>
+            <p className="cosmic-footer__brand-tag">
+              luke-the-duke.com — field registry
             </p>
           </div>
 
-          <div>
-            <p
-              className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              Site
-            </p>
-            <nav className="grid grid-cols-2 gap-2" aria-label="Footer site">
-              {siteLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
-                  {item.label}
+          <div className="cosmic-footer__index" role="list" aria-label="Lead systems">
+            {featuredProjects.map((project, i) => (
+              <div key={project.dossierHref} className="cosmic-footer__index-row" role="listitem">
+                <span className="reg-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <Link href={project.dossierHref} className="cosmic-footer__btn">
+                  {project.label}
                 </Link>
-              ))}
-            </nav>
+                {project.liveHref && project.liveLabel ? (
+                  <a
+                    href={project.liveHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cosmic-footer__btn-live"
+                    aria-label={`${project.label} live at ${project.liveLabel}`}
+                  >
+                    {project.liveLabel}
+                    <ExternalIcon className="cosmic-footer__btn-icon" />
+                  </a>
+                ) : null}
+              </div>
+            ))}
           </div>
 
-          <div>
-            <p
-              className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              Lead systems
-            </p>
-            <ul className="space-y-2">
-              {leadSystems.map((project) => (
-                <li key={project.href}>
-                  <Link
-                    href={project.href}
-                    className="text-sm text-foreground hover:text-primary transition-colors"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
-                    {project.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <nav className="cosmic-footer__nav" aria-label="Site">
+            {siteLinks.map((item) => (
+              <Link key={item.href} href={item.href} className="cosmic-footer__nav-link">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
 
-        <div
-          className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-muted-foreground"
-          style={{ fontFamily: "var(--font-mono)" }}
-        >
-          <span>© {year} COSMIC INTELLIGENCE</span>
-          <span>EXO · JETBRAINS MONO · TAILWIND · NEXTJS</span>
+        <div className="cosmic-footer__bottom">
+          <span>&copy; {new Date().getFullYear()} Cosmic Intelligence</span>
+          <span className="cosmic-footer__bottom-sep" aria-hidden>
+            ·
+          </span>
+          <span>Next.js on Railway</span>
+          <span className="cosmic-footer__bottom-sep" aria-hidden>
+            ·
+          </span>
+          <span>Provo, UT · Remote, US</span>
         </div>
       </div>
     </footer>

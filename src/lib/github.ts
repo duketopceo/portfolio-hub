@@ -110,9 +110,10 @@ export async function fetchAllRepos(): Promise<GitHubRepo[]> {
 }
 
 async function fetchRepoLanguages(
-  repoName: string
+  repoName: string,
+  owner: string = GITHUB_USER
 ): Promise<string[]> {
-  const url = `${GITHUB_API}/repos/${GITHUB_USER}/${repoName}/languages`;
+  const url = `${GITHUB_API}/repos/${owner}/${repoName}/languages`;
   try {
     const res = await fetch(url, {
       headers: await githubAuthHeaders(),
@@ -133,8 +134,11 @@ async function fetchRepoLanguages(
  * Fetch the README content for a public repo (rendered as HTML).
  * Never called for private repos on the dossier page.
  */
-export async function fetchReadme(repoName: string): Promise<string | null> {
-  const url = `${GITHUB_API}/repos/${GITHUB_USER}/${repoName}/readme`;
+export async function fetchReadme(
+  repoName: string,
+  owner: string = GITHUB_USER
+): Promise<string | null> {
+  const url = `${GITHUB_API}/repos/${owner}/${repoName}/readme`;
 
   try {
     const res = await fetch(url, {
@@ -175,11 +179,12 @@ interface GhContentFile {
  * Fetch SHOWCASE.md at repo root for private dossiers (allowlisted filename only).
  */
 export async function fetchShowcaseMd(
-  repoName: string
+  repoName: string,
+  owner: string = GITHUB_USER
 ): Promise<string | null> {
   if (!repoName) return null;
 
-  const url = `${GITHUB_API}/repos/${GITHUB_USER}/${encodeURIComponent(repoName)}/contents/${SHOWCASE_FILENAME}`;
+  const url = `${GITHUB_API}/repos/${owner}/${encodeURIComponent(repoName)}/contents/${SHOWCASE_FILENAME}`;
 
   try {
     const res = await fetch(url, {
@@ -215,7 +220,11 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   const allRepos = await fetchAllRepos();
   const repoMap = new Map<string, GitHubRepo>();
   for (const repo of allRepos) {
-    repoMap.set(repo.name, repo);
+    // Keyed by owner+name, lowercased: /user/repos includes collaborator and
+    // org-member repos, so a name-only key would let another owner's same-name
+    // repository stand in for the configured one.
+    if (!repo.owner?.login) continue;
+    repoMap.set(`${repo.owner.login}/${repo.name}`.toLowerCase(), repo);
   }
 
   const enriched = await Promise.all(
@@ -237,11 +246,13 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         } satisfies EnrichedProject;
       }
 
-      const repo = repoMap.get(withDeploy.repoName) || null;
+      const owner = withDeploy.repoOwner ?? GITHUB_ACCOUNT_LOGIN;
+      const repo =
+        repoMap.get(`${owner}/${withDeploy.repoName}`.toLowerCase()) || null;
       const githubUrl = publicGithubUrl(
         withDeploy.private || repo?.private === true,
         withDeploy.repoName,
-        GITHUB_ACCOUNT_LOGIN
+        owner
       );
 
       let languages: string[] = [];
@@ -254,7 +265,9 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
       return {
         ...withDeploy,
         githubUrl,
-        private: repo?.private ?? withDeploy.private,
+        // Monotonic: a configured-private project is never downgraded to public
+        // by whatever the API reports for a same-name repository.
+        private: withDeploy.private || repo?.private === true,
         repo: null,
         lastUpdated: repo?.pushed_at || "",
         language: repo?.language || null,
@@ -307,9 +320,10 @@ export async function enrichProjectActivity(
 ): Promise<EnrichedProject> {
   if (project.siteOnly || !project.repoName) return project;
 
-  const languages = await fetchRepoLanguages(project.repoName);
+  const owner = project.repoOwner ?? GITHUB_USER;
+  const languages = await fetchRepoLanguages(project.repoName, owner);
   const repoRes = await fetch(
-    `${GITHUB_API}/repos/${GITHUB_USER}/${encodeURIComponent(project.repoName)}`,
+    `${GITHUB_API}/repos/${owner}/${encodeURIComponent(project.repoName)}`,
     {
       headers: await githubAuthHeaders(),
       next: { revalidate: 3600 },
@@ -321,7 +335,7 @@ export async function enrichProjectActivity(
   if (repoRes.ok) {
     const repo = (await repoRes.json()) as GitHubRepo;
     const { ci } = await fetchLatestCiState(
-      GITHUB_ACCOUNT_LOGIN,
+      owner,
       project.repoName,
       repo.default_branch || "main"
     );

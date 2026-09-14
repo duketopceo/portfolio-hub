@@ -56,7 +56,7 @@ export default function BdhDossier() {
         <em>launch-gate evaluation playbook</em>, not a benchmark or live score.
       </p>
 
-      <div className="openrouter-card__meta" style={{ marginTop: "1rem" }}>
+      <dl className="openrouter-card__meta" style={{ marginTop: "1rem" }}>
         <div>
           <dt>Claims (from the paper)</dt>
           <dd>
@@ -72,7 +72,7 @@ export default function BdhDossier() {
           <dd style={{ color: "var(--color-text-faint)" }}>{BDH.readiness}</dd>
         </div>
         <div>
-          <dt>How I&apos;d gate it if it landed</dt>
+          <dt>How I&rsquo;d gate it if it landed</dt>
           <dd>
             <ol className="bdh-list">
               {BDH.gatingPlaybook.map((s) => (
@@ -81,7 +81,7 @@ export default function BdhDossier() {
             </ol>
           </dd>
         </div>
-      </div>
+      </dl>
 
       <footer className="openrouter-card__footer" style={{ marginTop: "1rem" }}>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>

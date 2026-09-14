@@ -1,7 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
+
+const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
+  ssr: false,
+});
+const StarfieldScene = dynamic(
+  () => import("@/components/scene/StarfieldScene"),
+  { ssr: false }
+);
 
 export function SiteFooter() {
   const pathname = usePathname();
@@ -14,11 +23,16 @@ export function SiteBackground() {
   if (pathname?.startsWith("/podcast")) return null;
   return (
     <div className="cosmic-bg" aria-hidden="true">
-      <div className="cosmic-bg__nebula" />
-      <div className="cosmic-bg__nebula cosmic-bg__nebula--accent" />
-      <div className="cosmic-bg__stars cosmic-bg__stars--near" />
-      <div className="cosmic-bg__stars cosmic-bg__stars--mid" />
+      <SceneFrame
+        className="cosmic-bg__field"
+        camera={{ position: [0, 0, 42], fov: 50 }}
+      >
+        <StarfieldScene />
+      </SceneFrame>
+      <div className="cosmic-bg__grid" />
       <div className="cosmic-bg__stars cosmic-bg__stars--far" />
+      <div className="cosmic-bg__noise" />
+      <div className="cosmic-bg__vignette" />
     </div>
   );
 }

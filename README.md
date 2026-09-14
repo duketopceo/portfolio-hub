@@ -1,5 +1,9 @@
 # Cosmic Intelligence — portfolio-hub
 
+<p align="center">
+  <img src="docs/assets/social.png" alt="portfolio-hub — cosmic portfolio" width="640" />
+</p>
+
 **Live site:** [luke-the-duke.com](https://luke-the-duke.com)  
 **Repo:** Next.js 16 app that powers Luke Kimball’s personal engineering portfolio.
 
@@ -110,7 +114,19 @@ src/
 
 `GET /api/repos` — JSON list of enriched catalog projects (ISR).  
 `GET /api/activity` — homepage activity showcase.  
-`GET /api/health` — Railway health probe.
+`GET /api/activity/[slug]` — per-project activity timeline.  
+`GET /api/github/pulls` — open pull requests across the curated repos.  
+`GET /api/github/repo/[repoName]/summary` — per-repo summary for one curated repo.  
+`GET /api/health` — Railway health probe.  
+`GET /openrouter/api/bakeoff` — committed three-model coding comparison snapshot.
+
+`/api/activity` and `/api/github/repo/[repoName]/summary` currently have no in-app
+consumer — the components that called them were removed with the Star Chart
+redesign. They are kept because they are advertised in `public/llms.txt`; whether
+to retire them is an open product decision, not a cleanup.
+
+The résumé is also served in machine-readable form at `/resume.json` and
+`/resume.md` (see `src/data/resume.ts`).
 
 ---
 

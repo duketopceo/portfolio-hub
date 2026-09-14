@@ -1,5 +1,8 @@
 export interface GitHubRepo {
   name: string;
+  /** Owner login. Required to key repos by owner+name — a name-only key lets a
+   *  same-name repository from another owner replace the configured one. */
+  owner: { login: string };
   description: string | null;
   language: string | null;
   topics: string[];
@@ -69,6 +72,8 @@ export interface PlanetVisualConfig {
 export interface ProjectConfig {
   slug: string;
   repoName: string;
+  /** GitHub owner/org — defaults to the portfolio account login (GITHUB_USER). */
+  repoOwner?: string;
   displayName: string;
   tagline: string;
   description: string;
@@ -89,7 +94,7 @@ export interface ProjectConfig {
   demoVideoUrl?: string;
   /** If true, liveUrl can be iframed on the detail page */
   embeddable?: boolean;
-  /** If true, the demo subdomain is offline — show ProjectPreview instead of iframe */
+  /** If true, the demo subdomain is offline — show a static preview instead of iframe */
   demoOffline?: boolean;
   subdomain?: string;
   techStack: string[];

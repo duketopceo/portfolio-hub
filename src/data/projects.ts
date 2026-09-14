@@ -379,7 +379,6 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "finance-frenzy",
     repoName: "FinanceFrenzy",
-    siteOnly: true,
     displayName: "Finance Frenzy",
     tagline:
       "Finance simulation game — Hackathon winner (Best Finance Hack & Top 6)",
@@ -403,7 +402,6 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "nem-stock-pitch",
     repoName: "nem-stock-pitch",
-    siteOnly: true,
     displayName: "NEM Stock Pitch",
     tagline:
       "Institutional-grade equity research — LONG Newmont, built entirely with Perplexity Computer",
@@ -500,7 +498,6 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "nanoclaw",
     repoName: "nanoclaw",
-    siteOnly: true,
     displayName: "NanoClaw",
     tagline:
       "Lightweight agentic AI container that connects to WhatsApp, Telegram, Slack, Discord, Gmail",
@@ -680,12 +677,13 @@ export const projectConfigs: ProjectConfig[] = [
   },
   {
     slug: "stratum-hq",
-    repoName: "stratumhq",
-    siteOnly: true,
+    repoName: "stratum-engine",
+    repoOwner: "Herzog-LLC",
     displayName: "Stratum Engine",
-    tagline: "Stratum product engine — shell and roadmap at stratumhq.app",
+    tagline:
+      "AI-powered operations backend for home service contractors — live at stratumhq.app",
     description:
-      "Stratum Engine is the umbrella product surface for related apps and infrastructure. The public shell at stratumhq.app may be offline; this dossier stays honest about availability while the roadmap evolves.",
+      "Stratum Engine is the operations backend for home service contractors — AI-powered intake, dispatch, and workflow. The public shell lives at stratumhq.app; source stays private under Herzog-LLC.",
     category: "apps",
     type: "platform",
     featured: true,
@@ -699,8 +697,9 @@ export const projectConfigs: ProjectConfig[] = [
     },
     embeddable: false,
     techStack: ["TypeScript", "Next.js", "Docker"],
-    private: false,
+    private: true,
     highlights: [
+      "AI-powered operations backend for home service contractors",
       "Product engine and brand shell for the Stratum surface",
       "Roadmap-aligned infrastructure story",
     ],

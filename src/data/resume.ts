@@ -1,8 +1,10 @@
 // Single source of truth for Luke Kimball's resume / professional data.
 // Consumed by:
-//   - src/app/resume/page.tsx   (semantic HTML + JSON-LD for crawlers/AI)
-//   - scripts/gen-resume-static.mjs  (writes public/resume.json + public/resume.md)
-// Keep this in sync with build_resume.js (PDF) when content changes.
+//   - src/app/resume/page.tsx        (semantic HTML + JSON-LD for crawlers/AI)
+//   - src/app/resume.json/route.ts   (JSON Resume output)
+//   - src/app/resume.md/route.ts     (plain-markdown output)
+// public/resume.pdf is a separately produced static artifact with no generator
+// in this repository — update it by hand when this content changes.
 
 export const SITE = "https://luke-the-duke.com";
 
@@ -13,8 +15,10 @@ export const basics = {
     "OpenRouter-Native Multi-Model Routing · Agent Harnesses · Build-Over-Buy Internal Tools",
   summary:
     "OpenRouter-native operator-builder who ships internal agentic tooling instead of buying software built for the masses. Multi-model daily driver: routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model. Forked Agent Zero into a personal, OpenRouter-native harness and designed a tenant-aware agent platform with security and evals built in. Support/GTM fluency from sales, ticketing, CRM, and ops.",
-  phone: "559-789-7214",
-  email: "kimballluke@gmail.com",
+  // Public contact address is an alias routed through Cloudflare Email
+  // Routing (luke-the-duke.com) — never the personal mailbox. No phone:
+  // it is unrotatable and this data is explicitly offered to AI crawlers.
+  email: "hello@luke-the-duke.com",
   url: SITE,
   location: { city: "Provo", region: "UT", countryCode: "US", remote: true },
   profiles: [

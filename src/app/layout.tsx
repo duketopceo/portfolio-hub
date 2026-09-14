@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Exo, JetBrains_Mono } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import { SiteFooter } from "@/components/SiteChrome";
+import WelcomeIntro from "@/components/WelcomeIntro";
+import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 
-const exo = Exo({
+/** Star Chart system: Archivo industrial grotesk (display + body), JetBrains Mono for all meta/labels */
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-exo",
+  variable: "--font-archivo",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
 });
 
-const jetbrains = JetBrains_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  variable: "--font-jbmono",
   display: "swap",
-  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/brand/favicon-16.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-16.png", sizes: "16x16", type: "image/png" },
     ],
     shortcut: "/brand/favicon.ico",
     apple: "/brand/apple-touch-icon.png",
@@ -56,15 +56,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${exo.variable} ${jetbrains.variable} antialiased`}
-        style={{
-          "--font-display": "var(--font-exo)",
-          "--font-body": "var(--font-exo)",
-          "--font-mono": "var(--font-jetbrains)",
-        } as React.CSSProperties}
+        className={`${archivo.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <SiteBackground />
+        <WelcomeIntro />
+
         <Header />
-        <main className="flex-1 relative pt-16">{children}</main>
+        <main className="flex-1 relative animate-page-in">{children}</main>
         <SiteFooter />
       </body>
     </html>

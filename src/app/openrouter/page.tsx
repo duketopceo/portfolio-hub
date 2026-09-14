@@ -17,13 +17,14 @@ export const metadata = {
 export default function OpenRouterPage() {
   return (
     <div className="cosmic-page cosmic-page--shell">
-      <header
-        className="projects-page-header max-w-2xl"
-        style={{ marginBottom: "clamp(1.5rem, 3vw, 2.5rem)" }}
-      >
-        <p className="projects-page-header__eyebrow">OPENROUTER</p>
-        <h1 className="projects-page-header__title">Application demos</h1>
-        <p className="projects-page-header__sub">
+      <header className="reg-page-head max-w-2xl">
+        <div className="reg-page-head__margin" aria-hidden="true">
+          <span>CI / Demo bay</span>
+          <span className="hidden sm:inline">OpenRouter harness</span>
+          <span>Sheet 03</span>
+        </div>
+        <h1 className="reg-page-head__title">Application demos</h1>
+        <p className="reg-page-head__sub" style={{ textTransform: "none", letterSpacing: "0.02em" }}>
           Portfolio viewer for four eval-driven demos mapped to OpenRouter application
           roles — deflection, GTM motion, provider bake-offs, and debate traces. This page
           is <em>not</em> the Python <code>dev_server.py</code> dashboard. Harness source,

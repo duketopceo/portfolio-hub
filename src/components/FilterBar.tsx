@@ -68,7 +68,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
             className={`catalog-view-toggle__btn${mainView === "catalog" ? " catalog-view-toggle__btn--active" : ""}`}
             onClick={() => setMainView("catalog")}
           >
-            Catalog
+            Registry
           </button>
           <button
             type="button"
@@ -161,7 +161,12 @@ export default function FilterBar({ projects }: FilterBarProps) {
                 className="animate-fade-up"
                 style={{ animationDelay: `${i * 40}ms` }}
               >
-                <ProjectCard project={project} />
+                <ProjectCard
+                  project={project}
+                  registryIndex={projects.findIndex(
+                    (p) => p.slug === project.slug
+                  )}
+                />
               </div>
             ))}
           </div>
