@@ -1,5 +1,9 @@
 # Cosmic Intelligence — portfolio-hub
 
+<p align="center">
+  <img src="docs/assets/social.png" alt="portfolio-hub — cosmic portfolio" width="640" />
+</p>
+
 **Live site:** [luke-the-duke.com](https://luke-the-duke.com)  
 **Repo:** Next.js 16 app that powers Luke Kimball’s personal engineering portfolio.
 
