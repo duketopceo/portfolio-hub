@@ -34,6 +34,6 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 
 ### Known caveats
 
-- **Lint status:** `npm run lint` currently exits 0 with warnings only (41 as of 2026-09-12). An older caveat claiming a `react-hooks/set-state-in-effect` error in `SolarSystemNav.tsx` was stale and has been removed.
-- **metadataBase warning:** During `npm run build`, Next.js warns about missing `metadataBase` for social OG images. This is cosmetic and does not affect the build.
+- **Lint status:** `npm run lint` exits 0 with no errors and no warnings (verified 2026-09-13). `public/podcast/app.js` is a minified, page-unreferenced bundle excluded via `globalIgnores` in `eslint.config.mjs`; the other scripts in that directory are hand-authored and linted normally.
+- **`react-hooks/set-state-in-effect` suppression:** `src/components/WelcomeIntro.tsx` disables that rule around its mount effect, with a comment explaining why. The pattern is genuine — the overlay renders nothing on the server and may only read `localStorage` on the client — but rewriting it to the `useSyncExternalStore` hydration idiom is outstanding follow-up work.
 - **Tests:** Vitest covers pure helpers under `src/**/*.test.ts`. App gates remain lint, `npm run build`, and manual browser testing.

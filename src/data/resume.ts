@@ -1,8 +1,10 @@
 // Single source of truth for Luke Kimball's resume / professional data.
 // Consumed by:
-//   - src/app/resume/page.tsx   (semantic HTML + JSON-LD for crawlers/AI)
-//   - scripts/gen-resume-static.mjs  (writes public/resume.json + public/resume.md)
-// Keep this in sync with build_resume.js (PDF) when content changes.
+//   - src/app/resume/page.tsx        (semantic HTML + JSON-LD for crawlers/AI)
+//   - src/app/resume.json/route.ts   (JSON Resume output)
+//   - src/app/resume.md/route.ts     (plain-markdown output)
+// public/resume.pdf is a separately produced static artifact with no generator
+// in this repository — update it by hand when this content changes.
 
 export const SITE = "https://luke-the-duke.com";
 
