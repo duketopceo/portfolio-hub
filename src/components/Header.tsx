@@ -42,7 +42,7 @@ export default function Header() {
             FIELD OPERATION: ACTIVE
           </span>
           <span className="site-header__status-item hidden sm:inline">
-            40.7608°N 111.8910°W
+            PROVO, UT / REMOTE
           </span>
           <span className="site-header__status-item hidden md:inline">
             SECTOR: LDK-01

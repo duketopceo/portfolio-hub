@@ -126,18 +126,18 @@ strips, and drafting title blocks are the signature motifs.
 
 ## Motion & Canvas Layers
 
-WebGL/canvas layers are progressive enhancement via
-`@designcodeio/threeui` — each is a client component that skips mounting
-under `prefers-reduced-motion`:
+WebGL/canvas layers are progressive enhancement. Every layer skips mounting
+under `prefers-reduced-motion` and leaves meaning-bearing HTML intact:
 
-| Piece | Component | Where |
-|---|---|---|
-| Living constellation field | `StarChartField` (`constellation-field`) | Site background, under grid/noise/vignette |
-| Surveyed terrain | `SectorTerrain` (`topo-field`) | `/projects` sector map |
-| Surveyed body | `OrbitalBody` (`orbital-sphere`) | Home primary-orbit center |
-| Telemetry arcs | `DossierArcField` (`predictive-arc`) | Dossier hero band |
-| Hyperspace streaks | `WarpFieldLayer` (`warp-field/hyperspace`) | 404 plate |
-| Uplink loader | `UplinkLoader` | Route transitions (`loading.tsx`) |
+| Piece | Component | Implementation | Where |
+|---|---|---|---|
+| Living starfield | `StarfieldScene` | R3F via `SceneFrame` | Site background, under grid/noise/vignette |
+| Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Home FIG.01 |
+| Secondary belt | `BeltScene` | R3F via `SceneFrame` | Home FIG.02 |
+| Surveyed terrain | `SectorTerrain` | ThreeUI `constellation-field` / `topo-field` | `/projects` sector map |
+| Telemetry arcs | `DossierArcField` | ThreeUI `predictive-arc` | Dossier hero band |
+| Hyperspace streaks | `WarpFieldLayer` | ThreeUI `warp-field/hyperspace` | 404 plate |
+| Uplink loader | `UplinkLoader` | ThreeUI | Route transitions (`loading.tsx`) |
 
 Canvas layers never carry meaning — semantic HTML, labels, and keyboard
 paths work with every layer disabled.

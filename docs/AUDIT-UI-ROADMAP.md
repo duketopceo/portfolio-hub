@@ -55,9 +55,9 @@ Create a global error boundary that replaces the root layout on catastrophic fai
 
 ### 2a. Extract `catColors` to shared module
 
-**Status: Done** — `catColors` is exported from `src/lib/utils.ts` and imported by the components that render category colors.
+**Status: Done** — `catColors` is exported from [[src/lib/utils.ts]] and imported by the components that render category colors.
 
-The same category-to-color mapping was duplicated across five files. The list below named `QuadrantGraph.tsx`, which has since been deleted; the shared map now lives in `src/lib/utils.ts`.
+The same category-to-color mapping was duplicated across five files. The list below named `QuadrantGraph.tsx`, which has since been deleted; the shared map now lives in [[src/lib/utils.ts]].
 
 **Fix:**
 1. Create export `catColors` in `src/lib/utils.ts` (or `src/data/projects.ts`)

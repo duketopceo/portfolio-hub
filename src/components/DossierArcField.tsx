@@ -1,7 +1,16 @@
 "use client";
 
-import { PredictiveArcCanvas } from "@designcodeio/threeui/components/PredictiveArcCanvas";
+import dynamic from "next/dynamic";
+import DecorativeEffectBoundary from "@/components/DecorativeEffectBoundary";
 import { useMediaQuery } from "@/lib/use-media-query";
+
+const PredictiveArcCanvas = dynamic(
+  () =>
+    import("@designcodeio/threeui/components/PredictiveArcCanvas").then(
+      ({ PredictiveArcCanvas }) => PredictiveArcCanvas
+    ),
+  { ssr: false, loading: () => null }
+);
 
 /**
  * Trajectory arcs behind the dossier hero — survey-chart telemetry lines.
@@ -13,18 +22,20 @@ export default function DossierArcField() {
   if (!enabled) return null;
 
   return (
-    <div className="dossier-hero__arcs" aria-hidden="true">
-      <PredictiveArcCanvas
-        variant="predictive"
-        mode="dark"
-        speed={0.6}
-        spacing={22}
-        dotSize={1.6}
-        archHeight={0.9}
-        thickness={1.2}
-        brightness={1.15}
-        saturation={0.8}
-      />
-    </div>
+    <DecorativeEffectBoundary>
+      <div className="dossier-hero__arcs" aria-hidden="true">
+        <PredictiveArcCanvas
+          variant="predictive"
+          mode="dark"
+          speed={0.6}
+          spacing={22}
+          dotSize={1.6}
+          archHeight={0.9}
+          thickness={1.2}
+          brightness={1.15}
+          saturation={0.8}
+        />
+      </div>
+    </DecorativeEffectBoundary>
   );
 }

@@ -25,9 +25,6 @@ const eslintConfig = defineConfig([
         "warn",
         {
           argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-          destructuredArrayIgnorePattern: "^_",
         },
       ],
     },

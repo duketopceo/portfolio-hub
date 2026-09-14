@@ -248,9 +248,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
 
       const owner = withDeploy.repoOwner ?? GITHUB_ACCOUNT_LOGIN;
       const repo =
-        owner === GITHUB_ACCOUNT_LOGIN
-          ? repoMap.get(`${owner}/${withDeploy.repoName}`.toLowerCase()) || null
-          : null;
+        repoMap.get(`${owner}/${withDeploy.repoName}`.toLowerCase()) || null;
       const githubUrl = publicGithubUrl(
         withDeploy.private || repo?.private === true,
         withDeploy.repoName,

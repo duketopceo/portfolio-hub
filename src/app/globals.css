@@ -2739,9 +2739,8 @@ body {
 }
 
 @keyframes solar-orbit-shimmer {
-  0%   { stroke-opacity: 0.35; stroke-dashoffset: 0; }
-  50%  { stroke-opacity: 1; stroke-dashoffset: 24; }
-  100% { stroke-opacity: 0.35; stroke-dashoffset: 0; }
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
 }
 
 /* ── R3F orbital scene — canvas layer inside the stage ── */
@@ -3057,9 +3056,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .solar-orbit-line--a,
-  .solar-orbit-line--b,
-  .solar-orbit-line--c {
+  .solar-orbit-line {
     animation: none;
     stroke-opacity: 0.55;
   }
@@ -5433,9 +5430,7 @@ body {
    ═══════════════════════════════════════════════════════ */
 
 .site-header {
-  background: color-mix(in srgb, var(--color-bg) 82%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: var(--color-bg);
 }
 
 /* Status strip — the field-operations line */

@@ -34,7 +34,7 @@ export default async function Home() {
           {/* Sheet margins — registry marginalia */}
           <div className="sheet__margins" aria-hidden="true">
             <span>CI — ORBITAL REGISTRY</span>
-            <span className="hidden sm:inline">40.7608°N — 111.8910°W</span>
+            <span className="hidden sm:inline">PROVO, UT — REMOTE US</span>
             <span className="hidden md:inline">SURVEY 2026.09</span>
             <span>SHEET 01 / 01</span>
           </div>

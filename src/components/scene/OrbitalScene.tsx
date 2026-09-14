@@ -90,7 +90,7 @@ function FocusBeacon({ target }: { target: THREE.Vector3 }) {
     }
   });
   return (
-    <group ref={ref} position={target}>
+    <group ref={ref}>
       <mesh rotation-x={-Math.PI / 2}>
         <ringGeometry args={[0.9, 1.05, 48]} />
         <meshBasicMaterial color={TEAL} transparent opacity={0.55} side={THREE.DoubleSide} />

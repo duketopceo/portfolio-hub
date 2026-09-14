@@ -102,7 +102,7 @@ export default function Footer() {
           <span className="cosmic-footer__bottom-sep" aria-hidden>
             ·
           </span>
-          <span>40.7608°N 111.8910°W</span>
+          <span>Provo, UT · Remote, US</span>
         </div>
       </div>
     </footer>
