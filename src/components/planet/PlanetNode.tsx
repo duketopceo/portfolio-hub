@@ -136,10 +136,10 @@ export function PlanetNode({
           <span className="planet-node__name">
             {label}
             {project.private && (
-              <LockIcon
-                className="inline w-2.5 h-2.5 ml-0.5 opacity-60"
-                aria-label="Private"
-              />
+              <>
+                <LockIcon className="inline w-2.5 h-2.5 ml-0.5 opacity-60" />
+                <span className="sr-only">Private</span>
+              </>
             )}
           </span>
         </span>

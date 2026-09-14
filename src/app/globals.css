@@ -19,7 +19,7 @@
   /* ── Text — starlight scale ────────────── */
   --color-text: #E9ECEF;
   --color-text-muted: #9AA3AC;
-  --color-text-faint: #5B6570;
+  --color-text-faint: #7E8A96;
 
   /* ── Signal teal — live + interactive only ─ */
   --color-accent: #2DD4BF;
@@ -3358,7 +3358,7 @@ body {
   line-height: 1;
   letter-spacing: -0.03em;
   color: transparent;
-  -webkit-text-stroke: 1px var(--color-border-strong);
+  -webkit-text-stroke: 1px var(--color-text-muted);
   margin-bottom: 0.25rem;
 }
 

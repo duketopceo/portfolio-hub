@@ -5,7 +5,7 @@ import ConstellationNav from "@/components/ConstellationNav";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Projects — Catalog",
+  title: "Projects — System Registry",
   description:
     "Browse all projects: AI automation, trading systems, OSINT platforms, infrastructure, and web apps.",
 };
