@@ -150,7 +150,12 @@ export default function SceneFrame({
               frameloop={inView ? "always" : "never"}
               dpr={dpr}
               camera={camera}
-              gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}
+              gl={{
+                antialias: true,
+                alpha: true,
+                powerPreference: "low-power",
+                preserveDrawingBuffer: true,
+              }}
               style={{ pointerEvents: "none" }}
               eventSource={hostEl ?? undefined}
               onCreated={onCreated}

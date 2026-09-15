@@ -30,6 +30,13 @@ import {
   DossierBackendSection,
 } from "@/components/dossier";
 import { getProjectActivityTimeline } from "@/lib/github-activity";
+import {
+  EvidencePanel,
+  MediaFrame,
+  PageShell,
+  StatusMark,
+  SurveyPlate,
+} from "@/components/design";
 
 export const revalidate = 3600;
 
@@ -118,15 +125,14 @@ export default async function ProjectDetailPage({
       />
 
       {project.demoVideoUrl && !project.private && (
-        <section
-          className="cosmic-page"
-          style={{ paddingTop: "clamp(1.5rem, 3vw, 2.5rem)" }}
-        >
-          <ProjectDemoVideo
-            src={project.demoVideoUrl}
-            title={project.displayName}
-          />
-        </section>
+        <PageShell className="dossier-page__demo">
+          <MediaFrame>
+            <ProjectDemoVideo
+              src={project.demoVideoUrl}
+              title={project.displayName}
+            />
+          </MediaFrame>
+        </PageShell>
       )}
 
       <DossierActivityTimeline
@@ -215,43 +221,52 @@ export default async function ProjectDetailPage({
           )}
 
           {project.private && (
-            <div className="dossier-page__private">
+            <SurveyPlate
+              className="dossier-page__private"
+              metadata={["Restricted survey", "Source withheld"]}
+            >
               <div className="dossier-classified-banner">
-                Restricted — classified survey file · source withheld
+                <StatusMark tone="restricted">Restricted</StatusMark>
+                <span>Classified survey file · source withheld</span>
               </div>
-
-              {project.businessContext && (
-                <div className="dossier-section">
-                  <div className="dossier-section__label">Business Context</div>
-                  <p className="dossier-section__body">
-                    {project.businessContext}
-                  </p>
-                </div>
-              )}
-
-              {project.scopeAndScale && (
-                <div className="dossier-section">
-                  <div className="dossier-section__label">Scope &amp; Scale</div>
-                  <p className="dossier-section__body">
-                    {project.scopeAndScale}
-                  </p>
-                </div>
-              )}
-
-              {project.engineeringDecisions &&
-                project.engineeringDecisions.length > 0 && (
+              <EvidencePanel
+                eyebrow="Curated evidence"
+                title="Publish-safe project record"
+                description="Approved context, ownership, architecture, decisions, and outcomes without exposing private source."
+              >
+                {project.businessContext && (
                   <div className="dossier-section">
-                    <div className="dossier-section__label">
-                      Engineering Decisions
-                    </div>
-                    {project.engineeringDecisions.map((d, i) => (
-                      <p key={i} className="dossier-section__body">
-                        {d}
-                      </p>
-                    ))}
+                    <div className="dossier-section__label">Business Context</div>
+                    <p className="dossier-section__body">
+                      {project.businessContext}
+                    </p>
                   </div>
                 )}
-            </div>
+
+                {project.scopeAndScale && (
+                  <div className="dossier-section">
+                    <div className="dossier-section__label">Scope &amp; Scale</div>
+                    <p className="dossier-section__body">
+                      {project.scopeAndScale}
+                    </p>
+                  </div>
+                )}
+
+                {project.engineeringDecisions &&
+                  project.engineeringDecisions.length > 0 && (
+                    <div className="dossier-section">
+                      <div className="dossier-section__label">
+                        Engineering Decisions
+                      </div>
+                      {project.engineeringDecisions.map((d, i) => (
+                        <p key={i} className="dossier-section__body">
+                          {d}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+              </EvidencePanel>
+            </SurveyPlate>
           )}
 
           {project.highlights && project.highlights.length > 0 && (
@@ -342,20 +357,15 @@ export default async function ProjectDetailPage({
       </div>
 
       {useIframeEmbed && embedUrl && (
-        <section className="cosmic-page dossier-page__demo">
-          <div className="demo-frame">
-            <div className="demo-frame__header">
-              <span className="demo-frame__url">
-                {embedUrl.replace(/^https?:\/\//, "")}
-              </span>
-            </div>
+        <PageShell className="dossier-page__demo">
+          <MediaFrame caption={embedUrl.replace(/^https?:\/\//, "")}>
             <DemoEmbed
               url={embedUrl}
               title={project.displayName}
               embeddable
             />
-          </div>
-        </section>
+          </MediaFrame>
+        </PageShell>
       )}
 
       <DossierFooterNav prev={prevProject} next={nextProject} />

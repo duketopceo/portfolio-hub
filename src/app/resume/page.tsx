@@ -3,9 +3,14 @@ import { basics } from "@/data/resume";
 import { ResumeDocument } from "@/components/ResumeDocument";
 import ProjectDemoVideo from "@/components/ProjectDemoVideo";
 import { skills, work } from "@/data/resume";
-
-const OPENROUTER_DEMO_VIDEO =
-  "https://pub-9e45e5f7be6f4c9989852b4989e83a23.r2.dev/demos/openrouter-demos-walkthrough.mp4";
+import { OPENROUTER_DEMO_VIDEO_URL } from "@/data/projects";
+import {
+  EvidencePanel,
+  MediaFrame,
+  MetricRow,
+  PageShell,
+  StatusMark,
+} from "@/components/design";
 
 export const metadata = {
   title: "Résumé — Luke Kimball",
@@ -39,34 +44,46 @@ const jsonLd = {
 
 export default function ResumePage() {
   return (
-    <div className="cosmic-page cosmic-page--shell resume-page">
+    <PageShell className="resume-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section
-        className="max-w-2xl mx-auto mb-10 space-y-3"
-        aria-labelledby="resume-openrouter-demo"
+      <EvidencePanel
+        className="mb-10"
+        labelledBy="resume-openrouter-demo"
+        eyebrow="Featured evidence"
+        title={<span id="resume-openrouter-demo">OpenRouter demos</span>}
+        description={
+          <>
+            Four RouteKit harnesses on OpenRouter — deflection, GTM motion,
+            provider bakeoff, and Caesar debate. Offline pytest fixtures; live
+            runs with an API key.{" "}
+            <Link href="/projects/openrouter" className="detail-nav-link">
+              Full dossier →
+            </Link>
+          </>
+        }
       >
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="resume-openrouter-demo" className="detail-section-label mb-0">
-            Featured — OpenRouter Demos
-          </h2>
-          <Link href="/projects/openrouter" className="detail-nav-link text-sm">
-            Full dossier →
-          </Link>
-        </div>
-        <p
-          className="cosmic-readable"
-          style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)" }}
-        >
-          Four RouteKit harnesses on OpenRouter — deflection, GTM motion, provider
-          bakeoff, and Caesar debate. Offline pytest fixtures; live runs with an API
-          key.
-        </p>
-        <ProjectDemoVideo src={OPENROUTER_DEMO_VIDEO} title="OpenRouter Demos" />
-      </section>
+        <dl>
+          <MetricRow label="Harnesses" value="4 RouteKit evaluations" />
+          <MetricRow
+            label="Mode"
+            value="Fixture-backed offline evidence; live inference requires a key"
+          />
+          <MetricRow
+            label="Status"
+            value={<StatusMark tone="interactive">Inspectable demo</StatusMark>}
+          />
+        </dl>
+        <MediaFrame>
+          <ProjectDemoVideo
+            src={OPENROUTER_DEMO_VIDEO_URL}
+            title="OpenRouter Demos"
+          />
+        </MediaFrame>
+      </EvidencePanel>
       <ResumeDocument />
-    </div>
+    </PageShell>
   );
 }

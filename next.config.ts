@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
+import { fileURLToPath } from "node:url";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
+  // Keep worktree builds rooted here when the parent checkout also has a lockfile.
+  turbopack: { root: fileURLToPath(new URL(".", import.meta.url)) },
+
   // three.js stack needs transpilation under Turbopack
   transpilePackages: ["three", "@react-three/fiber", "@react-three/drei"],
 

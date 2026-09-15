@@ -1,3 +1,12 @@
+import {
+  MetricRow,
+  PageHeader,
+  PageShell,
+  StatusMark,
+  SurveyPlate,
+  TransmissionClose,
+} from "@/components/design";
+
 export const metadata = {
   title: "Contact",
   description:
@@ -6,34 +15,32 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="cosmic-page cosmic-page--shell contact-page">
-      <header className="reg-page-head contact-page__header">
-        <div className="reg-page-head__margin" aria-hidden="true">
-          <span>CI / Uplink</span>
-          <span className="hidden sm:inline">Provo, UT — remote US</span>
-          <span>Sheet 06</span>
-        </div>
-        <h1 className="reg-page-head__title">Open channel</h1>
-        <p className="contact-page__lede">
-          Email is the hire path. GitHub and LinkedIn are the public work.
-        </p>
-      </header>
+    <PageShell measure="readable">
+      <PageHeader
+        metadata={[
+          { content: "CI / Uplink" },
+          { content: "Provo, UT — remote US", className: "hidden sm:inline" },
+          { content: <StatusMark tone="live">Routed alias</StatusMark> },
+        ]}
+        eyebrow="Transmission"
+        title="Open channel"
+        lede="Email is the hire path. GitHub and LinkedIn are the public work."
+      />
 
-      <div className="contact-page__grid">
-        <div className="contact-page__card">
-          <h2>Email</h2>
-          <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
-            hello@luke-the-duke.com
-          </a>
-        </div>
-        <div className="contact-page__card">
-          <h2>Location</h2>
-          <p>Provo, UT · Remote, US</p>
-        </div>
-        <div className="contact-page__card">
-          <h2>Links</h2>
-          <ul>
-            <li>
+      <SurveyPlate metadata={["Contact registry", "Verified route"]}>
+        <dl>
+          <MetricRow
+            label="Email"
+            value={
+              <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
+                hello@luke-the-duke.com
+              </a>
+            }
+          />
+          <MetricRow label="Location" value="Provo, UT · Remote, US" />
+          <MetricRow
+            label="GitHub"
+            value={
               <a
                 href="https://github.com/duketopceo"
                 target="_blank"
@@ -42,8 +49,11 @@ export default function ContactPage() {
               >
                 github.com/duketopceo ↗
               </a>
-            </li>
-            <li>
+            }
+          />
+          <MetricRow
+            label="LinkedIn"
+            value={
               <a
                 href="https://linkedin.com/in/lukekimball2789"
                 target="_blank"
@@ -52,15 +62,30 @@ export default function ContactPage() {
               >
                 linkedin.com/in/lukekimball2789 ↗
               </a>
-            </li>
-            <li>
+            }
+          />
+          <MetricRow
+            label="Résumé"
+            value={
               <a href="/resume" className="detail-nav-link">
                 Web résumé →
               </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+            }
+          />
+        </dl>
+      </SurveyPlate>
+
+      <TransmissionClose
+        title="Best next step"
+        actions={
+          <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
+            Start with email
+          </a>
+        }
+      >
+        Send the role, the problem to solve, or the project you want to inspect.
+        A short note is enough; the dossiers carry the evidence.
+      </TransmissionClose>
+    </PageShell>
   );
 }

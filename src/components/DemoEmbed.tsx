@@ -34,7 +34,7 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
               <span className="w-2 h-2 rounded-full" style={{ background: "rgba(39,201,63,0.6)" }} />
             </div>
             <div
-              className="ml-2 px-2.5 py-0.5 rounded-md truncate max-w-xs"
+              className="ml-2 px-2.5 py-0.5 rounded-sm truncate max-w-xs"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "var(--text-xs)",
@@ -50,7 +50,7 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 px-2 py-0.5 rounded-md transition-colors"
+            className="flex items-center gap-1 px-2 py-0.5 rounded-sm transition-colors"
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "var(--text-xs)",
@@ -72,7 +72,7 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
               style={{ background: "var(--color-surface)" }}
             >
               <div
-                className="w-12 h-12 rounded-lg flex items-center justify-center"
+                className="w-12 h-12 rounded flex items-center justify-center"
                 style={{
                   background: "var(--color-accent-muted)",
                   border: "1px solid var(--glass-border)",
@@ -161,7 +161,7 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
       style={{ textDecoration: "none" }}
     >
       <div
-        className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center"
+        className="w-10 h-10 rounded mx-auto mb-3 flex items-center justify-center"
         style={{
           background: "var(--color-accent-muted)",
           border: "1px solid var(--glass-border)",
@@ -190,7 +190,7 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
         Opens in a new tab
       </p>
       <span
-        className="inline-flex items-center gap-1 px-3 py-1 rounded-md"
+        className="inline-flex items-center gap-1 px-3 py-1 rounded-sm"
         style={{
           fontFamily: "var(--font-mono)",
           fontSize: "var(--text-xs)",

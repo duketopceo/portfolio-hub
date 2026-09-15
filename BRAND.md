@@ -102,8 +102,47 @@ Hover states use a 1px teal inset ring (`--glass-shadow-hover`), not glow.
 
 Rules:
 - Headlines: Archivo, heavy weight, tight tracking, uppercase-capable
-- Marginalia/labels/registry IDs: JetBrains Mono, ALL CAPS, `letter-spacing: 0.14–0.2em`, `9–10px`
+- Marginalia/labels/registry IDs: JetBrains Mono, ALL CAPS, `letter-spacing: 0.14–0.2em`, `11–12px`
+- Body copy: `16–18px`, `line-height: 1.6–1.75`, measure `58–70ch`
+- Meaningful UI copy and controls: minimum `12px`
 - Mono inline "chips" for handles, paths, and technical strings inside body copy
+
+---
+
+## Page families
+
+Every route uses one of six compositions; no page is a generic max-width div
+with unrelated cards.
+
+| Family | Routes | Role |
+|---|---|---|
+| Poster | `/`, non-interactive flagship landings | Introduce, orient, and route |
+| Registry | `/projects`, `/now` | Scan, filter, and compare systems or transmissions |
+| Dossier | `/projects/[slug]`, `/resume` | Prove ownership, architecture, decisions, evidence, and outcome |
+| Transmission | `/about`, `/hire`, `/contact` | One editorial message and one conversion goal |
+| Mission briefing | `/openrouter`, interactive job demos | Scenario, controls, output, evaluation, and limitations |
+| System state | loading, empty, error, offline, 404 | Explain state and recovery without blocking comprehension |
+
+## Layout and spacing
+
+- One page rail: fluid `16–48px` horizontal inset, maximum `1440px`
+- Reading measure: `58–70ch`; evidence surfaces may use the full rail
+- 4px spacing foundation: `4/8` micro, `12/16` controls, `24/32` components,
+  `48/64` sections, `96/128` major transitions
+- Mobile compression preserves hierarchy rather than simply removing space
+- Prefer rows, tables, diagrams, and editorial groups over repeated cards
+
+## Evidence standard
+
+Every featured dossier answers in order: what it is, why it exists, what Luke
+owned, what was difficult, system shape, decisions and tradeoffs, inspectable
+proof, outcome/status, and the next action.
+
+Private projects use curated, publish-safe evidence packages. They may disclose
+purpose, approved context, ownership, sanitized architecture, technology,
+decisions, safe scale ranges, outcomes, media, and the reason source remains
+private. Raw private source, credentials, client records, internal hosts,
+account data, and unapproved claims are never published or indexed.
 
 ---
 

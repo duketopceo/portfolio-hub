@@ -3,10 +3,16 @@ import {
   openRouterDemos,
   OPENROUTER_DEMOS_REPO_URL,
 } from "@/data/openrouter-demos";
-
-const KURULTAI_REPO_URL = "https://github.com/duketopceo/kurultai";
 import OpenRouterDashboard from "./components/OpenRouterDashboard";
 import BdhDossier from "./components/BdhDossier";
+import {
+  EvidencePanel,
+  PageHeader,
+  PageShell,
+  SectionHeading,
+} from "@/components/design";
+
+const KURULTAI_REPO_URL = "https://github.com/duketopceo/kurultai";
 
 export const metadata = {
   title: "OpenRouter Applications",
@@ -16,61 +22,61 @@ export const metadata = {
 
 export default function OpenRouterPage() {
   return (
-    <div className="cosmic-page cosmic-page--shell">
-      <header className="reg-page-head max-w-2xl">
-        <div className="reg-page-head__margin" aria-hidden="true">
-          <span>CI / Demo bay</span>
-          <span className="hidden sm:inline">OpenRouter harness</span>
-          <span>Sheet 03</span>
-        </div>
-        <h1 className="reg-page-head__title">Application demos</h1>
-        <p className="reg-page-head__sub" style={{ textTransform: "none", letterSpacing: "0.02em" }}>
-          Portfolio viewer for four eval-driven demos mapped to OpenRouter application
-          roles — deflection, GTM motion, provider bake-offs, and debate traces. This page
-          is <em>not</em> the Python <code>dev_server.py</code> dashboard. Harness source,
-          offline pytest, and the local run UI live in{" "}
-          <a
-            href={OPENROUTER_DEMOS_REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="detail-nav-link"
-          >
-            github.com/duketopceo/openrouter-demos
-          </a>{" "}
-          (<code>python3 dev_server.py</code> →{" "}
-          <a
-            href="http://localhost:8080"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="detail-nav-link"
-          >
-            localhost:8080
-          </a>
-          ). Offline pytest is green on fixtures; live evals need{" "}
-          <code>OPENROUTER_API_KEY</code>.
-        </p>
-      </header>
+    <PageShell>
+      <PageHeader
+        metadata={[
+          { content: "CI / Demo bay" },
+          { content: "OpenRouter harness", className: "hidden sm:inline" },
+          { content: "Sheet 03" },
+        ]}
+        title="Application demos"
+        lede={
+          <>
+            Portfolio viewer for four eval-driven demos mapped to OpenRouter
+            application roles — deflection, GTM motion, provider bake-offs, and
+            debate traces. This page is <em>not</em> the Python{" "}
+            <code>dev_server.py</code> dashboard. Harness source, offline pytest,
+            and the local run UI live in{" "}
+            <a
+              href={OPENROUTER_DEMOS_REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="detail-nav-link"
+            >
+              github.com/duketopceo/openrouter-demos
+            </a>{" "}
+            (<code>python3 dev_server.py</code> →{" "}
+            <a
+              href="http://localhost:8080"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="detail-nav-link"
+            >
+              localhost:8080
+            </a>
+            ). Offline pytest is green on fixtures; live evals need{" "}
+            <code>OPENROUTER_API_KEY</code>.
+          </>
+        }
+      />
 
       {/* Portfolio viewer: baked JSON snapshot + optional session-key live smoke test */}
       <OpenRouterDashboard />
 
-      <section className="openrouter-section" aria-labelledby="openrouter-demos-heading">
-        <h2 id="openrouter-demos-heading">The job packet</h2>
-        <p
-          className="muted"
-          style={{ color: "var(--color-text-muted)", fontSize: 14, marginBottom: "1.25rem" }}
-        >
-          Four role-aligned demos — Deflect, Motion, Bakeoff, Caesar — with
-          fixture evals and honest offline status.
-        </p>
-
+      <EvidencePanel
+        className="openrouter-section"
+        labelledBy="openrouter-demos-heading"
+        eyebrow="Mission packet"
+        title={<span id="openrouter-demos-heading">The job packet</span>}
+        description="Four role-aligned demos — Deflect, Motion, Bakeoff, Caesar — with fixture evals and honest offline status."
+      >
         <div className="openrouter-grid" role="list">
           {openRouterDemos.map((demo) => (
             <article
               key={demo.slug}
               className="openrouter-card"
               role="listitem"
-              style={{ "--card-accent": "#2DD4BF" } as React.CSSProperties}
+              style={{ "--card-accent": "var(--color-accent)" } as React.CSSProperties}
             >
               <div className="openrouter-card__head">
                 <h3 className="openrouter-card__title">{demo.name}</h3>
@@ -143,12 +149,16 @@ export default function OpenRouterPage() {
             </Link>
           </span>
         </p>
-      </section>
+      </EvidencePanel>
 
       {/* BDH research dossier — secondary “also on my radar” */}
       <BdhDossier />
 
       <section className="openrouter-footer cosmic-readable max-w-2xl">
+        <SectionHeading
+          eyebrow="Limitations"
+          title="What this page does not claim"
+        />
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.7 }}>
           This page is a portfolio viewer — it surfaces fixture status, a baked coding
           comparison snapshot, and an optional live smoke test. It does not replace the
@@ -183,6 +193,6 @@ export default function OpenRouterPage() {
           </Link>
         </p>
       </section>
-    </div>
+    </PageShell>
   );
 }

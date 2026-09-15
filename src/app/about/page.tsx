@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageHeader, PageShell, TransmissionClose } from "@/components/design";
 
 export const metadata = {
   title: "About",
@@ -6,22 +7,21 @@ export const metadata = {
     "Luke Kimball — OpenRouter-native systems builder in Provo, UT. Cosmic Intelligence portfolio at luke-the-duke.com.",
 };
 
-const externalLink = "detail-nav-link";
+const navLinkClass = "detail-nav-link";
 
 export default function AboutPage() {
   return (
-    <div className="cosmic-page cosmic-page--shell">
-      <header className="reg-page-head max-w-xl">
-        <div className="reg-page-head__margin" aria-hidden="true">
-          <span>CI / Operator file</span>
-          <span className="hidden sm:inline">Provo, UT</span>
-          <span>Sheet 05</span>
-        </div>
-        <h1 className="reg-page-head__title">Luke Kimball</h1>
-        <p className="reg-page-head__sub">
-          OpenRouter-native systems builder · Provo, UT
-        </p>
-      </header>
+    <PageShell measure="readable">
+      <PageHeader
+        metadata={[
+          { content: "CI / Operator file" },
+          { content: "Provo, UT", className: "hidden sm:inline" },
+          { content: "Sheet 05" },
+        ]}
+        eyebrow="Transmission"
+        title="Luke Kimball"
+        lede="OpenRouter-native systems builder · Provo, UT"
+      />
 
       <div className="cosmic-readable space-y-5">
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.75 }}>
@@ -42,7 +42,7 @@ export default function AboutPage() {
             href="https://github.com/duketopceo"
             target="_blank"
             rel="noopener noreferrer"
-            className={externalLink}
+            className={navLinkClass}
           >
             duketopceo
           </a>
@@ -50,7 +50,7 @@ export default function AboutPage() {
         </p>
 
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.75 }}>
-          <Link href="/" className={externalLink}>
+          <Link href="/" className={navLinkClass}>
             Cosmic Intelligence
           </Link>{" "}
           at luke-the-duke.com is the public map: five featured worlds in the
@@ -59,49 +59,48 @@ export default function AboutPage() {
           structured, not as a fake “last week only” strip.
         </p>
 
-        <nav
-          className="about-links"
-          aria-label="Where to go next"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.75rem 1.25rem",
-            paddingTop: "0.5rem",
-          }}
+        <TransmissionClose
+          title="Where to go next"
+          actions={
+            <>
+              <Link href="/projects" className={navLinkClass}>
+                Projects →
+              </Link>
+              <Link href="/openrouter" className={navLinkClass}>
+                OpenRouter demos →
+              </Link>
+              <Link href="/resume" className={navLinkClass}>
+                Résumé →
+              </Link>
+              <Link href="/hire" className={navLinkClass}>
+                Hire →
+              </Link>
+              <Link href="/contact" className={navLinkClass}>
+                Contact →
+              </Link>
+              <a
+                href="https://github.com/duketopceo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={navLinkClass}
+              >
+                GitHub ↗
+              </a>
+              <a
+                href="https://linkedin.com/in/lukekimball2789"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={navLinkClass}
+              >
+                LinkedIn ↗
+              </a>
+            </>
+          }
         >
-          <Link href="/projects" className={externalLink}>
-            Projects →
-          </Link>
-          <Link href="/openrouter" className={externalLink}>
-            OpenRouter demos →
-          </Link>
-          <Link href="/resume" className={externalLink}>
-            Résumé →
-          </Link>
-          <Link href="/hire" className={externalLink}>
-            Hire →
-          </Link>
-          <Link href="/contact" className={externalLink}>
-            Contact →
-          </Link>
-          <a
-            href="https://github.com/duketopceo"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={externalLink}
-          >
-            GitHub ↗
-          </a>
-          <a
-            href="https://linkedin.com/in/lukekimball2789"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={externalLink}
-          >
-            LinkedIn ↗
-          </a>
-        </nav>
+          Follow the evidence path: registry, dossier, mission briefing, then
+          contact.
+        </TransmissionClose>
       </div>
-    </div>
+    </PageShell>
   );
 }
