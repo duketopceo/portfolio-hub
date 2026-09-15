@@ -6,11 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint && npm run check:design",
+    "lint": "eslint && npm run check:design && npm run check:privacy",
     "test": "vitest run",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
     "check:design": "node scripts/check-design-system.mjs",
+    "check:privacy": "node scripts/check-privacy.mjs",
     "notion:seed": "node scripts/notion/seed-episodes.mjs"
   },
   "dependencies": {

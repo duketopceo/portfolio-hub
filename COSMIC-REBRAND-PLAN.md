@@ -679,15 +679,16 @@ Keep existing `fade-up` and `node-enter` animations. They work well with the cos
 
 ## 12. Security Reminders
 
-**DO NOT expose any of the following in the site code or metadata:**
-- Personal email: kimballluke@gmail.com
-- GitHub username: duketopceo
-- Personal name: Luke Kimball
-- Location: Utah
+**Publish-safe personal information:** Luke Kimball, city-level location (Provo, UT), GitHub `duketopceo`, LinkedIn `lukekimball2789`, and the Cloudflare-routed alias `hello@luke-the-duke.com`.
+
+**DO NOT expose any of the following in the site code, metadata, or repository docs:**
+- Personal or employer mailboxes
+- Phone numbers or `tel:` links
+- Exact coordinates
 - Private repo URLs
 - Any API keys or tokens
 
-The site should feel anonymous/pseudonymous — "Cosmic Intelligence" is the brand identity, not a person's name.
+The site is a recruiter-facing engineering showcase, not an anonymous or pseudonymous product.
 
 ---
 
