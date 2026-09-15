@@ -19,6 +19,42 @@ const viewports = [
 ] as const;
 
 const utcStatusSelector = ".site-header__status-item[aria-label='UTC time']";
+const publicAlias = "hello@luke-the-duke.com";
+const machineReadableRoutes = [
+  "/resume.json",
+  "/resume.md",
+  "/llms.txt",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/api/activity",
+  "/api/repos",
+  "/api/github/pulls",
+  "/api/github/repo/Khan/summary",
+  "/api/health",
+] as const;
+const forbiddenPersonalInfo = [
+  {
+    label: "Gmail mailbox",
+    pattern: /[a-z0-9._%+-]+@gmail\.com/i,
+  },
+  {
+    label: "employer mailbox",
+    pattern: /luke\.k@bartlettroofs\.com/i,
+  },
+  {
+    label: "telephone link",
+    pattern: /\bhref\s*=\s*["']\s*tel\s*:/i,
+  },
+  {
+    label: "phone number",
+    pattern: /(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b/,
+  },
+  {
+    label: "precise coordinates",
+    pattern:
+      /(?:\b-?\d{1,3}\.\d{3,}\s*,\s*-?\d{1,3}\.\d{3,}\b|\b-?\d{1,3}\.\d{3,}\s*°\s*[NSEW]\b)/i,
+  },
+] as const;
 
 const masked = [
   "canvas",
@@ -88,6 +124,45 @@ test.describe("Portfolio visual acceptance matrix", () => {
   test("dismissed introduction stays out of route baselines", async ({ page }) => {
     await page.goto("/contact", { waitUntil: "networkidle" });
     await expect(page.locator(".welcome-intro")).toHaveCount(0);
+  });
+
+  test("public routes do not expose private personal contact details", async ({
+    page,
+  }) => {
+    const violations: string[] = [];
+
+    for (const route of routes) {
+      await page.goto(route.path, { waitUntil: "networkidle" });
+      const html = await page.locator("html").evaluate((el) => el.outerHTML);
+      for (const { label, pattern } of forbiddenPersonalInfo) {
+        if (pattern.test(html)) violations.push(`${route.path}: ${label}`);
+      }
+    }
+
+    const machineBodies: string[] = [];
+    for (const path of machineReadableRoutes) {
+      const response = await page.request.get(path);
+      expect(response.status()).toBe(200);
+      const body = await response.text();
+      machineBodies.push(body);
+      for (const { label, pattern } of forbiddenPersonalInfo) {
+        if (pattern.test(body)) violations.push(`${path}: ${label}`);
+      }
+    }
+
+    expect(violations).toEqual([]);
+
+    await page.goto("/contact", { waitUntil: "networkidle" });
+    const html = await page.locator("html").evaluate((el) => el.outerHTML);
+    const emails = new Set(
+      [html, ...machineBodies].flatMap((body) =>
+        Array.from(
+          body.matchAll(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi),
+          (match) => match[0],
+        ),
+      ),
+    );
+    expect(Array.from(emails)).toEqual([publicAlias]);
   });
 
   test("first-visit introduction renders and dismisses", async ({

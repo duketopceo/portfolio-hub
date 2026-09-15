@@ -157,7 +157,7 @@ A hiring manager who lands on luke-the-duke.com in about 90 seconds cannot tell 
 - KTD3. Build `githubUrl` from curated `withDeploy.private` and a non-empty `repoName` before any GitHub `private` overwrite. Catalog-private rows get `githubUrl: null` even if GitHub reports the repo public. Do not import `@/lib/github` into client components. Instantiates R4, R5, R9.
 - KTD4. Summary API: 404 if not curated. Catalog-private curated names do not call GitHub; return 200 curated fallback with empty pulls and no `githubPath` or pull `htmlUrl`. Catalog-public: 200 full payload on GitHub 2xx; 200 curated fallback on GitHub 401/403/404 or missing token; 502 only for timeout or GitHub 5xx. Mirror `src/app/api/github/pulls/route.ts` degrade, not Traefik overlay `docs/AUDIT-502.md`. Instantiates R5, R6.
 - KTD5. Delist Stratum as live in `src/data/deployments.ts` (`online: false`) and remove the Footer `liveLinks` row. Gate dossier demo chrome with `isProjectLive`. Keep the `stratum-hq` catalog row. Instantiates R7.
-- KTD6. Three routes, one CTA. `/about` is bio. `/hire` is intent plus mailto. `/contact` is the same mailto, not a third essay. Default address: `kimballluke@gmail.com` from `COSMIC-REBRAND-PLAN.md`. Never `luke.k@bartlettroofs.com`. Instantiates R1, R2, KD4.
+- KTD6. Three routes, one CTA. `/about` is bio. `/hire` is intent plus mailto. `/contact` is the same mailto, not a third essay. Use only the current public contact alias; never a personal or employer mailbox. Instantiates R1, R2, KD4.
 - KTD7. Keep monolithic `src/data/projects.ts`. Do not merge PR #18. Under current `## [Unreleased]`, add a sibling heading next to `### Docs` (for example `### Changed`) for this lane’s bullets. Do not append hire-path work under `### Docs`. Do not take PR #18’s Unreleased headings.
 - KTD8. Rewrite the README lead in-repo even while the GitHub repo stays private. Set GitHub description and topics with `gh repo edit` without changing visibility. Instantiates R10, R12, KD1.
 - KTD9. Do not add a new Swarm stack file. `docker-compose.yml` already deploys stack `portfolio` with Traefik labels and `/api/health`. Instantiates the “if not Swarm-defined, make it so” gate: it is already defined.
@@ -202,7 +202,7 @@ flowchart LR
 
 ### Assumptions
 
-- Public hire email is `kimballluke@gmail.com` until the user names another personal address.
+- Public contact surfaces use the current public alias; personal and employer mailboxes stay private.
 - No LinkedIn or resume this lane.
 - Catalog stays 27 rows. PR #18’s 18-row cut is out of scope.
 - “Cosmic Intelligence” remains in-app brand. Recruiter copy still names Luke Kimball in `/about` and README lead.
@@ -255,7 +255,7 @@ U2 lands Vitest before U3 uses it. U1 and U4 both edit `Footer.tsx`: apply nav a
 - **Test scenarios:**
   - Happy path: Request `/about`, `/contact`, `/hire`. Each renders a heading and does not use `not-found.tsx`.
   - Happy path: Header, footer, and WelcomeIntro chips contain About, Contact, and Hire links. Sitemap includes all three absolute `luke-the-duke.com` URLs.
-  - Edge: `/contact` and `/hire` both contain `mailto:kimballluke@gmail.com` and no Bartlett email.
+  - Edge: `/contact` and `/hire` both contain only the public contact alias and no personal or employer mailbox.
   - Error: Visiting an unknown path still uses `not-found.tsx` and offers a path back to `/hire` or `/projects`.
 - **Verification:** `npm run build` includes the new routes. Local `/about` `/contact` `/hire` are 200. Copy has no Tailscale IP or Bartlett hostname.
 

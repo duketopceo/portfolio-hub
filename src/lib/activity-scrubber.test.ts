@@ -36,6 +36,24 @@ describe("activity-scrubber", () => {
     expect(out).toBe("PR merged");
   });
 
+  it("redacts phone numbers on private repos", () => {
+    const out = scrubActivityText(
+      "Call follow-up at 801-555-0199",
+      true,
+      "PR merged"
+    );
+    expect(out).toBe("PR merged");
+  });
+
+  it("redacts precise coordinates on private repos", () => {
+    for (const title of [
+      "Site visit near 12.3456°N 98.7654°W",
+      "Site visit near 12.3456, -98.7654",
+    ]) {
+      expect(scrubActivityText(title, true, "PR merged")).toBe("PR merged");
+    }
+  });
+
   it("looksLikeSecret detects bearer tokens", () => {
     expect(looksLikeSecret("Authorization Bearer sk-abc123")).toBe(true);
   });

@@ -6,6 +6,10 @@
 const EMAIL = /@[\w.-]+\.[a-z]{2,}/i;
 const GITHUB_TOKEN =
   /\b(ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{10,})\b/;
+const PHONE =
+  /(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b/;
+const COORDINATES =
+  /(?:\b-?\d{1,3}\.\d{3,}\s*,\s*-?\d{1,3}\.\d{3,}\b|\b-?\d{1,3}\.\d{3,}\s*°\s*[NSEW]\b)/i;
 const BEARER = /Bearer\s+\S+/i;
 const SECRET_PATH =
   /(?:^|\s)(?:\/(?:etc|home|Users|var|tmp)|~\/|\.\/)[^\s]*/i;
@@ -25,6 +29,8 @@ export function looksLikeSecret(text: string): boolean {
   if (BEARER.test(t)) return true;
   if (SECRET_PATH.test(t)) return true;
   if (ENV_FILE.test(t)) return true;
+  if (PHONE.test(t)) return true;
+  if (COORDINATES.test(t)) return true;
   if (COMBINED.test(t)) return true;
   if (INTERNAL_HOST.test(t)) return true;
   return false;
@@ -46,7 +52,18 @@ export function scrubActivityText(
   }
 
   let s = text.trim();
-  const patterns = [EMAIL, GITHUB_TOKEN, BEARER, SECRET_PATH, ENV_FILE, BARTLETT, INTERNAL_HOST, COMBINED];
+  const patterns = [
+    EMAIL,
+    GITHUB_TOKEN,
+    BEARER,
+    SECRET_PATH,
+    ENV_FILE,
+    PHONE,
+    COORDINATES,
+    BARTLETT,
+    INTERNAL_HOST,
+    COMBINED,
+  ];
   let redacted = false;
 
   for (const p of patterns) {
