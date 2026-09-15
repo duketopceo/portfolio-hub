@@ -1,4 +1,10 @@
 import Link from "next/link";
+import {
+  PageHeader,
+  PageShell,
+  SurveyPlate,
+  TransmissionClose,
+} from "@/components/design";
 
 export const metadata = {
   title: "Hire",
@@ -8,53 +14,63 @@ export const metadata = {
 
 export default function HirePage() {
   return (
-    <div className="cosmic-page cosmic-page--shell hire-page">
-      <header className="reg-page-head hire-page__header">
-        <div className="reg-page-head__margin" aria-hidden="true">
-          <span>CI / Engagement</span>
-          <span className="hidden sm:inline">Full-time · applied AI</span>
-          <span>Sheet 07</span>
+    <PageShell measure="readable">
+      <PageHeader
+        metadata={[
+          { content: "CI / Engagement" },
+          { content: "Full-time · applied AI", className: "hidden sm:inline" },
+          { content: "Sheet 07" },
+        ]}
+        eyebrow="Transmission"
+        title="Engage"
+        lede="Open to full-time engineering roles where applied AI, infrastructure, and product-minded operations meet. Public work lives here and on GitHub; private dossiers are available in conversation."
+      />
+
+      <TransmissionClose
+        title="Start the engagement"
+        actions={
+          <>
+            <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
+              Email hello@luke-the-duke.com
+            </a>
+            <Link href="/resume" className="detail-cta detail-cta--secondary">
+              View web résumé
+            </Link>
+          </>
+        }
+      >
+        Send the role, scope, and decision timeline. The portfolio carries the
+        technical evidence; email starts the conversation.
+      </TransmissionClose>
+
+      <SurveyPlate
+        className="mt-6"
+        metadata={["Secondary routes", "Evidence"]}
+      >
+        <div className="hire-page__secondary">
+          <p>
+            Prefer a print copy?{" "}
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="detail-nav-link"
+            >
+              Download PDF ↗
+            </a>
+          </p>
+          <p>
+            Demos and case studies:{" "}
+            <Link href="/openrouter" className="detail-nav-link">
+              OpenRouter applications
+            </Link>
+            {" · "}
+            <Link href="/projects" className="detail-nav-link">
+              full catalog
+            </Link>
+          </p>
         </div>
-        <h1 className="reg-page-head__title">Engage</h1>
-        <p className="hire-page__lede">
-          Open to full-time engineering roles where applied AI, infrastructure,
-          and product-minded operations meet. Public work lives here and on
-          GitHub; private dossiers available in conversation.
-        </p>
-      </header>
-
-      <div className="hire-page__actions">
-        <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
-          Email hello@luke-the-duke.com
-        </a>
-        <Link href="/resume" className="detail-cta detail-cta--secondary">
-          View web résumé
-        </Link>
-      </div>
-
-      <div className="hire-page__secondary">
-        <p>
-          Prefer a print copy?{" "}
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="detail-nav-link"
-          >
-            Download PDF ↗
-          </a>
-        </p>
-        <p>
-          Demos and case studies:{" "}
-          <Link href="/openrouter" className="detail-nav-link">
-            OpenRouter applications
-          </Link>
-          {" · "}
-          <Link href="/projects" className="detail-nav-link">
-            full catalog
-          </Link>
-        </p>
-      </div>
-    </div>
+      </SurveyPlate>
+    </PageShell>
   );
 }

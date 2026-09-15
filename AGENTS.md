@@ -19,8 +19,9 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 |--------|---------|
 | Install deps | `npm ci` |
 | Dev server | `npm run dev` (port 3000) |
-| Lint | `npm run lint` (ESLint 9) |
-| Test | `npm run test` (Vitest; `src/**/*.test.ts` helpers) |
+| Lint + design guard | `npm run lint` (ESLint 9 + `check:design`) |
+| Test | `npm run test` (Vitest helpers and design primitives) |
+| Visual acceptance | `npm run test:visual` (Playwright production-build route matrix) |
 | Build | `npm run build` |
 | Prod server | `npm run start` |
 | Railway deploy | Push to GitHub-connected branch (service already exists) |
@@ -36,4 +37,5 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 
 - **Lint status:** `npm run lint` exits 0 with no errors and no warnings (verified 2026-09-13). `public/podcast/app.js` is a minified, page-unreferenced bundle excluded via `globalIgnores` in `eslint.config.mjs`; the other scripts in that directory are hand-authored and linted normally.
 - **`react-hooks/set-state-in-effect` suppression:** `src/components/WelcomeIntro.tsx` disables that rule around its mount effect, with a comment explaining why. The pattern is genuine — the overlay renders nothing on the server and may only read `localStorage` on the client — but rewriting it to the `useSyncExternalStore` hydration idiom is outstanding follow-up work.
-- **Tests:** Vitest covers pure helpers under `src/**/*.test.ts`. App gates remain lint, `npm run build`, and manual browser testing.
+- **Tests:** Vitest covers helpers and shared design primitives under `src/**/*.{test.ts,test.tsx}`. App gates are `npm run lint`, `npm run test`, `npm run build`, and `npm run test:visual` for visual changes.
+- **Visual setup:** run `npx playwright install chromium` once on a fresh checkout before `npm run test:visual`; the command builds and serves the production bundle on port 3100.

@@ -1,0 +1,25 @@
+/* Reset and document base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-top: 3rem;
+  /* Orbital/chart elements bleed off-viewport by design — clip, don't scroll */
+  overflow-x: clip;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  font-size: var(--text-base);
+  /* Orbital/chart elements bleed off-viewport by design — clip, don't scroll */
+  overflow-x: clip;
+}

@@ -9,6 +9,7 @@ import { isProjectLive } from "@/lib/deployments";
 import SolarSystemNav from "@/components/SolarSystemNav";
 import SecondaryOrbitRings from "@/components/SecondaryOrbitRings";
 import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
+import { ActionRow, MetricRow, PageShell, StatusMark } from "@/components/design";
 
 export const revalidate = 3600;
 
@@ -68,24 +69,13 @@ export default async function Home() {
 
           {/* Drafting title block — engineering convention, lower right */}
           <dl className="sheet__titleblock" aria-label="Survey summary">
-            <div className="sheet__tb-row">
-              <dt>Bodies cataloged</dt>
-              <dd>{all.length}</dd>
-            </div>
-            <div className="sheet__tb-row">
-              <dt>Sectors</dt>
-              <dd>{categories.size}</dd>
-            </div>
-            <div className="sheet__tb-row">
-              <dt>Live surfaces</dt>
-              <dd className="sheet__tb-live">{liveCount}</dd>
-            </div>
-            {lead && (
-              <div className="sheet__tb-row">
-                <dt>Lead system</dt>
-                <dd>{lead.displayName}</dd>
-              </div>
-            )}
+            <MetricRow label="Bodies cataloged" value={all.length} />
+            <MetricRow label="Sectors" value={categories.size} />
+            <MetricRow
+              label="Live surfaces"
+              value={<span className="sheet__tb-live">{liveCount}</span>}
+            />
+            {lead && <MetricRow label="Lead system" value={lead.displayName} />}
           </dl>
         </div>
       </section>
@@ -95,14 +85,14 @@ export default async function Home() {
         <HomeActivityShowcase data={activity} />
       </div>
 
-      <section
-        className="cosmic-page home-domain-hint"
-        aria-label="Domain map in catalog"
-      >
-        <Link href="/projects#domain-map" className="detail-nav-link">
-          Open sector map →
-        </Link>
-      </section>
+      <PageShell className="home-domain-hint" measure="readable">
+        <ActionRow role="group" aria-label="Domain map in catalog">
+          <StatusMark tone="live">{liveCount} live surfaces</StatusMark>
+          <Link href="/projects#domain-map" className="detail-nav-link">
+            Open sector map →
+          </Link>
+        </ActionRow>
+      </PageShell>
     </div>
   );
 }

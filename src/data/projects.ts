@@ -1,6 +1,9 @@
 import { ProjectConfig } from "@/lib/types";
 import { projectExtensionConfigs } from "./projects-ext";
 
+export const OPENROUTER_DEMO_VIDEO_URL =
+  "https://pub-9e45e5f7be6f4c9989852b4989e83a23.r2.dev/demos/openrouter-demos-walkthrough.mp4";
+
 /**
  * Master project configuration — curated for recruiter/professional viewing.
  * SECURITY: No personal emails, no GitHub usernames, no internal details.
@@ -178,8 +181,7 @@ export const projectConfigs: ProjectConfig[] = [
     liveUrl: "https://luke-the-duke.com/openrouter",
     demoUrl: "https://luke-the-duke.com/openrouter",
     embeddable: true,
-    demoVideoUrl:
-      "https://pub-9e45e5f7be6f4c9989852b4989e83a23.r2.dev/demos/openrouter-demos-walkthrough.mp4",
+    demoVideoUrl: OPENROUTER_DEMO_VIDEO_URL,
     highlights: [
       "Deflect — support routing with Guardrails and eval fixtures",
       "Motion — GTM next-action with Auto Router and presets",

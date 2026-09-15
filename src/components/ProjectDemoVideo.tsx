@@ -32,8 +32,8 @@ export default function ProjectDemoVideo({ src, title }: ProjectDemoVideoProps) 
         style={{
           display: "block",
           maxHeight: "540px",
-          background: "var(--color-surface, #0d1117)",
-          borderRadius: "0 0 8px 8px",
+          background: "var(--color-surface)",
+          borderRadius: "0 0 var(--radius-xl) var(--radius-xl)",
         }}
       >
         <source src={src} type="video/mp4" />

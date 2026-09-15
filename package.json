@@ -6,8 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint && npm run check:design",
     "test": "vitest run",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "check:design": "node scripts/check-design-system.mjs",
     "notion:seed": "node scripts/notion/seed-episodes.mjs"
   },
   "dependencies": {
@@ -23,6 +26,7 @@
     "three": "^0.186.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
