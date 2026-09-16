@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getAllSlugs } from "@/lib/github";
 import { getProjectActivityTimeline } from "@/lib/github-activity";
 
 export const revalidate = 3600;
@@ -8,6 +9,9 @@ export async function GET(
   context: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await context.params;
+  if (!getAllSlugs().includes(slug)) {
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
   try {
     const data = await getProjectActivityTimeline(slug);
     return NextResponse.json(data);
