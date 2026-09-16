@@ -111,9 +111,9 @@ test.describe("Portfolio visual acceptance matrix", () => {
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     const canvases = page.locator("canvas");
-    await expect(canvases).toHaveCount(3);
+    await expect(canvases).toHaveCount(2);
 
-    for (let index = 0; index < 3; index += 1) {
+    for (let index = 0; index < 2; index += 1) {
       const canvas = canvases.nth(index);
       await canvas.scrollIntoViewIfNeeded();
       await expect(canvas).toBeVisible();
@@ -148,6 +148,23 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator("canvas")).toHaveCount(0);
+  });
+
+  test("catalog belt keeps secondary systems readable", async ({ page }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+    const items = page.locator(".home-catalog__item");
+    expect(await items.count()).toBeGreaterThan(30);
+    await items.first().scrollIntoViewIfNeeded();
+    const metrics = await items.first().evaluate((element) => {
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return {
+        fontSize: parseFloat(style.fontSize),
+        height: rect.height,
+      };
+    });
+    expect(metrics.fontSize).toBeGreaterThanOrEqual(12);
+    expect(metrics.height).toBeGreaterThanOrEqual(32);
   });
 
   test("UTC status remains live while masked from screenshots", async ({ page }) => {
