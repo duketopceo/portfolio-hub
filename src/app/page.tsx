@@ -7,9 +7,10 @@ import {
 import { getHomepageActivityShowcase } from "@/lib/github-activity";
 import { isProjectLive } from "@/lib/deployments";
 import SolarSystemNav from "@/components/SolarSystemNav";
-import SecondaryOrbitRings from "@/components/SecondaryOrbitRings";
 import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
-import { ActionRow, MetricRow, PageShell, StatusMark } from "@/components/design";
+import { HomeCatalogBelt } from "@/components/HomeCatalogBelt";
+import { HomeLeadSystems } from "@/components/HomeLeadSystems";
+import { MetricRow, PageShell } from "@/components/design";
 
 export const revalidate = 3600;
 
@@ -59,12 +60,6 @@ export default async function Home() {
               projects={primaryOrbit}
               registryIndexOf={indexOf(primaryOrbit)}
             />
-            {secondaryOrbit.length > 0 && (
-              <SecondaryOrbitRings
-                projects={secondaryOrbit}
-                registryIndexOf={indexOf(secondaryOrbit)}
-              />
-            )}
           </div>
 
           {/* Drafting title block — engineering convention, lower right */}
@@ -80,18 +75,52 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Transmissions — live activity strip ── */}
-      <div className="home-activity-strip">
-        <HomeActivityShowcase data={activity} />
-      </div>
+      <PageShell className="home-flow" measure="wide">
+        <HomeLeadSystems
+          projects={primaryOrbit}
+          registryIndexOf={indexOf(primaryOrbit)}
+        />
 
-      <PageShell className="home-domain-hint" measure="readable">
-        <ActionRow role="group" aria-label="Domain map in catalog">
-          <StatusMark tone="live">{liveCount} live surfaces</StatusMark>
-          <Link href="/projects#domain-map" className="detail-nav-link">
-            Open sector map →
-          </Link>
-        </ActionRow>
+        <section
+          className="home-transmissions"
+          aria-labelledby="home-transmissions-heading"
+        >
+          <div className="home-section__head">
+            <p className="reg-label reg-label--accent">Transmissions</p>
+            <h2 id="home-transmissions-heading">Recent engineering signal</h2>
+            <p>
+              The public activity digest stays compact, but now sits inside the
+              same registry grammar as the rest of the page.
+            </p>
+          </div>
+          <HomeActivityShowcase data={activity} />
+        </section>
+
+        {secondaryOrbit.length > 0 && (
+          <HomeCatalogBelt
+            projects={secondaryOrbit}
+            registryIndexOf={indexOf(secondaryOrbit)}
+          />
+        )}
+
+        <section className="home-close" aria-labelledby="home-close-heading">
+          <p className="reg-label reg-label--accent">Next action</p>
+          <h2 id="home-close-heading">
+            Need the short version, or the operating context?
+          </h2>
+          <p>
+            The résumé gives the compressed timeline; the hire brief explains
+            what kind of systems I am best used on.
+          </p>
+          <div className="home-close__actions">
+            <Link href="/resume" className="detail-nav-link">
+              Open résumé →
+            </Link>
+            <Link href="/hire" className="detail-nav-link">
+              Open hire brief →
+            </Link>
+          </div>
+        </section>
       </PageShell>
     </div>
   );
