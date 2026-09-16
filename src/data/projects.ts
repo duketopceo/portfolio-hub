@@ -99,6 +99,46 @@ export const projectConfigs: ProjectConfig[] = [
       "Source connectors → SQLite (FTS5 + sqlite-vec) → axum API → MCP tools → Vite/React 3D brain + OpenRouter swarm",
   },
   {
+    slug: "argus",
+    repoName: "Argus",
+    displayName: "Argus",
+    tagline:
+      "Vision-model E2E testing — record once, fingerprint-cache every step, heal on drift, cost-metered per run",
+    description:
+      "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    orbitTier: "secondary",
+    demoUrl: "/demos/argus",
+    techStack: [
+      "TypeScript",
+      "Playwright",
+      "OpenRouter",
+      "GitHub Actions",
+      "Docker",
+    ],
+    private: false,
+    highlights: [
+      "Cache-first replay — zero vision calls on unchanged UI",
+      "Cost-explicit — per-run dollar figure on the PR report",
+      "Heal-on-drift with reviewable cache diffs",
+      "Sandbox lane reproduces review findings, stamped not suspected",
+      "Published npm package argus-reviewer-e2e",
+    ],
+    architecture:
+      "Record (Playwright + vision model) → fingerprint cache → replay/heal → GitHub check + PR comment with per-call cost ledger",
+    businessContext:
+      "Selector-based E2E is brittle and vision E2E is expensive. Argus makes vision testing cost-predictable: cache hits are free, heals are reviewable, and every run carries an exact dollar figure.",
+    scopeAndScale:
+      "Published npm package (argus-reviewer-e2e), GitHub Action runner, self-hosted. BYOK via OPENROUTER_API_KEY with hard budget caps.",
+    engineeringDecisions: [
+      "Fingerprint cache over re-invocation — Vision calls only on drift, not every run",
+      "DOM-verified grounding — Model coordinate output checked against the DOM before any click",
+      "Cost ledger first-class — Per-call OpenRouter pricing rolled into the run report",
+    ],
+  },
+  {
     slug: "pace-server",
     repoName: "Pace-Server",
     displayName: "Pace Server",

@@ -1,0 +1,402 @@
+{
+ "provenance": "Real /api/* responses captured 2026-09-16 from a kurultai 0.6.0 daemon over a public-docs demo corpus \u2014 not the personal store.",
+ "status": {
+  "atoms": 19,
+  "brain": {
+   "merge_candidates_pending": 0,
+   "quarantine_count": 13,
+   "trusted_count": 6
+  },
+  "inbox": {
+   "failed": 0,
+   "pending": 0,
+   "roots": 0
+  },
+  "memory": {
+   "cold": 0,
+   "hot": 6,
+   "warm": 0
+  },
+  "metrics": {
+   "ask": {
+    "errors": 0,
+    "latency_avg_ms": 0.0,
+    "latency_p50_ms": null,
+    "latency_p90_ms": null,
+    "latency_p99_ms": null,
+    "latency_sum_ms": 0,
+    "requests": 0,
+    "results_sum": 0
+   },
+   "cite": {
+    "errors": 0,
+    "latency_avg_ms": 0.0,
+    "latency_p50_ms": null,
+    "latency_p90_ms": null,
+    "latency_p99_ms": null,
+    "latency_sum_ms": 0,
+    "requests": 0,
+    "results_sum": 0
+   },
+   "graph": {
+    "errors": 0,
+    "latency_avg_ms": 0.0,
+    "latency_p50_ms": null,
+    "latency_p90_ms": null,
+    "latency_p99_ms": null,
+    "latency_sum_ms": 0,
+    "requests": 0,
+    "results_sum": 0
+   },
+   "search": {
+    "errors": 0,
+    "latency_avg_ms": 0.0,
+    "latency_p50_ms": 1,
+    "latency_p90_ms": 1,
+    "latency_p99_ms": 1,
+    "latency_sum_ms": 0,
+    "requests": 2,
+    "results_sum": 0
+   },
+   "who_knows": {
+    "errors": 0,
+    "latency_avg_ms": 0.0,
+    "latency_p50_ms": null,
+    "latency_p90_ms": null,
+    "latency_p99_ms": null,
+    "latency_sum_ms": 0,
+    "requests": 0,
+    "results_sum": 0
+   }
+  },
+  "ok": true,
+  "request_id": "5a9f5b3b-683a-47f3-a96d-56abbf58f621",
+  "scheduler": {
+   "last_client_activity_unix": 1789594922,
+   "last_full_unix": 0,
+   "last_incremental_unix": 1789595075,
+   "nightly_full_sync_hour": null,
+   "poll_enabled": false,
+   "watch_enabled": true
+  },
+  "service": "kurultai",
+  "version": "0.6.0"
+ },
+ "searches": {
+  "MCP": [
+   {
+    "atom": {
+     "id": "770d75a578f7f4f60eae2f1fc44b98bb70c4c23804a2ebfb08116ef9cc869acd",
+     "source": "notes",
+     "source_id": "kurultai-overview.md",
+     "title": "kurultai overview",
+     "summary": "# Kurultai overview\n\nKurultai is a local knowledge brain: a Rust + axum daemon over SQLite with\nFTS5 full-text search and sqlite-vec embeddings. Agents reach it through MCP\ntools \u2014 search, cite, remember, ask, who_knows \u2014 and humans through the Brain\nUI served by the daemon at /u",
+     "question": null,
+     "resolution": null,
+     "tags": [
+      "kurultai",
+      "demo",
+      "search"
+     ],
+     "source_updated_at": "2026-09-16T21:43:36Z",
+     "indexed_at": "2026-09-16T21:43:36.394055186Z",
+     "last_accessed_at": "2026-09-16T21:43:36.394055436Z",
+     "metadata": {
+      "chunk_index": "0",
+      "rel_path": "kurultai-overview.md",
+      "quality_score": "0.6781",
+      "chunk_count": "1",
+      "content_hash": "7dedae89fef7e35894cd31235513e0fa645a5082c747ac5c0d40b327b2acba52"
+     },
+     "trust_lane": "trusted",
+     "corpus_tier": "public",
+     "visibility": "personal"
+    },
+    "score": 0.017769596774193548,
+    "rank": 0,
+    "matched_by": [
+     "fts",
+     "quality"
+    ]
+   },
+   {
+    "atom": {
+     "id": "78ff007e14e49c04baa717d460599363f33ab2184a70afdab18609f8cedfd692",
+     "source": "notes",
+     "source_id": "mcp-wiring.md",
+     "title": "mcp wiring",
+     "summary": "# MCP agent wiring\n\n`kurultai init --agent all` writes MCP config for Cursor, Claude, Codex, and\nHermes so agents discover the brain on next restart. Codenames identify the\nproduct family; instance_id identifies the concurrent seat.",
+     "question": null,
+     "resolution": null,
+     "tags": [
+      "mcp",
+      "agents",
+      "demo"
+     ],
+     "source_updated_at": "2026-09-16T21:43:36Z",
+     "indexed_at": "2026-09-16T21:43:36.393993229Z",
+     "last_accessed_at": "2026-09-16T21:43:36.393993437Z",
+     "metadata": {
+      "chunk_count": "1",
+      "quality_score": "0.4591",
+      "rel_path": "mcp-wiring.md",
+      "chunk_index": "0",
+      "content_hash": "1c63515ca6de02ff1af8462016a38762ba6de6d940c5e99485a2a84039e9ded1"
+     },
+     "trust_lane": "trusted",
+     "corpus_tier": "public",
+     "visibility": "personal"
+    },
+    "score": 0.01752237704918033,
+    "rank": 1,
+    "matched_by": [
+     "fts",
+     "quality"
+    ]
+   }
+  ],
+  "tailscale": [
+   {
+    "atom": {
+     "id": "e4090b45d015ea462f58795c1947b1586101b0eaaf8df6e2432e91e606e384aa",
+     "source": "notes",
+     "source_id": "tailscale-access.md",
+     "title": "tailscale access",
+     "summary": "# Daemon and Tailscale access\n\n`kurultai daemon` binds loopback by default and serves the HTTP API plus the\nembedded Brain UI. `daemon --bind tailscale` resolves the machine's tailnet\nIPv4 so the UI is reachable from other tailnet devices.",
+     "question": null,
+     "resolution": null,
+     "tags": [
+      "daemon",
+      "tailscale",
+      "demo"
+     ],
+     "source_updated_at": "2026-09-16T21:43:36Z",
+     "indexed_at": "2026-09-16T21:43:36.393818066Z",
+     "last_accessed_at": "2026-09-16T21:43:36.393818316Z",
+     "metadata": {
+      "content_hash": "3050811ea72d23b86876cacc017272f5f6cc82a237b24fcb157995a6a9fbc216",
+      "rel_path": "tailscale-access.md",
+      "chunk_index": "0",
+      "chunk_count": "1",
+      "quality_score": "0.4656"
+     },
+     "trust_lane": "trusted",
+     "corpus_tier": "public",
+     "visibility": "personal"
+    },
+    "score": 0.017538360655737703,
+    "rank": 0,
+    "matched_by": [
+     "fts",
+     "quality"
+    ]
+   }
+  ]
+ },
+ "atoms": [
+  {
+   "atom": {
+    "id": "770d75a578f7f4f60eae2f1fc44b98bb70c4c23804a2ebfb08116ef9cc869acd",
+    "source": "notes",
+    "source_id": "kurultai-overview.md",
+    "title": "kurultai overview",
+    "summary": "# Kurultai overview\n\nKurultai is a local knowledge brain: a Rust + axum daemon over SQLite with\nFTS5 full-text search and sqlite-vec embeddings. Agents reach it through MCP\ntools \u2014 search, cite, remember, ask, who_knows \u2014 and humans through the Brain\nUI served by the daemon at /u",
+    "question": null,
+    "resolution": null,
+    "tags": [
+     "kurultai",
+     "demo",
+     "search"
+    ],
+    "source_updated_at": "2026-09-16T21:43:36Z",
+    "indexed_at": "2026-09-16T21:43:36.394055186Z",
+    "last_accessed_at": "2026-09-16T21:44:35.951714014Z",
+    "metadata": {
+     "chunk_index": "0",
+     "quality_score": "0.6781",
+     "content_hash": "7dedae89fef7e35894cd31235513e0fa645a5082c747ac5c0d40b327b2acba52",
+     "rel_path": "kurultai-overview.md",
+     "chunk_count": "1"
+    },
+    "trust_lane": "trusted",
+    "corpus_tier": "public",
+    "visibility": "personal"
+   },
+   "score": 1.0,
+   "rank": 0,
+   "matched_by": [
+    "list"
+   ]
+  },
+  {
+   "atom": {
+    "id": "78ff007e14e49c04baa717d460599363f33ab2184a70afdab18609f8cedfd692",
+    "source": "notes",
+    "source_id": "mcp-wiring.md",
+    "title": "mcp wiring",
+    "summary": "# MCP agent wiring\n\n`kurultai init --agent all` writes MCP config for Cursor, Claude, Codex, and\nHermes so agents discover the brain on next restart. Codenames identify the\nproduct family; instance_id identifies the concurrent seat.",
+    "question": null,
+    "resolution": null,
+    "tags": [
+     "mcp",
+     "agents",
+     "demo"
+    ],
+    "source_updated_at": "2026-09-16T21:43:36Z",
+    "indexed_at": "2026-09-16T21:43:36.393993229Z",
+    "last_accessed_at": "2026-09-16T21:44:35.951743514Z",
+    "metadata": {
+     "rel_path": "mcp-wiring.md",
+     "content_hash": "1c63515ca6de02ff1af8462016a38762ba6de6d940c5e99485a2a84039e9ded1",
+     "quality_score": "0.4591",
+     "chunk_index": "0",
+     "chunk_count": "1"
+    },
+    "trust_lane": "trusted",
+    "corpus_tier": "public",
+    "visibility": "personal"
+   },
+   "score": 1.0,
+   "rank": 1,
+   "matched_by": [
+    "list"
+   ]
+  },
+  {
+   "atom": {
+    "id": "d140bba0f423afb6cf01c70c23699dbbf7f6e6dcd039eded9e7f065810274171",
+    "source": "notes",
+    "source_id": "search-modes.md",
+    "title": "search modes",
+    "summary": "# Search modes\n\nFTS5 bm25 with stopword sanitization is the always-on path. Hybrid search\ncombines FTS and vector kNN with reciprocal-rank fusion when embeddings are\nconfigured. Untagged markdown lands in quarantine, outside default search.",
+    "question": null,
+    "resolution": null,
+    "tags": [
+     "search",
+     "fts",
+     "vector",
+     "demo"
+    ],
+    "source_updated_at": "2026-09-16T21:43:36Z",
+    "indexed_at": "2026-09-16T21:43:36.393950146Z",
+    "last_accessed_at": "2026-09-16T21:43:36.393950438Z",
+    "metadata": {
+     "content_hash": "e7efb294c6350c74ec8fbcc4e55e4889acc9f328ef5749ea4003d2bb9c73f89a",
+     "quality_score": "0.4716",
+     "chunk_count": "1",
+     "rel_path": "search-modes.md",
+     "chunk_index": "0"
+    },
+    "trust_lane": "trusted",
+    "corpus_tier": "public",
+    "visibility": "personal"
+   },
+   "score": 1.0,
+   "rank": 2,
+   "matched_by": [
+    "list"
+   ]
+  },
+  {
+   "atom": {
+    "id": "e4090b45d015ea462f58795c1947b1586101b0eaaf8df6e2432e91e606e384aa",
+    "source": "notes",
+    "source_id": "tailscale-access.md",
+    "title": "tailscale access",
+    "summary": "# Daemon and Tailscale access\n\n`kurultai daemon` binds loopback by default and serves the HTTP API plus the\nembedded Brain UI. `daemon --bind tailscale` resolves the machine's tailnet\nIPv4 so the UI is reachable from other tailnet devices.",
+    "question": null,
+    "resolution": null,
+    "tags": [
+     "daemon",
+     "tailscale",
+     "demo"
+    ],
+    "source_updated_at": "2026-09-16T21:43:36Z",
+    "indexed_at": "2026-09-16T21:43:36.393818066Z",
+    "last_accessed_at": "2026-09-16T21:44:35.955159150Z",
+    "metadata": {
+     "chunk_index": "0",
+     "content_hash": "3050811ea72d23b86876cacc017272f5f6cc82a237b24fcb157995a6a9fbc216",
+     "quality_score": "0.4656",
+     "rel_path": "tailscale-access.md",
+     "chunk_count": "1"
+    },
+    "trust_lane": "trusted",
+    "corpus_tier": "public",
+    "visibility": "personal"
+   },
+   "score": 1.0,
+   "rank": 3,
+   "matched_by": [
+    "list"
+   ]
+  },
+  {
+   "atom": {
+    "id": "a1a783f1be8e11e64a8db25fcfad6d6d8a1c81a34550fe6ef7d92c275b4be13c",
+    "source": "notes",
+    "source_id": "solo-solo-path.md",
+    "title": "solo solo path",
+    "summary": "# Zero-friction solo path\n\n`kurultai init --docs` provisions a notes folder and works keyless. An\noptional `--key`/`--key-file` stores an OpenRouter key for vector recall and\nLLM ask; `--no-key` keeps agents and CI non-interactive. `kurultai webui`\nopens the Brain UI, spawning a ",
+    "question": null,
+    "resolution": null,
+    "tags": [
+     "init",
+     "onboarding",
+     "demo"
+    ],
+    "source_updated_at": "2026-09-16T21:43:36Z",
+    "indexed_at": "2026-09-16T21:43:36.393779191Z",
+    "last_accessed_at": "2026-09-16T21:43:36.393779566Z",
+    "metadata": {
+     "content_hash": "4590a5af0a748989e439e9ac908e017ecd2a33f69a977e496b9468340e7f8f31",
+     "rel_path": "solo-solo-path.md",
+     "quality_score": "0.5324",
+     "chunk_count": "1",
+     "chunk_index": "0"
+    },
+    "trust_lane": "trusted",
+    "corpus_tier": "public",
+    "visibility": "personal"
+   },
+   "score": 1.0,
+   "rank": 4,
+   "matched_by": [
+    "list"
+   ]
+  },
+  {
+   "atom": {
+    "id": "5e6ef30533fdfd3eeb25de2e21266c96f8b6027826ee3919fb61da45348b4dc1",
+    "source": "notes",
+    "source_id": "demo-note.md",
+    "title": "demo note",
+    "summary": "# Demo note\nKurultai indexes markdown atoms with frontmatter tags for FTS5 search.",
+    "question": null,
+    "resolution": null,
+    "tags": [
+     "demo",
+     "kurultai"
+    ],
+    "source_updated_at": "2026-09-16T21:40:49Z",
+    "indexed_at": "2026-09-16T21:41:38.915920753Z",
+    "last_accessed_at": "2026-09-16T21:41:38.915920961Z",
+    "metadata": {
+     "chunk_count": "1",
+     "chunk_index": "0",
+     "quality_score": "0.3000",
+     "content_hash": "3ae01a8192e43382da3bd5ab11d89e86acd8c1add45397fc3e0e6711178c4ae7",
+     "rel_path": "demo-note.md"
+    },
+    "trust_lane": "trusted",
+    "corpus_tier": "public",
+    "visibility": "personal"
+   },
+   "score": 1.0,
+   "rank": 5,
+   "matched_by": [
+    "list"
+   ]
+  }
+ ]
+}
