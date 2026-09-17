@@ -1,0 +1,59 @@
+{
+ "generatedAt": "2026-09-11T17:27:35.059Z",
+ "suite": "evals/suite",
+ "budgetUsd": 1,
+ "results": [
+  {
+   "model": "google/gemini-2.5-flash-lite",
+   "cold": {
+    "ok": true,
+    "passed": 3,
+    "tests": 3,
+    "visionCalls": 7,
+    "visionCostUsd": 0.001598355,
+    "healEvents": 0,
+    "exitCode": 0,
+    "failures": []
+   },
+   "warm": {
+    "ok": true,
+    "passed": 3,
+    "tests": 3,
+    "visionCalls": 0,
+    "visionCostUsd": 0,
+    "healEvents": null,
+    "exitCode": 0,
+    "failures": []
+   }
+  },
+  {
+   "model": "moonshotai/kimi-k2.5",
+   "cold": {
+    "ok": false,
+    "passed": 2,
+    "tests": 3,
+    "visionCalls": 6,
+    "visionCostUsd": 0.05021765892,
+    "healEvents": 0,
+    "exitCode": 1,
+    "failures": [
+     {
+      "name": "typing fills the name field",
+      "reason": "td.find(\"the \"Name\" input\") failed: model grounded to \"\", which does not match the instruction"
+     }
+    ]
+   },
+   "warm": {
+    "ok": true,
+    "passed": 3,
+    "tests": 3,
+    "visionCalls": 3,
+    "visionCostUsd": 0.03481873956,
+    "healEvents": null,
+    "exitCode": 0,
+    "failures": []
+   }
+  }
+ ],
+ "provenance": "Real eval run captured from Argus evals/results \u2014 local paths stripped."
+}

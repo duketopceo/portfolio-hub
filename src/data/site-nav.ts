@@ -3,6 +3,7 @@ export const siteNavItems = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
   { href: "/openrouter", label: "OpenRouter" },
+  { href: "/demos", label: "Demos" },
   { href: "/now", label: "Now" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
