@@ -6734,6 +6734,14 @@
   border-radius: var(--radius-sm);
 }
 
+.demo-shot {
+  display: block;
+  max-width: 560px;
+  width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
 .demo-provenance {
   color: var(--color-text-faint);
   font-family: var(--font-mono);

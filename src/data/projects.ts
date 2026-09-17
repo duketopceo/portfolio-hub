@@ -139,6 +139,36 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
   {
+    slug: "dayflow-linux",
+    repoName: "dayflow-linux",
+    displayName: "Dayflow",
+    tagline:
+      "Private automatic work journal for Linux — screenshot sampling, dedupe, vision-model summaries into a readable timeline",
+    description:
+      "Dayflow for Omarchy/Wayland is a local-first port of the macOS Dayflow app: a single static Go binary samples a frame every 10 seconds, deduplicates unchanged shots, and every 15 minutes sends the block to a vision model (Gemma 4 via OpenRouter by default) for a plain-language summary. The result is a readable timeline in a QML panel — Today, Standup, Chat, Week, and Settings views — with per-app ignore lists, pause controls, retention pruning, inline edits, and journal chat. Frames and the SQLite store stay in ~/.local/share/dayflow.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    orbitTier: "secondary",
+    demoUrl: "/demos/dayflow",
+    techStack: ["Go", "QML", "SQLite", "OpenRouter", "Wayland"],
+    private: false,
+    highlights: [
+      "Local-first — frames and DB never leave ~/.local/share/dayflow",
+      "Cheap by design — ~30 frames per block to a $0.09/M-token vision model",
+      "~25MB RAM, sub-1% CPU single static binary",
+      "Multi-provider routing — vision, summary, standup, and chat can hit different endpoints",
+      "Privacy controls — pause toggle, per-app ignore list, automatic frame deletion",
+    ],
+    architecture:
+      "wlroots frame sampler → dedupe → SQLite → 15-min vision summaries (OpenRouter) → QML panel + CLI",
+    engineeringDecisions: [
+      "Blocks over streams — 15-minute chunks make the timeline readable and the model calls bounded",
+      "Edits overlay raw rows — corrections flow into analytics without rewriting history",
+      "Dead-letter retries — failed summaries retry 3x then quarantine; `dayflow retry` resets",
+    ],
+  },
+  {
     slug: "pace-server",
     repoName: "Pace-Server",
     displayName: "Pace Server",
