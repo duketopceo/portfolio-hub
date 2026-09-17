@@ -60,12 +60,12 @@ export const demos: DemoEntry[] = [
     href: "/projects/ai-debate-arena",
   },
   {
-    slug: "dayflow-linux",
+    slug: "dayflow",
     name: "Dayflow",
-    tier: "planned",
+    projectSlug: "dayflow-linux",
+    tier: "replay",
     tagline:
-      "Desktop timeline widget — QML surface; screenshot panel pending.",
-    href: "https://github.com/duketopceo/dayflow-linux",
-    external: true,
+      "Desktop timeline widget — real QML capture plus a reconstructed 15-minute block timeline.",
+    href: "/demos/dayflow",
   },
 ];

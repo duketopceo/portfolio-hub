@@ -49,6 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${base}/demos/dayflow`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
       url: `${base}/now`,
       lastModified: new Date(),
       changeFrequency: "weekly",

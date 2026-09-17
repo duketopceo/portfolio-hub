@@ -8,6 +8,7 @@ const routes = [
   { path: "/demos", name: "demos" },
   { path: "/demos/argus", name: "demo-argus" },
   { path: "/demos/kurultai", name: "demo-kurultai" },
+  { path: "/demos/dayflow", name: "demo-dayflow" },
   { path: "/resume", name: "resume" },
   { path: "/now", name: "now" },
   { path: "/about", name: "about" },
