@@ -70,7 +70,8 @@ export default function RootLayout({
         <Script
           src="https://analytics.pacehq.io/script.js"
           data-website-id="85c70ffd-c5dc-4f8a-a18e-b13bbe101904"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
+          defer
         />
       </body>
     </html>
