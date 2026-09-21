@@ -30,10 +30,20 @@ export default function HirePage() {
         title="Start the engagement"
         actions={
           <>
-            <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
+            <a
+              href="mailto:hello@luke-the-duke.com"
+              className="detail-cta"
+              data-umami-event="contact-email"
+              data-umami-event-source="hire"
+            >
               Email hello@luke-the-duke.com
             </a>
-            <Link href="/resume" className="detail-cta detail-cta--secondary">
+            <Link
+              href="/resume"
+              className="detail-cta detail-cta--secondary"
+              data-umami-event="resume-view"
+              data-umami-event-source="hire"
+            >
               View web résumé
             </Link>
           </>
@@ -55,6 +65,8 @@ export default function HirePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="detail-nav-link"
+              data-umami-event="resume-download"
+              data-umami-event-format="pdf"
             >
               Download PDF ↗
             </a>

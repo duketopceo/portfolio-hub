@@ -64,7 +64,12 @@ export default function WelcomeIntro() {
       role="complementary"
       aria-label="Site introduction"
     >
-      <button className="welcome-intro__close" onClick={dismiss} aria-label="Dismiss introduction">
+      <button
+        className="welcome-intro__close"
+        onClick={dismiss}
+        aria-label="Dismiss introduction"
+        data-umami-event="intro-dismiss"
+      >
         ×
       </button>
 
@@ -76,34 +81,36 @@ export default function WelcomeIntro() {
       </p>
 
       <div className="welcome-intro__nav">
-        <Link href="/" className="welcome-intro__chip" onClick={dismiss}>
+        <Link href="/" className="welcome-intro__chip" onClick={dismiss} data-umami-event="intro-choice" data-umami-event-target="chart">
           Chart ↺
         </Link>
-        <Link href="/projects" className="welcome-intro__chip" onClick={dismiss}>
+        <Link href="/projects" className="welcome-intro__chip" onClick={dismiss} data-umami-event="intro-choice" data-umami-event-target="registry">
           Registry →
         </Link>
-        <Link href="/now" className="welcome-intro__chip" onClick={dismiss}>
+        <Link href="/now" className="welcome-intro__chip" onClick={dismiss} data-umami-event="intro-choice" data-umami-event-target="transmissions">
           Transmissions →
         </Link>
-        <Link href="/about" className="welcome-intro__chip" onClick={dismiss}>
+        <Link href="/about" className="welcome-intro__chip" onClick={dismiss} data-umami-event="intro-choice" data-umami-event-target="about">
           About →
         </Link>
-        <Link href="/contact" className="welcome-intro__chip" onClick={dismiss}>
+        <Link href="/contact" className="welcome-intro__chip" onClick={dismiss} data-umami-event="intro-choice" data-umami-event-target="contact">
           Contact →
         </Link>
-        <Link href="/hire" className="welcome-intro__chip" onClick={dismiss}>
+        <Link href="/hire" className="welcome-intro__chip" onClick={dismiss} data-umami-event="intro-choice" data-umami-event-target="hire">
           Hire →
         </Link>
         <Link
           href="/podcast"
           className="welcome-intro__chip welcome-intro__chip--accent"
           onClick={dismiss}
+          data-umami-event="intro-choice"
+          data-umami-event-target="podcast"
         >
           🎙 EP009
         </Link>
       </div>
 
-      <button className="welcome-intro__cta" onClick={dismiss}>
+      <button className="welcome-intro__cta" onClick={dismiss} data-umami-event="intro-dismiss">
         Got it
       </button>
     </div>

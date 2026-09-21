@@ -32,7 +32,12 @@ export default function ContactPage() {
           <MetricRow
             label="Email"
             value={
-              <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
+              <a
+                href="mailto:hello@luke-the-duke.com"
+                className="detail-cta"
+                data-umami-event="contact-email"
+                data-umami-event-source="contact"
+              >
                 hello@luke-the-duke.com
               </a>
             }
@@ -78,7 +83,12 @@ export default function ContactPage() {
       <TransmissionClose
         title="Best next step"
         actions={
-          <a href="mailto:hello@luke-the-duke.com" className="detail-cta">
+          <a
+            href="mailto:hello@luke-the-duke.com"
+            className="detail-cta"
+            data-umami-event="contact-email"
+            data-umami-event-source="contact-cta"
+          >
             Start with email
           </a>
         }

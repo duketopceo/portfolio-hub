@@ -14,6 +14,8 @@ export default function DemoLink({ url }: DemoLinkProps) {
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
       className="cosmic-card-demo"
+      data-umami-event="live-demo"
+      data-umami-event-url={url}
     >
       <span className="cosmic-card-demo__left">
         <span className="cosmic-card-demo__pulse" aria-hidden />

@@ -57,6 +57,8 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
               color: "var(--color-text-faint)",
               textDecoration: "none",
             }}
+            data-umami-event="demo-open-external"
+            data-umami-event-url={url}
           >
             Open
             <ExternalIcon className="w-3 h-3" />
@@ -70,6 +72,8 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
               onClick={() => setShowIframe(true)}
               className="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer"
               style={{ background: "var(--color-surface)" }}
+              data-umami-event="demo-embed-load"
+              data-umami-event-url={url}
             >
               <div
                 className="w-12 h-12 rounded flex items-center justify-center"
@@ -159,6 +163,8 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
       rel="noopener noreferrer"
       className="glass-card block p-6 sm:p-8 text-center group"
       style={{ textDecoration: "none" }}
+      data-umami-event="demo-launch"
+      data-umami-event-url={url}
     >
       <div
         className="w-10 h-10 rounded mx-auto mb-3 flex items-center justify-center"

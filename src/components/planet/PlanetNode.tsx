@@ -108,6 +108,9 @@ export function PlanetNode({
         onMouseEnter={onMouseEnter}
         onFocus={onFocus}
         tabIndex={tabIndex}
+        data-umami-event="orbit-marker"
+        data-umami-event-slug={project.slug}
+        data-umami-event-tier={tier}
       >
         <span className="planet-node__body">
           {visual.rings.map((ring, i) => (
