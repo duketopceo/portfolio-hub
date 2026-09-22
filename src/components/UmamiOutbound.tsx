@@ -54,7 +54,7 @@ export default function UmamiOutbound() {
           const doc = document.documentElement;
           const max = doc.scrollHeight - doc.clientHeight;
           if (max <= 0) return;
-          const pct = Math.round((doc.scrollTop / max) * 100);
+          const pct = (doc.scrollTop / max) * 100;
           for (const t of SCROLL_THRESHOLDS) {
             if (pct >= t && !fired.has(t)) {
               fired.add(t);
