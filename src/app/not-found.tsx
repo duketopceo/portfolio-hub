@@ -1,10 +1,12 @@
 import Link from "next/link";
+import NotFoundPing from "@/components/NotFoundPing";
 import WarpFieldLayer from "@/components/WarpFieldLayer";
 import { ActionRow, MarginRail, PageShell } from "@/components/design";
 
 export default function NotFound() {
   return (
     <PageShell className="min-h-[70vh] flex items-center justify-center">
+      <NotFoundPing />
       <div className="nf-plate">
         <WarpFieldLayer />
 

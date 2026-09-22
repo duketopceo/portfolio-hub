@@ -68,6 +68,7 @@ export default function OpenRouterPage() {
         labelledBy="openrouter-demos-heading"
         eyebrow="Mission packet"
         title={<span id="openrouter-demos-heading">The job packet</span>}
+        trackAs="job-packet"
         description="Four role-aligned demos — Deflect, Motion, Bakeoff, Caesar — with fixture evals and honest offline status."
       >
         <div className="openrouter-grid" role="list">

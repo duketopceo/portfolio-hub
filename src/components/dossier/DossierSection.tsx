@@ -29,6 +29,7 @@ export function DossierSection({
     <section
       className={`${surfaceClass} ${className}`.trim()}
       aria-labelledby={id}
+      data-umami-section={title}
     >
       <h2 id={id} className="detail-section-label">
         {title}
