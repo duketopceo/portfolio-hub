@@ -233,6 +233,7 @@ export default async function ProjectDetailPage({
               <EvidencePanel
                 eyebrow="Curated evidence"
                 title="Publish-safe project record"
+                trackAs="project-record"
                 description="Approved context, ownership, architecture, decisions, and outcomes without exposing private source."
               >
                 {project.businessContext && (

@@ -356,6 +356,9 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
               href={`/projects/${focused.slug}`}
               className="solar-focus-card corner-ticks corner-ticks--accent"
               style={{ "--focus-accent": accent } as React.CSSProperties}
+              data-umami-event="survey-file-open"
+              data-umami-event-slug={focused.slug}
+              data-umami-event-source="orbit-card"
             >
               <span className="solar-focus-card__top">
                 <span className="solar-focus-card__eyebrow">

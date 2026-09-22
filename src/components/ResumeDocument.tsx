@@ -156,11 +156,17 @@ export function ResumeDocument() {
 
       <footer className="resume-doc__formats" aria-label="Machine-readable formats">
         <span className="resume-doc__formats-label">Also available:</span>
-        <a href="/resume.json">JSON</a>
+        <a href="/resume.json" data-umami-event="resume-download" data-umami-event-format="json">JSON</a>
         <span aria-hidden>·</span>
-        <a href="/resume.md">Markdown</a>
+        <a href="/resume.md" data-umami-event="resume-download" data-umami-event-format="markdown">Markdown</a>
         <span aria-hidden>·</span>
-        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-umami-event="resume-download"
+          data-umami-event-format="pdf"
+        >
           PDF
         </a>
       </footer>

@@ -33,6 +33,9 @@ export function HomeLeadSystems({
               href={`/projects/${project.slug}`}
               className="home-lead__card"
               style={{ "--system-accent": catColors[project.category] } as CSSProperties}
+              data-umami-event="survey-file-open"
+              data-umami-event-slug={project.slug}
+              data-umami-event-source="lead-card"
             >
               <span className="home-lead__meta">
                 <span>CI-{String(registryIndexOf[index] ?? index).padStart(2, "0")}</span>

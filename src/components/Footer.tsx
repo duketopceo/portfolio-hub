@@ -65,7 +65,13 @@ export default function Footer() {
                 <span className="reg-num" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <Link href={project.dossierHref} className="cosmic-footer__btn">
+                <Link
+                  href={project.dossierHref}
+                  className="cosmic-footer__btn"
+                  data-umami-event="survey-file-open"
+                  data-umami-event-slug={project.label}
+                  data-umami-event-source="footer"
+                >
                   {project.label}
                 </Link>
                 {project.liveHref && project.liveLabel ? (
@@ -75,6 +81,8 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="cosmic-footer__btn-live"
                     aria-label={`${project.label} live at ${project.liveLabel}`}
+                    data-umami-event="live-site"
+                    data-umami-event-slug={project.label}
                   >
                     {project.liveLabel}
                     <ExternalIcon className="cosmic-footer__btn-icon" />

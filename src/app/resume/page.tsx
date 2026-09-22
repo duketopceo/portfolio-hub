@@ -54,6 +54,7 @@ export default function ResumePage() {
         labelledBy="resume-openrouter-demo"
         eyebrow="Featured evidence"
         title={<span id="resume-openrouter-demo">OpenRouter demos</span>}
+        trackAs="openrouter-demos"
         description={
           <>
             Four RouteKit harnesses on OpenRouter — deflection, GTM motion,

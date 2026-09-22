@@ -67,6 +67,8 @@ export default function FilterBar({ projects }: FilterBarProps) {
             aria-selected={mainView === "catalog"}
             className={`catalog-view-toggle__btn${mainView === "catalog" ? " catalog-view-toggle__btn--active" : ""}`}
             onClick={() => setMainView("catalog")}
+            data-umami-event="catalog-view"
+            data-umami-event-view="catalog"
           >
             Registry
           </button>
@@ -76,6 +78,8 @@ export default function FilterBar({ projects }: FilterBarProps) {
             aria-selected={mainView === "prs"}
             className={`catalog-view-toggle__btn${mainView === "prs" ? " catalog-view-toggle__btn--active" : ""}`}
             onClick={() => setMainView("prs")}
+            data-umami-event="catalog-view"
+            data-umami-event-view="prs"
           >
             Open PRs
           </button>
@@ -104,6 +108,8 @@ export default function FilterBar({ projects }: FilterBarProps) {
                     aria-selected={active}
                     id={`catalog-tab-${cat.key}`}
                     onClick={() => setActiveCategory(cat.key)}
+                    data-umami-event="catalog-filter"
+                    data-umami-event-category={cat.key}
                     className={`catalog-pill${active ? " catalog-pill--active" : ""}`}
                     style={
                       { "--pill-accent": pillColor } as React.CSSProperties
@@ -128,6 +134,8 @@ export default function FilterBar({ projects }: FilterBarProps) {
                   key={opt}
                   type="button"
                   onClick={() => setSortBy(opt)}
+                  data-umami-event="catalog-sort"
+                  data-umami-event-sort={opt}
                   className={`catalog-sort__btn${sortBy === opt ? " catalog-sort__btn--active" : ""}`}
                 >
                   {sortLabels[opt]}

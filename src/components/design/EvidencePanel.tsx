@@ -9,6 +9,7 @@ export function EvidencePanel({
   children,
   className,
   labelledBy,
+  trackAs,
 }: {
   eyebrow?: ReactNode;
   title: ReactNode;
@@ -16,11 +17,14 @@ export function EvidencePanel({
   children: ReactNode;
   className?: string;
   labelledBy?: string;
+  /** Stable Umami section name for dossier-section-view impressions. */
+  trackAs?: string;
 }) {
   return (
     <section
       className={cx("ds-evidence", className)}
       aria-labelledby={labelledBy}
+      data-umami-section={trackAs}
     >
       <SectionHeading
         classPrefix="ds-evidence"

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import WelcomeIntro from "@/components/WelcomeIntro";
+import UmamiOutbound from "@/components/UmamiOutbound";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 
 /** Star Chart system: Archivo industrial grotesk (display + body), JetBrains Mono for all meta/labels */
@@ -64,6 +66,13 @@ export default function RootLayout({
         <Header />
         <main className="flex-1 relative animate-page-in">{children}</main>
         <SiteFooter />
+        <UmamiOutbound />
+        <Script
+          src="https://analytics.pacehq.io/script.js"
+          data-website-id="85c70ffd-c5dc-4f8a-a18e-b13bbe101904"
+          strategy="beforeInteractive"
+          defer
+        />
       </body>
     </html>
   );

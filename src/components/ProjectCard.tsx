@@ -34,6 +34,9 @@ export default function ProjectCard({
         href={`/projects/${project.slug}`}
         className="cosmic-project-card__main flex flex-col flex-1 text-left w-full"
         prefetch={false}
+        data-umami-event="survey-file-open"
+        data-umami-event-slug={project.slug}
+        data-umami-event-source="project-card"
       >
         <header className="cosmic-project-card__top">
           <div className="cosmic-project-card__identity">
