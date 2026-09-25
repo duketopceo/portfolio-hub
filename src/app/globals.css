@@ -1664,6 +1664,25 @@
     transform var(--transition);
 }
 
+/* Scan light — sheen follows the pointer (set by CardTorch) */
+.cosmic-project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    240px circle at var(--torch-x, 50%) var(--torch-y, 50%),
+    color-mix(in srgb, var(--card-accent, var(--color-accent)) 13%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.cosmic-project-card:hover::before {
+  opacity: 1;
+}
+
 /* Top tick — survey mark appears on hover */
 .cosmic-project-card::after {
   content: '';
