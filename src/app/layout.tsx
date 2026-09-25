@@ -4,6 +4,7 @@ import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import WelcomeIntro from "@/components/WelcomeIntro";
+import CardTorch from "@/components/CardTorch";
 import UmamiOutbound from "@/components/UmamiOutbound";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 
@@ -67,6 +68,7 @@ export default function RootLayout({
         <main className="flex-1 relative animate-page-in">{children}</main>
         <SiteFooter />
         <UmamiOutbound />
+        <CardTorch />
         <Script
           src="https://analytics.pacehq.io/script.js"
           data-website-id="85c70ffd-c5dc-4f8a-a18e-b13bbe101904"
