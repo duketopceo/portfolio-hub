@@ -98,6 +98,14 @@ export default function Footer() {
                 {item.label}
               </Link>
             ))}
+            <a
+              href="https://show.luke-the-duke.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cosmic-footer__nav-link"
+            >
+              The Show
+            </a>
           </nav>
         </div>
 
