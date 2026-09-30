@@ -95,25 +95,111 @@ export default function ArgusDemoPage() {
         <SectionHeading
           eyebrow="Fig. 02 — What the run caught"
           title="Failures are evidence, not noise"
-          description="The losing model's failure is captured verbatim — a grounding miss the cache diff would have flagged for review."
+          description="Cold-run failures are captured verbatim — grounding misses the cache diff would flag for review. This run came back clean."
         />
-        {results
-          .flatMap((r) =>
-            r.cold.failures.map((f) => ({ model: r.model, ...f })),
-          )
-          .map((f) => (
-            <div key={f.name} className="demo-finding">
-              <span className="demo-finding__badge">FAIL</span>
-              <div>
-                <p className="demo-finding__name">{f.name}</p>
-                <p className="demo-finding__reason">{f.reason}</p>
-                <p className="demo-finding__model">{f.model}</p>
-              </div>
+        {results.every((r) => r.cold.failures.length === 0) ? (
+          <div className="demo-finding demo-finding--clean">
+            <span className="demo-finding__badge demo-finding__badge--pass">
+              PASS
+            </span>
+            <div>
+              <p className="demo-finding__name">Clean sweep — 3/3 both models</p>
+              <p className="demo-finding__reason">
+                No grounding misses this run. Prior captures include a kimi-k2.5
+                grounding miss on the name field — the ledger keeps it honest.
+              </p>
             </div>
-          ))}
+          </div>
+        ) : (
+          results
+            .flatMap((r) =>
+              r.cold.failures.map(
+                (f: { name: string; reason: string }) => ({
+                  model: r.model,
+                  ...f,
+                }),
+              ),
+            )
+            .map((f) => (
+              <div key={f.name} className="demo-finding">
+                <span className="demo-finding__badge">FAIL</span>
+                <div>
+                  <p className="demo-finding__name">{f.name}</p>
+                  <p className="demo-finding__reason">{f.reason}</p>
+                  <p className="demo-finding__model">{f.model}</p>
+                </div>
+              </div>
+            ))
+        )}
       </section>
 
-      <p className="demo-provenance">{fixture.provenance}</p>
+      <section className="demo-ledger" aria-labelledby="demo-shipped-heading">
+        <SectionHeading
+          eyebrow="Fig. 03 — Since the capture"
+          title="The eval harness became a shipped reviewer"
+          description="The fixture above is where it started. Since then Argus released 0.3.x — a formal GitHub review surface that can satisfy required-review gates."
+        />
+        <div className="demo-ledger__table" role="table" aria-label="Shipped since capture">
+          <div className="demo-ledger__row demo-ledger__row--atoms demo-ledger__row--head" role="row">
+            <span role="columnheader">Shipped</span>
+            <span role="columnheader">What it does</span>
+            <span role="columnheader">Ref</span>
+          </div>
+          <div className="demo-ledger__row demo-ledger__row--atoms" role="row">
+            <span className="demo-ledger__model" role="cell">v0.3.0 — Review surface</span>
+            <span role="cell">CodeRabbit-style suggestion blocks with gated REQUEST_CHANGES</span>
+            <span role="cell">#92</span>
+          </div>
+          <div className="demo-ledger__row demo-ledger__row--atoms" role="row">
+            <span className="demo-ledger__model" role="cell">Formal GitHub reviews</span>
+            <span role="cell">Submits a real review — an Argus verdict can satisfy required-approvals branch protection</span>
+            <span role="cell">#91</span>
+          </div>
+          <div className="demo-ledger__row demo-ledger__row--atoms" role="row">
+            <span className="demo-ledger__model" role="cell">Review-depth tranche</span>
+            <span role="cell">Prompt packs, explore captures, @argus commands, probe persistence</span>
+            <span role="cell">#97</span>
+          </div>
+          <div className="demo-ledger__row demo-ledger__row--atoms" role="row">
+            <span className="demo-ledger__model" role="cell">Budget ledger fix</span>
+            <span role="cell">Integer-cent accounting — float drift could trip the USD cap falsely</span>
+            <span role="cell">#89</span>
+          </div>
+          <div className="demo-ledger__row demo-ledger__row--atoms" role="row">
+            <span className="demo-ledger__model" role="cell">v0.3.1 — Model override</span>
+            <span role="cell">ARGUS_CODE_MODEL env override for the review model</span>
+            <span role="cell">#96</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="demo-gallery" aria-labelledby="demo-surface-heading">
+        <SectionHeading
+          eyebrow="Fig. 04 — Review surface"
+          title="A real review, captured"
+          description="Argus reviewing a live PR — conversation verdict and per-file suggestion blocks."
+        />
+        <div className="demo-gallery__grid">
+          <figure className="demo-gallery__item">
+            <img
+              src="/demos/argus/pr31-conversation.png"
+              alt="Argus PR review — conversation verdict"
+              loading="lazy"
+            />
+            <figcaption>PR review — verdict</figcaption>
+          </figure>
+          <figure className="demo-gallery__item">
+            <img
+              src="/demos/argus/pr31-files.png"
+              alt="Argus PR review — per-file suggestions"
+              loading="lazy"
+            />
+            <figcaption>PR review — per-file suggestions</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <p className="demo-provenance">{fixture.provenance} Review-surface captures from Argus demo/pr31-review-surface (2026-09-29); shipped ledger from git history through v0.3.1.</p>
 
       <p>
         <Link href="/demos" className="detail-nav-link">

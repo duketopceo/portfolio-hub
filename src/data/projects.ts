@@ -124,10 +124,11 @@ export const projectConfigs: ProjectConfig[] = [
       "Cost-explicit — per-run dollar figure on the PR report",
       "Heal-on-drift with reviewable cache diffs",
       "Sandbox lane reproduces review findings, stamped not suspected",
-      "Published npm package argus-reviewer-e2e",
+      "CodeRabbit-style review surface — formal GitHub reviews that satisfy required-approvals",
+      "Published npm package argus-reviewer-e2e (v0.3.x)",
     ],
     architecture:
-      "Record (Playwright + vision model) → fingerprint cache → replay/heal → GitHub check + PR comment with per-call cost ledger",
+      "Record (Playwright + vision model) → fingerprint cache → replay/heal → GitHub check + formal review with per-call cost ledger",
     businessContext:
       "Selector-based E2E is brittle and vision E2E is expensive. Argus makes vision testing cost-predictable: cache hits are free, heals are reviewable, and every run carries an exact dollar figure.",
     scopeAndScale:
