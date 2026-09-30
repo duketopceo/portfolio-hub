@@ -10,6 +10,11 @@ export interface DemoEntry {
   tagline: string;
   href: string;
   external?: boolean;
+  /** Hosted instance URL when one exists (may be access-gated). */
+  demoUrl?: string;
+  /** "gated" marks a hosted instance behind Cloudflare Access — the card
+   *  shows the affordance instead of pretending the demo is public. */
+  demoAccess?: "gated";
 }
 
 export const demos: DemoEntry[] = [
@@ -39,6 +44,11 @@ export const demos: DemoEntry[] = [
     tagline:
       "Knowledge-brain API replay — real /api/search and /api/status responses captured from a public-docs demo corpus.",
     href: "/demos/kurultai",
+    // Hosted fixture-corpus instance (kurultai daemon --demo) behind
+    // Cloudflare Access — app provisioned, tunnel route pending.
+    // See kurultai/demo/README.md.
+    demoUrl: "https://kurultai-demo.luke-the-duke.com",
+    demoAccess: "gated",
   },
   {
     slug: "openrouter",

@@ -44,6 +44,9 @@ export default function DemosPage() {
               <span className={`demo-card__tier demo-card__tier--${demo.tier}`}>
                 {tierLabel[demo.tier]}
               </span>
+              {demo.demoAccess === "gated" && (
+                <span className="demo-card__gated">Access-gated</span>
+              )}
               {demo.external && <span>↗</span>}
             </span>
             <span className="demo-card__name">{demo.name}</span>
