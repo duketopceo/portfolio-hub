@@ -40,3 +40,13 @@ Portfolio Hub is a Next.js 16 (App Router) personal portfolio site. No database,
 - **Tests:** Vitest covers helpers and shared design primitives under `src/**/*.{test.ts,test.tsx}`. `npm run lint` also runs the design-system and privacy source checks. App gates are `npm run lint`, `npm run test`, `npm run build`, and `npm run test:visual` for visual changes.
 - **Visual setup:** run `npx playwright install chromium` once on a fresh checkout before `npm run test:visual`; the command builds and serves the production bundle on port 3100.
 - **Analytics:** Umami event catalog, UTM convention, and verification recipe live in `docs/analytics.md` — instrument new surfaces via `data-umami-event` attributes per that grammar.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
