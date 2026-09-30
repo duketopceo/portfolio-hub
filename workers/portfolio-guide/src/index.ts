@@ -25,15 +25,75 @@ export class GuideSession extends DurableObject<Env> {
   }
 }
 
+const EMBED_MODEL = "@cf/baai/bge-base-en-v1.5";
+const EMBED_VERSION = 1;
+const TOP_K = 6;
+
+interface CorpusMeta {
+  sourceId: string;
+  scope: string;
+  class: string;
+  title: string;
+  url: string;
+  embedVersion: number;
+  text: string;
+}
+
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === "/health") {
       return Response.json({ ok: true, service: "portfolio-guide" });
     }
 
-    // Chat/retrieval land in later phases; fail closed everywhere else.
+    if (url.pathname === "/search") {
+      const q = (
+        request.method === "POST"
+          ? ((await request.json().catch(() => null)) as { q?: string } | null)
+              ?.q
+          : url.searchParams.get("q")
+      )?.trim();
+      if (!q) {
+        return Response.json({ error: "missing q" }, { status: 400 });
+      }
+      if (q.length > 500) {
+        return Response.json({ error: "q too long" }, { status: 400 });
+      }
+
+      const embedded = (await env.AI.run(EMBED_MODEL, {
+        text: [q],
+      })) as { data?: number[][] };
+      const vector = embedded.data?.[0];
+      if (!vector) {
+        return Response.json({ error: "embed failed" }, { status: 502 });
+      }
+
+      const matches = await env.CORPUS.query(vector, {
+        topK: TOP_K,
+        returnMetadata: "all",
+      });
+      const results = matches.matches
+        .filter(
+          (m) =>
+            (m.metadata as unknown as CorpusMeta | undefined)?.embedVersion ===
+            EMBED_VERSION,
+        )
+        .map((m) => {
+          const meta = m.metadata as unknown as CorpusMeta;
+          return {
+            score: m.score,
+            sourceId: meta.sourceId,
+            scope: meta.scope,
+            class: meta.class,
+            citation: { title: meta.title, url: meta.url },
+            text: meta.text,
+          };
+        });
+      return Response.json({ results });
+    }
+
+    // Chat lands in later phases; fail closed everywhere else.
     return Response.json(
       { error: "not implemented — phase 1 scaffold" },
       { status: 501 },
