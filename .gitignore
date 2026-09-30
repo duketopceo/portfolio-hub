@@ -42,3 +42,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .codebase-memory/
+
+# isolated worker package
+workers/**/node_modules/
+workers/**/.wrangler/
+workers/**/.dev.vars

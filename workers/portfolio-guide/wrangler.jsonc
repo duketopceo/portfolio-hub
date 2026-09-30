@@ -1,0 +1,49 @@
+{
+  "name": "portfolio-guide",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-30",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Observability: metrics/logs on, but prompt/response content is never
+  // logged — only request ids, timing, model route, token counts.
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+
+  "ai": {
+    "binding": "AI"
+  },
+
+  "vectorize": [
+    {
+      "binding": "CORPUS",
+      "index_name": "portfolio-guide-corpus"
+    }
+  ],
+
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "GUIDE_SESSIONS",
+        "class_name": "GuideSession"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["GuideSession"]
+    }
+  ],
+
+  "vars": {
+    // Public Turnstile sitekey — set per environment; secret is server-side.
+    "TURNSTILE_SITEKEY": "",
+    // Hard caps — enforced before any model call, fail closed.
+    "MAX_MESSAGE_CHARS": "4000",
+    "MAX_MESSAGES_PER_SESSION": "20",
+    "DAILY_OPENROUTER_BUDGET_USD": "0.50",
+    "SESSION_TTL_SECONDS": "3600"
+  }
+}
