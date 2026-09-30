@@ -50,3 +50,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+
+## Code graph index (optional accelerator)
+
+This repo may be indexed by `codebase-memory-mcp` (CBM) on an agent's local
+machine — `.codebase-memory/` is gitignored. If your harness exposes CBM
+tools (`search_graph`, `trace_path`, `get_architecture`, `detect_changes`),
+prefer them for structural questions — symbol lookup, caller/callee traces,
+impact analysis — instead of grep/read loops. Reindex after large refactors
+(`index_repository`); treat `.codebase-memory/graph.db.zst` as a local cache
+artifact, never commit it.
