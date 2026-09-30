@@ -184,26 +184,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     architecture: "OpenRouter spend data → budget helpers → lightweight UI",
   },
   {
-    slug: "dayflow-linux",
-    repoName: "dayflow-linux",
-    displayName: "Dayflow Linux",
-    tagline: "Automatic local work journal for Linux",
-    description:
-      "Tracks your day on Linux and summarizes it with vision models via OpenRouter. Builds a private, timestamped work journal from desktop activity.",
-    category: "apps",
-    type: "app",
-    featured: false,
-    techStack: ["Python", "OpenRouter", "Vision Models", "Linux"],
-    private: false,
-    highlights: [
-      "Linux desktop activity journaling",
-      "Vision-model daily summaries",
-      "Private, local-first data",
-    ],
-    architecture:
-      "Activity capture → vision summarizer → markdown journal → local store",
-  },
-  {
     slug: "dayflow-screenshots",
     repoName: "dayflow-screenshots",
     displayName: "Dayflow Screenshots",
