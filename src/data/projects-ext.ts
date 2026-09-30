@@ -125,26 +125,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "Plugin catalog → markdown docs → per-plugin build/usage instructions",
   },
   {
-    slug: "argus",
-    repoName: "Argus",
-    displayName: "Argus",
-    tagline: "Open-source vision-model E2E testing harness",
-    description:
-      "End-to-end testing harness for vision models. Record, replay, heal, and assert with BYOK OpenRouter, hard budget caps, self-hosted runner, and GitHub PR reporting.",
-    category: "ai",
-    type: "platform",
-    featured: false,
-    techStack: ["TypeScript", "OpenRouter", "Vision Models", "GitHub"],
-    private: false,
-    highlights: [
-      "Vision-model E2E recording and replay",
-      "Self-hosted runner with hard budget caps",
-      "GitHub PR reporting",
-    ],
-    architecture:
-      "Test recorder → vision model assertions → self-hosted runner → GitHub PR bot",
-  },
-  {
     slug: "orchestral",
     repoName: "orchestral",
     displayName: "Orchestral",
