@@ -12,7 +12,7 @@ export const basics = {
   headline:
     "OpenRouter-Native Multi-Model Routing · Agent Harnesses · Build-Over-Buy Internal Tools",
   summary:
-    "OpenRouter-native operator-builder who ships internal agentic tooling instead of buying software built for the masses. Multi-model daily driver: routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model. Forked Agent Zero into a personal, OpenRouter-native harness and designed a tenant-aware agent platform with security and evals built in. Support/GTM fluency from sales, ticketing, CRM, and ops.",
+    "OpenRouter-native operator-builder who ships internal agentic tooling instead of buying software built for the masses. Multi-model daily driver: routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model. Runs five agent harnesses daily and extends them with self-authored Agent Zero plugins published in the open. Designed a tenant-aware agent platform with security and evals built in. Support/GTM fluency from sales, ticketing, CRM, and ops.",
   phone: "559-789-7214",
   email: "kimballluke@gmail.com",
   url: SITE,
@@ -34,7 +34,7 @@ export const skills = [
   {
     name: "Agent Harnesses",
     detail:
-      "Heavy use of Claude Code, Cursor, Agent Zero, Hermes, and Gemini; hands-on with Factory AI, OpenCode, Grok, and Perplexity Computer; forked Agent Zero into \"Khan\" and designed Pace's agentrun pipeline (TierGate, tool registry, approval gates).",
+      "Daily use of Claude Code, Cursor, Agent Zero, Hermes, and Gemini; hands-on with Factory AI, OpenCode, Grok, and Perplexity Computer. Ships public Agent Zero plugins (a0-plugin-argus, a0-openrouter-spend) and an ecosystem index, and designed Pace's agentrun pipeline (TierGate, tool registry, approval gates).",
     keywords: ["Claude Code", "Cursor", "Agent Zero", "Hermes", "Gemini", "agentic workflows"],
   },
   {
@@ -77,15 +77,16 @@ export const projects = [
     stack: ["Rust", "Axum", "Go", "Chi", "Python", "LangGraph", "React", "Supabase", "Postgres 17", "RLS", "Redis", "Stripe", "Stytch"],
   },
   {
-    name: "Khan — Agent Zero fork",
-    caseStudy: `${SITE}/projects/khan`,
+    name: "Agent Zero Plugins",
+    url: "https://github.com/duketopceo/a0-plugins",
+    caseStudy: "https://github.com/duketopceo/a0-plugin-argus",
     description:
-      "Private product fork of Agent Zero — a personal Linux-backed agent harness with model/harness freedom. OpenRouter-native, plugin system, multi-agent delegation, secrets management, browser DOM annotation, and Mac app distribution.",
+      "Public Agent Zero plugins plus an ecosystem index. a0-plugin-argus exposes Argus pull-request review as agent tools; a0-openrouter-spend surfaces OpenRouter organisation spend as a bar widget and dashboard.",
     highlights: [
-      "Strategy, design, and governance live in-repo; one-command install ships a PATH CLI plus a Mac app wrapper.",
-      "Extended Agent Zero into a workflow-specific harness rather than a config.",
+      "Ships against Agent Zero's extension API — tools, hooks, default_config, prompts and tests — instead of maintaining a fork.",
+      "a0-plugins indexes the wider Agent Zero plugin ecosystem with tags and authorship metadata.",
     ],
-    stack: ["Agent Zero", "OpenRouter", "plugins", "multi-agent", "Mac app"],
+    stack: ["Agent Zero", "Python", "plugin API", "OpenRouter", "MCP"],
   },
   {
     name: "Kurultai",
