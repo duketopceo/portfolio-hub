@@ -6672,6 +6672,14 @@
   color: var(--color-signal);
 }
 
+.demo-finding--clean {
+  border-left-color: var(--color-live);
+}
+
+.demo-finding__badge--pass {
+  color: var(--color-live);
+}
+
 .demo-finding__name {
   margin: 0;
   color: var(--color-text);
