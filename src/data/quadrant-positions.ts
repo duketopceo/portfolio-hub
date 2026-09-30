@@ -25,6 +25,7 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "optimezer":         { x: -0.35, y:  0.20 },
   "republic-atlas":    { x:  0.05, y:  0.85 },
   "military-hardware-db": { x: -0.55, y: -0.50 },
+  "pixel-tycoon":      { x: -0.40, y:  0.15 },
   "etl-pipeline":      { x: -0.70, y: -0.70 },
   "server-cluster":    { x: -0.80, y:  0.45 },
   "dixi":              { x:  0.70, y:  0.15 },

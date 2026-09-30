@@ -19,8 +19,17 @@ export const demos: DemoEntry[] = [
     projectSlug: "argus",
     tier: "replay",
     tagline:
-      "Cost-metered vision E2E — a real eval bake-off replay: cold run vs cached warm run, per-model dollar ledger.",
+      "Cost-metered vision E2E + shipped review surface — dollar ledger replay, formal GitHub reviews, real PR capture.",
     href: "/demos/argus",
+  },
+  {
+    slug: "pixel-tycoon",
+    name: "Pixel Tycoon",
+    projectSlug: "pixel-tycoon",
+    tier: "replay",
+    tagline:
+      "Godot 4.7 city-block tycoon — headless perf baseline + regression gate ledger, day/night/weather capture reel.",
+    href: "/demos/pixel-tycoon",
   },
   {
     slug: "kurultai",

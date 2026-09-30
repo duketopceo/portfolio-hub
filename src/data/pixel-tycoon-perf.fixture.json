@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-09-26T21:40:27Z",
+  "provenance": "Real perf harness output from pixel-tycoon output/perf_baseline.json and output/regression_diff.json (Godot 4.7 headless benchmark, 2026-09-26). Captures from captures/20260926_213359.",
+  "baseline": {
+    "1280x720": {
+      "avg_frame_ms": 8.35,
+      "dynamic_memory_mb": 79.27,
+      "fps": 119.8,
+      "load_error": 0,
+      "resolution": "1280x720",
+      "scene_load_ms": 202,
+      "static_memory_mb": 79.22,
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    "3430x1887": {
+      "avg_frame_ms": 8.155,
+      "dynamic_memory_mb": 79.73,
+      "fps": 122.6,
+      "load_error": 0,
+      "resolution": "3430x1887",
+      "scene_load_ms": 13,
+      "static_memory_mb": 79.4,
+      "viewport": {
+        "height": 1887,
+        "width": 3430
+      }
+    }
+  },
+  "regression": {
+    "thresholds": {
+      "scene_load_ms": 50.0,
+      "avg_frame_ms": 1.0,
+      "static_memory_mb": 10.0,
+      "dynamic_memory_mb": 50.0
+    },
+    "rows": [
+      {
+        "resolution": "1280x720",
+        "scene_load_ms": {
+          "before": 202,
+          "after": 207,
+          "delta": 5,
+          "pct": 2.48,
+          "pass": true
+        },
+        "avg_frame_ms": {
+          "before": 8.35,
+          "after": 7.562,
+          "delta": -0.788,
+          "pct": -9.44,
+          "pass": true
+        },
+        "static_memory_mb": {
+          "before": 79.22,
+          "after": 71.76,
+          "delta": -7.46,
+          "pct": -9.42,
+          "pass": true
+        },
+        "dynamic_memory_mb": {
+          "before": 79.27,
+          "after": 72.26,
+          "delta": -7.01,
+          "pct": -8.84,
+          "pass": true
+        }
+      },
+      {
+        "resolution": "3430x1887",
+        "scene_load_ms": {
+          "before": 13,
+          "after": 13,
+          "delta": 0,
+          "pct": 0.0,
+          "pass": true
+        },
+        "avg_frame_ms": {
+          "before": 8.155,
+          "after": 7.38,
+          "delta": -0.775,
+          "pct": -9.5,
+          "pass": true
+        },
+        "static_memory_mb": {
+          "before": 79.4,
+          "after": 71.91,
+          "delta": -7.49,
+          "pct": -9.43,
+          "pass": true
+        },
+        "dynamic_memory_mb": {
+          "before": 79.73,
+          "after": 72.27,
+          "delta": -7.46,
+          "pct": -9.36,
+          "pass": true
+        }
+      }
+    ],
+    "pass": true
+  },
+  "captures": [
+    {
+      "src": "downtown_day.png",
+      "label": "Downtown \u2014 day"
+    },
+    {
+      "src": "downtown_night.png",
+      "label": "Downtown \u2014 night"
+    },
+    {
+      "src": "downtown_dawn.png",
+      "label": "Downtown \u2014 dawn"
+    },
+    {
+      "src": "downtown_weather_fog.png",
+      "label": "Weather \u2014 fog"
+    },
+    {
+      "src": "downtown_weather_rain.png",
+      "label": "Weather \u2014 rain"
+    },
+    {
+      "src": "downtown_weather_snow.png",
+      "label": "Weather \u2014 snow"
+    },
+    {
+      "src": "downtown_weather_storm.png",
+      "label": "Weather \u2014 storm"
+    },
+    {
+      "src": "downtown_weather_heat_wave.png",
+      "label": "Weather \u2014 heat wave"
+    },
+    {
+      "src": "market_day.png",
+      "label": "Market district \u2014 day"
+    },
+    {
+      "src": "market_night.png",
+      "label": "Market district \u2014 night"
+    },
+    {
+      "src": "industrial_day.png",
+      "label": "Industrial district \u2014 day"
+    },
+    {
+      "src": "industrial_night.png",
+      "label": "Industrial district \u2014 night"
+    },
+    {
+      "src": "menu_phone.png",
+      "label": "Phone menu"
+    },
+    {
+      "src": "menu_inventory.png",
+      "label": "Inventory"
+    },
+    {
+      "src": "occlusion_behind.png",
+      "label": "Occlusion \u2014 behind building"
+    }
+  ]
+}

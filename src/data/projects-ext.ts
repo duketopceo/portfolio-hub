@@ -467,4 +467,37 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     ],
     architecture: "iOS client → OpenRouter chat API → keyring → BYOK chat UI",
   },
+  {
+    slug: "pixel-tycoon",
+    repoName: "pixel-tycoon",
+    displayName: "Pixel Tycoon",
+    tagline:
+      "Godot 4.7 city-block tycoon — instrumented like a service: perf baselines, regression gates, capture reels",
+    description:
+      "2D top-down city-block tycoon built in Godot 4.7 (GDScript): run shops, buy property, day/night cycle, weather states, NPCs, save/load. Engineered with a dev-end spine — EventBus autoloads, JSON-driven modular buildings, an EconomyMath library, integer-cent money, and a headless perf harness that writes per-resolution baselines and fails regressions past explicit thresholds.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    demoUrl: "/demos/pixel-tycoon",
+    planetVisual: {
+      size: "md",
+      shape: "cube",
+      color: "#4ADE80",
+      rings: [{ opacity: 0.3, tilt: -18 }],
+      moons: [
+        { label: "Godot 4.7", kind: "stack" },
+        { label: "Perf gate", kind: "stack" },
+      ],
+    },
+    techStack: ["GDScript", "Godot 4.7", "Python", "EventBus", "JSON data"],
+    private: false,
+    highlights: [
+      "Headless perf harness — per-resolution FPS/frame/memory/load baselines",
+      "Regression gate with explicit pass thresholds on every change",
+      "JSON-driven modular buildings (BuildingZone + data rows)",
+      "Day/night cycle, four weather states, occlusion pass",
+    ],
+    architecture:
+      "Godot scenes → EventBus autoloads → JSON building data → EconomyMath lib → headless perf harness → regression diff",
+  },
 ];
