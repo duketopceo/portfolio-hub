@@ -35,8 +35,10 @@ export const demos: DemoEntry[] = [
     tagline:
       "Knowledge-brain API replay — real /api/search and /api/status responses captured from a public-docs demo corpus.",
     href: "/demos/kurultai",
-    // Hosted fixture-corpus instance (kurultai daemon --demo) sits behind
-    // Cloudflare Access; hostname pending — see kurultai/demo/README.md.
+    // Hosted fixture-corpus instance (kurultai daemon --demo) behind
+    // Cloudflare Access — app provisioned, tunnel route pending.
+    // See kurultai/demo/README.md.
+    demoUrl: "https://kurultai-demo.luke-the-duke.com",
     demoAccess: "gated",
   },
   {
