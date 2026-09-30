@@ -3,6 +3,7 @@
 import {
   useMemo,
   useRef,
+  useState,
   type ComponentRef,
   type ReactNode,
 } from "react";
@@ -141,12 +142,34 @@ function SightingLine({ target }: { target: THREE.Vector3 }) {
  * Scales the orbit group to fit the stage — at narrow viewports the fixed
  * rem radii would push focusable markers off-screen. Shrink the whole
  * composition instead: DOM markers stay in-frame and reachable.
+ *
+ * The margin is measured, not guessed: labels are absolutely positioned
+ * and can extend well past the wrap's own box, so a fixed reserve
+ * under-fits edge markers (#46). Re-measure periodically — markers mount
+ * asynchronously through the Html portal.
  */
-function FitScale({ rx, children }: { rx: number; children: ReactNode }) {
+function FitScale({
+  rx,
+  overlay,
+  children,
+}: {
+  rx: number;
+  overlay: HTMLElement | null;
+  children: ReactNode;
+}) {
   const { viewport, size } = useThree();
-  // Marker labels are DOM px regardless of scene scale — reserve their
-  // half-width (plus breathing room) as world units before fitting.
-  const marginPx = 48;
+  const [marginPx, setMarginPx] = useState(48);
+  const tick = useRef(0);
+  useFrame(() => {
+    if (!overlay || tick.current++ % 30 !== 0) return;
+    let half = 48;
+    overlay
+      .querySelectorAll(".planet-node__label, .planet-node__body")
+      .forEach((el) => {
+        half = Math.max(half, (el as HTMLElement).offsetWidth / 2 + 8);
+      });
+    if (Math.abs(half - marginPx) > 2) setMarginPx(half);
+  });
   const marginWorld = marginPx * (viewport.width / Math.max(size.width, 1));
   const s = Math.min(1, (viewport.width / 2 - marginWorld) / rx);
   return <group scale={THREE.MathUtils.clamp(s, 0.2, 1)}>{children}</group>;
@@ -192,7 +215,7 @@ export default function OrbitalScene({
   return (
     <>
       <CameraDrift />
-      <FitScale rx={rx}>
+      <FitScale rx={rx} overlay={overlay}>
         <SurveySphere />
         <FocusBeacon target={focused} />
         <SightingLine target={focused} />
