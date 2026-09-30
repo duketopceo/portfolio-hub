@@ -138,14 +138,6 @@ export const deployments: DeploymentConfig[] = [
     online: true,
   },
   {
-    slug: "nanoclaw",
-    url: "https://nanoclaw.dev",
-    host: "other",
-    role: "Multi-channel agentic AI container",
-    healthCheck: "/",
-    online: true,
-  },
-  {
     slug: "chronicle-weaver",
     url: "https://chronicleweaver.com",
     host: "other",
