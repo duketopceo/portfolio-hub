@@ -537,30 +537,6 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
 
-  {
-    slug: "nanoclaw",
-    repoName: "nanoclaw",
-    displayName: "NanoClaw",
-    tagline:
-      "Lightweight agentic AI container that connects to WhatsApp, Telegram, Slack, Discord, Gmail",
-    description:
-      "Lightweight agentic AI container that connects to WhatsApp, Telegram, Slack, Discord, Gmail. Features persistent memory across sessions, scheduled job execution, and runs on the Anthropic Agents SDK. Containerized for security isolation with multi-platform messaging integrations.",
-    category: "ai",
-    type: "platform",
-    featured: false,
-    liveUrl: "https://nanoclaw.dev",
-    demoUrl: "https://nanoclaw.dev",
-    embeddable: false,
-    techStack: ["TypeScript", "Anthropic SDK", "Docker", "Node.js"],
-    private: false,
-    highlights: [
-      "Multi-platform messaging integrations",
-      "Persistent memory across sessions",
-      "Scheduled job execution",
-      "Containerized for security isolation",
-    ],
-  },
-
   // ── OSINT & Data ─────────────────────────────────────────────────
   {
     slug: "republic-atlas",

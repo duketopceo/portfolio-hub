@@ -23,7 +23,6 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "skyguard-ai":       { x: -0.25, y:  0.75 },
   "quiz-the-best":     { x:  0.65, y: -0.45 },
   "optimezer":         { x: -0.35, y:  0.20 },
-  "nanoclaw":          { x: -0.10, y:  0.50 },
   "republic-atlas":    { x:  0.05, y:  0.85 },
   "military-hardware-db": { x: -0.55, y: -0.50 },
   "etl-pipeline":      { x: -0.70, y: -0.70 },
