@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { stubThirdParty } from "./stubs";
 
 const routes = [
   { path: "/", name: "home" },
@@ -86,6 +87,7 @@ async function expectNoHorizontalOverflow(page: Page) {
 
 test.describe("Portfolio visual acceptance matrix", () => {
   test.beforeEach(async ({ page }) => {
+    await stubThirdParty(page);
     await page.addInitScript(() => {
       localStorage.setItem("lk_welcomed", "1");
     });
