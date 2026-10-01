@@ -92,6 +92,16 @@ export default function Header() {
               ))}
 
               <a
+                href="https://show.luke-the-duke.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="site-header__link"
+              >
+                <span className="site-header__link-idx">↗</span>
+                The Show
+              </a>
+
+              <a
                 href="https://github.com/duketopceo"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -131,6 +141,16 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
+              <a
+                href="https://show.luke-the-duke.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="site-header__mobilelink"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span className="site-header__link-idx">↗</span>
+                The Show
+              </a>
               <a
                 href="https://github.com/duketopceo"
                 target="_blank"
