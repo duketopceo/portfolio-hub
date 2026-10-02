@@ -99,15 +99,15 @@ export default function WelcomeIntro() {
         <Link href="/hire" className="welcome-intro__chip" onClick={dismiss} data-umami-event="intro-choice" data-umami-event-target="hire">
           Hire →
         </Link>
-        <Link
-          href="/podcast"
+        <a
+          href="https://show.luke-the-duke.com/podcast/episodes/ep009/"
           className="welcome-intro__chip welcome-intro__chip--accent"
           onClick={dismiss}
           data-umami-event="intro-choice"
           data-umami-event-target="podcast"
         >
           🎙 EP009
-        </Link>
+        </a>
       </div>
 
       <button className="welcome-intro__cta" onClick={dismiss} data-umami-event="intro-dismiss">
