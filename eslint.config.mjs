@@ -12,10 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Minified bundle with no page referencing it. The other scripts in
-    // public/podcast/ are hand-authored and loaded by live pages, so they
-    // stay in scope — only this artifact is ignored.
-    "public/podcast/app.js",
     // Isolated Cloudflare Worker package — own toolchain and lint surface.
     "workers/**",
     // In-repo git worktrees are separate checkouts with their own build
