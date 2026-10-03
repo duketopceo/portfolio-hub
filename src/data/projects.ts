@@ -369,7 +369,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Broadsheet landing + verified episode archive",
     ],
     architecture:
-      "Static files → Cloudflare Pages → Broadcast deck mode (?broadcast=1) → apex /podcast/* redirects in",
+      "Static files → Cloudflare Pages → Broadcast deck mode (?broadcast=1); apex /podcast/* redirects to the show domain",
     businessContext:
       "A dedicated show surface for episodes and live recording decks, distinct from the portfolio hub.",
     scopeAndScale:
