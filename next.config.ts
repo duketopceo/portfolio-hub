@@ -45,29 +45,16 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Hard redirect /podcast and /podcast/ to the standalone static dashboard
-  // Static file lives at public/podcast/index.html → served at /podcast/index.html
+  // Podcast dashboards moved to the show site (Cloudflare Pages serves
+  // directory-index URLs like /podcast/episodes/ep009/ that this app's
+  // static layer can't). One permanent hop keeps every old apex path —
+  // including vault-recorded links — landing on the canonical copy.
   async redirects() {
     return [
       {
-        source: "/podcast",
-        destination: "/podcast/index.html",
-        permanent: false,
-      },
-      {
-        source: "/podcast/",
-        destination: "/podcast/index.html",
-        permanent: false,
-      },
-      {
-        source: "/podcast/mission",
-        destination: "/podcast/live.html",
-        permanent: false,
-      },
-      {
-        source: "/podcast/live",
-        destination: "/podcast/live.html",
-        permanent: false,
+        source: "/podcast/:path*",
+        destination: "https://show.luke-the-duke.com/podcast/:path*",
+        permanent: true,
       },
     ];
   },

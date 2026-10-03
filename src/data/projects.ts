@@ -352,28 +352,28 @@ export const projectConfigs: ProjectConfig[] = [
   },
   {
     slug: "luke-the-duke-show",
-    repoName: "lukethedukeshow",
+    repoName: "luke-the-duke-show",
     displayName: "Luke the Duke Show",
     tagline:
-      "Podcast deck and episode shell — broadcast mode for recording-quality presentation",
+      "Show site + Mission Control dashboards — broadcast mode for recording-quality decks",
     description:
-      "Next.js podcast site for Luke the Duke Show: episode shell, carousel, and broadcast mode tuned for recording-quality deck presentation. Separate from Cosmic Intelligence (portfolio-hub) but part of the luke-the-duke brand surface.",
+      "Static site at show.luke-the-duke.com (Cloudflare Pages): broadsheet landing, episode archive, and the Mission Control dashboard system with broadcast mode tuned for recording-quality deck presentation. Separate from Cosmic Intelligence (portfolio-hub) but part of the luke-the-duke brand surface.",
     category: "apps",
     type: "app",
     featured: false,
-    techStack: ["TypeScript", "Next.js", "Tailwind", "Podcast"],
+    techStack: ["HTML", "CSS", "Cloudflare Pages", "Podcast"],
     private: true,
     highlights: [
       "Episode shell + carousel structure",
       "Broadcast mode for recording-quality decks",
-      "Brand-aligned Cosmic visual language",
+      "Broadsheet landing + verified episode archive",
     ],
     architecture:
-      "Next.js App Router → Episode templates → Broadcast deck mode → Static/SSR delivery",
+      "Static files → Cloudflare Pages → Broadcast deck mode (?broadcast=1); apex /podcast/* redirects to the show domain",
     businessContext:
       "A dedicated show surface for episodes and live recording decks, distinct from the portfolio hub.",
     scopeAndScale:
-      "Single-product podcast site with episode catalog and presentation modes.",
+      "Single-product show site with episode catalog and presentation modes.",
     engineeringDecisions: [
       "Separate repo from portfolio-hub — Keeps show content and Cosmic portfolio deploy pipelines independent",
     ],
