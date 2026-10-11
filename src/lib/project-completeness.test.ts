@@ -60,8 +60,8 @@ describe("homepage orbit split", () => {
     );
   });
 
-  it("catalog has 63 projects with 5 featured flags", () => {
-    expect(projectConfigs.length).toBe(63);
+  it("catalog has 61 projects with 5 featured flags", () => {
+    expect(projectConfigs.length).toBe(61);
     expect(projectConfigs.filter((p) => p.featured).length).toBe(5);
   });
 });

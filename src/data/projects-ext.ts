@@ -12,7 +12,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     tagline:
       "Self-hostable, agent-native issue tracker — Linear-class UX on one board for humans and AI agents",
     description:
-      "Tallyline (repo docketry) is an MIT-licensed, self-hostable issue tracker with Linear-style density: keyboard-first web app, kanban, triage inbox, cycles, and an append-only event log attributing every transition to a human or agent actor. Agents enter through an MCP server, the `tallyline` CLI with stable `--json` exit codes, or the REST/OpenAPI API; dispatch routes assigned work to harness adapters with signed outbound webhooks.",
+      "Tallyline is an MIT-licensed, self-hostable issue tracker with Linear-style density: keyboard-first web app, kanban, triage inbox, cycles, and an append-only event log attributing every transition to a human or agent actor. Agents enter through an MCP server, the `tallyline` CLI with stable `--json` exit codes, or the REST/OpenAPI API; dispatch routes assigned work to harness adapters with signed outbound webhooks. Public source currently lives at github.com/duketopceo/docketry while the GitHub rename to tallyline completes.",
     category: "apps",
     type: "platform",
     featured: false,
@@ -117,6 +117,28 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     ],
     architecture:
       "PipeWire capture → whisper.cpp → Jev router → mode handlers → QML companion + panel",
+  },
+  {
+    slug: "jev-compact",
+    repoName: "jev-compact",
+    displayName: "Jev Compact",
+    tagline:
+      "Context compaction for agent harnesses — retention filter with tombstones and MCP restore",
+    description:
+      "jev-compact scores transcript spans against a moving highlight (current intent, last action, active files), keeps load-bearing spans verbatim, tombstones the rest with one-line receipts, and drops the tail under a token budget — without summarizing away code, paths, or diffs. Full transcripts stay on disk; the context-restore MCP server rehydrates tombstones when the thread swings back. Python stdlib CLI with Jev scoring or an offline heuristic; Claude Code PreCompact adapter ships in-repo.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Jev", "MCP", "Agent harnesses"],
+    private: false,
+    highlights: [
+      "Retention filter, not a summarizer — verbatim spans for code and errors",
+      "Knapsack under budget with restorable tombstones via MCP",
+      "Moving highlight tracks topic drift across long sessions",
+      "Harness adapters — Claude Code PreCompact + SessionStart wired",
+    ],
+    architecture:
+      "Transcript spans → highlight → Jev/heuristic scores → knapsack → tombstones → MCP restore",
   },
   {
     slug: "omarchy-agents",
@@ -435,26 +457,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "Companion to OpenRouter Usage",
     ],
     architecture: "OpenRouter spend data → budget helpers → lightweight UI",
-  },
-  {
-    slug: "dayflow-screenshots",
-    repoName: "dayflow-screenshots",
-    displayName: "Dayflow Screenshots",
-    tagline: "Auto-rename and index Wayland screenshots",
-    description:
-      "Auto-rename and index Wayland screenshots with a vision model. Produces timestamped snake_case filenames plus a markdown catalog.",
-    category: "apps",
-    type: "app",
-    featured: false,
-    techStack: ["Python", "OpenRouter", "Vision Models", "Wayland"],
-    private: false,
-    highlights: [
-      "Automatic Wayland screenshot indexing",
-      "Vision-generated snake_case filenames",
-      "Markdown catalog output",
-    ],
-    architecture:
-      "Screenshot watcher → vision model → file rename → markdown catalog",
   },
   {
     slug: "kurultai-people",

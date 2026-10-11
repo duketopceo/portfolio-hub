@@ -513,33 +513,6 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
 
-  {
-    slug: "nem-stock-pitch",
-    repoName: "nem-stock-pitch",
-    displayName: "NEM Stock Pitch",
-    tagline:
-      "Institutional-grade equity research — LONG Newmont, built entirely with Perplexity Computer",
-    description:
-      "Interactive stock pitch arguing Newmont (NEM) is not a gold miner but a sovereign hedge fund. Built for the 2026 Perplexity Computer Stock Pitch Competition judged by Philippe Laffont (Coatue), Dan Loeb (Third Point), and Ken Hao (Silver Lake). The thesis rests on macro inevitability ($39T national debt, $193.6T unfunded liabilities, M2 expansion), three structural legs (central bank gold bid, hidden copper call, nuclear-mining nexus), and an AI hardware demand angle (gold + copper in every chip and data center). Features Chart.js visualizations, MapLibre globe, peer comparison tables, and oil sensitivity analysis. Dark theme, responsive, single-page.",
-    category: "finance",
-    type: "app",
-    featured: false,
-    liveUrl: "https://nem.luke-the-duke.com",
-    demoUrl: "https://nem.luke-the-duke.com",
-    embeddable: false,
-    demoOffline: true,
-    techStack: ["HTML/CSS", "Chart.js", "MapLibre", "Perplexity Computer"],
-    private: false,
-    highlights: [
-      "Built entirely with Perplexity Computer — research, code, deploy",
-      "Macro thesis: $193.6T unfunded liabilities, 863t CB gold buying",
-      "Multi-angle analysis: copper, nuclear, AI hardware demand",
-      "Competition: Laffont, Loeb, Hao judging panel",
-    ],
-    architecture:
-      "Static HTML/CSS → Chart.js charts → MapLibre globe → Responsive single-page app",
-  },
-
   // ── AI & Automation ──────────────────────────────────────────────
   {
     slug: "skyguard-ai",
@@ -689,29 +662,6 @@ export const projectConfigs: ProjectConfig[] = [
       "Configurable transformation steps",
       "Multiple data source connectors",
     ],
-  },
-
-  // ── Infrastructure ───────────────────────────────────────────────
-  {
-    slug: "server-cluster",
-    repoName: "Bartlett-server-001",
-    displayName: "Production Cluster",
-    tagline:
-      "Docker Swarm infrastructure — multi-node cluster with Traefik, monitoring, and CI/CD",
-    description:
-      "Three-node Docker Swarm on Tailscale (cluster1 / cluster-1-master as manager, cluster2 and cluster3 as workers) running Apple Silicon Mac Minis. Features automated container deployments via GitHub webhooks, Traefik reverse proxy handling TLS termination and routing for multiple subdomains, Cloudflare Tunnel for secure public access without port forwarding, and Tailscale mesh VPN for encrypted inter-node communication. Currently hosts the portfolio site, military hardware database, and several internal tools.",
-    category: "infra",
-    type: "infra",
-    featured: false,
-    techStack: ["Docker", "Shell", "Traefik", "Cloudflare", "Tailscale"],
-    private: true,
-    highlights: [
-      "Multi-node Docker Swarm orchestration",
-      "CI/CD with automatic container deployments",
-      "Zero-trust networking with Tailscale mesh",
-    ],
-    architecture:
-      "GitHub webhooks → Docker Swarm → Traefik routing → Cloudflare Tunnel → Public subdomains",
   },
 
   // ── Education & Study ────────────────────────────────────────────
