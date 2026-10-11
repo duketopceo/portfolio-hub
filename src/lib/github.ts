@@ -1,5 +1,6 @@
 import { GitHubRepo, EnrichedProject } from "./types";
 import { projectConfigs } from "@/data/projects";
+import { isCatalogArchived } from "@/lib/catalog-archive";
 import { applyDeploymentOverlay } from "@/lib/deployments";
 import { publicGithubUrl } from "@/lib/github-public-url";
 import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
@@ -233,6 +234,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
       if (withDeploy.siteOnly) {
         return {
           ...withDeploy,
+          catalogArchive: isCatalogArchived(withDeploy),
           githubUrl: null,
           private: false,
           repo: null,
@@ -264,6 +266,10 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
 
       return {
         ...withDeploy,
+        catalogArchive: isCatalogArchived({
+          ...withDeploy,
+          repoArchived: repo?.archived,
+        }),
         githubUrl,
         // Monotonic: a configured-private project is never downgraded to public
         // by whatever the API reports for a same-name repository.

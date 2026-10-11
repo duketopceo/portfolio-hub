@@ -112,11 +112,15 @@ export interface ProjectConfig {
   engineeringDecisions?: string[];
   /** On-site showcase only — no GitHub repo (e.g. OpenRouter demos page) */
   siteOnly?: boolean;
+  /** When true (or listed in catalog archive slugs), hide from homepage orbits and show in archive registry. */
+  catalogArchive?: boolean;
   /** Private dossier — shipped vs remaining finish-line (recruiter-facing) */
   finishLine?: string;
 }
 
 export interface EnrichedProject extends ProjectConfig {
+  /** Resolved archive flag — config, slug list, or GitHub repo.archived. */
+  catalogArchive: boolean;
   repo: GitHubRepo | null;
   lastUpdated: string;
   language: string | null;

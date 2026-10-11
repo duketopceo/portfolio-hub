@@ -1,4 +1,5 @@
 import { getEnrichedProjects } from "@/lib/github";
+import { partitionCatalogProjects } from "@/lib/catalog-archive";
 import FilterBar from "@/components/FilterBar";
 import ConstellationNav from "@/components/ConstellationNav";
 import { PageHeader, PageShell, SectionHeading } from "@/components/design";
@@ -13,6 +14,7 @@ export const metadata = {
 
 export default async function ProjectsPage() {
   const projects = await getEnrichedProjects();
+  const { active: activeProjects } = partitionCatalogProjects(projects);
 
   return (
     <PageShell>
@@ -38,7 +40,7 @@ export default async function ProjectsPage() {
           title={<span id="domain-map-heading">Sector map</span>}
           description="A 2D chart of how bodies cluster by domain — distinct from the home orbit ordering by completeness."
         />
-        <ConstellationNav projects={projects} />
+        <ConstellationNav projects={activeProjects} />
       </section>
     </PageShell>
   );

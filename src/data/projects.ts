@@ -330,6 +330,47 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
   {
+    slug: "agentflow",
+    repoName: "agentflow",
+    displayName: "Agentflow",
+    tagline:
+      "Cross-harness dynamic workflows — script-driven multi-agent orchestration with journaled, resumable runs",
+    description:
+      "Agentflow is a portable subprocess runner for multi-agent work: write an orchestration script once, fan out one-shot agent sessions (Devin, Claude Code, Codex, OpenCode, OpenRouter, and more) under a bounded concurrency pool, and keep state in a run journal instead of a model context window. Workflow scripts use top-level await with `agent()`, `parallel()`, `pipeline()`, `batch()`, and `phase()`; `agentflow watch` renders live lane progress from the journal; detach/stop/clean ops stay resumable mid-run.",
+    category: "ai",
+    type: "platform",
+    featured: true,
+    planetVisual: {
+      size: "lg",
+      shape: "hex",
+      color: "#A78BFA",
+      rings: [{ opacity: 0.28, tilt: -12 }],
+      moons: [
+        { label: "Devin", kind: "stack" },
+        { label: "Codex", kind: "stack" },
+        { label: "journal", kind: "stack" },
+      ],
+    },
+    techStack: [
+      "Node.js",
+      "JavaScript",
+      "Devin",
+      "Claude Code",
+      "Codex",
+      "OpenCode",
+      "OpenRouter",
+    ],
+    private: false,
+    highlights: [
+      "Script-native orchestration — state lives in the journal, not chat context",
+      "Harness adapters for Devin, Claude, Codex, OpenCode, OpenRouter, Perplexity",
+      "Bounded concurrency with resumable detach/stop/clean ops",
+      "Plugin manifests for Devin, Claude Code, Codex, and OpenCode",
+    ],
+    architecture:
+      "Workflow .mjs → harness pool → journaled agent calls → watch/status/stop → resumable run record",
+  },
+  {
     slug: "ai-debate-arena",
     repoName: "ai-debate-arena",
     displayName: "AI Debate Arena",
@@ -735,7 +776,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Stratum Engine is the operations backend for home service contractors — AI-powered intake, dispatch, and workflow. The public shell lives at stratumhq.app; source stays private under Herzog-LLC.",
     category: "apps",
     type: "platform",
-    featured: true,
+    featured: false,
     planetVisual: {
       size: "lg",
       shape: "cube",

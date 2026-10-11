@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EnrichedProject, ProjectCategory } from "@/lib/types";
+import { partitionCatalogProjects } from "@/lib/catalog-archive";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import ProjectCard from "./ProjectCard";
@@ -34,7 +35,10 @@ export default function FilterBar({ projects }: FilterBarProps) {
   >("all");
   const [sortBy, setSortBy] = useState<"recent" | "name" | "stars">("recent");
 
-  const filtered = projects
+  const { active: activeCatalog, archived: archivedCatalog } =
+    partitionCatalogProjects(projects);
+
+  const filtered = activeCatalog
     .filter(
       (p) => activeCategory === "all" || p.category === activeCategory
     )
@@ -95,8 +99,8 @@ export default function FilterBar({ projects }: FilterBarProps) {
               {categories.map((cat) => {
                 const count =
                   cat.key === "all"
-                    ? projects.length
-                    : projects.filter((p) => p.category === cat.key).length;
+                    ? activeCatalog.length
+                    : activeCatalog.filter((p) => p.category === cat.key).length;
                 if (count === 0 && cat.key !== "all") return null;
                 const active = activeCategory === cat.key;
                 const pillColor = catColors[cat.key] || "#2DD4BF";
@@ -183,6 +187,38 @@ export default function FilterBar({ projects }: FilterBarProps) {
             <div className="catalog-empty">
               No projects in this category.
             </div>
+          )}
+
+          {archivedCatalog.length > 0 && (
+            <section
+              className="catalog-archive-section"
+              aria-labelledby="catalog-archive-heading"
+            >
+              <h3 id="catalog-archive-heading" className="catalog-archive__title">
+                Archived registry
+              </h3>
+              <p className="catalog-archive__lede">
+                Retired or GitHub-archived bodies — dossiers stay available, but
+                these are off the homepage orbits.
+              </p>
+              <div className="catalog-grid catalog-grid--archive">
+                {archivedCatalog.map((project, i) => (
+                  <div
+                    key={project.slug}
+                    className="animate-fade-up"
+                    style={{ animationDelay: `${i * 40}ms` }}
+                  >
+                    <ProjectCard
+                      project={project}
+                      archived
+                      registryIndex={projects.findIndex(
+                        (p) => p.slug === project.slug
+                      )}
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
           )}
         </>
       ) : (

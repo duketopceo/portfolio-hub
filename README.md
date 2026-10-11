@@ -24,7 +24,7 @@ I build OpenRouter-native systems that compound — agent harnesses, knowledge l
 
 The homepage is not a flat project list. It is a **solar map**:
 
-- **Primary orbit** — five featured systems (Khan, Kurultai, Pace Server, OpenRouter Demos, Stratum Engine)
+- **Primary orbit** — five featured systems (Khan, Kurultai, Pace Server, OpenRouter Demos, Agentflow)
 - **Secondary orbit** — ~20 smaller catalog worlds on offset double rings (same planet module, scaled down)
 - **Activity strip** — GitHub App history ingested (~90 days), displayed as condensed charts + grouped PRs with a **7d / 30d / 90d** range toggle
 
