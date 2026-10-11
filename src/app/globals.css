@@ -1732,8 +1732,7 @@
 .cosmic-project-card__labels {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.5rem;
+  gap: 0.5rem;
   min-width: 0;
 }
 
@@ -1782,8 +1781,6 @@
   letter-spacing: -0.025em;
   line-height: 1.25;
   margin-bottom: 0.875rem;
-  overflow-wrap: anywhere;
-  word-break: break-word;
 }
 
 .cosmic-card-desc {
@@ -1794,7 +1791,6 @@
   margin-bottom: 0;
   flex: 1;
   min-height: 4.5em;
-  overflow-wrap: anywhere;
 }
 
 .cosmic-project-card__meta {
@@ -1876,41 +1872,6 @@
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  max-width: 100%;
-}
-
-@media (max-width: 480px) {
-  .cosmic-project-card__top {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.625rem;
-  }
-
-  .cosmic-project-card__meta-right {
-    width: 100%;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.35rem 0.5rem;
-  }
-
-  .cosmic-card-desc {
-    min-height: 0;
-  }
-
-  .cosmic-project-card__meta {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .cosmic-project-card__chevron {
-    width: 100%;
-    justify-content: flex-end;
-  }
-
-  .catalog-archive-section {
-    margin-top: 2.25rem;
-    padding-top: 1.5rem;
-  }
 }
 
 .cosmic-card-pill--live {

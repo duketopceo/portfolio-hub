@@ -119,28 +119,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "PipeWire capture → whisper.cpp → Jev router → mode handlers → QML companion + panel",
   },
   {
-    slug: "jev-compact",
-    repoName: "jev-compact",
-    displayName: "Jev Compact",
-    tagline:
-      "Context compaction for agent harnesses — retention filter with tombstones and MCP restore",
-    description:
-      "jev-compact scores transcript spans against a moving highlight (current intent, last action, active files), keeps load-bearing spans verbatim, tombstones the rest with one-line receipts, and drops the tail under a token budget — without summarizing away code, paths, or diffs. Full transcripts stay on disk; the context-restore MCP server rehydrates tombstones when the thread swings back. Python stdlib CLI with Jev scoring or an offline heuristic; Claude Code PreCompact adapter ships in-repo.",
-    category: "ai",
-    type: "library",
-    featured: false,
-    techStack: ["Python", "Jev", "MCP", "Agent harnesses"],
-    private: false,
-    highlights: [
-      "Retention filter, not a summarizer — verbatim spans for code and errors",
-      "Knapsack under budget with restorable tombstones via MCP",
-      "Moving highlight tracks topic drift across long sessions",
-      "Harness adapters — Claude Code PreCompact + SessionStart wired",
-    ],
-    architecture:
-      "Transcript spans → highlight → Jev/heuristic scores → knapsack → tombstones → MCP restore",
-  },
-  {
     slug: "omarchy-agents",
     repoName: "omarchy-agents",
     displayName: "Omarchy Agents",
@@ -400,6 +378,31 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "Umbrella catalog → per-plugin subtrees → `omarchy plugin add` repos → marketplace listings",
   },
   {
+    slug: "a0-plugins",
+    repoName: "a0-plugins",
+    displayName: "Agent Zero Plugins",
+    tagline:
+      "Community plugin index plus first-party a0-plugin-* extensions for stock Agent Zero",
+    description:
+      "The a0-plugins repository is the community-maintained index surfaced inside Agent Zero — each submission is an `index.yaml` pointing at its own repo. First-party plugins in this portfolio include device-sync (Tailscale settings/chat sync), durable (journaled restart-survivable tasks), notion (read-only Notion MCP tools), glitchtip (Sentry-compatible error reporting), jev-compact (span-scored compaction via the vendored jev-compact engine), and omaseal (unified secrets resolution for tools and providers). All install under `usr/plugins/<name>/` with opt-in defaults.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "MCP", "Plugins", "YAML index"],
+    private: false,
+    highlights: [
+      "a0-plugins — community index with index.yaml submissions",
+      "device-sync — peer sync for settings, chats, and memory atoms",
+      "durable — journaled llm/tool steps with restart replay",
+      "notion — read-only Notion MCP + ingestion helpers",
+      "glitchtip — OTel-tagged exception export to self-hosted GlitchTip",
+      "jev-compact plugin — tombstone/restore compaction (engine: jev-compact)",
+      "omaseal plugin — §§secret() resolution across keyring backends",
+    ],
+    architecture:
+      "a0-plugins index → per-plugin repos → usr/plugins/* → A0 startup + MCP/tools",
+  },
+  {
     slug: "orchestral",
     repoName: "orchestral",
     displayName: "Orchestral",
@@ -440,25 +443,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "OpenRouter API → usage aggregation → budget engine → dashboard UI",
   },
   {
-    slug: "a0-openrouter-spend",
-    repoName: "a0-openrouter-spend",
-    displayName: "A0 OpenRouter Spend",
-    tagline: "OpenRouter spend and budget tracking utility",
-    description:
-      "OpenRouter spend tracking and budget analytics utility. Work-in-progress companion to the main OpenRouter Usage dashboard.",
-    category: "finance",
-    type: "experiment",
-    featured: false,
-    techStack: ["TypeScript", "OpenRouter", "Analytics"],
-    private: false,
-    highlights: [
-      "OpenRouter spend tracking",
-      "Budget analytics helpers",
-      "Companion to OpenRouter Usage",
-    ],
-    architecture: "OpenRouter spend data → budget helpers → lightweight UI",
-  },
-  {
     slug: "kurultai-people",
     repoName: "kurultai_people",
     displayName: "Kurultai People",
@@ -497,26 +481,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     ],
     architecture:
       "Grafana JSON dashboards → Git sync → Pace observability stack",
-  },
-  {
-    slug: "omaseal",
-    repoName: "OmaSeal",
-    displayName: "OmaSeal",
-    tagline: "First-party keyring manager for Omarchy",
-    description:
-      "First-party keyring manager for the Omarchy environment. Securely stores and retrieves credentials for plugins and services.",
-    category: "apps",
-    type: "library",
-    featured: false,
-    techStack: ["TypeScript", "Omarchy", "Security", "Keyring"],
-    private: false,
-    highlights: [
-      "First-party keyring for Omarchy",
-      "Plugin credential store",
-      "Secure retrieval API",
-    ],
-    architecture:
-      "Keyring backend → encrypted store → plugin credential API → Omarchy UI",
   },
   {
     slug: "crucible",

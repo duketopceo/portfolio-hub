@@ -23,6 +23,7 @@ describe("homepage orbit split", () => {
     ciStatus: null,
     lastUpdated: "",
     githubUrl: p.private ? null : `https://github.com/duketopceo/${p.repoName}`,
+    companionGithubLinks: [],
   }));
 
   it("primary orbit has exactly the featured five", () => {
@@ -60,8 +61,8 @@ describe("homepage orbit split", () => {
     );
   });
 
-  it("catalog has 61 projects with 5 featured flags", () => {
-    expect(projectConfigs.length).toBe(61);
+  it("catalog has 59 projects with 5 featured flags", () => {
+    expect(projectConfigs.length).toBe(59);
     expect(projectConfigs.filter((p) => p.featured).length).toBe(5);
   });
 });

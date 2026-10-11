@@ -105,11 +105,17 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Vision-model E2E testing — record once, fingerprint-cache every step, heal on drift, cost-metered per run",
     description:
-      "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced.",
+      "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced. The Agent Zero plugin (`a0-plugin-argus`) exposes `argus_review` and `argus_flow` tools inside A0 runs.",
     category: "ai",
     type: "library",
     featured: false,
     orbitTier: "secondary",
+    companionRepos: [
+      {
+        repoName: "a0-plugin-argus",
+        label: "Agent Zero plugin",
+      },
+    ],
     demoUrl: "/demos/argus",
     techStack: [
       "TypeScript",
@@ -126,6 +132,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Sandbox lane reproduces review findings, stamped not suspected",
       "CodeRabbit-style review surface — formal GitHub reviews that satisfy required-approvals",
       "Published npm package argus-reviewer-e2e (v0.3.x)",
+      "Agent Zero plugin — PR review and flow replay tools for A0",
     ],
     architecture:
       "Record (Playwright + vision model) → fingerprint cache → replay/heal → GitHub check + formal review with per-call cost ledger",

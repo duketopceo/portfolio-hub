@@ -132,6 +132,9 @@ export default function ProjectCard({
       {project.githubUrl && !project.private && (
         <GithubLink url={project.githubUrl} />
       )}
+      {project.companionGithubLinks.map((link) => (
+        <GithubLink key={link.url} url={link.url} label={link.label} />
+      ))}
       {hasDemo && demoUrl && <DemoLink url={demoUrl} />}
     </article>
   );

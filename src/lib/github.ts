@@ -217,6 +217,20 @@ function mapCiStatus(ci: CiStateKind): EnrichedProject["ciStatus"] {
  * Enrich project configs with live GitHub data.
  * SECURITY: Strips sensitive fields before returning.
  */
+function companionGithubLinks(
+  project: (typeof projectConfigs)[number],
+  isPrivateProject: boolean
+): EnrichedProject["companionGithubLinks"] {
+  if (isPrivateProject || !project.companionRepos?.length) return [];
+  return project.companionRepos
+    .map((c) => {
+      const owner = c.repoOwner ?? GITHUB_ACCOUNT_LOGIN;
+      const url = publicGithubUrl(false, c.repoName, owner);
+      return url ? { url, label: c.label } : null;
+    })
+    .filter((x): x is { url: string; label: string } => x !== null);
+}
+
 export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   const allRepos = await fetchAllRepos();
   const repoMap = new Map<string, GitHubRepo>();
@@ -245,6 +259,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
           forks: 0,
           openIssuesCount: 0,
           ciStatus: null,
+          companionGithubLinks: [],
         } satisfies EnrichedProject;
       }
 
@@ -264,6 +279,9 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         languages = [repo.language];
       }
 
+      const isPrivateProject =
+        withDeploy.private || repo?.private === true;
+
       return {
         ...withDeploy,
         catalogArchive: isCatalogArchived({
@@ -273,7 +291,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         githubUrl,
         // Monotonic: a configured-private project is never downgraded to public
         // by whatever the API reports for a same-name repository.
-        private: withDeploy.private || repo?.private === true,
+        private: isPrivateProject,
         repo: null,
         lastUpdated: repo?.pushed_at || "",
         language: repo?.language || null,
@@ -282,6 +300,10 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         forks: repo?.forks_count || 0,
         openIssuesCount: repo?.open_issues_count ?? 0,
         ciStatus,
+        companionGithubLinks: companionGithubLinks(
+          withDeploy,
+          isPrivateProject
+        ),
       } satisfies EnrichedProject;
     })
   );

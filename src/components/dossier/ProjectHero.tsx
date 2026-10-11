@@ -135,6 +135,18 @@ export function ProjectHero({ project, accentColor, meta, registryIndex }: Proje
                     <ExternalIcon className="w-3 h-3 opacity-80" />
                   </a>
                 )}
+                {project.companionGithubLinks.map((link) => (
+                  <a
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="detail-cta detail-cta--secondary"
+                  >
+                    {link.label}
+                    <ExternalIcon className="w-3 h-3 opacity-80" />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
