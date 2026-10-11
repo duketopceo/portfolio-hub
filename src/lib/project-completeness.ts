@@ -1,4 +1,5 @@
 import type { EnrichedProject, OrbitTier } from "@/lib/types";
+import { isCatalogArchived } from "@/lib/catalog-archive";
 import { isProjectLive } from "@/lib/deployments";
 
 /**
@@ -28,7 +29,7 @@ export const HOMEPAGE_FEATURED_SLUGS = [
   "kurultai",
   "pace-server",
   "openrouter",
-  "stratum-hq",
+  "agentflow",
 ] as const;
 
 const MS_DAY = 86_400_000;
@@ -118,7 +119,8 @@ export function getHomepageSecondaryOrbitProjects(
     projects.filter(
       (p) =>
         !featured.has(p.slug) &&
-        p.orbitTier !== "catalog-only"
+        p.orbitTier !== "catalog-only" &&
+        !isCatalogArchived(p)
     )
   );
 }

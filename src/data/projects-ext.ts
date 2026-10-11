@@ -6,6 +6,119 @@ import type { ProjectConfig } from "@/lib/types";
  */
 export const projectExtensionConfigs: ProjectConfig[] = [
   {
+    slug: "tallyline",
+    repoName: "docketry",
+    displayName: "Tallyline",
+    tagline:
+      "Self-hostable, agent-native issue tracker — Linear-class UX on one board for humans and AI agents",
+    description:
+      "Tallyline is an MIT-licensed, self-hostable issue tracker with Linear-style density: keyboard-first web app, kanban, triage inbox, cycles, and an append-only event log attributing every transition to a human or agent actor. Agents enter through an MCP server, the `tallyline` CLI with stable `--json` exit codes, or the REST/OpenAPI API; dispatch routes assigned work to harness adapters with signed outbound webhooks. Public source currently lives at github.com/duketopceo/docketry while the GitHub rename to tallyline completes.",
+    category: "apps",
+    type: "platform",
+    featured: false,
+    techStack: [
+      "TypeScript",
+      "Next.js",
+      "Hono",
+      "Postgres",
+      "Drizzle",
+      "MCP",
+      "BullMQ",
+    ],
+    private: false,
+    highlights: [
+      "One state machine for people and agents — full audit trail per actor",
+      "MCP + CLI + REST entry points with dispatch to harness adapters",
+      "pnpm/Turborepo monorepo — web, API, MCP, dispatch worker, CLI",
+      "GitHub, Slack, n8n, and Linear CSV import integrations",
+    ],
+    architecture:
+      "Next.js web → Hono API → Postgres event log → MCP/CLI/agents → BullMQ dispatch → webhooks",
+  },
+  {
+    slug: "open-computer",
+    repoName: "open-computer",
+    displayName: "Open Computer",
+    tagline:
+      "Open, self-hosted composition of Perplexity Computer — routed sandboxes, approval gates, hard cost caps",
+    description:
+      "open-computer is a research-phase program to compose browser-use, OpenHands, CubeSandbox, agentflow, and related fleet repos into a cost-capped orchestrator: route subtasks to cheap models, run each in a disposable sandbox, hold sensitive steps for human approval, and ledger spend per run. Architecture and router benchmarks are documented; the first runnable CLI is planned — no runtime code ships yet.",
+    category: "ai",
+    type: "experiment",
+    featured: false,
+    techStack: ["Research", "Orchestration", "Sandboxes", "Cost ledger"],
+    private: false,
+    highlights: [
+      "Research repo — architecture mapped, runtime not shipped yet",
+      "Planned orchestrator + placement policy + approval gate + cost ledger",
+      "Builds on agentflow fan-out, orchestral loop, and CubeSandbox isolation",
+      "MIT licensed — personal infrastructure first, not a Perplexity clone",
+    ],
+    architecture:
+      "Goal → orchestrator → placement policy → sandbox subtask → approval gate (when flagged) → cost ledger",
+  },
+  {
+    slug: "wordink",
+    repoName: "WordInk",
+    displayName: "WordInk",
+    tagline:
+      "Dictation as a component — provider-agnostic web SDK (pre-release)",
+    description:
+      "WordInk is an open-source dictation engine packaged as drop-in web components and React hooks: speech becomes finished text at the cursor with native undo, BYOK through a small `@wordink/server` relay so provider keys never reach the browser, optional offline Moonshine via `@wordink/local`, and no WordInk-hosted telemetry. Phase 1 Web SDK is built ahead of first npm release; docs and live demo ship on GitHub Pages.",
+    category: "apps",
+    type: "library",
+    featured: false,
+    liveUrl: "https://duketopceo.github.io/WordInk/",
+    demoUrl: "https://duketopceo.github.io/WordInk/",
+    embeddable: true,
+    techStack: [
+      "Rust",
+      "WebAssembly",
+      "TypeScript",
+      "React",
+      "Groq",
+      "Cloudflare Workers",
+    ],
+    private: false,
+    highlights: [
+      "`<wordink-mic>` and React `WordInkMic` — insert dictation at the caret",
+      "Rust sans-I/O core compiled to WASM with provider-agnostic relays",
+      "BYOK via `@wordink/server` — fail-closed, no keys in the browser",
+      "Pre-release — Changesets/npm publish pipeline documented in-repo",
+    ],
+    architecture:
+      "Browser mic → WASM core → relay (@wordink/server) → STT provider → text at cursor",
+  },
+  {
+    slug: "wisp",
+    repoName: "wisp",
+    displayName: "Wisp",
+    tagline:
+      "Jev-powered voice computer-use agent for Omarchy — push-to-talk desktop companion (v0.9 shipped)",
+    description:
+      "Wisp is a resident voice companion for Omarchy on Hyprland: hold Super+D, speak, and a PipeWire → whisper.cpp → Jev routing pipeline chooses launch, tool, agent, act, dictate, answer, or clarify modes. v0.9 ships the companion orb, cursor bubble, listening pill, ghost cursor, and panel (Now, Agents, Memory, Settings) plus `wispd` install/onboard/doctor flows — distinct from the omarchy-wisp shell plugin, which only renders wispd state in the bar.",
+    category: "apps",
+    type: "platform",
+    featured: false,
+    techStack: [
+      "Python",
+      "QML",
+      "Hyprland",
+      "whisper.cpp",
+      "Jev",
+      "PipeWire",
+    ],
+    private: false,
+    highlights: [
+      "v0.9 shipped — multi-surface companion (orb, bubble, pill, panel)",
+      "Push-to-talk voice → Jev routing → guarded hyprctl / CUA actions",
+      "Persistent `wispd` daemon with install, onboard, and doctor commands",
+      "Separate from omarchy-wisp — this repo is the voice agent, not the bar shell",
+    ],
+    architecture:
+      "PipeWire capture → whisper.cpp → Jev router → mode handlers → QML companion + panel",
+  },
+  {
     slug: "omarchy-agents",
     repoName: "omarchy-agents",
     displayName: "Omarchy Agents",
@@ -265,6 +378,31 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "Umbrella catalog → per-plugin subtrees → `omarchy plugin add` repos → marketplace listings",
   },
   {
+    slug: "a0-plugins",
+    repoName: "a0-plugins",
+    displayName: "Agent Zero Plugins",
+    tagline:
+      "Community plugin index plus first-party a0-plugin-* extensions for stock Agent Zero",
+    description:
+      "The a0-plugins repository is the community-maintained index surfaced inside Agent Zero — each submission is an `index.yaml` pointing at its own repo. First-party plugins in this portfolio include device-sync (Tailscale settings/chat sync), durable (journaled restart-survivable tasks), notion (read-only Notion MCP tools), glitchtip (Sentry-compatible error reporting), jev-compact (span-scored compaction via the vendored jev-compact engine), and omaseal (unified secrets resolution for tools and providers). All install under `usr/plugins/<name>/` with opt-in defaults.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "MCP", "Plugins", "YAML index"],
+    private: false,
+    highlights: [
+      "a0-plugins — community index with index.yaml submissions",
+      "device-sync — peer sync for settings, chats, and memory atoms",
+      "durable — journaled llm/tool steps with restart replay",
+      "notion — read-only Notion MCP + ingestion helpers",
+      "glitchtip — OTel-tagged exception export to self-hosted GlitchTip",
+      "jev-compact plugin — tombstone/restore compaction (engine: jev-compact)",
+      "omaseal plugin — §§secret() resolution across keyring backends",
+    ],
+    architecture:
+      "a0-plugins index → per-plugin repos → usr/plugins/* → A0 startup + MCP/tools",
+  },
+  {
     slug: "orchestral",
     repoName: "orchestral",
     displayName: "Orchestral",
@@ -305,45 +443,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "OpenRouter API → usage aggregation → budget engine → dashboard UI",
   },
   {
-    slug: "a0-openrouter-spend",
-    repoName: "a0-openrouter-spend",
-    displayName: "A0 OpenRouter Spend",
-    tagline: "OpenRouter spend and budget tracking utility",
-    description:
-      "OpenRouter spend tracking and budget analytics utility. Work-in-progress companion to the main OpenRouter Usage dashboard.",
-    category: "finance",
-    type: "experiment",
-    featured: false,
-    techStack: ["TypeScript", "OpenRouter", "Analytics"],
-    private: false,
-    highlights: [
-      "OpenRouter spend tracking",
-      "Budget analytics helpers",
-      "Companion to OpenRouter Usage",
-    ],
-    architecture: "OpenRouter spend data → budget helpers → lightweight UI",
-  },
-  {
-    slug: "dayflow-screenshots",
-    repoName: "dayflow-screenshots",
-    displayName: "Dayflow Screenshots",
-    tagline: "Auto-rename and index Wayland screenshots",
-    description:
-      "Auto-rename and index Wayland screenshots with a vision model. Produces timestamped snake_case filenames plus a markdown catalog.",
-    category: "apps",
-    type: "app",
-    featured: false,
-    techStack: ["Python", "OpenRouter", "Vision Models", "Wayland"],
-    private: false,
-    highlights: [
-      "Automatic Wayland screenshot indexing",
-      "Vision-generated snake_case filenames",
-      "Markdown catalog output",
-    ],
-    architecture:
-      "Screenshot watcher → vision model → file rename → markdown catalog",
-  },
-  {
     slug: "kurultai-people",
     repoName: "kurultai_people",
     displayName: "Kurultai People",
@@ -382,26 +481,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     ],
     architecture:
       "Grafana JSON dashboards → Git sync → Pace observability stack",
-  },
-  {
-    slug: "omaseal",
-    repoName: "OmaSeal",
-    displayName: "OmaSeal",
-    tagline: "First-party keyring manager for Omarchy",
-    description:
-      "First-party keyring manager for the Omarchy environment. Securely stores and retrieves credentials for plugins and services.",
-    category: "apps",
-    type: "library",
-    featured: false,
-    techStack: ["TypeScript", "Omarchy", "Security", "Keyring"],
-    private: false,
-    highlights: [
-      "First-party keyring for Omarchy",
-      "Plugin credential store",
-      "Secure retrieval API",
-    ],
-    architecture:
-      "Keyring backend → encrypted store → plugin credential API → Omarchy UI",
   },
   {
     slug: "crucible",

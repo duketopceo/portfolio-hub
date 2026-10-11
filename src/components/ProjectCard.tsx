@@ -11,11 +11,14 @@ interface ProjectCardProps {
   project: EnrichedProject;
   /** Stable registry index — position in projects.ts source order. */
   registryIndex?: number;
+  /** Archived registry row — muted card, no live emphasis. */
+  archived?: boolean;
 }
 
 export default function ProjectCard({
   project,
   registryIndex,
+  archived = false,
 }: ProjectCardProps) {
   const meta = categoryMeta[project.category];
   const hasDemo = isProjectLive(project);
@@ -27,7 +30,7 @@ export default function ProjectCard({
 
   return (
     <article
-      className="cosmic-project-card group relative"
+      className={`cosmic-project-card group relative${archived ? " cosmic-project-card--archived" : ""}`}
       style={{ "--card-accent": accentColor } as React.CSSProperties}
     >
       <Link
@@ -47,6 +50,11 @@ export default function ProjectCard({
               <span className="cosmic-card-category">
                 {meta?.label || project.category}
               </span>
+              {archived && (
+                <span className="cosmic-card-pill cosmic-card-pill--muted cosmic-project-card__archive-tag">
+                  Archived
+                </span>
+              )}
               {project.private && (
                 <LockIcon
                   className="cosmic-project-card__lock w-3.5 h-3.5 opacity-50"
@@ -124,6 +132,9 @@ export default function ProjectCard({
       {project.githubUrl && !project.private && (
         <GithubLink url={project.githubUrl} />
       )}
+      {project.companionGithubLinks.map((link) => (
+        <GithubLink key={link.url} url={link.url} label={link.label} />
+      ))}
       {hasDemo && demoUrl && <DemoLink url={demoUrl} />}
     </article>
   );

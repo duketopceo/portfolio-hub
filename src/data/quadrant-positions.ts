@@ -27,7 +27,6 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "military-hardware-db": { x: -0.55, y: -0.50 },
   "pixel-tycoon":      { x: -0.40, y:  0.15 },
   "etl-pipeline":      { x: -0.70, y: -0.70 },
-  "server-cluster":    { x: -0.80, y:  0.45 },
   "dixi":              { x:  0.70, y:  0.15 },
   "stratum-hq":        { x:  0.55, y:  0.28 },
   "chronicle-weaver":  { x:  0.80, y:  0.00 },
@@ -35,7 +34,6 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "personal-blog":     { x:  0.80, y: -0.65 },
   "series65-study-app": { x: 0.35, y:  0.70 },
   "curious-storycard": { x:  0.75, y: -0.30 },
-  "nem-stock-pitch":   { x:  0.40, y:  0.40 },
 };
 
 export const quadrantLabels = {

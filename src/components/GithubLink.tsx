@@ -2,9 +2,13 @@ import { ExternalIcon } from "./Icons";
 
 interface GithubLinkProps {
   url: string;
+  label?: string;
 }
 
-export default function GithubLink({ url }: GithubLinkProps) {
+export default function GithubLink({
+  url,
+  label = "View on GitHub",
+}: GithubLinkProps) {
   return (
     <a
       href={url}
@@ -14,7 +18,7 @@ export default function GithubLink({ url }: GithubLinkProps) {
       data-umami-event="github-repo"
       data-umami-event-url={url}
     >
-      <span className="cosmic-card-demo__left">View on GitHub</span>
+      <span className="cosmic-card-demo__left">{label}</span>
       <ExternalIcon className="w-4 h-4 opacity-70 shrink-0" aria-hidden />
     </a>
   );

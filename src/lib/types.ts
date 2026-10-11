@@ -69,11 +69,21 @@ export interface PlanetVisualConfig {
   moons?: PlanetMoonConfig[];
 }
 
+/** Extra public repos shown on the same catalog card/dossier (same project surface). */
+export interface CompanionGithubRepo {
+  repoName: string;
+  /** Link label, e.g. "Agent Zero plugin". */
+  label: string;
+  repoOwner?: string;
+}
+
 export interface ProjectConfig {
   slug: string;
   repoName: string;
   /** GitHub owner/org — defaults to the portfolio account login (GITHUB_USER). */
   repoOwner?: string;
+  /** Additional GitHub repos linked from the same card (primary remains repoName). */
+  companionRepos?: CompanionGithubRepo[];
   displayName: string;
   tagline: string;
   description: string;
@@ -112,11 +122,15 @@ export interface ProjectConfig {
   engineeringDecisions?: string[];
   /** On-site showcase only — no GitHub repo (e.g. OpenRouter demos page) */
   siteOnly?: boolean;
+  /** When true (or listed in catalog archive slugs), hide from homepage orbits and show in archive registry. */
+  catalogArchive?: boolean;
   /** Private dossier — shipped vs remaining finish-line (recruiter-facing) */
   finishLine?: string;
 }
 
 export interface EnrichedProject extends ProjectConfig {
+  /** Resolved archive flag — config, slug list, or GitHub repo.archived. */
+  catalogArchive: boolean;
   repo: GitHubRepo | null;
   lastUpdated: string;
   language: string | null;
@@ -133,4 +147,5 @@ export interface EnrichedProject extends ProjectConfig {
    * Null for catalog-private rows even if GitHub later reports public.
    */
   githubUrl: string | null;
+  companionGithubLinks: { url: string; label: string }[];
 }

@@ -234,15 +234,6 @@ export const deployments: DeploymentConfig[] = [
     healthCheck: "/",
     online: false,
   },
-  {
-    slug: "nem-stock-pitch",
-    url: "https://nem.luke-the-duke.com",
-    subdomain: "nem",
-    host: "swarm",
-    role: "NEM stock pitch",
-    healthCheck: "/",
-    online: false,
-  },
 ];
 
 export function getDeploymentsBySlug(slug: string): DeploymentConfig[] {

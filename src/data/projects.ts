@@ -105,11 +105,17 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "Vision-model E2E testing — record once, fingerprint-cache every step, heal on drift, cost-metered per run",
     description:
-      "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced.",
+      "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced. The Agent Zero plugin (`a0-plugin-argus`) exposes `argus_review` and `argus_flow` tools inside A0 runs.",
     category: "ai",
     type: "library",
     featured: false,
     orbitTier: "secondary",
+    companionRepos: [
+      {
+        repoName: "a0-plugin-argus",
+        label: "Agent Zero plugin",
+      },
+    ],
     demoUrl: "/demos/argus",
     techStack: [
       "TypeScript",
@@ -126,6 +132,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Sandbox lane reproduces review findings, stamped not suspected",
       "CodeRabbit-style review surface — formal GitHub reviews that satisfy required-approvals",
       "Published npm package argus-reviewer-e2e (v0.3.x)",
+      "Agent Zero plugin — PR review and flow replay tools for A0",
     ],
     architecture:
       "Record (Playwright + vision model) → fingerprint cache → replay/heal → GitHub check + formal review with per-call cost ledger",
@@ -330,6 +337,47 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
   {
+    slug: "agentflow",
+    repoName: "agentflow",
+    displayName: "Agentflow",
+    tagline:
+      "Cross-harness dynamic workflows — script-driven multi-agent orchestration with journaled, resumable runs",
+    description:
+      "Agentflow is a portable subprocess runner for multi-agent work: write an orchestration script once, fan out one-shot agent sessions (Devin, Claude Code, Codex, OpenCode, OpenRouter, and more) under a bounded concurrency pool, and keep state in a run journal instead of a model context window. Workflow scripts use top-level await with `agent()`, `parallel()`, `pipeline()`, `batch()`, and `phase()`; `agentflow watch` renders live lane progress from the journal; detach/stop/clean ops stay resumable mid-run.",
+    category: "ai",
+    type: "platform",
+    featured: true,
+    planetVisual: {
+      size: "lg",
+      shape: "hex",
+      color: "#A78BFA",
+      rings: [{ opacity: 0.28, tilt: -12 }],
+      moons: [
+        { label: "Devin", kind: "stack" },
+        { label: "Codex", kind: "stack" },
+        { label: "journal", kind: "stack" },
+      ],
+    },
+    techStack: [
+      "Node.js",
+      "JavaScript",
+      "Devin",
+      "Claude Code",
+      "Codex",
+      "OpenCode",
+      "OpenRouter",
+    ],
+    private: false,
+    highlights: [
+      "Script-native orchestration — state lives in the journal, not chat context",
+      "Harness adapters for Devin, Claude, Codex, OpenCode, OpenRouter, Perplexity",
+      "Bounded concurrency with resumable detach/stop/clean ops",
+      "Plugin manifests for Devin, Claude Code, Codex, and OpenCode",
+    ],
+    architecture:
+      "Workflow .mjs → harness pool → journaled agent calls → watch/status/stop → resumable run record",
+  },
+  {
     slug: "ai-debate-arena",
     repoName: "ai-debate-arena",
     displayName: "AI Debate Arena",
@@ -470,33 +518,6 @@ export const projectConfigs: ProjectConfig[] = [
       "Gamified financial literacy through simulation",
       "Interactive portfolio management gameplay",
     ],
-  },
-
-  {
-    slug: "nem-stock-pitch",
-    repoName: "nem-stock-pitch",
-    displayName: "NEM Stock Pitch",
-    tagline:
-      "Institutional-grade equity research — LONG Newmont, built entirely with Perplexity Computer",
-    description:
-      "Interactive stock pitch arguing Newmont (NEM) is not a gold miner but a sovereign hedge fund. Built for the 2026 Perplexity Computer Stock Pitch Competition judged by Philippe Laffont (Coatue), Dan Loeb (Third Point), and Ken Hao (Silver Lake). The thesis rests on macro inevitability ($39T national debt, $193.6T unfunded liabilities, M2 expansion), three structural legs (central bank gold bid, hidden copper call, nuclear-mining nexus), and an AI hardware demand angle (gold + copper in every chip and data center). Features Chart.js visualizations, MapLibre globe, peer comparison tables, and oil sensitivity analysis. Dark theme, responsive, single-page.",
-    category: "finance",
-    type: "app",
-    featured: false,
-    liveUrl: "https://nem.luke-the-duke.com",
-    demoUrl: "https://nem.luke-the-duke.com",
-    embeddable: false,
-    demoOffline: true,
-    techStack: ["HTML/CSS", "Chart.js", "MapLibre", "Perplexity Computer"],
-    private: false,
-    highlights: [
-      "Built entirely with Perplexity Computer — research, code, deploy",
-      "Macro thesis: $193.6T unfunded liabilities, 863t CB gold buying",
-      "Multi-angle analysis: copper, nuclear, AI hardware demand",
-      "Competition: Laffont, Loeb, Hao judging panel",
-    ],
-    architecture:
-      "Static HTML/CSS → Chart.js charts → MapLibre globe → Responsive single-page app",
   },
 
   // ── AI & Automation ──────────────────────────────────────────────
@@ -650,29 +671,6 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
 
-  // ── Infrastructure ───────────────────────────────────────────────
-  {
-    slug: "server-cluster",
-    repoName: "Bartlett-server-001",
-    displayName: "Production Cluster",
-    tagline:
-      "Docker Swarm infrastructure — multi-node cluster with Traefik, monitoring, and CI/CD",
-    description:
-      "Three-node Docker Swarm on Tailscale (cluster1 / cluster-1-master as manager, cluster2 and cluster3 as workers) running Apple Silicon Mac Minis. Features automated container deployments via GitHub webhooks, Traefik reverse proxy handling TLS termination and routing for multiple subdomains, Cloudflare Tunnel for secure public access without port forwarding, and Tailscale mesh VPN for encrypted inter-node communication. Currently hosts the portfolio site, military hardware database, and several internal tools.",
-    category: "infra",
-    type: "infra",
-    featured: false,
-    techStack: ["Docker", "Shell", "Traefik", "Cloudflare", "Tailscale"],
-    private: true,
-    highlights: [
-      "Multi-node Docker Swarm orchestration",
-      "CI/CD with automatic container deployments",
-      "Zero-trust networking with Tailscale mesh",
-    ],
-    architecture:
-      "GitHub webhooks → Docker Swarm → Traefik routing → Cloudflare Tunnel → Public subdomains",
-  },
-
   // ── Education & Study ────────────────────────────────────────────
   {
     slug: "series65-study-app",
@@ -735,7 +733,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Stratum Engine is the operations backend for home service contractors — AI-powered intake, dispatch, and workflow. The public shell lives at stratumhq.app; source stays private under Herzog-LLC.",
     category: "apps",
     type: "platform",
-    featured: true,
+    featured: false,
     planetVisual: {
       size: "lg",
       shape: "cube",

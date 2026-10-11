@@ -6,10 +6,14 @@ import {
   resolveOrbitTier,
 } from "./project-completeness";
 import { projectConfigs } from "@/data/projects";
+import { isCatalogArchived } from "@/lib/catalog-archive";
 
 describe("homepage orbit split", () => {
+  const archivedCount = projectConfigs.filter((p) => isCatalogArchived(p)).length;
+
   const enriched = projectConfigs.map((p) => ({
     ...p,
+    catalogArchive: isCatalogArchived(p),
     repo: null,
     stars: 0,
     language: null,
@@ -19,6 +23,7 @@ describe("homepage orbit split", () => {
     ciStatus: null,
     lastUpdated: "",
     githubUrl: p.private ? null : `https://github.com/duketopceo/${p.repoName}`,
+    companionGithubLinks: [],
   }));
 
   it("primary orbit has exactly the featured five", () => {
@@ -31,7 +36,9 @@ describe("homepage orbit split", () => {
     const secondary = getHomepageSecondaryOrbitProjects(enriched);
     const featured = new Set<string>(HOMEPAGE_FEATURED_SLUGS);
     expect(secondary.every((p) => !featured.has(p.slug))).toBe(true);
-    expect(primary.length + secondary.length).toBe(projectConfigs.length);
+    expect(primary.length + secondary.length).toBe(
+      projectConfigs.length - archivedCount
+    );
   });
 
   it("resolveOrbitTier defaults non-featured to secondary", () => {
@@ -49,11 +56,13 @@ describe("homepage orbit split", () => {
     );
     const secondary = getHomepageSecondaryOrbitProjects(withCatalogOnly);
     expect(secondary.some((p) => p.slug === "homelab")).toBe(false);
-    expect(secondary.length).toBe(projectConfigs.length - 6);
+    expect(secondary.length).toBe(
+      projectConfigs.length - HOMEPAGE_FEATURED_SLUGS.length - 1 - archivedCount
+    );
   });
 
-  it("catalog has 58 projects with 5 featured flags", () => {
-    expect(projectConfigs.length).toBe(58);
+  it("catalog has 59 projects with 5 featured flags", () => {
+    expect(projectConfigs.length).toBe(59);
     expect(projectConfigs.filter((p) => p.featured).length).toBe(5);
   });
 });

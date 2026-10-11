@@ -12,7 +12,7 @@ describe("resolvePlanetVisual", () => {
 
   it("uses explicit featured config for Kurultai", () => {
     const visual = resolvePlanetVisual(
-      { ...kurultai, repo: null, stars: 0, lastUpdated: "", language: null, languages: [], forks: 0, openIssuesCount: 0, ciStatus: null, githubUrl: null },
+      { ...kurultai, catalogArchive: false, companionGithubLinks: [], repo: null, stars: 0, lastUpdated: "", language: null, languages: [], forks: 0, openIssuesCount: 0, ciStatus: null, githubUrl: null },
       "primary"
     );
     expect(visual.size).toBe("xl");
@@ -22,11 +22,11 @@ describe("resolvePlanetVisual", () => {
 
   it("defaults secondary worlds smaller than primary", () => {
     const primary = resolvePlanetVisual(
-      { ...kurultai, repo: null, stars: 0, lastUpdated: "", language: null, languages: [], forks: 0, openIssuesCount: 0, ciStatus: null, githubUrl: null },
+      { ...kurultai, catalogArchive: false, companionGithubLinks: [], repo: null, stars: 0, lastUpdated: "", language: null, languages: [], forks: 0, openIssuesCount: 0, ciStatus: null, githubUrl: null },
       "primary"
     );
     const secondary = resolvePlanetVisual(
-      { ...homelab, repo: null, stars: 0, lastUpdated: "", language: null, languages: [], forks: 0, openIssuesCount: 0, ciStatus: null, githubUrl: null },
+      { ...homelab, catalogArchive: false, companionGithubLinks: [], repo: null, stars: 0, lastUpdated: "", language: null, languages: [], forks: 0, openIssuesCount: 0, ciStatus: null, githubUrl: null },
       "secondary"
     );
     expect(secondary.size).not.toBe("xl");
