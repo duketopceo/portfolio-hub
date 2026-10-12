@@ -56,7 +56,7 @@ dark survey plate; a single teal carries signal.
 |---|---|---|
 | `--color-text` | `#E9ECEF` | Primary copy |
 | `--color-text-muted` | `#9AA3AC` | Secondary / body |
-| `--color-text-faint` | `#5B6570` | Marginalia, registry IDs |
+| `--color-text-faint` | `#7E8A96` | Marginalia, registry IDs (AA: 5.0:1 on surface-3 at worst) |
 
 ### Signal Colors
 
