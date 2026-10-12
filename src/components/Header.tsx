@@ -62,18 +62,17 @@ export default function Header() {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 48 48"
                 fill="none"
-                width="22"
-                height="22"
+                width="24"
+                height="24"
                 aria-hidden="true"
                 className="site-header__mark"
               >
-                <circle cx="24" cy="24" r="3" fill="currentColor" />
-                <circle cx="24" cy="24" r="16" stroke="currentColor" strokeWidth="1" opacity="0.45" />
-                <line x1="24" y1="2" x2="24" y2="14" stroke="currentColor" strokeWidth="1" opacity="0.6" />
-                <line x1="24" y1="34" x2="24" y2="46" stroke="currentColor" strokeWidth="1" opacity="0.6" />
-                <line x1="2" y1="24" x2="14" y2="24" stroke="currentColor" strokeWidth="1" opacity="0.6" />
-                <line x1="34" y1="24" x2="46" y2="24" stroke="currentColor" strokeWidth="1" opacity="0.6" />
-                <circle cx="36" cy="12" r="1.4" fill="currentColor" opacity="0.7" />
+                <g stroke="currentColor" strokeWidth="3" strokeLinecap="square">
+                  <path d="M6 14V6h8M34 6h8v8M42 34v8h-8M14 42H6v-8" />
+                  <path d="M24 12v6M24 30v6M12 24h6M30 24h6" opacity="0.6" />
+                </g>
+                <circle cx="24" cy="24" r="9" stroke="currentColor" strokeWidth="2" opacity="0.5" />
+                <circle cx="24" cy="24" r="3.5" fill="var(--color-accent)" />
               </svg>
               <span className="site-header__brand">Cosmic Intelligence</span>
             </Link>
