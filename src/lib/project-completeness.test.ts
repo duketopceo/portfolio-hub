@@ -21,7 +21,7 @@ describe("homepage orbit split", () => {
     githubUrl: p.private ? null : `https://github.com/duketopceo/${p.repoName}`,
   }));
 
-  it("primary orbit has exactly the featured five", () => {
+  it("primary orbit has exactly the featured four", () => {
     const primary = getHomepageOrbitProjects(enriched);
     expect(primary.map((p) => p.slug)).toEqual([...HOMEPAGE_FEATURED_SLUGS]);
   });
@@ -49,11 +49,11 @@ describe("homepage orbit split", () => {
     );
     const secondary = getHomepageSecondaryOrbitProjects(withCatalogOnly);
     expect(secondary.some((p) => p.slug === "homelab")).toBe(false);
-    expect(secondary.length).toBe(projectConfigs.length - 6);
+    expect(secondary.length).toBe(projectConfigs.length - 5);
   });
 
-  it("catalog has 73 projects with 5 featured flags", () => {
-    expect(projectConfigs.length).toBe(73);
-    expect(projectConfigs.filter((p) => p.featured).length).toBe(5);
+  it("catalog has 72 projects with 4 featured flags", () => {
+    expect(projectConfigs.length).toBe(72);
+    expect(projectConfigs.filter((p) => p.featured).length).toBe(4);
   });
 });

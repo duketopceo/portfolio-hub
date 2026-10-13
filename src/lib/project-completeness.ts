@@ -28,7 +28,6 @@ export const HOMEPAGE_FEATURED_SLUGS = [
   "kurultai",
   "pace-server",
   "openrouter",
-  "stratum-hq",
 ] as const;
 
 const MS_DAY = 86_400_000;
