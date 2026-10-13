@@ -48,7 +48,13 @@ export function scrubActivityText(
   fallback: string
 ): string {
   if (!isPrivate) {
-    return text.trim().slice(0, 140);
+    const s = text.trim();
+    // Public titles keep verbatim text — but PII/secrets in a title are
+    // never republished regardless of repo visibility (fail closed).
+    if (looksLikeSecret(s) || BARTLETT.test(s) || INTERNAL_HOST.test(s)) {
+      return fallback;
+    }
+    return s.slice(0, 140);
   }
 
   let s = text.trim();
