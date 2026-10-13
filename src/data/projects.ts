@@ -9,6 +9,7 @@ export const DAYFLOW_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/dayflow-launch.mp4`;
 export const ORCHESTRAL_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/orchestral-launch.mp4`;
 export const ARGUS_WITNESS_VIDEO_URL = `${MEDIA_BASE_URL}/argus-witness.mp4`;
 export const PACE_DEBUT_VIDEO_URL = `${MEDIA_BASE_URL}/pace-debut.mp4`;
+export const KATE_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/kate-launch.mp4`;
 
 /**
  * Master project configuration — curated for recruiter/professional viewing.
@@ -851,6 +852,30 @@ export const projectConfigs: ProjectConfig[] = [
       "Docker-hosted backend with PostgreSQL",
       "36 passing backend tests with CI pipeline",
     ],
+  },
+  {
+    slug: "kate-ios",
+    repoName: "kate-ios",
+    displayName: "Kate",
+    tagline:
+      "Native iOS field journal for a household — SwiftUI, built and deployed entirely on Linux via xtool",
+    description:
+      "Kate is a shared field journal for a household or small group: day proposals, a running ideas list, a movie shelf with per-person ratings, and a journal timeline with photos. The iOS client is pure SwiftUI + SwiftPM with zero third-party dependencies — signed, compiled, and installed from Arch Linux ARM via xtool, no Xcode machine required. A typed decision API on Cloudflare Workers keeps every member's view in sync, with an offline outbox for writes.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    liveUrl: "https://kate.luke-the-duke.com",
+    demoVideoUrl: KATE_LAUNCH_VIDEO_URL,
+    techStack: ["Swift", "SwiftUI", "SwiftPM", "Cloudflare Workers", "xtool"],
+    private: true,
+    highlights: [
+      "Native iOS built end-to-end on Linux — xtool signs and deploys",
+      "Zero-dependency SwiftUI client, Linux-tested pure core",
+      "Crew model — members, colors, and ratings come from the API",
+      "Offline outbox for journal and idea writes",
+    ],
+    architecture:
+      "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync",
   },
 
   ...projectExtensionConfigs,
