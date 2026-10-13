@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { EnrichedProject, ProjectCategory } from "@/lib/types";
+import { ProjectCardData, ProjectCategory } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import ProjectCard from "./ProjectCard";
 import PullRequestsPanel from "./PullRequestsPanel";
 
 interface FilterBarProps {
-  projects: EnrichedProject[];
+  projects: ProjectCardData[];
 }
 
 const categories: { key: ProjectCategory | "all"; label: string }[] = [

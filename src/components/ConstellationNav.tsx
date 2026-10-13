@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
-import { EnrichedProject } from "@/lib/types";
+import { ProjectMapData } from "@/lib/types";
 import {
   quadrantPositions,
   quadrantLabels,
@@ -14,7 +14,7 @@ import { categoryMeta } from "@/data/projects";
 import { projectIconMap } from "./ProjectIcons";
 
 interface ConstellationNavProps {
-  projects: EnrichedProject[];
+  projects: ProjectMapData[];
 }
 
 function fallbackPosition(slug: string): { x: number; y: number } {

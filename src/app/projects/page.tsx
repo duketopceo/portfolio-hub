@@ -1,4 +1,5 @@
 import { getEnrichedProjects } from "@/lib/github";
+import { toProjectCardData, toProjectMapData } from "@/lib/types";
 import FilterBar from "@/components/FilterBar";
 import ConstellationNav from "@/components/ConstellationNav";
 import { PageHeader, PageShell, SectionHeading } from "@/components/design";
@@ -26,7 +27,7 @@ export default async function ProjectsPage() {
         lede="All surveyed bodies — finance, AI, OSINT, infrastructure, web."
       />
 
-      <FilterBar projects={projects} />
+      <FilterBar projects={projects.map(toProjectCardData)} />
 
       <section
         id="domain-map"
@@ -38,7 +39,7 @@ export default async function ProjectsPage() {
           title={<span id="domain-map-heading">Sector map</span>}
           description="A 2D chart of how bodies cluster by domain — distinct from the home orbit ordering by completeness."
         />
-        <ConstellationNav projects={projects} />
+        <ConstellationNav projects={projects.map(toProjectMapData)} />
       </section>
     </PageShell>
   );

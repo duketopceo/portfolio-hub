@@ -475,6 +475,8 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "nem-stock-pitch",
     repoName: "nem-stock-pitch",
+    // duketopceo/nem-stock-pitch 404s (deleted or never public); keep the entry, drop the link.
+    repoUnavailable: true,
     displayName: "NEM Stock Pitch",
     tagline:
       "Institutional-grade equity research — LONG Newmont, built entirely with Perplexity Computer",
@@ -621,7 +623,7 @@ export const projectConfigs: ProjectConfig[] = [
     embeddable: true,
     techStack: ["Data", "OSINT", "JSON", "Documentation"],
     private: false,
-    demoOffline: false,
+    demoOffline: true,
     highlights: [
       "Comprehensive multi-domain weapons catalog",
       "Structured data for research and analysis",
@@ -653,7 +655,7 @@ export const projectConfigs: ProjectConfig[] = [
   // ── Infrastructure ───────────────────────────────────────────────
   {
     slug: "server-cluster",
-    repoName: "Bartlett-server-001",
+    repoName: "server-001", // renamed from Bartlett-server-001 (private)
     displayName: "Production Cluster",
     tagline:
       "Docker Swarm infrastructure — multi-node cluster with Traefik, monitoring, and CI/CD",
@@ -722,35 +724,6 @@ export const projectConfigs: ProjectConfig[] = [
       "End-to-end TypeScript type safety",
       "Server-side rendering with API routes",
       "Modern React patterns and responsive UI",
-    ],
-  },
-  {
-    slug: "stratum-hq",
-    repoName: "stratum-engine",
-    repoOwner: "Herzog-LLC",
-    displayName: "Stratum Engine",
-    tagline:
-      "AI-powered operations backend for home service contractors — live at stratumhq.app",
-    description:
-      "Stratum Engine is the operations backend for home service contractors — AI-powered intake, dispatch, and workflow. The public shell lives at stratumhq.app; source stays private under Herzog-LLC.",
-    category: "apps",
-    type: "platform",
-    featured: true,
-    planetVisual: {
-      size: "lg",
-      shape: "cube",
-      color: "#34D399",
-      moons: [
-        { label: "stratumhq", kind: "live", href: "https://stratumhq.app" },
-      ],
-    },
-    embeddable: false,
-    techStack: ["TypeScript", "Next.js", "Docker"],
-    private: true,
-    highlights: [
-      "AI-powered operations backend for home service contractors",
-      "Product engine and brand shell for the Stratum surface",
-      "Roadmap-aligned infrastructure story",
     ],
   },
   {

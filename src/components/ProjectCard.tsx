@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { EnrichedProject } from "@/lib/types";
+import { ProjectCardData } from "@/lib/types";
 import { formatDate, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import { isProjectLive } from "@/lib/deployments";
@@ -8,7 +8,7 @@ import DemoLink from "./DemoLink";
 import GithubLink from "./GithubLink";
 
 interface ProjectCardProps {
-  project: EnrichedProject;
+  project: ProjectCardData;
   /** Stable registry index — position in projects.ts source order. */
   registryIndex?: number;
 }
@@ -105,6 +105,16 @@ export default function ProjectCard({
                   <path d="M10 1l2.47 5.01L18 6.86l-4 3.9.94 5.5L10 13.47l-4.94 2.79.94-5.5-4-3.9 5.53-.85L10 1z" />
                 </svg>
                 {project.stars}
+              </span>
+            )}
+            {project.archived && (
+              <span className="cosmic-card-pill cosmic-card-pill--muted">
+                Archived
+              </span>
+            )}
+            {project.repoUnavailable && (
+              <span className="cosmic-card-pill cosmic-card-pill--muted">
+                Repo unavailable
               </span>
             )}
             {hasDemo && (

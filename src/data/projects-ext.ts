@@ -325,8 +325,8 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   },
   {
     slug: "dayflow-screenshots",
-    repoName: "dayflow-screenshots",
-    displayName: "Dayflow Screenshots",
+    repoName: "snapdex", // renamed from dayflow-screenshots
+    displayName: "Snapdex",
     tagline: "Auto-rename and index Wayland screenshots",
     description:
       "Auto-rename and index Wayland screenshots with a vision model. Produces timestamped snake_case filenames plus a markdown catalog.",

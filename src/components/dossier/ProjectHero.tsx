@@ -88,6 +88,16 @@ export function ProjectHero({ project, accentColor, meta, registryIndex }: Proje
                   </span>
                 )}
 
+                {project.archived && (
+                  <span className="dossier-page__pill dossier-page__pill--public">
+                    Archived
+                  </span>
+                )}
+                {project.repoUnavailable && (
+                  <span className="dossier-page__pill dossier-page__pill--public">
+                    Repo unavailable
+                  </span>
+                )}
                 {hasDemo && (
                   <span className="dossier-page__pill dossier-page__pill--live">
                     <span
