@@ -277,11 +277,32 @@ export function sanitiseReadmeLeaks(html: string): string {
     .replace(/<blockquote>\s*<\/blockquote>/gi, "");
 }
 
+/**
+ * The site is dark-only, but <picture> sources keyed on prefers-color-scheme
+ * follow the visitor's OS. Collapse each picture to its dark variant so a
+ * light-OS visitor does not get dark-on-dark artwork.
+ */
+export function preferDarkPictures(html: string): string {
+  return html.replace(/<picture\b[^>]*>([\s\S]*?)<\/picture>/gi, (full, inner: string) => {
+    const dark = inner.match(
+      /<source\b[^>]*media="[^"]*prefers-color-scheme:\s*dark[^"]*"[^>]*\ssrcset="([^"]+)"/i
+    );
+    const img = inner.match(/<img\b[^>]*>/i);
+    if (!dark || !img) return full;
+    const url = dark[1].split(",")[0].trim().split(/\s+/)[0];
+    const tag = /\ssrc="[^"]*"/i.test(img[0])
+      ? img[0].replace(/(\ssrc=)"[^"]*"/i, `$1"${url}"`)
+      : img[0].replace(/<img/i, `<img src="${url}"`);
+    return tag;
+  });
+}
+
 /** Full pipeline used by fetchReadme. */
 export function prepareReadmeHtml(html: string, ctx: ReadmeContext): string {
   let out = sanitiseReadmeLeaks(html);
   out = rewriteRelativeUrls(out, ctx);
   out = dropEmptyMedia(out);
+  out = preferDarkPictures(out);
   out = normaliseHeadings(out, ctx.projectNames);
   return out;
 }

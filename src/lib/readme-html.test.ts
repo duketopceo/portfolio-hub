@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   dropEmptyMedia,
   normaliseHeadings,
+  preferDarkPictures,
   prepareReadmeHtml,
   resolveRepoPath,
   rewriteRelativeUrls,
@@ -170,5 +171,18 @@ describe("prepareReadmeHtml", () => {
     const out = prepareReadmeHtml(html, { ...ctx, projectNames: ["Argus"] });
     expect(out).not.toMatch(/<h1|TODO|<video/);
     expect(out).toContain(`${RAW}/docs/a.png`);
+  });
+});
+
+describe("preferDarkPictures", () => {
+  it("collapses a picture to its dark variant (site is dark-only)", () => {
+    const out = preferDarkPictures(
+      '<picture><source media="(prefers-color-scheme: dark)" srcset="https://x/dark.svg"><img src="https://x/light.svg" alt="A" width="240"></picture>'
+    );
+    expect(out).toBe('<img src="https://x/dark.svg" alt="A" width="240">');
+  });
+  it("leaves pictures without a dark source alone", () => {
+    const html = '<picture><source srcset="a.webp"><img src="a.png"></picture>';
+    expect(preferDarkPictures(html)).toBe(html);
   });
 });
