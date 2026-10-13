@@ -895,4 +895,61 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     ],
     architecture: "Client UI → entries store → shared log → optional voice capture",
   },
+  {
+    slug: "kate-ios",
+    repoName: "kate-ios",
+    displayName: "Kate (iOS)",
+    tagline: "Native SwiftUI field journal for spontaneous outings, built on Linux with no Mac",
+    description:
+      "Native iOS client for Kate, a private spontaneous-activity journal for a two-person household. SwiftUI and SwiftPM with zero third-party dependencies, built and signed on Linux with xtool, which installs it to a USB-connected iPhone. Five tabs (Today, Ideas, Movies, Journal, More) talk to a Cloudflare Workers API. Journal and idea writes go through an offline outbox, and the UI uses the Field Journal design system.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: [
+      "Swift",
+      "SwiftUI",
+      "SwiftPM",
+      "xtool",
+      "Keychain",
+      "Cloudflare Workers",
+      "D1",
+      "R2",
+    ],
+    private: true,
+    highlights: [
+      "Native iOS app built on Linux with xtool: no Mac and no Xcode install",
+      "Five tabs: Today, Ideas, Movies, Journal, More",
+      "Pairing-code sign-in with the session held in the Keychain; Sign in with Apple server half built and the client compiled in behind a flag",
+      "Offline outbox keeps journal and idea writes without signal, retries with idempotency keys, and never drops them on sign-out",
+      "Field Journal design system: one OKLCH token source generating CSS and Swift, a WCAG AA contrast gate, Fraunces serif",
+      "Journal editing with a three-way merge of two people's edits (server side, in review)",
+    ],
+    architecture:
+      "SwiftUI tabs → KateCore API client + offline outbox → Keychain session → Cloudflare Workers API (Next.js via OpenNext) → D1 + R2",
+    businessContext:
+      "A personal project: a field-journal app for a small household to capture spontaneous days out (what we did, what to try next) without friction or signal. It is private by design and not a product for sale.",
+    scopeAndScale:
+      "Two repositories: this SwiftUI client and a Next.js 15 backend on Cloudflare Workers with D1 and R2. Core logic is split into pure targets (KateCore, KateAuthCore) so it is unit-tested on Linux, where no iOS Simulator exists.",
+    engineeringDecisions: [
+      "Build and sign for a physical iPhone from Linux with xtool and SwiftPM; there is no Simulator, so pure logic is isolated into targets that run under swift test on Linux.",
+      "Local-first writes: entries land in an on-device outbox first, then send in order with stable idempotency keys so a lost reply never creates a duplicate.",
+      "Design tokens have one source that generates both CSS and Swift, with a contrast gate that fails below WCAG AA.",
+      "Concurrent journal edits are reconciled by a three-way merge on the server; true overlaps return a conflict instead of overwriting.",
+    ],
+    finishLine:
+      "Roadmap, not built yet: hike recording with tap-to-mark points, photo EXIF placed on a map and timeline, user-enabled modules (weekly rituals, camping, gold panning, birding, fishing, stargazing, road trips, an outing deck), calendars, and an iPad layout.",
+    previewMedia: [
+      {
+        src: "/projects/kate-ios/app-icon.png",
+        alt: "Kate app icon: a cream lowercase k with two dots on a rose background",
+        caption: "App icon",
+      },
+      {
+        src: "/projects/kate-ios/design-mock.png",
+        alt: "Four phone mockups of the Kate Today screen and hike recorder in light and dark",
+        caption:
+          "Design mock with fictional content, showing the planned Field Journal direction. The recorder and Map tab are roadmap, not shipped.",
+      },
+    ],
+  },
 ];

@@ -102,6 +102,8 @@ export interface ProjectConfig {
   highlights: string[];
   /** Optional screenshots or preview image URLs */
   previewImages?: string[];
+  /** Captioned preview media rendered on the dossier (logos, design mocks) */
+  previewMedia?: { src: string; alt: string; caption: string }[];
   /** High-level architecture description */
   architecture?: string;
   /** Private project dossier — 2–4 sentences: problem, users, real-world impact */
