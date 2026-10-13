@@ -89,8 +89,11 @@ export default async function ProjectDetailPage({
   const githubActivity = await getProjectActivityTimeline(slug);
 
   const readme =
-    !project.private && !project.siteOnly
-      ? await fetchReadme(project.repoName, project.repoOwner)
+    !project.private && !project.siteOnly && !project.repoUnavailable
+      ? await fetchReadme(project.repoName, project.repoOwner, [
+          project.displayName,
+          project.slug,
+        ])
       : null;
 
   const showcase =

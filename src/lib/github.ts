@@ -13,6 +13,7 @@ import {
   type GithubRequestFailure,
 } from "./github-errors";
 import { fetchLatestCiState, type CiStateKind } from "@/lib/github-repo-api";
+import { prepareReadmeHtml } from "@/lib/readme-html";
 
 export { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 
@@ -131,12 +132,45 @@ async function fetchRepoLanguages(
 }
 
 /**
+ * Default branch and README path, needed to resolve relative image links.
+ * Best-effort: falls back to `main` and the repo root.
+ */
+async function fetchReadmeLocation(
+  repoName: string,
+  owner: string
+): Promise<{ branch: string; readmePath: string }> {
+  const headers = await githubAuthHeaders();
+  const base = `${GITHUB_API}/repos/${owner}/${encodeURIComponent(repoName)}`;
+  const get = async <T>(url: string): Promise<T | null> => {
+    try {
+      const res = await fetch(url, {
+        headers,
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(10_000),
+      });
+      return res.ok ? ((await res.json()) as T) : null;
+    } catch {
+      return null;
+    }
+  };
+  const [repo, readme] = await Promise.all([
+    get<{ default_branch?: string }>(base),
+    get<{ path?: string }>(`${base}/readme`),
+  ]);
+  return {
+    branch: repo?.default_branch || "main",
+    readmePath: readme?.path || "README.md",
+  };
+}
+
+/**
  * Fetch the README content for a public repo (rendered as HTML).
  * Never called for private repos on the dossier page.
  */
 export async function fetchReadme(
   repoName: string,
-  owner: string = GITHUB_USER
+  owner: string = GITHUB_USER,
+  projectNames: string[] = []
 ): Promise<string | null> {
   const url = `${GITHUB_API}/repos/${owner}/${repoName}/readme`;
 
@@ -161,7 +195,15 @@ export async function fetchReadme(
       return null;
     }
 
-    return await res.text();
+    const html = await res.text();
+    const { branch, readmePath } = await fetchReadmeLocation(repoName, owner);
+    return prepareReadmeHtml(html, {
+      owner,
+      repo: repoName,
+      branch,
+      readmePath,
+      projectNames: [repoName, ...projectNames],
+    });
   } catch (err) {
     const failure = failureFromUnknown(`fetchReadme ${repoName}`, err);
     logGithubFailure("fetchReadme", failure);
@@ -249,11 +291,13 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
       const owner = withDeploy.repoOwner ?? GITHUB_ACCOUNT_LOGIN;
       const repo =
         repoMap.get(`${owner}/${withDeploy.repoName}`.toLowerCase()) || null;
-      const githubUrl = publicGithubUrl(
-        withDeploy.private || repo?.private === true,
-        withDeploy.repoName,
-        owner
-      );
+      const githubUrl = withDeploy.repoUnavailable
+        ? null
+        : publicGithubUrl(
+            withDeploy.private || repo?.private === true,
+            withDeploy.repoName,
+            owner
+          );
 
       let languages: string[] = [];
       const ciStatus: EnrichedProject["ciStatus"] = null;
@@ -269,6 +313,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         // by whatever the API reports for a same-name repository.
         private: withDeploy.private || repo?.private === true,
         repo: null,
+        archived: repo?.archived === true,
         lastUpdated: repo?.pushed_at || "",
         language: repo?.language || null,
         languages,
@@ -318,7 +363,7 @@ export function getAllSlugs(): string[] {
 export async function enrichProjectActivity(
   project: EnrichedProject
 ): Promise<EnrichedProject> {
-  if (project.siteOnly || !project.repoName) return project;
+  if (project.siteOnly || project.repoUnavailable || !project.repoName) return project;
 
   const owner = project.repoOwner ?? GITHUB_USER;
   const languages = await fetchRepoLanguages(project.repoName, owner);
