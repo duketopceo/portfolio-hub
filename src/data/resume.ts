@@ -93,6 +93,42 @@ export const projects = [
     stack: ["Agent Zero", "Python", "plugin API", "OpenRouter", "MCP"],
   },
   {
+    name: "orchestral",
+    url: "https://github.com/duketopceo/orchestral",
+    caseStudy: "https://github.com/duketopceo/orchestral",
+    description:
+      "OpenRouter eval harness — does a cheap orchestrator plus cheap workers produce frontier-quality output? Python; grew an E2B-compatible isolated code runtime so evals have somewhere safe to execute.",
+    highlights: [
+      "Turns model-routing and cost tradeoffs into a measurable result instead of a vibe; 282 commits, CI-gated.",
+      "Provider-agnostic by design — the harness runs BYOK against any OpenRouter model.",
+    ],
+    stack: ["Python", "OpenRouter", "evals", "E2B", "sandboxing", "CI"],
+  },
+  {
+    name: "Argus",
+    url: "https://github.com/duketopceo/Argus",
+    caseStudy: "https://github.com/duketopceo/Argus",
+    description:
+      "Open-source vision-model E2E testing harness — record, replay, heal, assert. BYOK through OpenRouter with hard budget caps, a self-hosted runner, and GitHub PR reporting. The open TestDriver alternative.",
+    highlights: [
+      "Budget caps and failure recovery treated as part of the interface, not an afterthought.",
+      "TypeScript; 0.3.x releases with a CodeRabbit-style review surface.",
+    ],
+    stack: ["TypeScript", "OpenRouter", "vision models", "E2E testing", "GitHub Actions"],
+  },
+  {
+    name: "wisp",
+    url: "https://github.com/duketopceo/wisp",
+    caseStudy: "https://github.com/duketopceo/wisp",
+    description:
+      "Voice computer-use agent for the Omarchy desktop: push-to-talk → whisper.cpp → local decision model → guarded hyprctl launch, with a breathing dim overlay while it listens.",
+    highlights: [
+      "Local-first: the decision model runs on the machine, no round trip for the hot path.",
+      "Guardrails on every action the agent is allowed to take.",
+    ],
+    stack: ["Python", "whisper.cpp", "Hyprland", "local inference", "computer use"],
+  },
+  {
     name: "Kurultai",
     url: "https://github.com/duketopceo/kurultai",
     caseStudy: "https://github.com/duketopceo/kurultai",
@@ -117,13 +153,13 @@ export const projects = [
 export const work = [
   {
     company: "Bartlett Roofing",
-    position: "IT Operations & Infrastructure Lead",
+    position: "IT Support & Data Specialist",
     startDate: "2025",
     endDate: "Present",
     location: "UT / ID",
-    summary: "Lead IT across UT + ID for a ~200-person org.",
+    summary: "IT support and data work across UT + ID for a ~200-person org.",
     highlights: [
-      "Promoted to lead IT across UT + ID within 4 months for a ~200-person roofing org.",
+      "Promoted within 4 months; scope grew to IT support and data work across UT + ID for a ~200-person roofing org.",
       "Containerized services (Snipe-IT, MeshCentral, Vaultwarden) on bare-metal Linux; built a helpdesk dashboard and web-app pitch decks instead of buying SaaS or making PDFs.",
       "Built read/write internal APIs for the IT team, gated behind authentication; Python automations and a Next.js dashboard cut manual follow-up and reporting.",
       "Asked to train the IT team on AI tooling in month one — runs Claude Code, Cursor, and OpenRouter routing daily across the org.",
