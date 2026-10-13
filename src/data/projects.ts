@@ -1,8 +1,13 @@
 import { ProjectConfig } from "@/lib/types";
 import { projectExtensionConfigs } from "./projects-ext";
 
-export const OPENROUTER_DEMO_VIDEO_URL =
-  "https://pub-9e45e5f7be6f4c9989852b4989e83a23.r2.dev/demos/openrouter-demos-walkthrough.mp4";
+export const MEDIA_BASE_URL = "https://media.luke-the-duke.com/demos";
+
+export const OPENROUTER_DEMO_VIDEO_URL = `${MEDIA_BASE_URL}/openrouter-demos-walkthrough.mp4`;
+export const KURULTAI_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/kurultai-launch.mp4`;
+export const DAYFLOW_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/dayflow-launch.mp4`;
+export const ORCHESTRAL_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/orchestral-launch.mp4`;
+export const ARGUS_WITNESS_VIDEO_URL = `${MEDIA_BASE_URL}/argus-witness.mp4`;
 
 /**
  * Master project configuration — curated for recruiter/professional viewing.
@@ -89,6 +94,7 @@ export const projectConfigs: ProjectConfig[] = [
       "OpenRouter",
     ],
     private: false,
+    demoVideoUrl: KURULTAI_LAUNCH_VIDEO_URL,
     highlights: [
       "Rust + axum API with MCP tool surface",
       "SQLite FTS5 + sqlite-vec — no Postgres dependency",
@@ -111,6 +117,7 @@ export const projectConfigs: ProjectConfig[] = [
     featured: false,
     orbitTier: "secondary",
     demoUrl: "/demos/argus",
+    demoVideoUrl: ARGUS_WITNESS_VIDEO_URL,
     techStack: [
       "TypeScript",
       "Playwright",
@@ -152,6 +159,7 @@ export const projectConfigs: ProjectConfig[] = [
     featured: false,
     orbitTier: "secondary",
     demoUrl: "/demos/dayflow",
+    demoVideoUrl: DAYFLOW_LAUNCH_VIDEO_URL,
     techStack: ["Go", "QML", "SQLite", "OpenRouter", "Wayland"],
     private: false,
     highlights: [
