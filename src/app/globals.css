@@ -7289,3 +7289,16 @@
   }
 }
 
+
+/* Offline deployment shown as plain, unlinked text (never an <a>). */
+.cosmic-footer__btn-offline {
+  color: var(--color-text-faint);
+  cursor: default;
+}
+
+.dossier-services__offline-url {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  text-decoration: line-through;
+  text-decoration-color: var(--color-text-faint);
+}
