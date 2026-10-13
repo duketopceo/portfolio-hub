@@ -5,6 +5,7 @@ import {
   getHomepageSecondaryOrbitProjects,
 } from "@/lib/project-completeness";
 import { getHomepageActivityShowcase } from "@/lib/github-activity";
+import { toClientActivityPayload } from "@/lib/activity-aggregate";
 import { isProjectLive } from "@/lib/deployments";
 import SolarSystemNav from "@/components/SolarSystemNav";
 import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
@@ -93,7 +94,7 @@ export default async function Home() {
               same registry grammar as the rest of the page.
             </p>
           </div>
-          <HomeActivityShowcase data={activity} />
+          <HomeActivityShowcase data={toClientActivityPayload(activity)} />
         </section>
 
         {secondaryOrbit.length > 0 && (

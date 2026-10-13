@@ -71,6 +71,22 @@ export interface HomepageRepoActivity {
   condensed: CondensedActivity;
 }
 
+/**
+ * Lean shape handed to the client-side HomeActivityShowcase: a pre-condensed
+ * view per range (7/30/90d) instead of the raw 90-day event history.
+ */
+export interface HomepageActivityClientPayload {
+  repos: Array<
+    Pick<HomepageRepoActivity, "slug" | "displayName" | "private" | "href"> & {
+      byRange: Record<ActivityRangeDays, CondensedActivity>;
+    }
+  >;
+  fetchedAt: string;
+  source: HomepageActivityPayload["source"];
+  historyDays: number;
+  defaultRangeDays: ActivityRangeDays;
+}
+
 export interface HomepageActivityPayload {
   lines: HomepageActivityLine[];
   repos: HomepageRepoActivity[];

@@ -1,4 +1,6 @@
 import type {
+  HomepageActivityClientPayload,
+  HomepageActivityPayload,
   ActivityDayBucket,
   ActivityEventKind,
   ActivityTimelineItem,
@@ -36,6 +38,8 @@ export interface CondensedActivity {
   days: ActivityDaySeries[];
   showcase: ActivityGroupRow[];
   grouped: ActivityGroupRow[];
+  /** Set when `grouped` was dropped to shrink a client payload. */
+  groupedCount?: number;
   totals: {
     merged: number;
     opened: number;
@@ -435,4 +439,47 @@ export function showcaseKindLabel(kind: ActivityEventKind): string {
 
 export function activityRangeLabel(days: ActivityRangeDays): string {
   return `Last ${days} days`;
+}
+
+/** Number of repos the homepage activity panel renders (client slices the same). */
+export const HOME_ACTIVITY_REPO_LIMIT = 4;
+
+/**
+ * Build the homepage activity payload for the client. The home cards only
+ * render totals, the day chart, two showcase rows and a count of the rest, so
+ * the condensed view is computed per range on the server and the 90-day raw
+ * event history (the bulk of the old payload) never reaches the browser.
+ */
+export function toClientActivityPayload(
+  data: HomepageActivityPayload
+): HomepageActivityClientPayload {
+  const anchor = new Date(data.fetchedAt);
+  return {
+    fetchedAt: data.fetchedAt,
+    source: data.source,
+    historyDays: data.historyDays,
+    defaultRangeDays: data.defaultRangeDays,
+    repos: data.repos.slice(0, HOME_ACTIVITY_REPO_LIMIT).map((repo) => {
+      const byRange = {} as Record<ActivityRangeDays, CondensedActivity>;
+      for (const windowDays of ACTIVITY_RANGE_OPTIONS) {
+        const c = condenseProjectActivity(repo.activity, {
+          anchorDate: anchor,
+          windowDays,
+        });
+        byRange[windowDays] = {
+          ...c,
+          showcase: c.showcase.slice(0, 2),
+          grouped: [],
+          groupedCount: c.grouped.length,
+        };
+      }
+      return {
+        slug: repo.slug,
+        displayName: repo.displayName,
+        private: repo.private,
+        href: repo.href,
+        byRange,
+      };
+    }),
+  };
 }
