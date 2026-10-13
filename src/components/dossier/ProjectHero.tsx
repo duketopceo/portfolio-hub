@@ -116,7 +116,7 @@ export function ProjectHero({ project, accentColor, meta, registryIndex }: Proje
                   isRelativeLive ? (
                     <Link href={liveHref} className="detail-cta">
                       <span className="detail-cta__pulse" />
-                      Open production
+                      Open demo
                     </Link>
                   ) : (
                     <a

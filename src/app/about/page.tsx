@@ -8,6 +8,7 @@ export const metadata = {
 };
 
 const navLinkClass = "detail-nav-link";
+const inlineLinkClass = "inline-text-link";
 
 export default function AboutPage() {
   return (
@@ -42,7 +43,7 @@ export default function AboutPage() {
             href="https://github.com/duketopceo"
             target="_blank"
             rel="noopener noreferrer"
-            className={navLinkClass}
+            className={inlineLinkClass}
           >
             duketopceo
           </a>
@@ -50,10 +51,10 @@ export default function AboutPage() {
         </p>
 
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.75 }}>
-          <Link href="/" className={navLinkClass}>
+          <Link href="/" className={inlineLinkClass}>
             Cosmic Intelligence
           </Link>{" "}
-          at luke-the-duke.com is the public map: five featured worlds in the
+          at luke-the-duke.com is the public map: four featured worlds in the
           main orbit, ~20 more in the catalog ring, dossiers for every repo, and
           a live GitHub activity view — ingest the history, display it
           structured, not as a fake “last week only” strip.

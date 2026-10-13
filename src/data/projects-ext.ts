@@ -608,27 +608,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
    * ------------------------------------------------------------------ */
 
   {
-    slug: "open-military-hardware-db",
-    repoName: "open-military-hardware-db",
-    displayName: "Open Military Hardware DB",
-    tagline: "Open-source database of military hardware across air, land, sea, and munitions",
-    description:
-      "Comprehensive open-source military hardware database covering weapons systems across air, land, sea, and munitions categories, with specifications, economics, operational history, and media references.",
-    category: "osint",
-    type: "platform",
-    featured: false,
-    techStack: ["TypeScript", "Python", "FastAPI", "SQLite", "Open Data"],
-    private: false,
-    highlights: [
-      "Structured weapons-systems data across four domains",
-      "Specifications plus programme economics and operational history",
-      "Media references and open-data provenance",
-      "Highest-traction repository on the account",
-    ],
-    architecture:
-      "Open data sources → ingestion → FastAPI service → SQLite store → typed query API",
-  },
-  {
     slug: "wisp",
     repoName: "wisp",
     displayName: "Wisp",
