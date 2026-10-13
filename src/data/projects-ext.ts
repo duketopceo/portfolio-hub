@@ -600,4 +600,299 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     architecture:
       "Godot scenes → EventBus autoloads → JSON building data → EconomyMath lib → headless perf harness → regression diff",
   },
+
+  /* ------------------------------------------------------------------ *
+   * 2026-10-12 audition batch — entries that cleared the setup bar and were
+   * not already catalogued. Selected by scripts/audit-repo-audition.py
+   * (judged on commits and files, not existence). See docs/CATALOG-AUDIT.md
+   * ------------------------------------------------------------------ */
+
+  {
+    slug: "open-military-hardware-db",
+    repoName: "open-military-hardware-db",
+    displayName: "Open Military Hardware DB",
+    tagline: "Open-source database of military hardware across air, land, sea, and munitions",
+    description:
+      "Comprehensive open-source military hardware database covering weapons systems across air, land, sea, and munitions categories, with specifications, economics, operational history, and media references.",
+    category: "osint",
+    type: "platform",
+    featured: false,
+    techStack: ["TypeScript", "Python", "FastAPI", "SQLite", "Open Data"],
+    private: false,
+    highlights: [
+      "Structured weapons-systems data across four domains",
+      "Specifications plus programme economics and operational history",
+      "Media references and open-data provenance",
+      "Highest-traction repository on the account",
+    ],
+    architecture:
+      "Open data sources → ingestion → FastAPI service → SQLite store → typed query API",
+  },
+  {
+    slug: "wisp",
+    repoName: "wisp",
+    displayName: "Wisp",
+    tagline: "Push-to-talk voice computer-use agent for Omarchy, decided by Jev",
+    description:
+      "Jev-powered voice computer-use agent for Omarchy on Hyprland and Asahi. Push-to-talk feeds whisper.cpp, Jev returns a typed decision, and the result drives a guarded hyprctl launch with a breathing dim overlay.",
+    category: "ai",
+    type: "app",
+    featured: false,
+    techStack: ["Python", "Jev", "whisper.cpp", "PipeWire", "Hyprland", "Omarchy"],
+    private: false,
+    highlights: [
+      "Push-to-talk voice control of the desktop",
+      "Typed decision model rather than free-text prompting",
+      "Guarded launch path — actions are gated, not freeform",
+      "Breathing dim overlay for visible agent state",
+    ],
+    architecture:
+      "Push-to-talk → whisper.cpp transcription → Jev typed decision → guarded hyprctl launch → dim overlay",
+  },
+  {
+    slug: "open-computer",
+    repoName: "open-computer",
+    displayName: "Open Computer",
+    tagline: "Open-source multi-model computer-use agent with disposable sandboxes",
+    description:
+      "Open-source equivalent of a cloud computer-use agent: multi-model routing, disposable sandboxed execution, and hybrid local/cloud placement.",
+    category: "ai",
+    type: "platform",
+    featured: false,
+    techStack: ["Python", "Sandboxing", "Multi-Model Routing"],
+    private: false,
+    highlights: [
+      "Multi-model routing across providers",
+      "Disposable sandboxed execution per task",
+      "Hybrid local and cloud placement",
+    ],
+    architecture: "Task intake → model routing → disposable sandbox → execution → result capture",
+  },
+  {
+    slug: "agentflow",
+    repoName: "agentflow",
+    displayName: "AgentFlow",
+    tagline: "Script-driven multi-agent orchestration across harnesses",
+    description:
+      "Cross-harness dynamic workflows: script-driven multi-agent orchestration spanning Devin, Claude Code, Codex, and OpenCode, with plugins for each.",
+    category: "ai",
+    type: "platform",
+    featured: false,
+    techStack: ["JavaScript", "Multi-Agent", "Claude Code", "Codex", "OpenCode"],
+    private: false,
+    highlights: [
+      "One workflow definition drives multiple agent harnesses",
+      "Script-driven rather than prompt-driven orchestration",
+      "Per-harness plugin adapters",
+    ],
+    architecture: "Workflow script → harness adapter → agent execution → step results → next step",
+  },
+  {
+    slug: "tallyline",
+    repoName: "tallyline",
+    displayName: "Tallyline",
+    tagline: "Self-hostable, agent-native issue tracker where humans and agents share one board",
+    description:
+      "Self-hostable, agent-native issue tracker — MIT-licensed Linear-class UX where humans and AI agents work the same board.",
+    category: "apps",
+    type: "platform",
+    featured: false,
+    techStack: ["TypeScript", "MIT", "Self-Hosted"],
+    private: false,
+    highlights: [
+      "Humans and agents operate the same board",
+      "Linear-class interface, MIT licensed",
+      "Self-hostable with no vendor dependency",
+    ],
+    architecture: "Web board → issue store → agent API surface → human and agent actors on one model",
+  },
+  {
+    slug: "openrouter-demos",
+    repoName: "openrouter-demos",
+    displayName: "OpenRouter Demos",
+    tagline: "Support deflection, GTM motion, and a three-model bakeoff",
+    description:
+      "Working demonstrations built on OpenRouter: a support-deflection flow, a go-to-market motion, and a multi-model bakeoff with cost, latency, and quality measured per candidate.",
+    category: "ai",
+    type: "app",
+    featured: false,
+    techStack: ["Python", "OpenRouter", "LLM Evals", "Tool Calling"],
+    private: false,
+    highlights: [
+      "Multi-model bakeoff with measured cost and quality",
+      "Support-deflection workflow",
+      "GTM motion workflow",
+      "Built directly on the OpenRouter API",
+    ],
+    architecture: "Task fixtures → per-model runs → cost/latency/quality capture → bakeoff report",
+  },
+  {
+    slug: "wordink",
+    repoName: "WordInk",
+    displayName: "WordInk",
+    tagline: "Speech-to-text dictation on Groq's inference API",
+    description:
+      "AI-powered speech-to-text dictation — an alternative to hosted dictation tools, built on Groq's low-latency inference API.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: ["TypeScript", "Python", "Groq", "Whisper"],
+    private: false,
+    highlights: [
+      "Low-latency dictation over a fast inference API",
+      "Client SDK plus app",
+    ],
+    architecture: "Audio capture → Groq transcription → text insertion",
+  },
+  /* a0-plugin-* — Agent Zero plugin suite */
+
+  {
+    slug: "a0-plugin-argus",
+    repoName: "a0-plugin-argus",
+    displayName: "Agent Zero Plugin — Argus",
+    tagline: "Pull-request review tools for Agent Zero, backed by Argus",
+    description:
+      "Agent Zero plugin adding argus_review and argus_flow tools, backed by Argus, a self-hosted bring-your-own-key pull-request reviewer.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "Argus", "Code Review"],
+    private: false,
+    highlights: [
+      "Exposes review and flow tools to an Agent Zero runtime",
+      "Bring-your-own-key, self-hosted",
+    ],
+    architecture: "Agent Zero tool call → plugin adapter → Argus reviewer → findings",
+  },
+  {
+    slug: "a0-plugin-omaseal",
+    repoName: "a0-plugin-omaseal",
+    displayName: "Agent Zero Plugin — OmaSeal",
+    tagline: "One secrets interface for Agent Zero, with masked values only",
+    description:
+      "One secrets interface for Agent Zero. Resolves keys through the OmaSeal keyring, 1Password, environment, or an encrypted vault; agents see names and masked values only.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "OmaSeal", "1Password", "Secrets"],
+    private: false,
+    highlights: [
+      "Single resolution path across four secret backends",
+      "Agents never receive plaintext values",
+      "Keyring, 1Password, env, and encrypted vault support",
+    ],
+    architecture: "Agent request → secret resolver → backend (keyring/1Password/env/vault) → masked value",
+  },
+  {
+    slug: "a0-plugin-jev-compact",
+    repoName: "a0-plugin-jev-compact",
+    displayName: "Agent Zero Plugin — Jev Compact",
+    tagline: "Jev-scored context compaction with tombstone restore",
+    description:
+      "Agent Zero plugin for context compaction scored by Jev, with tombstone restore so compacted context can be recovered rather than lost.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "Jev", "Context Management"],
+    private: false,
+    highlights: [
+      "Decision-model scoring drives what gets compacted",
+      "Tombstone restore for compacted spans",
+    ],
+    architecture: "Context window → Jev span scoring → compaction → tombstone store → restore",
+  },
+  {
+    slug: "a0-plugin-device-sync",
+    repoName: "a0-plugin-device-sync",
+    displayName: "Agent Zero Plugin — Device Sync",
+    tagline: "Cross-instance settings, chat, and memory sync over Tailscale",
+    description:
+      "Cross-instance sync packs for Agent Zero covering settings, chat, and memory, transported over Tailscale and carrying no secrets.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "Tailscale", "Sync"],
+    private: false,
+    highlights: [
+      "Settings, chat, and memory kept in sync across instances",
+      "Tailscale transport with no secrets in the payload",
+    ],
+    architecture: "Instance state → sync pack → Tailscale transport → peer instance apply",
+  },
+  {
+    slug: "a0-plugin-durable",
+    repoName: "a0-plugin-durable",
+    displayName: "Agent Zero Plugin — Durable Tasks",
+    tagline: "Restart-survivable agent tasks with a zero-dependency journal",
+    description:
+      "Agent Zero plugin making agent tasks durable and restart-survivable: a zero-dependency SQLite journal engine with an optional Restate adapter.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "SQLite", "Durability"],
+    private: false,
+    highlights: [
+      "Tasks survive process restarts",
+      "Zero-dependency SQLite journal",
+      "Optional Restate adapter for stronger guarantees",
+    ],
+    architecture: "Task start → SQLite journal append → restart → journal replay → resume",
+  },
+  {
+    slug: "a0-plugin-glitchtip",
+    repoName: "a0-plugin-glitchtip",
+    displayName: "Agent Zero Plugin — GlitchTip",
+    tagline: "Error tracking with request-ID and trace correlation",
+    description:
+      "Agent Zero plugin wiring GlitchTip error tracking into agent runs, correlating errors with request IDs and OpenTelemetry traces.",
+    category: "infra",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "GlitchTip", "OpenTelemetry"],
+    private: false,
+    highlights: [
+      "Errors correlated to request IDs",
+      "OpenTelemetry trace correlation",
+    ],
+    architecture: "Agent run → error capture → GlitchTip → request-ID and trace correlation",
+  },
+  {
+    slug: "a0-plugin-notion",
+    repoName: "a0-plugin-notion",
+    displayName: "Agent Zero Plugin — Notion",
+    tagline: "Local Notion stdio MCP server with ingestion atoms",
+    description:
+      "Notion connector plugin for Agent Zero: a local stdio MCP server plus ingestion atoms for pulling Notion content into an agent's reach.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "Agent Zero", "MCP", "Notion"],
+    private: false,
+    highlights: [
+      "Runs as a local stdio MCP server",
+      "Ingestion atoms for Notion content",
+    ],
+    architecture: "Agent Zero → local stdio MCP server → Notion API → ingestion atoms",
+  },
+  /* Personal */
+
+  {
+    slug: "kate",
+    repoName: "kate",
+    displayName: "Kate",
+    tagline: "Private two-person hub for plans, to-dos, and a what-we-did log",
+    description:
+      "Private two-person hub covering camping, movies, and to-dos, with a what-we-did log and optional voice journaling.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: ["TypeScript", "Voice"],
+    private: true,
+    highlights: [
+      "Shared to-do and plans surface",
+      "What-we-did log",
+      "Optional voice journaling",
+    ],
+    architecture: "Client UI → entries store → shared log → optional voice capture",
+  },
 ];
