@@ -901,7 +901,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     displayName: "Kate (iOS)",
     tagline: "Native SwiftUI field journal for spontaneous outings, built on Linux with no Mac",
     description:
-      "Native iOS client for Kate, a private spontaneous-activity journal for a two-person household. SwiftUI and SwiftPM with zero third-party dependencies, built and signed on Linux with xtool, which installs it to a USB-connected iPhone. Five tabs (Today, Ideas, Movies, Journal, More) talk to a Cloudflare Workers API. Journal and idea writes go through an offline outbox, and the UI uses the Field Journal design system.",
+      "Native iOS client for Kate, a spontaneous-activity field journal built first for a two-person household, growing into modules any household can switch on. SwiftUI and SwiftPM with zero third-party dependencies, built, signed and installed on a real iPhone entirely from Linux with xtool, with no Mac or Xcode. Five tabs (Today, Ideas, Movies, Journal, More) talk to a Cloudflare Workers API. Journal and idea writes go through an offline outbox, and the UI uses the Field Journal design system.",
     category: "apps",
     type: "app",
     featured: false,
@@ -919,7 +919,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     highlights: [
       "Native iOS app built on Linux with xtool: no Mac and no Xcode install",
       "Five tabs: Today, Ideas, Movies, Journal, More",
-      "Pairing-code sign-in with the session held in the Keychain; Sign in with Apple server half built and the client compiled in behind a flag",
+      "Pairing-code sign-in with the session held in the Keychain; Sign in with Apple live on the server (Apple JWKS verification, invite code, opaque sessions), with the client behind a build flag until the paid team activates",
       "Offline outbox keeps journal and idea writes without signal, retries with idempotency keys, and never drops them on sign-out",
       "Field Journal design system: one OKLCH token source generating CSS and Swift, a WCAG AA contrast gate, Fraunces serif",
       "Journal editing with a three-way merge of two people's edits (server side, in review)",
