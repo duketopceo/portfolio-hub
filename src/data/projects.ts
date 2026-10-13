@@ -8,6 +8,7 @@ export const KURULTAI_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/kurultai-launch.mp4`
 export const DAYFLOW_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/dayflow-launch.mp4`;
 export const ORCHESTRAL_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/orchestral-launch.mp4`;
 export const ARGUS_WITNESS_VIDEO_URL = `${MEDIA_BASE_URL}/argus-witness.mp4`;
+export const PACE_DEBUT_VIDEO_URL = `${MEDIA_BASE_URL}/pace-debut.mp4`;
 
 /**
  * Master project configuration — curated for recruiter/professional viewing.
@@ -215,6 +216,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Railway",
     ],
     private: true,
+    demoVideoUrl: PACE_DEBUT_VIDEO_URL,
     highlights: [
       "Platform live — gateway, auth, Stripe billing at pacehq.io",
       "Tenant-aware agent pipeline with TierGate and tool registry",
