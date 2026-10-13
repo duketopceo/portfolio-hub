@@ -92,6 +92,10 @@ export interface ProjectConfig {
   demoUrl?: string;
   /** Hosted walkthrough video (e.g. R2 mp4) for project dossier */
   demoVideoUrl?: string;
+  /** Poster frame (JPEG) for the hosted video */
+  demoVideoPosterUrl?: string;
+  /** Show the video on the dossier even when the repo is private (public product film) */
+  demoVideoPublic?: boolean;
   /** If true, liveUrl can be iframed on the detail page */
   embeddable?: boolean;
   /** If true, the demo subdomain is offline — show a static preview instead of iframe */

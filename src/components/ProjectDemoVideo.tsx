@@ -2,10 +2,11 @@
 
 type ProjectDemoVideoProps = {
   src: string;
+  poster?: string;
   title: string;
 };
 
-export default function ProjectDemoVideo({ src, title }: ProjectDemoVideoProps) {
+export default function ProjectDemoVideo({ src, poster, title }: ProjectDemoVideoProps) {
   return (
     <div className="demo-frame">
       <div className="demo-frame__header">
@@ -24,10 +25,14 @@ export default function ProjectDemoVideo({ src, title }: ProjectDemoVideoProps) 
           open ↗
         </a>
       </div>
+      {/* No autoplay anywhere: playback is always user-initiated, so
+          prefers-reduced-motion is respected by construction. */}
       <video
         controls
+        muted
         playsInline
-        preload="metadata"
+        preload="none"
+        poster={poster}
         className="w-full"
         style={{
           display: "block",
