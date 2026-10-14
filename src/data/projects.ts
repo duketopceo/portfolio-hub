@@ -858,9 +858,9 @@ export const projectConfigs: ProjectConfig[] = [
     repoName: "kate-ios",
     displayName: "Kate",
     tagline:
-      "A shared field journal for any crew — web + native iOS built and deployed entirely on Linux via xtool",
+      "A shared field journal for any crew — native iOS built and deployed entirely on Linux via xtool",
     description:
-      "Kate is a modular field journal for crews and small groups: day proposals, a running ideas list, a movie shelf with per-person ratings, travel pins on a real map, and a journal timeline with photos. The web app is Next.js on Cloudflare Workers with view-only-by-default sharing and an optional edit key; the iOS client is pure SwiftUI + SwiftPM with zero third-party dependencies — signed, compiled, and installed from Arch Linux ARM via xtool, no Xcode machine required. A typed decision API keeps every member's view in sync, with an offline outbox for writes.",
+      "Kate is a field journal for crews and small groups: journal entries with photos, hangout ideas, a movie shelf, places and outings with live GPS tracks, and week windows that find when everyone's free. The iOS client is pure SwiftUI + SwiftPM with zero third-party dependencies — signed, compiled, and installed from Arch Linux ARM via xtool, no Xcode machine required. A typed API on Cloudflare Workers (D1 + R2) keeps every member's view in sync behind invite-only crews, with an offline outbox for writes.",
     category: "apps",
     type: "app",
     featured: false,
