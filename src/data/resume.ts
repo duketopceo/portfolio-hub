@@ -99,7 +99,7 @@ export const projects = [
     description:
       "OpenRouter eval harness — does a cheap orchestrator plus cheap workers produce frontier-quality output? Python; grew an E2B-compatible isolated code runtime so evals have somewhere safe to execute.",
     highlights: [
-      "Turns model-routing and cost tradeoffs into a measurable result instead of a vibe; 282 commits, CI-gated.",
+      "Turns model-routing and cost tradeoffs into a measurable result instead of a vibe; 417 commits, CI-gated.",
       "Provider-agnostic by design — the harness runs BYOK against any OpenRouter model.",
     ],
     stack: ["Python", "OpenRouter", "evals", "E2B", "sandboxing", "CI"],
