@@ -943,12 +943,16 @@ export const projectExtensionConfigs: ProjectConfig[] = [
         src: "/projects/kate-ios/app-icon.png",
         alt: "Kate app icon: a cream lowercase k with two dots on a rose background",
         caption: "App icon",
+        width: 512,
+        height: 512,
       },
       {
         src: "/projects/kate-ios/design-mock.png",
         alt: "Four phone mockups of the Kate Today screen and hike recorder in light and dark",
         caption:
           "Design mock with fictional content, showing the planned Field Journal direction. The recorder and Map tab are roadmap, not shipped.",
+        width: 1760,
+        height: 1010,
       },
     ],
   },

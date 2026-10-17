@@ -224,8 +224,8 @@ export default async function ProjectDetailPage({
                     <Image
                       src={m.src}
                       alt={m.alt}
-                      width={0}
-                      height={0}
+                      width={m.width ?? 720}
+                      height={m.height ?? 405}
                       sizes="(min-width: 1024px) 720px, 100vw"
                       style={{
                         width: "100%",
