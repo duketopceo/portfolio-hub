@@ -7,7 +7,7 @@ being quoted externally.
 
 | Project | URL | Does well | Does worse than portfolio-hub |
 |---|---|---|---|
-| Brittany Chiang v4 | https://brittanychiang.com | Single-column scroll, clear role/employer list, fast | Text-only project proof; no per-project evidence pages |
+| Brittany Chiang v4 | https://v4.brittanychiang.com | Single-column scroll, clear role/employer list, fast | Text-only project proof; no per-project evidence pages |
 | Lee Robinson | https://leerob.com | Writing-first, very fast, simple | Projects are secondary; little system/architecture depth |
 | Rauno Freiberg | https://rauno.me | Craft-level interaction detail, restraint | Few projects documented with decisions and outcomes |
 | Paco Coursey | https://paco.me | Minimal, typographic, dense links | No catalog or filtering for a large body of work |
