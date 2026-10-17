@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import type { CSSProperties } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import {
@@ -208,6 +209,33 @@ export default async function ProjectDetailPage({
                   Demo showcase page →
                 </Link>
               </p>
+            </DossierSection>
+          )}
+
+          {project.previewMedia && project.previewMedia.length > 0 && (
+            <DossierSection
+              title="Visuals"
+              id={`dossier-visuals-${slug}`}
+              surface="glass"
+            >
+              <div className="space-y-4">
+                {project.previewMedia.map((m) => (
+                  <MediaFrame key={m.src} caption={m.caption}>
+                    <Image
+                      src={m.src}
+                      alt={m.alt}
+                      width={m.width ?? 720}
+                      height={m.height ?? 405}
+                      sizes="(min-width: 1024px) 720px, 100vw"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        maxWidth: m.src.endsWith("app-icon.png") ? 220 : undefined,
+                      }}
+                    />
+                  </MediaFrame>
+                ))}
+              </div>
             </DossierSection>
           )}
 
