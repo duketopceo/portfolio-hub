@@ -88,9 +88,9 @@ export function scrubActivityText(
   return s.slice(0, 140);
 }
 
-/** Strip merge target / branch refs for private display when they look internal */
-export function scrubBranchRef(ref: string, isPrivate: boolean): string | undefined {
-  if (!isPrivate) return ref;
-  if (looksLikeSecret(ref) || INTERNAL_HOST.test(ref)) return undefined;
+/** Strip merge target / branch refs when they look sensitive — PII/secrets are
+ * never republished regardless of repo visibility (same policy as titles). */
+export function scrubBranchRef(ref: string, _isPrivate: boolean): string | undefined {
+  if (looksLikeSecret(ref) || BARTLETT.test(ref)) return undefined;
   return ref;
 }

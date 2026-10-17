@@ -125,7 +125,7 @@ export default async function ProjectDetailPage({
         registryIndex={registryIndex}
       />
 
-      {project.demoVideoUrl && (
+      {project.demoVideoUrl && !project.private && (
         <PageShell className="dossier-page__demo">
           <MediaFrame>
             <ProjectDemoVideo
