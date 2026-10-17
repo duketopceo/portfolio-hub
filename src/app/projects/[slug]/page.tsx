@@ -14,7 +14,7 @@ import {
   sortPortfolioOrbit,
   getOrbitAdjacent,
 } from "@/lib/project-completeness";
-import { isProjectLive } from "@/lib/deployments";
+import { isProjectLive, getDeploymentsBySlug } from "@/lib/deployments";
 import { formatDate, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import { openRouterDemos, OPENROUTER_DEMOS_REPO_URL } from "@/data/openrouter-demos";
@@ -89,8 +89,11 @@ export default async function ProjectDetailPage({
   const githubActivity = await getProjectActivityTimeline(slug);
 
   const readme =
-    !project.private && !project.siteOnly
-      ? await fetchReadme(project.repoName, project.repoOwner)
+    !project.private && !project.siteOnly && !project.repoUnavailable
+      ? await fetchReadme(project.repoName, project.repoOwner, [
+          project.displayName,
+          project.slug,
+        ])
       : null;
 
   const showcase =
@@ -162,13 +165,15 @@ export default async function ProjectDetailPage({
             />
           </DossierSection>
 
-          <DossierSection
-            title="Production services"
-            id={`dossier-services-${slug}`}
-            surface="glass"
-          >
-            <DossierServicesTable slug={slug} />
-          </DossierSection>
+          {getDeploymentsBySlug(slug).length > 0 && (
+            <DossierSection
+              title="Production services"
+              id={`dossier-services-${slug}`}
+              surface="glass"
+            >
+              <DossierServicesTable slug={slug} />
+            </DossierSection>
+          )}
 
           {slug === "openrouter" && (
             <DossierSection

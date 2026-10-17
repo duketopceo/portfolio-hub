@@ -6,6 +6,8 @@ type ProjectDemoVideoProps = {
 };
 
 export default function ProjectDemoVideo({ src, title }: ProjectDemoVideoProps) {
+  // Never render a <video> without a playable source.
+  if (!src || !src.trim()) return null;
   return (
     <div className="demo-frame">
       <div className="demo-frame__header">

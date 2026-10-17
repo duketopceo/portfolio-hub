@@ -62,12 +62,13 @@ export default function RootLayout({
         className={`${archivo.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <SiteBackground />
-        <WelcomeIntro />
 
         <Header />
         <main className="flex-1 relative animate-page-in">{children}</main>
         <SiteFooter />
         <UmamiOutbound />
+        {/* After nav + content in DOM order so it is never the first tab stop. */}
+        <WelcomeIntro />
         <CardTorch />
         <Script
           src="https://analytics.pacehq.io/script.js"

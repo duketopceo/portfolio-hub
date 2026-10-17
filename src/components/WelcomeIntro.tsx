@@ -52,8 +52,7 @@ export default function WelcomeIntro() {
   if (
     !mounted ||
     gone ||
-    pathname?.startsWith("/podcast") ||
-    pathname?.startsWith("/openrouter")
+    pathname !== "/"
   ) {
     return null;
   }

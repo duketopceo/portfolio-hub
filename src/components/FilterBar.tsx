@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { EnrichedProject, ProjectCategory } from "@/lib/types";
+import { ProjectCardData, ProjectCategory } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
 import ProjectCard from "./ProjectCard";
 import PullRequestsPanel from "./PullRequestsPanel";
 
 interface FilterBarProps {
-  projects: EnrichedProject[];
+  projects: ProjectCardData[];
 }
 
 const categories: { key: ProjectCategory | "all"; label: string }[] = [
@@ -39,13 +39,17 @@ export default function FilterBar({ projects }: FilterBarProps) {
       (p) => activeCategory === "all" || p.category === activeCategory
     )
     .sort((a, b) => {
-      if (sortBy === "recent")
-        return (
-          new Date(b.lastUpdated).getTime() -
-          new Date(a.lastUpdated).getTime()
-        );
-      if (sortBy === "stars") return b.stars - a.stars;
-      return a.displayName.localeCompare(b.displayName);
+      // Total, deterministic order: empty dates sort last (NaN comparators
+      // are engine-dependent) and ties fall back to name, so server and
+      // client always agree.
+      const byName = a.displayName.localeCompare(b.displayName, "en");
+      if (sortBy === "recent") {
+        const ta = Date.parse(a.lastUpdated) || 0;
+        const tb = Date.parse(b.lastUpdated) || 0;
+        return tb - ta || byName;
+      }
+      if (sortBy === "stars") return b.stars - a.stars || byName;
+      return byName;
     });
 
   const scopeLabel =

@@ -127,9 +127,9 @@ export function ActivityCondensedPanel({
             ))}
           </ul>
         )}
-        {condensed.grouped.length > 0 && dossierHref && (
+        {(condensed.groupedCount ?? condensed.grouped.length) > 0 && dossierHref && (
           <Link href={dossierHref} className="activity-home-card__more">
-            + {condensed.grouped.length} in flight →
+            + {condensed.groupedCount ?? condensed.grouped.length} in flight →
           </Link>
         )}
       </article>

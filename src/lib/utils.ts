@@ -9,6 +9,9 @@ export function formatDate(dateStr: string): string {
     month: "short",
     day: "numeric",
     year: "numeric",
+    // Fixed zone: server (UTC) and browser must render the same string or
+    // React throws hydration error #418 near day boundaries.
+    timeZone: "UTC",
   });
 }
 

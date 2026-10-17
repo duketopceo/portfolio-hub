@@ -101,7 +101,12 @@ function defaultMoons(
   project: EnrichedProject,
   tier: OrbitVisualTier
 ): PlanetMoonConfig[] {
-  if (project.planetVisual?.moons?.length) return project.planetVisual.moons;
+  if (project.planetVisual?.moons?.length) {
+    // Explicit "live" moons link out; hide them while the deployment is offline.
+    return project.demoOffline
+      ? project.planetVisual.moons.filter((m) => m.kind !== "live")
+      : project.planetVisual.moons;
+  }
 
   const moons: PlanetMoonConfig[] = [];
   const live = liveMoon(project);

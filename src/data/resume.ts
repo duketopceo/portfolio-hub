@@ -62,7 +62,7 @@ export const skills = [
   {
     name: "Evals & Reliability",
     detail:
-      "Owns the unglamorous last 20% — reliability, edge cases, and finishing work: CI gates before merge, incident runbooks, and cross-tenant isolation enforcement (any RLS bypass halts and alerts the operator). Sentry + structlog observability on containerized bare-metal Linux; Stratum ships a 334+ test suite.",
+      "Owns the unglamorous last 20% — reliability, edge cases, and finishing work: CI gates before merge, incident runbooks, and cross-tenant isolation enforcement (any RLS bypass halts and alerts the operator). Sentry + structlog observability on containerized bare-metal Linux.",
     keywords: ["reliability", "CI gates", "incident runbooks", "RLS", "testing", "Sentry", "structlog", "observability"],
   },
 ];
@@ -139,14 +139,6 @@ export const projects = [
       "Per-source connectors (notes, repos, docs) feed a single embeddings store; MCP makes it agent-native.",
     ],
     stack: ["Rust", "SQLite", "FTS5", "sqlite-vec", "MCP", "axum"],
-  },
-  {
-    name: "Stratum Engine",
-    url: "https://stratumhq.app",
-    description:
-      "Secondary production voice-agent project — 24/7 Retell agent for contractors (missed-call recovery, follow-ups). FastAPI + Supabase + Fly.io + Stripe; 334+ tests.",
-    highlights: [],
-    stack: ["FastAPI", "Supabase", "Fly.io", "Stripe", "Retell", "voice AI"],
   },
 ];
 

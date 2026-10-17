@@ -38,7 +38,7 @@ Optional but recommended:
 
 **Default rule:** if a project is in `projectConfigs` and is not one of the featured five, it belongs on the **secondary orbit** (~20 planets). Only use `catalog-only` when a repo truly should not appear on the homepage (rare).
 
-- **Primary orbit** (main planets): fixed list in `HOMEPAGE_FEATURED_SLUGS` inside `src/lib/project-completeness.ts` — currently Khan, Kurultai, Pace Server, OpenRouter Demos, Stratum Engine.
+- **Primary orbit** (main planets): fixed list in `HOMEPAGE_FEATURED_SLUGS` inside `src/lib/project-completeness.ts` — currently Khan, Kurultai, Pace Server, OpenRouter Demos.
 - **Secondary orbit**: all non-featured entries except `orbitTier: "catalog-only"`, sorted by completeness score, split across two offset rings for spacing.
 - To promote/demote a primary world: edit `HOMEPAGE_FEATURED_SLUGS` **and** flip `featured` flags — keep both in sync.
 - Hero repo count uses `projectConfigs.length` — do not remove entries to “clean up.”

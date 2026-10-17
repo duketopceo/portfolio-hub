@@ -17,14 +17,24 @@ export function applyDeploymentOverlay(
   const dep = getPrimaryDeployment(config.slug);
   if (!dep) return config;
 
-  const isRelative = dep.url.startsWith("/");
+  if (!dep.online) {
+    // Offline deployment: never expose a clickable URL on any surface. The
+    // services table still lists the row (as plain text, marked offline).
+    return {
+      ...config,
+      liveUrl: undefined,
+      demoUrl: undefined,
+      subdomain: dep.subdomain ?? config.subdomain,
+      demoOffline: true,
+    };
+  }
 
   return {
     ...config,
-    liveUrl: isRelative ? dep.url : dep.url,
-    demoUrl: config.demoUrl ?? (isRelative ? dep.url : dep.url),
+    liveUrl: dep.url,
+    demoUrl: config.demoUrl ?? dep.url,
     subdomain: dep.subdomain ?? config.subdomain,
-    demoOffline: !dep.online,
+    demoOffline: false,
   };
 }
 

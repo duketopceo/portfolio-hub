@@ -28,12 +28,6 @@ const featuredProjects: FeaturedProject[] = [
     liveLabel: "pacehq.io",
   },
   {
-    label: "Stratum Engine",
-    dossierHref: "/projects/stratum-hq",
-    liveHref: "https://stratumhq.app",
-    liveLabel: "stratumhq.app",
-  },
-  {
     label: "OpenRouter demos",
     dossierHref: "/openrouter",
   },

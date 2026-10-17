@@ -104,20 +104,13 @@ export const deployments: DeploymentConfig[] = [
     online: true,
   },
   {
-    slug: "stratum-hq",
-    url: "https://stratumhq.app",
-    host: "other",
-    role: "Stratum Engine product shell",
-    healthCheck: "/",
-    online: false,
-  },
-  {
     slug: "portfolio-hub",
     url: "https://luke-the-duke.com",
     host: "railway",
     role: "Cosmic Intelligence portfolio (this repo) — public via tunnel until Railway DNS",
     healthCheck: "/api/health",
-    online: false,
+    // luke-the-duke.com and /api/health both return 200 (verified 2026-10-12).
+    online: true,
   },
   // ── Other live / catalog deployments ────────────────────────────
   {
@@ -127,7 +120,8 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "Open military hardware database",
     healthCheck: "/api/health",
-    online: true,
+    // Cloudflare tunnel origin returns HTTP 530 (verified 2026-10-12).
+    online: false,
   },
   {
     slug: "republic-atlas",

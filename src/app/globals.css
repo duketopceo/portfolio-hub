@@ -7289,3 +7289,169 @@
   }
 }
 
+
+/* Offline deployment shown as plain, unlinked text (never an <a>). */
+.cosmic-footer__btn-offline {
+  color: var(--color-text-faint);
+  cursor: default;
+}
+
+.dossier-services__offline-url {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  text-decoration: line-through;
+  text-decoration-color: var(--color-text-faint);
+}
+
+/* ═══ Audit 2026-10-12: layout, focus and tap-target fixes ═══ */
+
+/* Dossier: let grid/flex children shrink so wide README content scrolls or
+   wraps inside its card instead of stretching the whole page. */
+.dossier-page__two-col {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 1024px) {
+  .dossier-page__two-col {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+.dossier-page__main-stack,
+.dossier-page__main-stack > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.prose-readme {
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.prose-readme pre,
+.prose-readme table {
+  max-width: 100%;
+}
+.prose-readme table {
+  display: block;
+  overflow-x: auto;
+}
+.prose-readme img,
+.prose-readme video {
+  max-width: 100%;
+  height: auto;
+}
+.prose-readme a {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Dossier sidebar: tailwind utilities (p-4, space-y-6) lose to the reset. */
+.dossier-page__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.dossier-page__aside > .glass-card {
+  padding: 1.25rem;
+}
+.dossier-related-link {
+  min-height: 44px;
+  align-items: center;
+  gap: 0.5rem;
+}
+.dossier-related-link__live {
+  margin-left: auto;
+}
+
+/* Prose: paragraph rhythm + inline links that read as text, not buttons. */
+.cosmic-readable > * + * {
+  margin-top: 1.25rem;
+}
+.inline-text-link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+.inline-text-link:hover {
+  color: var(--color-text);
+}
+.inline-text-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Hero orbit marker needs a visible keyboard focus ring. */
+.planet-node:focus-visible .planet-node__body {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+/* Welcome toast: docked bottom-left, compact on phones, 44px targets. */
+.welcome-intro {
+  left: 1.5rem;
+  transform: translateY(calc(100% + 2.5rem));
+}
+.welcome-intro--visible {
+  transform: translateY(0);
+}
+.welcome-intro__close {
+  width: 44px;
+  height: 44px;
+  top: 0;
+  right: 0;
+}
+.welcome-intro__chip,
+.welcome-intro__cta {
+  min-height: 44px;
+}
+@media (max-width: 639px) {
+  .welcome-intro {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: auto;
+    padding: 0.75rem 3rem 0.75rem 0.9rem;
+  }
+  .welcome-intro__body,
+  .welcome-intro__nav {
+    display: none;
+  }
+  .welcome-intro__headline {
+    margin-bottom: 0.5rem;
+    padding-right: 0;
+  }
+  .welcome-intro__cta {
+    width: auto;
+    padding-inline: 1rem;
+  }
+}
+
+/* Tap targets */
+.activity-range__btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+.activity-home-card__more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.activity-range {
+  border-radius: var(--radius-md);
+}
+.activity-range__btn {
+  border-radius: var(--radius-md);
+}
+
+/* /projects category strip: never grow the page; it scrolls inside. */
+.catalog-toolbar,
+.catalog-toolbar__row,
+.catalog-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+.catalog-pills.filter-pills-row {
+  max-width: 100%;
+}
+
+/* GitHub permalink anchors in embedded READMEs are noise on our origin. */
+.prose-readme .anchor { display: none; }

@@ -112,12 +112,16 @@ export interface ProjectConfig {
   engineeringDecisions?: string[];
   /** On-site showcase only — no GitHub repo (e.g. OpenRouter demos page) */
   siteOnly?: boolean;
+  /** Source repo no longer exists (deleted / moved off this account) — no repo link, no README fetch. */
+  repoUnavailable?: boolean;
   /** Private dossier — shipped vs remaining finish-line (recruiter-facing) */
   finishLine?: string;
 }
 
 export interface EnrichedProject extends ProjectConfig {
   repo: GitHubRepo | null;
+  /** True when the GitHub repo is archived (read-only). */
+  archived?: boolean;
   lastUpdated: string;
   language: string | null;
   /** All languages from GitHub when API available (percentages omitted client-side) */
@@ -133,4 +137,70 @@ export interface EnrichedProject extends ProjectConfig {
    * Null for catalog-private rows even if GitHub later reports public.
    */
   githubUrl: string | null;
+}
+
+/** Fields ProjectCard and the registry filter actually read. */
+export type ProjectCardData = Pick<
+  EnrichedProject,
+  | "slug"
+  | "category"
+  | "private"
+  | "lastUpdated"
+  | "displayName"
+  | "tagline"
+  | "language"
+  | "stars"
+  | "archived"
+  | "repoUnavailable"
+  | "githubUrl"
+  | "liveUrl"
+  | "demoUrl"
+  | "demoOffline"
+>;
+
+/** Fields the sector map (ConstellationNav) reads. */
+export type ProjectMapData = Pick<
+  EnrichedProject,
+  | "slug"
+  | "category"
+  | "displayName"
+  | "tagline"
+  | "techStack"
+  | "featured"
+  | "liveUrl"
+  | "demoUrl"
+  | "demoOffline"
+>;
+
+export function toProjectCardData(p: EnrichedProject): ProjectCardData {
+  return {
+    slug: p.slug,
+    category: p.category,
+    private: p.private,
+    lastUpdated: p.lastUpdated,
+    displayName: p.displayName,
+    tagline: p.tagline,
+    language: p.language,
+    stars: p.stars,
+    archived: p.archived,
+    repoUnavailable: p.repoUnavailable,
+    githubUrl: p.githubUrl,
+    liveUrl: p.liveUrl,
+    demoUrl: p.demoUrl,
+    demoOffline: p.demoOffline,
+  };
+}
+
+export function toProjectMapData(p: EnrichedProject): ProjectMapData {
+  return {
+    slug: p.slug,
+    category: p.category,
+    displayName: p.displayName,
+    tagline: p.tagline,
+    techStack: p.techStack,
+    featured: p.featured,
+    liveUrl: p.liveUrl,
+    demoUrl: p.demoUrl,
+    demoOffline: p.demoOffline,
+  };
 }
