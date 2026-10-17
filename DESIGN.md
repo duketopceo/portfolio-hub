@@ -16,3 +16,12 @@ Current authority:
 - Route baselines: `tests/visual/`
 
 Any conflict between this file and `BRAND.md` resolves in favor of `BRAND.md`.
+
+## Direction summary (2026-10-11)
+
+Direction name: **Star Chart** (neo-industrial survey instrument; brand: Cosmic Intelligence).
+Dark-only by design: solid squared plates, hairline borders, Archivo plus JetBrains
+Mono marginalia, one teal signal. Tokens live in `src/app/design-system/tokens.css`
+(contrast verified 2026-10-11: text 16.8:1, muted 7.8:1, faint 5.0:1+, accent 10.7:1
+on `--color-bg`; all AA). Logo proposal: `assets/brand/` (survey reticle). Reference
+lock and the full decision ledger are `BRAND.md` and `COSMIC-REBRAND-PLAN.md`.

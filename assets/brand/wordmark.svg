@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 48" fill="none" role="img" aria-label="Cosmic Intelligence">
+  <title>Cosmic Intelligence wordmark (proposal)</title>
+  <rect width="340" height="48" fill="#07090B"/>
+  <g transform="translate(0 0)">
+    <g stroke="#E9ECEF" stroke-width="2" stroke-linecap="square">
+      <path d="M6 14V6h8M34 6h8v8M42 34v8h-8M14 42H6v-8"/>
+      <path d="M24 12v6M24 30v6M12 24h6M30 24h6"/>
+    </g>
+    <circle cx="24" cy="24" r="9" stroke="#7E8A96" stroke-width="1.5"/>
+    <circle cx="24" cy="24" r="3.5" fill="#2DD4BF"/>
+  </g>
+  <text x="64" y="23" fill="#E9ECEF" font-family="Archivo, 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif" font-weight="800" font-size="20" letter-spacing="1.6">COSMIC INTELLIGENCE</text>
+  <text x="64" y="40" fill="#7E8A96" font-family="'JetBrains Mono', Menlo, 'Liberation Mono', monospace" font-size="9" letter-spacing="2.4">CI / SYSTEM REGISTRY</text>
+</svg>
