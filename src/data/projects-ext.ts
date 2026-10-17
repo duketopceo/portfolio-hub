@@ -276,6 +276,8 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     featured: false,
     techStack: ["Python", "OpenRouter", "Eval", "LLM"],
     private: false,
+    demoVideoUrl: "https://media.luke-the-duke.com/launch/orchestral-16x9.mp4",
+    demoVideoPosterUrl: "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
     highlights: [
       "Orchestrator + worker eval design",
       "OpenRouter multi-model routing",

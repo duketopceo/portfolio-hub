@@ -2,7 +2,7 @@ import { ProjectConfig } from "@/lib/types";
 import { projectExtensionConfigs } from "./projects-ext";
 
 export const OPENROUTER_DEMO_VIDEO_URL =
-  "https://pub-9e45e5f7be6f4c9989852b4989e83a23.r2.dev/demos/openrouter-demos-walkthrough.mp4";
+  "https://media.luke-the-duke.com/demos/openrouter-demos-walkthrough.mp4";
 
 /**
  * Master project configuration — curated for recruiter/professional viewing.
@@ -119,6 +119,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Docker",
     ],
     private: false,
+    demoVideoUrl: "https://media.luke-the-duke.com/launch/argus-16x9.mp4",
+    demoVideoPosterUrl: "https://media.luke-the-duke.com/launch/argus-poster.jpg",
     highlights: [
       "Cache-first replay — zero vision calls on unchanged UI",
       "Cost-explicit — per-run dollar figure on the PR report",
@@ -207,6 +209,9 @@ export const projectConfigs: ProjectConfig[] = [
       "Railway",
     ],
     private: true,
+    demoVideoUrl: "https://media.luke-the-duke.com/launch/pace-16x9.mp4",
+    demoVideoPosterUrl: "https://media.luke-the-duke.com/launch/pace-poster.jpg",
+    demoVideoPublic: true,
     highlights: [
       "Platform live — gateway, auth, Stripe billing at pacehq.io",
       "Tenant-aware agent pipeline with TierGate and tool registry",
