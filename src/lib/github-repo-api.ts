@@ -1,6 +1,10 @@
 import { projectConfigs } from "@/data/projects";
 import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 import { getGithubAccessToken } from "@/lib/github-app";
+import {
+  scrubActivityText,
+  scrubBranchRef,
+} from "@/lib/activity-scrubber";
 
 export const curatedRepoNames = new Set(
   projectConfigs.filter((p) => !p.siteOnly).map((p) => p.repoName)
@@ -9,7 +13,7 @@ export const curatedRepoNames = new Set(
 export const repoNameToMeta = new Map(
   projectConfigs.map((p) => [
     p.repoName,
-    { slug: p.slug, displayName: p.displayName },
+    { slug: p.slug, displayName: p.displayName, private: p.private },
   ])
 );
 
@@ -323,9 +327,9 @@ export async function fetchAllOpenPullsAggregated(): Promise<
         slug: meta.slug,
         displayName: meta.displayName,
         number: pr.number,
-        title: pr.title,
+        title: scrubActivityText(pr.title, meta.private, "Pull request"),
         author: pr.user?.login ?? "unknown",
-        branch: pr.head.ref,
+        branch: scrubBranchRef(pr.head.ref, meta.private) ?? "restricted",
         updatedAt: pr.updated_at,
         htmlUrl: pr.html_url,
         draft: !!pr.draft,
