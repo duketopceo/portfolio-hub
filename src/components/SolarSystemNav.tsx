@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
-import { categoryMeta } from "@/data/projects";
+import { categoryMeta } from "@/data/category-meta";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { PlanetNode } from "@/components/planet/PlanetNode";
 

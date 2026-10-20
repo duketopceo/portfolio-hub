@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { toClientProject } from "@/lib/client-project";
 import {
   ActionRow,
   PageHeader,
@@ -64,7 +65,7 @@ export default async function HirePage() {
         </ActionRow>
       </div>
 
-      <FeaturedWork projects={featured} />
+      <FeaturedWork projects={featured.map(toClientProject)} />
 
       <SurveyPlate
         className="hire-page__section"
@@ -97,7 +98,7 @@ export default async function HirePage() {
               href="/resume"
               className="detail-cta detail-cta--secondary"
               data-umami-event="resume-view"
-              data-umami-event-source="hire"
+              data-umami-event-from="hire"
             >
               View web résumé
             </Link>

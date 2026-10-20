@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import Footer from "@/components/Footer";
+import type { ReactNode } from "react";
 
 const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
   ssr: false,
@@ -12,10 +12,11 @@ const StarfieldScene = dynamic(
   { ssr: false }
 );
 
-export function SiteFooter() {
+/** Footer is passed as a server-rendered child so the catalog stays out of the client bundle. */
+export function SiteFooter({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   if (pathname?.startsWith("/podcast")) return null;
-  return <Footer />;
+  return <>{children}</>;
 }
 
 export function SiteBackground() {

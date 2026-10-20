@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
 import { formatDate, languageColors, catColors } from "@/lib/utils";
-import { categoryMeta } from "@/data/projects";
+import { categoryMeta } from "@/data/category-meta";
 import { isProjectLive } from "@/lib/deployments";
 import { LockIcon, getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";

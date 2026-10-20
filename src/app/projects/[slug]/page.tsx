@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
+import { toClientProject } from "@/lib/client-project";
 import {
   getProjectBySlug,
   getAllSlugs,
@@ -114,7 +115,7 @@ export default async function ProjectDetailPage({
 
       {githubActivity && (
         <DossierActivityTimeline
-          project={project}
+          project={toClientProject(project)}
           activity={githubActivity}
         />
       )}

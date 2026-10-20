@@ -70,6 +70,14 @@ test.describe("production security boundaries", () => {
     });
     for (const path of ["/", "/projects/kurultai", "/hire"]) {
       await page.goto(path, { waitUntil: "load" });
+      if (path === "/hire") {
+        // The backdrop mounts on idle and creates its canvas after that; wait
+        // for it so any CSP violation from its setup is inside the window. A
+        // runner without WebGL never gets a canvas; the CSP check still runs.
+        await page
+          .waitForSelector(".hire-backdrop canvas", { timeout: 10_000 })
+          .catch(() => undefined);
+      }
       await page.waitForTimeout(1000);
       const violations = await page.evaluate(
         () => (window as unknown as { __csp: string[] }).__csp,

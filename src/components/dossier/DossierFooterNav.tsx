@@ -52,7 +52,7 @@ export function DossierFooterNav({ prev, next }: DossierFooterNavProps) {
         className="detail-nav-link"
         data-umami-event="resume-download"
         data-umami-event-format="pdf"
-        data-umami-event-source="dossier-footer"
+        data-umami-event-from="dossier-footer"
       >
         Résumé (PDF)
       </a>

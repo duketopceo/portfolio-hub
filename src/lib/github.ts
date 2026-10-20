@@ -12,6 +12,7 @@ import {
   rateLimitResetFromHeaders,
   type GithubRequestFailure,
 } from "./github-errors";
+import { scrubEmails } from "@/lib/readme-scrub";
 import { fetchLatestCiState, type CiStateKind } from "@/lib/github-repo-api";
 
 export { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
@@ -19,6 +20,11 @@ export { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 const GITHUB_USER = GITHUB_ACCOUNT_LOGIN;
 const GITHUB_API = GITHUB_API_BASE;
 const SHOWCASE_FILENAME = "SHOWCASE.md";
+
+/** Builds and visual tests set this so output never depends on live GitHub. */
+function fixturesEnabled(): boolean {
+  return process.env.ACTIVITY_USE_FIXTURES === "1";
+}
 
 /**
  * Headers for GitHub API requests (server-side only).
@@ -57,6 +63,7 @@ async function handleFailedGithubResponse(
  * Fetch all repos for the configured GitHub user / app installation.
  */
 export async function fetchAllRepos(): Promise<GitHubRepo[]> {
+  if (fixturesEnabled()) return [];
   const token = await getGithubAccessToken();
   const allRepos: GitHubRepo[] = [];
   let page = 1;
@@ -113,6 +120,7 @@ async function fetchRepoLanguages(
   repoName: string,
   owner: string = GITHUB_USER
 ): Promise<string[]> {
+  if (fixturesEnabled()) return [];
   const url = `${GITHUB_API}/repos/${owner}/${repoName}/languages`;
   try {
     const res = await fetch(url, {
@@ -138,6 +146,7 @@ export async function fetchReadme(
   repoName: string,
   owner: string = GITHUB_USER
 ): Promise<string | null> {
+  if (fixturesEnabled()) return null;
   const url = `${GITHUB_API}/repos/${owner}/${repoName}/readme`;
 
   try {
@@ -161,7 +170,7 @@ export async function fetchReadme(
       return null;
     }
 
-    return await res.text();
+    return scrubEmails(await res.text());
   } catch (err) {
     const failure = failureFromUnknown(`fetchReadme ${repoName}`, err);
     logGithubFailure("fetchReadme", failure);
@@ -182,7 +191,7 @@ export async function fetchShowcaseMd(
   repoName: string,
   owner: string = GITHUB_USER
 ): Promise<string | null> {
-  if (!repoName) return null;
+  if (!repoName || fixturesEnabled()) return null;
 
   const url = `${GITHUB_API}/repos/${owner}/${encodeURIComponent(repoName)}/contents/${SHOWCASE_FILENAME}`;
 
@@ -199,7 +208,7 @@ export async function fetchShowcaseMd(
     if (data.name !== SHOWCASE_FILENAME) return null;
     if (!data.content || data.encoding !== "base64") return null;
 
-    return Buffer.from(data.content, "base64").toString("utf8");
+    return scrubEmails(Buffer.from(data.content, "base64").toString("utf8"));
   } catch {
     return null;
   }
@@ -318,7 +327,7 @@ export function getAllSlugs(): string[] {
 export async function enrichProjectActivity(
   project: EnrichedProject
 ): Promise<EnrichedProject> {
-  if (project.siteOnly || !project.repoName) return project;
+  if (project.siteOnly || !project.repoName || fixturesEnabled()) return project;
 
   const owner = project.repoOwner ?? GITHUB_USER;
   const languages = await fetchRepoLanguages(project.repoName, owner);

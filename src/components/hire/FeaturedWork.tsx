@@ -23,8 +23,9 @@ export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
             <Link
               href={`/projects/${p.slug}`}
               className="hire-featured__item"
-              data-umami-event="hire-featured-open"
+              data-umami-event="survey-file-open"
               data-umami-event-slug={p.slug}
+              data-umami-event-source="hire"
             >
               {p.film?.poster && !failed.has(p.slug) ? (
                 // eslint-disable-next-line @next/next/no-img-element

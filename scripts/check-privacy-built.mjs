@@ -27,16 +27,24 @@ const domains = listOf("employerDomains");
 // Private catalog entries, read from the data files. Each entry opens at
 // `repoName:`; `repoOwner:` and `private:` follow inside the same entry.
 const slugs = new Set();
+const bareNames = new Set(); // private repoNames, for the quoted-token scan
+const publicNames = new Set(); // slugs + displayNames: public by design
 for (const file of readdirSync(join(repoRoot, "src/data")).filter((f) => /^projects.*\.ts$/.test(f))) {
-  const chunks = read(join(repoRoot, "src/data", file)).split(/\n\s*repoName:/).slice(1);
+  const src = read(join(repoRoot, "src/data", file));
+  for (const m of src.matchAll(/\n\s*(?:slug|displayName):\s*"([^"]+)"/g)) publicNames.add(m[1].toLowerCase());
+  const chunks = src.split(/\n\s*repoName:/).slice(1);
   for (const chunk of chunks) {
     const name = chunk.match(/^\s*"([^"]+)"/)?.[1];
     const entry = chunk.split(/\n\s*slug:/)[0];
     if (!name || !/\n\s*private:\s*true\b/.test(entry)) continue;
     const owner = entry.match(/\n\s*repoOwner:\s*"([^"]+)"/)?.[1] ?? defaultOwner;
     slugs.add(`${owner}/${name}`);
+    bareNames.add(name);
   }
 }
+// A bare repoName that equals a listed slug or displayName is public anyway.
+const exempt = [...bareNames].filter((n) => publicNames.has(n.toLowerCase()));
+const bareChecked = [...bareNames].filter((n) => !publicNames.has(n.toLowerCase()));
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // Tolerate JSON-escaped slashes (`\/`) as found in RSC payloads.
@@ -47,11 +55,15 @@ const patterns = [
     label: `private repo ${s}`,
     re: new RegExp(esc(s).replace(/\//, slash) + tail, "i"),
   })),
+  ...bareChecked.map((n) => ({
+    label: `private repo name ${n}`,
+    re: new RegExp(`(["'])${esc(n)}\\1`, "i"),
+  })),
   ...workOrgs.map((o) => ({ label: `work org ${o}`, re: new RegExp(esc(o), "i") })),
   ...domains.map((d) => ({ label: `employer domain ${d}`, re: new RegExp(esc(d), "i") })),
 ];
 
-const textExt = new Set([".html", ".body", ".rsc", ".meta", ".txt", ".xml", ".json", ".md", ""]);
+const textExt = new Set([".js", ".html", ".body", ".rsc", ".meta", ".txt", ".xml", ".json", ".md", ""]);
 const files = [];
 const walk = (dir) => {
   if (!existsSync(dir)) return;
@@ -62,9 +74,16 @@ const walk = (dir) => {
   }
 };
 walk(join(scanRoot, ".next/server/app"));
+walk(join(scanRoot, ".next/static"));
 for (const f of ["llms.txt", "robots.txt"]) {
   const p = join(scanRoot, "public", f);
   if (existsSync(p)) files.push(p);
+}
+
+// Guard against a silently empty derivation (catalog format drift).
+if (slugs.size === 0) {
+  console.error("check:privacy:built derived zero private catalog patterns; refusing to pass.");
+  process.exit(1);
 }
 
 if (files.length === 0) {
@@ -86,3 +105,4 @@ if (hits.length > 0) {
   process.exit(1);
 }
 console.log(`check:privacy:built passed (${files.length} files, ${patterns.length} identifiers)`);
+console.log(`bare repoName exemptions (listed slug/displayName): ${exempt.join(", ") || "none"}`);

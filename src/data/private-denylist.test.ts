@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -48,5 +48,56 @@ describe("check:privacy:built", () => {
     const root = fixture(slugs.map((s) => `github.com/${s}`).join(" "));
     const res = run(root);
     for (const s of slugs) expect(res.stderr, s).toContain(`private repo ${s} `);
+  });
+
+  // Private repoNames that are not also a slug or displayName.
+  const publicNames = new Set(
+    projectConfigs.flatMap((c) => [c.slug, c.displayName]).map((n) => n.toLowerCase()),
+  );
+  const bareName = projectConfigs.find(
+    (c) => c.private === true && !publicNames.has(c.repoName.toLowerCase()),
+  )?.repoName as string;
+
+  it("fails on a quoted bare private repoName in client JS under .next/static", () => {
+    expect(bareName).toBeTruthy();
+    const root = fixture("<p>clean</p>");
+    mkdirSync(join(root, ".next/static/chunks"), { recursive: true });
+    writeFileSync(
+      join(root, ".next/static/chunks/app.js"),
+      `x={slug:"a",repoName:"${bareName}"}`,
+    );
+    const res = run(root);
+    expect(res.status).toBe(1);
+    expect(res.stderr).toContain("app.js");
+    expect(res.stderr).toContain(`private repo name ${bareName}`);
+  });
+
+  it("fails on an employer domain and on a slug planted in public/llms.txt", () => {
+    expect(run(fixture("<a>jobs@bartlettroofs.com</a>")).status).toBe(1);
+    const root = fixture("<p>clean</p>");
+    writeFileSync(join(root, "public/llms.txt"), `see github.com/${privateSlug}\n`);
+    const res = run(root);
+    expect(res.status).toBe(1);
+    expect(res.stderr).toContain("llms.txt");
+  });
+
+  it("fails when zero private patterns can be derived", () => {
+    const sandbox = mkdtempSync(join(tmpdir(), "privacy-built-empty-"));
+    mkdirSync(join(sandbox, "scripts"));
+    mkdirSync(join(sandbox, "src/data"), { recursive: true });
+    copyFileSync(script, join(sandbox, "scripts/check-privacy-built.mjs"));
+    copyFileSync(
+      join(process.cwd(), "src/data/private-denylist.ts"),
+      join(sandbox, "src/data/private-denylist.ts"),
+    );
+    writeFileSync(join(sandbox, "src/data/projects.ts"), "export const projectConfigs = [];\n");
+    const root = fixture("<p>clean</p>");
+    const res = spawnSync(
+      process.execPath,
+      [join(sandbox, "scripts/check-privacy-built.mjs"), "--root", root],
+      { encoding: "utf8" },
+    );
+    expect(res.status).toBe(1);
+    expect(res.stderr).toContain("zero private catalog patterns");
   });
 });

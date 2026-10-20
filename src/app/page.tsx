@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
+import { toClientProject } from "@/lib/client-project";
 import {
   getHomepageOrbitProjects,
   getHomepageSecondaryOrbitProjects,
@@ -57,7 +58,7 @@ export default async function Home() {
           <div className="sheet__chart">
             <SolarSystemNav
               key={lead?.slug ?? "orbit"}
-              projects={primaryOrbit}
+              projects={primaryOrbit.map(toClientProject)}
               registryIndexOf={indexOf(primaryOrbit)}
             />
           </div>

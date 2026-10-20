@@ -1,5 +1,6 @@
 import { getEnrichedProjects } from "@/lib/github";
 import FilterBar from "@/components/FilterBar";
+import { toClientProject } from "@/lib/client-project";
 import ConstellationNav from "@/components/ConstellationNav";
 import { PageHeader, PageShell, SectionHeading } from "@/components/design";
 import { earlierWork } from "@/lib/catalog";
@@ -26,6 +27,7 @@ export const metadata = {
 
 export default async function ProjectsPage() {
   const projects = await getEnrichedProjects();
+  const clientProjects = projects.map(toClientProject);
   // Private earlier work is never rendered, not even by name.
   const earlier = earlierWork().filter((p) => !p.private);
 
@@ -41,7 +43,7 @@ export default async function ProjectsPage() {
         lede="All surveyed bodies — finance, AI, OSINT, infrastructure, web."
       />
 
-      <FilterBar projects={projects} />
+      <FilterBar projects={clientProjects} />
 
       <section
         id="domain-map"
@@ -53,7 +55,7 @@ export default async function ProjectsPage() {
           title={<span id="domain-map-heading">Sector map</span>}
           description="A 2D chart of how bodies cluster by domain — distinct from the home orbit ordering by completeness."
         />
-        <ConstellationNav projects={projects} />
+        <ConstellationNav projects={clientProjects} />
       </section>
 
       <section

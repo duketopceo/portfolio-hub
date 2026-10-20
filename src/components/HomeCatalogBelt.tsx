@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { categoryMeta } from "@/data/projects";
+import { categoryMeta } from "@/data/category-meta";
 import { isProjectLive } from "@/lib/deployments";
 import type { EnrichedProject, ProjectCategory } from "@/lib/types";
 import { catColors } from "@/lib/utils";
