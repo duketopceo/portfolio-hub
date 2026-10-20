@@ -879,6 +879,35 @@ export const projectConfigs: ProjectConfig[] = [
     ],
     architecture:
       "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync",
+    businessContext:
+      "A personal project: a field-journal app for crews and small groups to capture spontaneous days out (what we did, what to try next) without friction or signal. It is private by design and not a product for sale.",
+    scopeAndScale:
+      "Two repositories: this SwiftUI client and a Next.js 15 backend on Cloudflare Workers with D1 and R2. Core logic is split into pure targets (KateCore, KateAuthCore) so it is unit-tested on Linux, where no iOS Simulator exists.",
+    engineeringDecisions: [
+      "Build and sign for a physical iPhone from Linux with xtool and SwiftPM; there is no Simulator, so pure logic is isolated into targets that run under swift test on Linux.",
+      "Local-first writes: entries land in an on-device outbox first, then send in order with stable idempotency keys so a lost reply never creates a duplicate.",
+      "Design tokens have one source that generates both CSS and Swift, with a contrast gate that fails below WCAG AA.",
+      "Concurrent journal edits are reconciled by a three-way merge on the server; true overlaps return a conflict instead of overwriting.",
+    ],
+    finishLine:
+      "Roadmap, not built yet: hike recording with tap-to-mark points, photo EXIF placed on a map and timeline, user-enabled modules (weekly rituals, camping, gold panning, birding, fishing, stargazing, road trips, an outing deck), calendars, and an iPad layout.",
+    previewMedia: [
+      {
+        src: "/projects/kate-ios/app-icon.png",
+        alt: "Kate app icon: a cream lowercase k with two dots on a rose background",
+        caption: "App icon",
+        width: 512,
+        height: 512,
+      },
+      {
+        src: "/projects/kate-ios/design-mock.png",
+        alt: "Four phone mockups of the Kate Today screen and hike recorder in light and dark",
+        caption:
+          "Design mock with fictional content, showing the planned Field Journal direction. The recorder and Map tab are roadmap, not shipped.",
+        width: 1760,
+        height: 1010,
+      },
+    ],
   },
 
   ...projectExtensionConfigs,
