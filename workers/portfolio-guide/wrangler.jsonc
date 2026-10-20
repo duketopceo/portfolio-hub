@@ -4,6 +4,12 @@
   "compatibility_date": "2026-09-30",
   "compatibility_flags": ["nodejs_compat"],
 
+  // No public origin: the guide has no callers, and its /search route spends
+  // Workers AI + Vectorize for anyone who knows the workers.dev name. Set in
+  // config so a later deploy cannot silently re-publish it.
+  "workers_dev": false,
+  "preview_urls": false,
+
   // Observability: metrics/logs on, but prompt/response content is never
   // logged — only request ids, timing, model route, token counts.
   "observability": {
