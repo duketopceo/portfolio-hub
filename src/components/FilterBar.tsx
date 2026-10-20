@@ -39,12 +39,15 @@ export default function FilterBar({ projects }: FilterBarProps) {
       (p) => activeCategory === "all" || p.category === activeCategory
     )
     .sort((a, b) => {
-      if (sortBy === "recent")
+      if (sortBy === "recent") {
+        const ta = a.lastUpdated ? Date.parse(a.lastUpdated) : 0;
+        const tb = b.lastUpdated ? Date.parse(b.lastUpdated) : 0;
         return (
-          new Date(b.lastUpdated).getTime() -
-          new Date(a.lastUpdated).getTime()
+          (Number.isNaN(tb) ? 0 : tb) - (Number.isNaN(ta) ? 0 : ta) ||
+          a.slug.localeCompare(b.slug)
         );
-      if (sortBy === "stars") return b.stars - a.stars;
+      }
+      if (sortBy === "stars") return b.stars - a.stars || a.slug.localeCompare(b.slug);
       return a.displayName.localeCompare(b.displayName);
     });
 
