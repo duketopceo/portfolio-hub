@@ -25,11 +25,11 @@ export const PORTFOLIO_LEAD_SLUG = "kurultai";
 
 /** Homepage solar orbit — top 5 featured systems (fixed order). */
 export const HOMEPAGE_FEATURED_SLUGS = [
-  "khan",
+  "orchestral",
+  "argus",
   "kurultai",
   "pace-server",
-  "openrouter",
-  "stratum-hq",
+  "khan",
 ] as const;
 
 const MS_DAY = 86_400_000;

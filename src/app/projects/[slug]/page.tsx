@@ -125,11 +125,11 @@ export default async function ProjectDetailPage({
         registryIndex={registryIndex}
       />
 
-      {project.demoVideoUrl && !project.private && (
+      {project.film && !project.private && (
         <PageShell className="dossier-page__demo">
           <MediaFrame>
             <ProjectDemoVideo
-              src={project.demoVideoUrl}
+              src={project.film.url}
               title={project.displayName}
             />
           </MediaFrame>
@@ -170,7 +170,7 @@ export default async function ProjectDetailPage({
             <DossierServicesTable slug={slug} />
           </DossierSection>
 
-          {slug === "openrouter" && (
+          {slug === "openrouter-demos" && (
             <DossierSection
               title="Application demos"
               id={`dossier-demos-${slug}`}

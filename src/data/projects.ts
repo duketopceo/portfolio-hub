@@ -96,7 +96,7 @@ export const projectConfigs: ProjectConfig[] = [
       "OpenRouter",
     ],
     private: false,
-    demoVideoUrl: KURULTAI_LAUNCH_VIDEO_URL,
+    film: { url: KURULTAI_LAUNCH_VIDEO_URL },
     highlights: [
       "Rust + axum API with MCP tool surface",
       "SQLite FTS5 + sqlite-vec — no Postgres dependency",
@@ -116,10 +116,19 @@ export const projectConfigs: ProjectConfig[] = [
       "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced.",
     category: "ai",
     type: "library",
-    featured: false,
-    orbitTier: "secondary",
+    featured: true,
+    planetVisual: {
+      size: "lg",
+      shape: "diamond",
+      color: "#F472B6",
+      rings: [{ opacity: 0.3, tilt: -16 }],
+      moons: [
+        { label: "Playwright", kind: "stack" },
+        { label: "OpenRouter", kind: "stack" },
+      ],
+    },
     demoUrl: "/demos/argus",
-    demoVideoUrl: ARGUS_WITNESS_VIDEO_URL,
+    film: { url: ARGUS_WITNESS_VIDEO_URL },
     techStack: [
       "TypeScript",
       "Playwright",
@@ -161,7 +170,7 @@ export const projectConfigs: ProjectConfig[] = [
     featured: false,
     orbitTier: "secondary",
     demoUrl: "/demos/dayflow",
-    demoVideoUrl: DAYFLOW_LAUNCH_VIDEO_URL,
+    film: { url: DAYFLOW_LAUNCH_VIDEO_URL },
     techStack: ["Go", "QML", "SQLite", "OpenRouter", "Wayland"],
     private: false,
     highlights: [
@@ -217,7 +226,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Railway",
     ],
     private: true,
-    demoVideoUrl: PACE_DEBUT_VIDEO_URL,
+    film: { url: PACE_DEBUT_VIDEO_URL },
     highlights: [
       "Platform live — gateway, auth, Stripe billing at pacehq.io",
       "Tenant-aware agent pipeline with TierGate and tool registry",
@@ -238,7 +247,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Gateway, auth, and Stripe billing are live (pacehq.io, app.pacehq.io). Remaining ~20%: real tool execution and Python reasoning service hardening — hire is for last-mile finishing.",
   },
   {
-    slug: "openrouter",
+    slug: "openrouter-demos",
     repoName: "openrouter-demos",
     displayName: "OpenRouter Demos",
     tagline:
@@ -247,9 +256,9 @@ export const projectConfigs: ProjectConfig[] = [
       "Four OpenRouter application demos in github.com/duketopceo/openrouter-demos: Deflect (support classify/deflect/escalate with Guardrails), Motion (GTM inbound → next action with Auto Router), Bakeoff (provider ops — latency, cost, quality launch gate), and Caesar (two-model debate with concession traces). Offline pytest passes on fixtures; live evals require OPENROUTER_API_KEY.",
     category: "ai",
     type: "platform",
-    featured: true,
+    featured: false,
     planetVisual: {
-      size: "lg",
+      size: "md",
       shape: "diamond",
       color: "#A78BFA",
       moons: [
@@ -263,7 +272,7 @@ export const projectConfigs: ProjectConfig[] = [
     liveUrl: "https://luke-the-duke.com/openrouter",
     demoUrl: "https://luke-the-duke.com/openrouter",
     embeddable: true,
-    demoVideoUrl: OPENROUTER_DEMO_VIDEO_URL,
+    film: { url: OPENROUTER_DEMO_VIDEO_URL },
     highlights: [
       "Deflect — support routing with Guardrails and eval fixtures",
       "Motion — GTM next-action with Auto Router and presets",
@@ -343,6 +352,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "ai-debate-arena",
     repoName: "ai-debate-arena",
+    era: "earlier",
     displayName: "AI Debate Arena",
     tagline:
       "Two AI agents debate any topic — OpenRouter routing and rich terminal UI",
@@ -361,39 +371,12 @@ export const projectConfigs: ProjectConfig[] = [
     architecture:
       "CLI → Prompt orchestrator → OpenRouter → Dual agent turns → Terminal renderer",
   },
-  {
-    slug: "luke-the-duke-show",
-    repoName: "luke-the-duke-show",
-    displayName: "Luke the Duke Show",
-    tagline:
-      "Show site + Mission Control dashboards — broadcast mode for recording-quality decks",
-    description:
-      "Static site at show.luke-the-duke.com (Cloudflare Pages): broadsheet landing, episode archive, and the Mission Control dashboard system with broadcast mode tuned for recording-quality deck presentation. Separate from Cosmic Intelligence (portfolio-hub) but part of the luke-the-duke brand surface.",
-    category: "apps",
-    type: "app",
-    featured: false,
-    techStack: ["HTML", "CSS", "Cloudflare Pages", "Podcast"],
-    private: true,
-    highlights: [
-      "Episode shell + carousel structure",
-      "Broadcast mode for recording-quality decks",
-      "Broadsheet landing + verified episode archive",
-    ],
-    architecture:
-      "Static files → Cloudflare Pages → Broadcast deck mode (?broadcast=1); apex /podcast/* redirects to the show domain",
-    businessContext:
-      "A dedicated show surface for episodes and live recording decks, distinct from the portfolio hub.",
-    scopeAndScale:
-      "Single-product show site with episode catalog and presentation modes.",
-    engineeringDecisions: [
-      "Separate repo from portfolio-hub — Keeps show content and Cosmic portfolio deploy pipelines independent",
-    ],
-  },
 
   // ── Finance & Trading ────────────────────────────────────────────
   {
     slug: "trading-bot",
     repoName: "TradingBot",
+    era: "earlier",
     displayName: "TradingBot",
     tagline:
       "Algorithmic trading system with ML-driven signal generation and automated execution",
@@ -415,6 +398,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "alphahedge",
     repoName: "AlphaHedge-Hedge-Fund-Simulator",
+    era: "earlier",
     displayName: "AlphaHedge",
     tagline:
       "Full-stack hedge fund simulation platform with realistic market dynamics",
@@ -440,6 +424,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "ikbr-dashboard",
     repoName: "ibkr-portfolio-dashboard",
+    era: "earlier",
     displayName: "IBKR Dashboard",
     tagline:
       "Interactive Brokers portfolio dashboard with real-time data visualization",
@@ -463,6 +448,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "finance-frenzy",
     repoName: "FinanceFrenzy",
+    era: "earlier",
     displayName: "Finance Frenzy",
     tagline:
       "Finance simulation game — Hackathon winner (Best Finance Hack & Top 6)",
@@ -483,37 +469,12 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
 
-  {
-    slug: "nem-stock-pitch",
-    repoName: "nem-stock-pitch",
-    displayName: "NEM Stock Pitch",
-    tagline:
-      "Institutional-grade equity research — LONG Newmont, built entirely with Perplexity Computer",
-    description:
-      "Interactive stock pitch arguing Newmont (NEM) is not a gold miner but a sovereign hedge fund. Built for the 2026 Perplexity Computer Stock Pitch Competition judged by Philippe Laffont (Coatue), Dan Loeb (Third Point), and Ken Hao (Silver Lake). The thesis rests on macro inevitability ($39T national debt, $193.6T unfunded liabilities, M2 expansion), three structural legs (central bank gold bid, hidden copper call, nuclear-mining nexus), and an AI hardware demand angle (gold + copper in every chip and data center). Features Chart.js visualizations, MapLibre globe, peer comparison tables, and oil sensitivity analysis. Dark theme, responsive, single-page.",
-    category: "finance",
-    type: "app",
-    featured: false,
-    liveUrl: "https://nem.luke-the-duke.com",
-    demoUrl: "https://nem.luke-the-duke.com",
-    embeddable: false,
-    demoOffline: true,
-    techStack: ["HTML/CSS", "Chart.js", "MapLibre", "Perplexity Computer"],
-    private: false,
-    highlights: [
-      "Built entirely with Perplexity Computer — research, code, deploy",
-      "Macro thesis: $193.6T unfunded liabilities, 863t CB gold buying",
-      "Multi-angle analysis: copper, nuclear, AI hardware demand",
-      "Competition: Laffont, Loeb, Hao judging panel",
-    ],
-    architecture:
-      "Static HTML/CSS → Chart.js charts → MapLibre globe → Responsive single-page app",
-  },
 
   // ── AI & Automation ──────────────────────────────────────────────
   {
     slug: "skyguard-ai",
     repoName: "BartlettBot",
+    era: "earlier",
     displayName: "SkyGuard AI",
     tagline:
       "Intelligent roofing assistant — permit coordination, document analysis, customer comms",
@@ -539,6 +500,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "quiz-the-best",
     repoName: "QuizTheBest",
+    era: "earlier",
     displayName: "QuizTheBest",
     tagline:
       "LLM-powered study tool — auto-generates quizzes and flashcards from any source",
@@ -562,6 +524,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "optimezer",
     repoName: "Zer_solutions",
+    era: "earlier",
     displayName: "OptiMezer",
     tagline:
       "Small business AI integration platform for workflow automation",
@@ -583,6 +546,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "republic-atlas",
     repoName: "republic-atlas",
+    era: "earlier",
     displayName: "Republic Atlas",
     tagline:
       "Political data intelligence platform — election analytics and civic mapping",
@@ -644,6 +608,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "etl-pipeline",
     repoName: "ETL-Pipeline",
+    era: "earlier",
     displayName: "ETL Pipeline",
     tagline:
       "Data engineering pipeline for extraction, transformation, and loading workflows",
@@ -662,32 +627,12 @@ export const projectConfigs: ProjectConfig[] = [
   },
 
   // ── Infrastructure ───────────────────────────────────────────────
-  {
-    slug: "server-cluster",
-    repoName: "Bartlett-server-001",
-    displayName: "Production Cluster",
-    tagline:
-      "Docker Swarm infrastructure — multi-node cluster with Traefik, monitoring, and CI/CD",
-    description:
-      "Three-node Docker Swarm on Tailscale (cluster1 / cluster-1-master as manager, cluster2 and cluster3 as workers) running Apple Silicon Mac Minis. Features automated container deployments via GitHub webhooks, Traefik reverse proxy handling TLS termination and routing for multiple subdomains, Cloudflare Tunnel for secure public access without port forwarding, and Tailscale mesh VPN for encrypted inter-node communication. Currently hosts the portfolio site, military hardware database, and several internal tools.",
-    category: "infra",
-    type: "infra",
-    featured: false,
-    techStack: ["Docker", "Shell", "Traefik", "Cloudflare", "Tailscale"],
-    private: true,
-    highlights: [
-      "Multi-node Docker Swarm orchestration",
-      "CI/CD with automatic container deployments",
-      "Zero-trust networking with Tailscale mesh",
-    ],
-    architecture:
-      "GitHub webhooks → Docker Swarm → Traefik routing → Cloudflare Tunnel → Public subdomains",
-  },
 
   // ── Education & Study ────────────────────────────────────────────
   {
     slug: "series65-study-app",
     repoName: "series65-study-app",
+    era: "earlier",
     displayName: "Series 65 Study Hub",
     tagline:
       "Multi-course study platform — Series 65 exam prep with adaptive quizzing and progress tracking",
@@ -736,37 +681,9 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
   {
-    slug: "stratum-hq",
-    repoName: "stratum-engine",
-    repoOwner: "Herzog-LLC",
-    displayName: "Stratum Engine",
-    tagline:
-      "AI-powered operations backend for home service contractors — live at stratumhq.app",
-    description:
-      "Stratum Engine is the operations backend for home service contractors — AI-powered intake, dispatch, and workflow. The public shell lives at stratumhq.app; source stays private under Herzog-LLC.",
-    category: "apps",
-    type: "platform",
-    featured: true,
-    planetVisual: {
-      size: "lg",
-      shape: "cube",
-      color: "#34D399",
-      moons: [
-        { label: "stratumhq", kind: "live", href: "https://stratumhq.app" },
-      ],
-    },
-    embeddable: false,
-    techStack: ["TypeScript", "Next.js", "Docker"],
-    private: true,
-    highlights: [
-      "AI-powered operations backend for home service contractors",
-      "Product engine and brand shell for the Stratum surface",
-      "Roadmap-aligned infrastructure story",
-    ],
-  },
-  {
     slug: "chronicle-weaver",
     repoName: "rork-chronicle-weaver",
+    era: "earlier",
     displayName: "Chronicle Weaver",
     tagline: "Interactive narrative and storytelling platform",
     description:
@@ -788,6 +705,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "collaborative-essay",
     repoName: "Collaborative-essay",
+    era: "earlier",
     displayName: "Collaborative Essay",
     tagline: "Real-time collaborative writing and editing tool",
     description:
@@ -832,6 +750,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "curious-storycard",
     repoName: "curious-storycard",
+    era: "earlier",
     displayName: "Curious",
     tagline:
       "Instagram for curiosity — swipeable knowledge cards with rich media storytelling",
@@ -865,7 +784,7 @@ export const projectConfigs: ProjectConfig[] = [
     type: "app",
     featured: false,
     liveUrl: "https://kate.shippedit.dev",
-    demoVideoUrl: KATE_LAUNCH_VIDEO_URL,
+    film: { url: KATE_LAUNCH_VIDEO_URL },
     techStack: ["Swift", "SwiftUI", "SwiftPM", "Cloudflare Workers", "xtool"],
     private: true,
     highlights: [
@@ -880,6 +799,7 @@ export const projectConfigs: ProjectConfig[] = [
   {
     slug: "kate-ios",
     repoName: "kate-ios",
+    parentSlug: "kate",
     displayName: "Kate iOS",
     tagline: "SwiftUI client for Kate, built and signed on Linux with xtool",
     description:

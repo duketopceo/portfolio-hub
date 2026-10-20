@@ -51,9 +51,9 @@ export const demos: DemoEntry[] = [
     demoAccess: "gated",
   },
   {
-    slug: "openrouter",
+    slug: "openrouter-demos",
     name: "OpenRouter Demos",
-    projectSlug: "openrouter",
+    projectSlug: "openrouter-demos",
     tier: "replay",
     tagline:
       "Four eval-driven application demos — Deflect, Motion, Bakeoff, Caesar — fixture summaries and smoke tests.",

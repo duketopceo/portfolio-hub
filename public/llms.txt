@@ -27,7 +27,7 @@
 
 ## External
 
-- [GitHub](https://github.com/duketopceo): public source — Pace Server, Kurultai (Rust + SQLite + FTS5 + MCP), Stratum Engine, Khan (Agent Zero fork).
+- [GitHub](https://github.com/duketopceo): public source — Pace Server, Kurultai (Rust + SQLite + FTS5 + MCP), Khan (Agent Zero fork).
 - [LinkedIn](https://linkedin.com/in/lukekimball2789): professional profile.
 - [Sitemap](https://luke-the-duke.com/sitemap.xml): all crawlable routes.
 

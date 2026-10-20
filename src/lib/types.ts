@@ -105,9 +105,6 @@ export interface ProjectConfig {
   liveUrl?: string;
   /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
   demoUrl?: string;
-  /** Hosted walkthrough video (e.g. R2 mp4) for project dossier.
-   *  Legacy: U3 migrates entries to `film`, then this is removed. */
-  demoVideoUrl?: string;
   /** Launch film for the dossier; shown on private entries too. Assets live on
    *  the existing media host only. */
   film?: ProjectFilm;

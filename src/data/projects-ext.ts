@@ -8,6 +8,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-agents",
     repoName: "omarchy-agents",
+    parentSlug: "omarchy-plugins",
     displayName: "Omarchy Agents",
     tagline: "Claude Code, Codex, and Fireworks usage panel in the Omarchy bar",
     description:
@@ -28,6 +29,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-fan",
     repoName: "omarchy-fan",
+    parentSlug: "omarchy-plugins",
     displayName: "Omarchy Fan",
     tagline: "RAM, CPU/GPU/NVMe thermals and fan presets in the Omarchy bar",
     description:
@@ -48,6 +50,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-nexus",
     repoName: "omarchy-nexus",
+    parentSlug: "omarchy-plugins",
     displayName: "Omarchy Nexus",
     tagline: "Hardware topology radar bar widget for Omarchy",
     description:
@@ -68,6 +71,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-standby",
     repoName: "omarchy-standby",
+    parentSlug: "omarchy-plugins",
     displayName: "Omarchy Standby",
     tagline: "Fullscreen nightstand overlay for Omarchy",
     description:
@@ -88,6 +92,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-ticker",
     repoName: "omarchy-ticker",
+    parentSlug: "omarchy-plugins",
     displayName: "Omarchy Ticker",
     tagline: "Gold, tech, nuclear, energy, and rates in the Omarchy bar",
     description:
@@ -107,6 +112,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-power",
     repoName: "omarchy-power",
+    parentSlug: "omarchy-plugins",
     displayName: "Power",
     tagline: "Battery model + power profiles on the Omarchy bar",
     description:
@@ -126,6 +132,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-connections",
     repoName: "omarchy-connections",
+    parentSlug: "omarchy-plugins",
     displayName: "Connections",
     tagline: "Network connections at a glance on the Omarchy bar",
     description:
@@ -145,6 +152,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-numbat",
     repoName: "omarchy-numbat",
+    parentSlug: "omarchy-plugins",
     displayName: "Numbat",
     tagline: "AI-agent activity radar — Perplexity numbat findings on the bar",
     description:
@@ -166,6 +174,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-bumblebee",
     repoName: "omarchy-bumblebee",
+    parentSlug: "omarchy-plugins",
     displayName: "Bumblebee",
     tagline: "Supply-chain exposure radar — scans against a compromise catalog",
     description:
@@ -185,28 +194,9 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "bumblebee scan → catalog diff → severity-tagged exposure rows → toasts + panel",
   },
   {
-    slug: "omarchy-neo",
-    repoName: "omarchy-neo",
-    displayName: "Neo",
-    tagline: "BrowserOS neo agent-browser control on the Omarchy bar",
-    description:
-      "Bar status + controls for a BrowserOS neo sidecar stack: per-unit restart, port map, MCP endpoint health, and live open-tab count from the CDP shim.",
-    category: "ai",
-    type: "library",
-    featured: false,
-    techStack: ["QML", "Omarchy", "Python", "CDP", "systemd"],
-    private: false,
-    highlights: [
-      "Per-unit start/stop/restart with whitelisted verbs",
-      "Live open-tab count via CDP shim /json/list",
-      "MCP endpoint health in the panel",
-    ],
-    architecture:
-      "systemd --user probes + loopback CDP shim → status payload → bar widget + control panel",
-  },
-  {
     slug: "omarchy-pplx",
     repoName: "omarchy-pplx",
+    parentSlug: "omarchy-plugins",
     displayName: "PPLX",
     tagline: "Perplexity quick-ask search in a bar dropdown",
     description:
@@ -227,6 +217,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "omarchy-wisp",
     repoName: "omarchy-wisp",
+    parentSlug: "wisp",
     displayName: "Wisp Shell",
     tagline: "Voice companion surface — orb, ghost cursor, agent panel",
     description:
@@ -273,10 +264,20 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "Eval harness that tests whether a cheap orchestrator plus cheap workers can produce frontier-quality output through OpenRouter routing.",
     category: "ai",
     type: "experiment",
-    featured: false,
+    featured: true,
+    planetVisual: {
+      size: "lg",
+      shape: "diamond",
+      color: "#38BDF8",
+      rings: [{ opacity: 0.3, tilt: -20 }],
+      moons: [
+        { label: "OpenRouter", kind: "stack" },
+        { label: "Eval", kind: "stack" },
+      ],
+    },
     techStack: ["Python", "OpenRouter", "Eval", "LLM"],
     private: false,
-    demoVideoUrl: "https://media.luke-the-duke.com/demos/orchestral-launch.mp4",
+    film: { url: "https://media.luke-the-duke.com/demos/orchestral-launch.mp4" },
     highlights: [
       "Orchestrator + worker eval design",
       "OpenRouter multi-model routing",
@@ -308,6 +309,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "a0-openrouter-spend",
     repoName: "a0-openrouter-spend",
+    parentSlug: "openrouter-usage",
     displayName: "A0 OpenRouter Spend",
     tagline: "OpenRouter spend and budget tracking utility",
     description:
@@ -325,28 +327,9 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     architecture: "OpenRouter spend data → budget helpers → lightweight UI",
   },
   {
-    slug: "dayflow-screenshots",
-    repoName: "dayflow-screenshots",
-    displayName: "Dayflow Screenshots",
-    tagline: "Auto-rename and index Wayland screenshots",
-    description:
-      "Auto-rename and index Wayland screenshots with a vision model. Produces timestamped snake_case filenames plus a markdown catalog.",
-    category: "apps",
-    type: "app",
-    featured: false,
-    techStack: ["Python", "OpenRouter", "Vision Models", "Wayland"],
-    private: false,
-    highlights: [
-      "Automatic Wayland screenshot indexing",
-      "Vision-generated snake_case filenames",
-      "Markdown catalog output",
-    ],
-    architecture:
-      "Screenshot watcher → vision model → file rename → markdown catalog",
-  },
-  {
     slug: "kurultai-people",
     repoName: "kurultai_people",
+    parentSlug: "kurultai",
     displayName: "Kurultai People",
     tagline: "Agent Zero plugin for Kurultai Memory",
     description:
@@ -363,26 +346,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     ],
     architecture:
       "Agent Zero hook → Kurultai search → recall ranking → cited response",
-  },
-  {
-    slug: "pace-grafana-dashboards",
-    repoName: "pace-grafana-dashboards",
-    displayName: "Pace Grafana Dashboards",
-    tagline: "Grafana dashboards for Pace observability",
-    description:
-      "Grafana dashboard collection for Pace Server observability. Git-sync friendly slim repo with service-health and infrastructure panels.",
-    category: "infra",
-    type: "library",
-    featured: false,
-    techStack: ["Grafana", "Observability", "Git Sync"],
-    private: false,
-    highlights: [
-      "Service health and infra panels",
-      "Git-sync friendly dashboard as code",
-      "Built for Pace Server",
-    ],
-    architecture:
-      "Grafana JSON dashboards → Git sync → Pace observability stack",
   },
   {
     slug: "omaseal",
@@ -424,32 +387,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     architecture: "TBD — follow README once scope is documented",
   },
   {
-    slug: "openclaw-macmini-hardened",
-    repoName: "openclaw-macmini-hardened",
-    displayName: "OpenClaw Mac Mini Hardened",
-    tagline: "Hardened OpenClaw deployment for Mac Mini M1",
-    description:
-      "Hardened macOS AI deployment on Mac Mini M1 — Docker, Tailscale SSH, Ollama, LiteLLM, memory review queue, audit logs, and cheap API routing.",
-    category: "infra",
-    type: "infra",
-    featured: false,
-    techStack: [
-      "Docker",
-      "Tailscale",
-      "Ollama",
-      "LiteLLM",
-      "Mac Mini",
-    ],
-    private: true,
-    highlights: [
-      "Hardened M1 Mini AI host",
-      "Tailscale SSH and Ollama/LiteLLM routing",
-      "Audit logs and memory review queue",
-    ],
-    architecture:
-      "Mac Mini host → Tailscale mesh → Docker runtime → Ollama + LiteLLM → audit queue",
-  },
-  {
     slug: "bartlett-permits",
     repoName: "bartlett-permits",
     displayName: "Bartlett Permits",
@@ -470,28 +407,9 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "Map UI → permit service → FastAPI workflows → PostgreSQL → automation sidecar",
   },
   {
-    slug: "bartlett-data-platform",
-    repoName: "bartlett-data-platform",
-    displayName: "Bartlett Data Platform",
-    tagline: "Agentic data platform for Bartlett Roofing",
-    description:
-      "Agentic data platform for Bartlett Roofing — ingestion, modeling, BI, and predictive analytics. Private production-adjacent system.",
-    category: "data",
-    type: "platform",
-    featured: false,
-    techStack: ["Python", "PostgreSQL", "BI", "Predictive Analytics"],
-    private: true,
-    highlights: [
-      "Ingestion, modeling, and BI layers",
-      "Predictive analytics for roofing ops",
-      "Agentic data orchestration",
-    ],
-    architecture:
-      "Ingestion → data warehouse → BI models → prediction service → reports",
-  },
-  {
     slug: "project-atlas",
     repoName: "project-atlas",
+    era: "earlier",
     displayName: "Project Atlas",
     tagline: "AI-powered operations backend for home service contractors",
     description:
@@ -532,6 +450,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "void-sleep",
     repoName: "void-sleep",
+    era: "earlier",
     displayName: "Void Sleep",
     tagline: "Personality-driven iOS sleep tracker",
     description:
@@ -608,27 +527,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
    * (judged on commits and files, not existence). See docs/CATALOG-AUDIT.md
    * ------------------------------------------------------------------ */
 
-  {
-    slug: "open-military-hardware-db",
-    repoName: "open-military-hardware-db",
-    displayName: "Open Military Hardware DB",
-    tagline: "Open-source database of military hardware across air, land, sea, and munitions",
-    description:
-      "Comprehensive open-source military hardware database covering weapons systems across air, land, sea, and munitions categories, with specifications, economics, operational history, and media references.",
-    category: "osint",
-    type: "platform",
-    featured: false,
-    techStack: ["TypeScript", "Python", "FastAPI", "SQLite", "Open Data"],
-    private: false,
-    highlights: [
-      "Structured weapons-systems data across four domains",
-      "Specifications plus programme economics and operational history",
-      "Media references and open-data provenance",
-      "Highest-traction repository on the account",
-    ],
-    architecture:
-      "Open data sources → ingestion → FastAPI service → SQLite store → typed query API",
-  },
   {
     slug: "wisp",
     repoName: "wisp",
@@ -708,26 +606,6 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     architecture: "Web board → issue store → agent API surface → human and agent actors on one model",
   },
   {
-    slug: "openrouter-demos",
-    repoName: "openrouter-demos",
-    displayName: "OpenRouter Demos",
-    tagline: "Support deflection, GTM motion, and a three-model bakeoff",
-    description:
-      "Working demonstrations built on OpenRouter: a support-deflection flow, a go-to-market motion, and a multi-model bakeoff with cost, latency, and quality measured per candidate.",
-    category: "ai",
-    type: "app",
-    featured: false,
-    techStack: ["Python", "OpenRouter", "LLM Evals", "Tool Calling"],
-    private: false,
-    highlights: [
-      "Multi-model bakeoff with measured cost and quality",
-      "Support-deflection workflow",
-      "GTM motion workflow",
-      "Built directly on the OpenRouter API",
-    ],
-    architecture: "Task fixtures → per-model runs → cost/latency/quality capture → bakeoff report",
-  },
-  {
     slug: "wordink",
     repoName: "WordInk",
     displayName: "WordInk",
@@ -748,8 +626,32 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   /* a0-plugin-* — Agent Zero plugin suite */
 
   {
+    slug: "agent-zero-plugins",
+    repoName: "a0-plugins",
+    displayName: "Agent Zero plugins",
+    tagline: "Seven public Agent Zero plugins: Argus review, OmaSeal, Jev compaction, device sync, durable runs, GlitchTip, Notion",
+    description:
+      "A suite of public plugins for the Agent Zero agent runtime, each in its own repository: pull-request review tools backed by Argus, OmaSeal secret access, Jev context compaction, device sync, durable run state, GlitchTip error reporting, and a Notion ingestion server. They appear here as components of one entry rather than seven.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    // Luke's a0-plugins repo is a fork of the community index (agent0ai/a0-plugins),
+    // not original work, so this entry links to the component repos only.
+    siteOnly: true,
+    techStack: ["Python", "Agent Zero", "MCP"],
+    private: false,
+    highlights: [
+      "Seven plugins, one per capability, each in its own public repository",
+      "Argus plugin exposes pull-request review as agent tools",
+      "Notion plugin runs as a local stdio MCP server",
+    ],
+    architecture: "Agent Zero runtime → plugin adapters → external service (Argus, Notion, GlitchTip, OmaSeal)",
+  },
+
+  {
     slug: "a0-plugin-argus",
     repoName: "a0-plugin-argus",
+    parentSlug: "agent-zero-plugins",
     displayName: "Agent Zero Plugin — Argus",
     tagline: "Pull-request review tools for Agent Zero, backed by Argus",
     description:
@@ -768,6 +670,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "a0-plugin-omaseal",
     repoName: "a0-plugin-omaseal",
+    parentSlug: "agent-zero-plugins",
     displayName: "Agent Zero Plugin — OmaSeal",
     tagline: "One secrets interface for Agent Zero, with masked values only",
     description:
@@ -787,6 +690,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "a0-plugin-jev-compact",
     repoName: "a0-plugin-jev-compact",
+    parentSlug: "agent-zero-plugins",
     displayName: "Agent Zero Plugin — Jev Compact",
     tagline: "Jev-scored context compaction with tombstone restore",
     description:
@@ -805,6 +709,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "a0-plugin-device-sync",
     repoName: "a0-plugin-device-sync",
+    parentSlug: "agent-zero-plugins",
     displayName: "Agent Zero Plugin — Device Sync",
     tagline: "Cross-instance settings, chat, and memory sync over Tailscale",
     description:
@@ -823,6 +728,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "a0-plugin-durable",
     repoName: "a0-plugin-durable",
+    parentSlug: "agent-zero-plugins",
     displayName: "Agent Zero Plugin — Durable Tasks",
     tagline: "Restart-survivable agent tasks with a zero-dependency journal",
     description:
@@ -842,6 +748,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "a0-plugin-glitchtip",
     repoName: "a0-plugin-glitchtip",
+    parentSlug: "agent-zero-plugins",
     displayName: "Agent Zero Plugin — GlitchTip",
     tagline: "Error tracking with request-ID and trace correlation",
     description:
@@ -860,6 +767,7 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   {
     slug: "a0-plugin-notion",
     repoName: "a0-plugin-notion",
+    parentSlug: "agent-zero-plugins",
     displayName: "Agent Zero Plugin — Notion",
     tagline: "Local Notion stdio MCP server with ingestion atoms",
     description:
@@ -874,6 +782,167 @@ export const projectExtensionConfigs: ProjectConfig[] = [
       "Ingestion atoms for Notion content",
     ],
     architecture: "Agent Zero → local stdio MCP server → Notion API → ingestion atoms",
+  },
+  /* Added 2026-10-20 from the tier audit */
+
+  {
+    slug: "cairn",
+    repoName: "cairn",
+    displayName: "Cairn",
+    tagline: "iOS-first study app: upload anything, quiz until you know it",
+    description:
+      "Upload anything you are studying; Cairn turns it into a study set, quizzes you until you know it, and shows your mastery over time. Built around retrieval practice and successive relearning, with a quality gate on every generated question. Private repository.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: ["Swift", "SwiftUI", "Next.js", "Cloudflare Workers", "D1", "OpenRouter"],
+    private: true,
+    highlights: [
+      "Retrieval practice and successive relearning: quiz until you pass, then again across days",
+      "Quality gate on every generated question",
+      "One AI gateway through OpenRouter, open-weight models preferred, with Apple on-device models for cheap tasks",
+      "iOS built from Linux with xtool, shipped to TestFlight from a Mac",
+    ],
+    architecture:
+      "SwiftUI app → Next.js API on Cloudflare Workers (OpenNext) → D1, R2, Vectorize, Queues → OpenRouter gateway",
+    // TODO(luke): review showcase copy
+    showcase: {
+      whatItIs:
+        "A study app. You upload what you are studying, Cairn turns it into a study set, quizzes you until you know it, and shows your mastery over time.",
+      whoItsFor: "One student studying alone; accounts are for ages 13 and up.",
+      whatLukeBuilt:
+        "An iOS-first SwiftUI app built on Linux with xtool, and a Next.js backend on Cloudflare Workers with D1 and R2. One AI gateway through OpenRouter, preferring open-weight models, with Apple on-device Foundation Models for cheap tasks. A quality gate checks every generated question.",
+      stack: ["Swift", "SwiftUI", "xtool", "Next.js", "Cloudflare Workers", "D1", "R2", "Vectorize", "Queues", "OpenRouter"],
+      status:
+        "Early development. The backend is deployed; an internal TestFlight build is being prepared.",
+    },
+  },
+  {
+    slug: "rts-skyrim",
+    repoName: "RTS-Skyrim",
+    displayName: "RTS-Skyrim",
+    tagline: "Command Skyrim NPCs like an RTS, simulated by 0 A.D. over a local WebSocket",
+    description:
+      "0 A.D. runs the simulation headless, a Python host mirrors it over a local WebSocket, and an SKSE plugin renders it as real Skyrim actors from a top-down command camera. Built around the Age of Skyrim mod. Private repository, work in progress.",
+    category: "apps",
+    type: "experiment",
+    featured: false,
+    techStack: ["C++", "SKSE", "Python", "WebSocket", "0 A.D."],
+    private: true,
+    highlights: [
+      "Two-process design: headless 0 A.D. plus a Python host, mirrored to the game over WebSocket",
+      "SKSE plugin with an RTS camera, box selection, orders and a command grid",
+      "Written message protocol between host and plugin",
+      "Host covered by offline tests",
+    ],
+    architecture:
+      "0 A.D. (headless) ↔ Python host (RL HTTP) ↔ WebSocket ↔ SKSE plugin → Skyrim NPCs",
+    // TODO(luke): review showcase copy
+    showcase: {
+      whatItIs:
+        "A mod that lets you command Skyrim NPCs like an RTS. 0 A.D. owns economy, pathing and combat; Skyrim is the renderer and input device.",
+      whoItsFor: "Skyrim Special Edition players; it is built around the Age of Skyrim mod.",
+      whatLukeBuilt:
+        "The Python bridge host that mirrors the 0 A.D. simulation, the SKSE plugin that renders it as Skyrim actors with a top-down camera, selection, orders and a command grid, and the WebSocket protocol between them.",
+      stack: ["C++", "SKSE", "CommonLibSSE-NG", "Python", "WebSocket", "0 A.D."],
+      status:
+        "Work in progress, Windows only. The host is covered by offline tests; the plugin UI has not had a long human playtest.",
+    },
+  },
+  {
+    slug: "scooter-ios",
+    repoName: "scooter-ios",
+    displayName: "Scooter",
+    tagline: "No-account iPhone remote for an electric scooter, over Bluetooth LE",
+    description:
+      "A lightweight Swift/SwiftUI app that talks to a HopCycle W3 Max electric scooter directly over Bluetooth LE: a native port of the Voltix FF60 protocol recovered from the vendor's Android app. No backend, no cloud, no account. Private repository.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: ["Swift", "SwiftUI", "CoreBluetooth", "XcodeGen"],
+    private: true,
+    highlights: [
+      "BLE protocol recovered from the vendor's Android app: service UUIDs, frame layout, CRC-16",
+      "Live dashboard (speed, battery, fault code), lock, lights, gear, speed limit, cruise control",
+      "Unbind, reset and OTA commands deliberately not implemented",
+      "No backend, no cloud, no account binding",
+    ],
+    architecture: "SwiftUI → CoreBluetooth → scooter BLE service FF60 (notify and write characteristics)",
+    // TODO(luke): review showcase copy
+    showcase: {
+      whatItIs:
+        "An iPhone remote for a HopCycle W3 Max electric scooter that talks to it directly over Bluetooth LE, with no backend, cloud or account.",
+      whoItsFor:
+        "Owners of a HopCycle W3 Max who want control without binding to the vendor's cloud account.",
+      whatLukeBuilt:
+        "A native Swift/SwiftUI port of the Voltix FF60 BLE protocol, decoded from the vendor's Android app: scan and connect, a live dashboard, lock and unlock, lights, gear, speed limit and cruise control. Unbind, reset and OTA commands are deliberately left out so the app cannot brick the scooter.",
+      stack: ["Swift", "SwiftUI", "CoreBluetooth", "XcodeGen", "Python (reference client)"],
+      status:
+        "Working client. UUIDs, frame layout and CRC are high confidence; telemetry decoding is provisional until checked against the scooter's display.",
+    },
+  },
+  {
+    slug: "portfolio-hub",
+    repoName: "portfolio-hub",
+    displayName: "Cosmic Intelligence",
+    tagline: "This site: a star-chart portfolio with live GitHub activity and a dossier per project",
+    description:
+      "The Next.js app behind luke-the-duke.com. The homepage is a solar map with a primary orbit of featured systems and a secondary orbit of the rest of the catalog; each project has a dossier page. A GitHub App ingests about 90 days of activity, rendered as condensed charts and grouped pull requests. The catalog in src/data is the single source of truth, nothing is auto-discovered.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: ["Next.js", "React", "TypeScript", "Three.js", "GitHub App", "Vitest", "Playwright"],
+    private: false,
+    highlights: [
+      "Solar-map homepage: primary and secondary orbits driven from catalog data",
+      "About 90 days of GitHub App activity, shown as charts and grouped PRs with a 7d / 30d / 90d toggle",
+      "Dossier page per project, with private work shown through scrubbed labels only",
+      "Catalog SOP and tests keep the single source of truth consistent",
+    ],
+    architecture:
+      "Catalog (src/data) → GitHub App ingest (ISR) → activity aggregation → orbit and dossier pages",
+  },
+  {
+    slug: "jev-compact",
+    repoName: "jev-compact",
+    displayName: "jev-compact",
+    tagline: "Context compaction for agent harnesses: keep what still matters, tombstone the rest",
+    description:
+      "A retention filter for agent transcripts, not a summarizer. A decision model scores each span against the conversation's moving highlight; top spans stay verbatim, the middle band becomes one-line tombstones, and the full transcript stays on disk. An MCP restore server rehydrates any tombstone on demand. A heuristic scorer works offline with no keys.",
+    category: "ai",
+    type: "library",
+    featured: false,
+    techStack: ["Python", "MCP", "Claude Code hooks"],
+    private: false,
+    highlights: [
+      "Scores spans on relevance to the current topic and how load-bearing they are",
+      "Token-budget knapsack: keep verbatim, tombstone, or drop",
+      "context-restore MCP server rehydrates tombstoned spans",
+      "Stdlib-only Python; Claude Code adapter ready, Codex and OpenCode next",
+    ],
+    architecture:
+      "Transcript → spans → highlight → score → budget knapsack → kept spans + tombstones → MCP restore",
+  },
+  {
+    slug: "pinetree-solari-demo",
+    repoName: "pinetree-solari-demo",
+    displayName: "Pinetree Solari Demo",
+    tagline: "Browser-to-sandbox pipeline that turns live SaaS pricing pages into CSV and JSON",
+    description:
+      "A Solari demo built for a SWE intern application. One cloud browser loads each configured pricing page, a headless sandbox parses it with a shared parser in two modes (class-based for React pricing cards, heading-based heuristic for conventional pages), and the host merges the per-site output into one CSV and one JSON. The parser is unit-tested against sample HTML without an API key.",
+    category: "data",
+    type: "experiment",
+    featured: false,
+    techStack: ["Python", "Solari browser", "Solari sandbox", "html.parser"],
+    private: false,
+    highlights: [
+      "Multi-URL pipeline from cloud browser to isolated sandbox",
+      "Two parsing modes for different pricing-page layouts",
+      "Combined pricing.csv and pricing.json from a verified live run",
+      "Runs inside the Solari Free plan: one browser, one sandbox, released on exit",
+    ],
+    architecture:
+      "sites.json → cloud browser → HTML upload → sandbox parser → per-site output → merged CSV and JSON",
   },
   /* Personal */
 
