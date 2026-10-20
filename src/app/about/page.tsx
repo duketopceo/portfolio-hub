@@ -23,7 +23,7 @@ export default function AboutPage() {
         lede="OpenRouter-native systems builder · Provo, UT"
       />
 
-      <div className="cosmic-readable space-y-5">
+      <div className="cosmic-readable ds-stack ds-stack--tight">
         <p style={{ color: "var(--color-text-muted)", lineHeight: 1.75 }}>
           I build systems that compound — agent harnesses, knowledge layers,
           production platforms, and the honest ops story around them. Routing

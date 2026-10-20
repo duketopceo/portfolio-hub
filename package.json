@@ -16,7 +16,7 @@
     "notion:seed": "node scripts/notion/seed-episodes.mjs"
   },
   "dependencies": {
-    "@designcodeio/threeui": "^1.2.0",
+    "@designcodeio/threeui": "1.2.0",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
     "@sentry/nextjs": "^10.74.0",

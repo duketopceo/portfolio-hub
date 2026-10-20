@@ -79,7 +79,7 @@ export default async function NowPage() {
             />
 
             {/* Content */}
-            <div className="flex-1 pb-8">
+            <div className="flex-1 pb-[var(--space-component-2)]">
               <div className="cosmic-timeline__date">
                 {project.lastUpdated ? formatDate(project.lastUpdated) : "—"}
                 {i === 0 && (

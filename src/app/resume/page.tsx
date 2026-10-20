@@ -50,7 +50,7 @@ export default function ResumePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <EvidencePanel
-        className="mb-10"
+        className="ds-block-gap"
         labelledBy="resume-openrouter-demo"
         eyebrow="Featured evidence"
         title={<span id="resume-openrouter-demo">OpenRouter demos</span>}

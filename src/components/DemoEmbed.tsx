@@ -16,7 +16,7 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
   if (embeddable) {
     return (
       <div
-        className="glass-card overflow-hidden"
+        className="ds-plate overflow-hidden"
         style={{ borderRadius: "var(--radius-lg)" }}
       >
         {/* Browser chrome */}
@@ -161,7 +161,7 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="glass-card block p-6 sm:p-8 text-center group"
+      className="ds-plate ds-plate--link block p-6 sm:p-8 text-center group"
       style={{ textDecoration: "none" }}
       data-umami-event="demo-launch"
       data-umami-event-url={url}

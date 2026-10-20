@@ -7,6 +7,7 @@ import {
   TransmissionClose,
 } from "@/components/design";
 import { FeaturedWork } from "@/components/hire/FeaturedWork";
+import HireBackdrop from "@/components/hire/HireBackdrop";
 import { UpstreamSummary } from "@/components/UpstreamContributions";
 import { basics } from "@/data/resume";
 import { listedProjects } from "@/lib/catalog";
@@ -29,6 +30,8 @@ export default async function HirePage() {
 
   return (
     <PageShell measure="readable">
+      <div className="hire-hero">
+      <HireBackdrop />
       <PageHeader
         metadata={[
           { content: "CI / Engagement" },
@@ -60,11 +63,12 @@ export default async function HirePage() {
           Email
         </a>
       </ActionRow>
+      </div>
 
       <FeaturedWork projects={featured} />
 
       <SurveyPlate
-        className="mt-6"
+        className="hire-page__section"
         metadata={["Upstream", "Contributions"]}
       >
         <div className="hire-page__secondary">
@@ -78,7 +82,7 @@ export default async function HirePage() {
       </SurveyPlate>
 
       <TransmissionClose
-        className="mt-6"
+        className="hire-page__section"
         title="Start the engagement"
         actions={
           <>

@@ -184,19 +184,19 @@ export function DossierBody({
               id={`dossier-features-${slug}`}
               surface="glass"
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <ul className="ds-feature-list">
                 {project.highlights.map((h, i) => (
-                  <div key={i} className="detail-feature-card">
+                  <li key={i} className="ds-feature-list__row">
                     <span
                       className="mt-0.5 flex-shrink-0"
                       style={{ color: accentColor }}
                     >
                       <CheckIcon className="w-3.5 h-3.5" />
                     </span>
-                    <span className="detail-feature-card__text">{h}</span>
-                  </div>
+                    <span className="ds-feature-list__text">{h}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </DossierSection>
           )}
 
@@ -229,9 +229,9 @@ export function DossierBody({
           )}
         </div>
 
-        <aside className="dossier-page__aside space-y-6">
+        <aside className="dossier-page__aside ds-stack">
           {project.lastUpdated && (
-            <div className="glass-card p-4">
+            <div className="ds-plate ds-plate__body">
               <h2 className="detail-section-label">Last activity</h2>
               <p className="detail-meta-value">
                 {formatDate(project.lastUpdated)}
@@ -240,7 +240,7 @@ export function DossierBody({
           )}
 
           {relatedProjects.length > 0 && (
-            <div className="glass-card p-4">
+            <div className="ds-plate ds-plate__body">
               <h2 className="detail-section-label">Related projects</h2>
               <div className="space-y-1.5">
                 {relatedProjects.map((rp) => (

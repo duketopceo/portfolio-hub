@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ExternalIcon } from "@/components/Icons";
+import { listedProjects } from "@/lib/catalog";
+import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
 
 type FeaturedProject = {
   label: string;
@@ -8,35 +10,30 @@ type FeaturedProject = {
   liveLabel?: string;
 };
 
-const featuredProjects: FeaturedProject[] = [
-  {
-    label: "Khan",
-    dossierHref: "/projects/khan",
-    liveHref: "https://khanai.app",
-    liveLabel: "khanai.app",
-  },
-  {
-    label: "Kurultai",
-    dossierHref: "/projects/kurultai",
-    liveHref: "https://github.com/duketopceo/kurultai",
-    liveLabel: "GitHub",
-  },
-  {
-    label: "Pace Server",
-    dossierHref: "/projects/pace-server",
-    liveHref: "https://pacehq.io",
-    liveLabel: "pacehq.io",
-  },
-  {
-    label: "OpenRouter demos",
-    dossierHref: "/openrouter",
-  },
-];
+/** Mirrors the homepage featured five, in the same order. */
+const featuredProjects: FeaturedProject[] = HOMEPAGE_FEATURED_SLUGS.flatMap(
+  (slug) => {
+    const p = listedProjects().find((x) => x.slug === slug);
+    if (!p) return [];
+    const live =
+      p.liveUrl ??
+      p.planetVisual?.moons?.find((m) => m.kind === "live" && m.href)?.href;
+    return [
+      {
+        label: p.displayName,
+        dossierHref: `/projects/${p.slug}`,
+        liveHref: live,
+        liveLabel: live ? new URL(live).hostname : undefined,
+      },
+    ];
+  }
+);
 
 const siteLinks = [
   { href: "/projects", label: "Registry" },
   { href: "/now", label: "Now" },
   { href: "/about", label: "About" },
+  { href: "/contributions", label: "Contributions" },
   { href: "/hire", label: "Hire" },
   { href: "/resume", label: "Resume" },
 ];

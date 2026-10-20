@@ -471,21 +471,6 @@
   border: 1px solid var(--glass-border);
 }
 
-.glass-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  transition: border-color var(--transition),
-              box-shadow var(--transition),
-              background var(--transition);
-}
-
-.glass-card:hover {
-  border-color: var(--glass-border-hover);
-  background: var(--glass-bg-hover);
-  box-shadow: var(--glass-shadow-hover);
-}
-
 /* ── Registry primitives ───────────────────────────────── */
 /* Mono microcopy label — the voice of the chart */
 .reg-label {
@@ -1205,21 +1190,6 @@
 }
 
 /* Feature card */
-.detail-feature-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 10px 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  transition: border-color var(--transition);
-}
-
-.detail-feature-card:hover {
-  border-color: var(--glass-border-hover);
-}
-
 /* Architecture flow */
 .detail-arch-step {
   display: inline-flex;
@@ -4540,13 +4510,6 @@
 }
 
 /* Feature card text */
-.detail-feature-card span[style] {
-  /* override inline style floor */
-}
-.detail-feature-card {
-  font-size: 12px;
-}
-
 /* Dossier pill base */
 .dossier-page__pill {
   font-size: var(--text-xs);
@@ -5280,12 +5243,6 @@
   box-shadow: none;
 }
 
-.detail-feature-card__text {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  line-height: 1.5;
-}
-
 .dossier-related-link {
   display: flex;
   align-items: center;
@@ -5991,17 +5948,50 @@
 }
 
 .hire-page__actions {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-component-2);
+}
+
+.hire-page__section {
+  margin-top: var(--space-component-1);
+}
+
+/* Decorative header backdrop — veiled so header text keeps contrast. */
+.hire-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.hire-hero > :not(.hire-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+.hire-backdrop {
+  position: absolute;
+  inset: calc(var(--space-component-1) * -1) calc(var(--page-pad-x) * -1);
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.4;
+  pointer-events: none;
+  mask-image: linear-gradient(180deg, black 0%, black 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, black 0%, black 40%, transparent 100%);
+}
+
+.hire-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--color-bg) 0%, transparent 85%);
 }
 
 .hire-featured {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-component-1);
 }
 
 .hire-featured__title {
-  margin: 0 0 0.75rem;
+  margin: 0 0 var(--space-control-1);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-text-muted);
@@ -6010,7 +6000,7 @@
 .hire-featured__list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
-  gap: 1rem;
+  gap: var(--space-control-2);
   margin: 0;
   padding: 0;
   list-style: none;
