@@ -47,3 +47,12 @@ next-env.d.ts
 workers/**/node_modules/
 workers/**/.wrangler/
 workers/**/.dev.vars
+
+# ── stray artifacts — anything here lands in public/ and is served ───────────
+# A backup resume dropped in public/ is publicly fetchable at its filename.
+# Keep resume.pdf itself tracked; ignore every dated/backup variant.
+public/resume*.bak.pdf
+public/resume.20*.pdf
+# Tool caches and unreferenced assets (not wired into any component)
+.firecrawl/
+public/textures/
