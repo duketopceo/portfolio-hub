@@ -1,6 +1,8 @@
 import { defineConfig } from "@playwright/test";
 
-const port = Number(process.env.VISUAL_TEST_PORT ?? 3100);
+const rawPort = process.env.VISUAL_TEST_PORT;
+const parsed = rawPort === undefined ? NaN : Number(rawPort);
+const port = Number.isInteger(parsed) && parsed >= 1 && parsed <= 65535 ? parsed : 3100;
 
 export default defineConfig({
   testDir: "./tests/visual",
