@@ -11,9 +11,9 @@ export default function ProjectDemoVideo({ src, poster, title }: ProjectDemoVide
     <div className="demo-frame">
       <div className="demo-frame__header">
         <div className="demo-frame__header-text">
-          <span className="demo-frame__url">Walkthrough recording</span>
+          <span className="demo-frame__url">Product film</span>
           <span className="demo-frame__hint">
-            Offline demo — no API keys shown
+            Recorded demo — no live credentials shown
           </span>
         </div>
         <a

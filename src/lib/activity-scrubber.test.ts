@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { scrubActivityText, looksLikeSecret } from "./activity-scrubber";
+import { scrubActivityText, scrubBranchRef, looksLikeSecret } from "./activity-scrubber";
 
 describe("activity-scrubber", () => {
   it("passes through public repo titles unchanged (truncated)", () => {
@@ -62,5 +62,11 @@ describe("activity-scrubber", () => {
     expect(
       scrubActivityText("Temporal worker retry policy", true, "PR merged")
     ).toBe("Temporal worker retry policy");
+  });
+
+  it("strips email-bearing branch refs even on public repos", () => {
+    expect(scrubBranchRef("feature/jane@example.com", false)).toBeUndefined();
+    expect(scrubBranchRef("feature/login-fix", false)).toBe("feature/login-fix");
+    expect(scrubBranchRef("release/1.2.0", true)).toBe("release/1.2.0");
   });
 });
