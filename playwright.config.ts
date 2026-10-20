@@ -1,6 +1,6 @@
 import { defineConfig } from "@playwright/test";
 
-const port = 3100;
+const port = Number(process.env.VISUAL_TEST_PORT ?? 3100);
 
 export default defineConfig({
   testDir: "./tests/visual",
