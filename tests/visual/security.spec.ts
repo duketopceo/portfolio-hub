@@ -51,7 +51,10 @@ test.describe("production security boundaries", () => {
     for (const slug of ["kate", "pace-server", "khan"]) {
       const response = await request.get(`/projects/${slug}`);
       expect(response.status(), slug).toBe(200);
-      expect(await response.text(), slug).not.toContain("github.com");
+      // The header's public profile link is allowed; a repo URL is not.
+      expect(await response.text(), slug).not.toMatch(
+        /github\.com\/(?!duketopceo(?:["'?#]|$))/i,
+      );
     }
   });
 

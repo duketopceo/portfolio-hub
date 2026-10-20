@@ -26,6 +26,7 @@ export default defineConfig({
   },
   webServer: {
     command: `npm run build && PORT=${port} node scripts/start-standalone.mjs`,
+    env: { ACTIVITY_USE_FIXTURES: "1" },
     url: `http://127.0.0.1:${port}`,
     timeout: 180_000,
   },
