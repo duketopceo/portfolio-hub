@@ -6,6 +6,7 @@ import {
   resolveOrbitTier,
 } from "./project-completeness";
 import { projectConfigs } from "@/data/projects";
+import { isListedProject } from "./catalog-filter";
 
 describe("homepage orbit split", () => {
   const enriched = projectConfigs.map((p) => ({
@@ -31,7 +32,8 @@ describe("homepage orbit split", () => {
     const secondary = getHomepageSecondaryOrbitProjects(enriched);
     const featured = new Set<string>(HOMEPAGE_FEATURED_SLUGS);
     expect(secondary.every((p) => !featured.has(p.slug))).toBe(true);
-    expect(primary.length + secondary.length).toBe(projectConfigs.length);
+    const listedCount = projectConfigs.filter(isListedProject).length;
+    expect(primary.length + secondary.length).toBe(listedCount);
   });
 
   it("resolveOrbitTier defaults non-featured to secondary", () => {
@@ -49,11 +51,41 @@ describe("homepage orbit split", () => {
     );
     const secondary = getHomepageSecondaryOrbitProjects(withCatalogOnly);
     expect(secondary.some((p) => p.slug === "homelab")).toBe(false);
-    expect(secondary.length).toBe(projectConfigs.length - 6);
+    const listedCount = projectConfigs.filter(isListedProject).length;
+    expect(secondary.length).toBe(
+      listedCount - HOMEPAGE_FEATURED_SLUGS.length - 1
+    );
   });
 
-  it("catalog has 74 projects with 5 featured flags", () => {
-    expect(projectConfigs.length).toBe(74);
+  it("no component or earlier-work entry is listed in either orbit", () => {
+    const hidden = new Set(
+      projectConfigs.filter((p) => !isListedProject(p)).map((p) => p.slug)
+    );
+    const shown = [
+      ...getHomepageOrbitProjects(enriched),
+      ...getHomepageSecondaryOrbitProjects(enriched),
+    ];
+    expect(shown.some((p) => hidden.has(p.slug))).toBe(false);
+  });
+
+  it("orbit functions drop components and earlier work if passed in", () => {
+    const extra = [
+      { ...enriched[0], slug: "fixture-part", parentSlug: enriched[0].slug },
+      { ...enriched[0], slug: "fixture-old", era: "earlier" as const },
+    ];
+    const secondary = getHomepageSecondaryOrbitProjects([...enriched, ...extra]);
+    expect(secondary.some((p) => p.slug.startsWith("fixture-"))).toBe(false);
+  });
+
+  it("every parentSlug resolves and exactly five entries are featured", () => {
+    const slugs = new Set(projectConfigs.map((p) => p.slug));
+    for (const p of projectConfigs) {
+      if (p.parentSlug) expect(slugs.has(p.parentSlug)).toBe(true);
+    }
     expect(projectConfigs.filter((p) => p.featured).length).toBe(5);
+  });
+
+  it("catalog is at least as large as the secondary belt needs", () => {
+    expect(projectConfigs.filter(isListedProject).length).toBeGreaterThan(30);
   });
 });

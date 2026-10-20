@@ -1,5 +1,5 @@
 import { GitHubRepo, EnrichedProject } from "./types";
-import { projectConfigs } from "@/data/projects";
+import { listedProjects } from "@/lib/catalog";
 import { applyDeploymentOverlay } from "@/lib/deployments";
 import { publicGithubUrl } from "@/lib/github-public-url";
 import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
@@ -228,7 +228,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   }
 
   const enriched = await Promise.all(
-    projectConfigs.map(async (config) => {
+    listedProjects().map(async (config) => {
       const withDeploy = applyDeploymentOverlay(config);
       if (withDeploy.siteOnly) {
         return {
@@ -309,7 +309,7 @@ export async function getProjectBySlug(
 }
 
 export function getAllSlugs(): string[] {
-  return projectConfigs.map((p) => p.slug);
+  return listedProjects().map((p) => p.slug);
 }
 
 /**

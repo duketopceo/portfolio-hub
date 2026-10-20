@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-import { projectConfigs } from "@/data/projects";
+import { listedProjects } from "@/lib/catalog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://luke-the-duke.com";
 
-  const projectPages = projectConfigs.map((p) => ({
+  const projectPages = listedProjects().map((p) => ({
     url: `${base}/projects/${p.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,

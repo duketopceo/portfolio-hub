@@ -10,11 +10,22 @@ export const curatedRepoNames = new Set(
   projectConfigs.filter((p) => !p.siteOnly).map((p) => p.repoName)
 );
 
+/** Component repos are attributed to their parent entry (KTD2); the privacy
+ *  flag stays the entry's own. */
 export const repoNameToMeta = new Map(
-  projectConfigs.map((p) => [
-    p.repoName,
-    { slug: p.slug, displayName: p.displayName, private: p.private },
-  ])
+  projectConfigs.map((p) => {
+    const parent = p.parentSlug
+      ? projectConfigs.find((q) => q.slug === p.parentSlug)
+      : undefined;
+    return [
+      p.repoName,
+      {
+        slug: parent?.slug ?? p.slug,
+        displayName: parent?.displayName ?? p.displayName,
+        private: p.private,
+      },
+    ] as const;
+  })
 );
 
 export function isCuratedRepoName(repoName: string): boolean {
@@ -294,7 +305,9 @@ export async function fetchAllOpenPullsAggregated(): Promise<
   const uniqueNames = [
     ...new Set(
       projectConfigs
-        .filter((p) => !p.siteOnly && p.repoName)
+        // Private entries are never aggregated: this feeds the public
+        // /api/github/pulls route, which must not return their PR rows.
+        .filter((p) => !p.siteOnly && !p.private && p.repoName)
         .map((p) => p.repoName)
     ),
   ];

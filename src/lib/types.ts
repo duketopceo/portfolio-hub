@@ -69,6 +69,21 @@ export interface PlanetVisualConfig {
   moons?: PlanetMoonConfig[];
 }
 
+export interface ProjectFilm {
+  url: string;
+  poster?: string;
+  transcript?: string;
+}
+
+/** Hand-written showcase copy for a private project. Never fetched at runtime. */
+export interface ProjectShowcase {
+  whatItIs: string;
+  whoItsFor: string;
+  whatLukeBuilt: string;
+  stack: string[];
+  status: string;
+}
+
 export interface ProjectConfig {
   slug: string;
   repoName: string;
@@ -90,8 +105,18 @@ export interface ProjectConfig {
   liveUrl?: string;
   /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
   demoUrl?: string;
-  /** Hosted walkthrough video (e.g. R2 mp4) for project dossier */
+  /** Hosted walkthrough video (e.g. R2 mp4) for project dossier.
+   *  Legacy: U3 migrates entries to `film`, then this is removed. */
   demoVideoUrl?: string;
+  /** Launch film for the dossier; shown on private entries too. Assets live on
+   *  the existing media host only. */
+  film?: ProjectFilm;
+  /** Hand-written card shown in place of activity/README on private entries. */
+  showcase?: ProjectShowcase;
+  /** Marks this entry as a component of the named parent: no dossier of its own. */
+  parentSlug?: string;
+  /** Marks archived work listed under "earlier work" on /projects: no dossier. */
+  era?: "earlier";
   /** If true, liveUrl can be iframed on the detail page */
   embeddable?: boolean;
   /** If true, the demo subdomain is offline — show a static preview instead of iframe */

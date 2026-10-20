@@ -1,4 +1,4 @@
-import { projectConfigs } from "@/data/projects";
+import { listedProjects } from "@/lib/catalog";
 import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
 import { scrubActivityText, scrubBranchRef } from "@/lib/activity-scrubber";
 import {
@@ -77,7 +77,7 @@ interface GhIssue {
 function featuredRepoTargets(): RepoTarget[] {
   const targets: RepoTarget[] = [];
   for (const slug of HOMEPAGE_FEATURED_SLUGS) {
-    const cfg = projectConfigs.find((p) => p.slug === slug);
+    const cfg = listedProjects().find((p) => p.slug === slug);
     if (!cfg || !cfg.repoName) continue;
     targets.push({
       slug,
@@ -91,7 +91,7 @@ function featuredRepoTargets(): RepoTarget[] {
 }
 
 function repoTargetForSlug(slug: string): RepoTarget | null {
-  const cfg = projectConfigs.find((p) => p.slug === slug);
+  const cfg = listedProjects().find((p) => p.slug === slug);
   if (!cfg || !cfg.repoName) return null;
   return {
     slug,
