@@ -51,11 +51,14 @@ function MoonChip({
     </span>
   );
 
-  if (moon.href && moon.kind !== "stack" && moon.href.startsWith("/")) {
+  const href = moon.kind !== "stack" ? moon.href : undefined;
+  if (!href) return body;
+
+  if (href.startsWith("/")) {
     // Component moon: on-site link to the parent dossier's #components anchor.
     return (
       <Link
-        href={moon.href}
+        href={href}
         className="planet-node__moon-link"
         onClick={(e) => e.stopPropagation()}
         aria-label={`${moon.label} (${moon.kind})`}
@@ -65,22 +68,18 @@ function MoonChip({
     );
   }
 
-  if (moon.href && moon.kind !== "stack") {
-    return (
-      <a
-        href={moon.href}
-        className="planet-node__moon-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={(e) => e.stopPropagation()}
-        aria-label={`${moon.label} (${moon.kind})`}
-      >
-        {body}
-      </a>
-    );
-  }
-
-  return body;
+  return (
+    <a
+      href={href}
+      className="planet-node__moon-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      aria-label={`${moon.label} (${moon.kind})`}
+    >
+      {body}
+    </a>
+  );
 }
 
 export function PlanetNode({

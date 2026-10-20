@@ -15,18 +15,16 @@ export function readSaveData(): boolean {
   return connection()?.saveData === true;
 }
 
+function subscribe(onChange: () => void): () => void {
+  const c = connection();
+  c?.addEventListener?.("change", onChange);
+  return () => c?.removeEventListener?.("change", onChange);
+}
+
 /**
  * Save-Data gate for decorative effects. `serverValue` defaults to the
  * conservative "saving data" so SSR/hydration render no effect.
  */
 export function useSaveData(serverValue = true): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const c = connection();
-      c?.addEventListener?.("change", onChange);
-      return () => c?.removeEventListener?.("change", onChange);
-    },
-    readSaveData,
-    () => serverValue
-  );
+  return useSyncExternalStore(subscribe, readSaveData, () => serverValue);
 }

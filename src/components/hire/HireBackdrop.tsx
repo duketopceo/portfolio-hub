@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import DecorativeEffectBoundary from "@/components/DecorativeEffectBoundary";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { useSaveData } from "@/lib/use-save-data";
@@ -21,7 +22,20 @@ export default function HireBackdrop() {
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)", true);
   const saveData = useSaveData(true);
 
-  if (reducedMotion || saveData) return null;
+  const [idle, setIdle] = useState(false);
+
+  // Defer mounting the heavy WarpField until the browser is idle after mount.
+  useEffect(() => {
+    if (reducedMotion || saveData) return;
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => setIdle(true));
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(() => setIdle(true), 200);
+    return () => window.clearTimeout(id);
+  }, [reducedMotion, saveData]);
+
+  if (reducedMotion || saveData || !idle) return null;
 
   return (
     <DecorativeEffectBoundary>

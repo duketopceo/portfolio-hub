@@ -2,6 +2,8 @@ import { SectionHeading, StatusMark } from "@/components/design";
 import { UPSTREAM_CURATED } from "@/data/upstream-curated";
 import type { UpstreamContributionsData, UpstreamPr } from "@/lib/upstream";
 
+type PrState = "Merged" | "Open" | "Closed";
+
 const OPEN_VISIBLE = 10;
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
@@ -16,14 +18,14 @@ function formatDate(iso: string): string {
   return Number.isNaN(d.getTime()) ? "" : dateFormat.format(d);
 }
 
-const MONO = "upstream__meta";
+const META_CLASS = "upstream__meta";
 
 function PrRows({
   rows,
   state,
 }: {
   rows: UpstreamPr[];
-  state: "Merged" | "Open" | "Closed";
+  state: PrState;
 }) {
   return (
     <>
@@ -32,7 +34,7 @@ function PrRows({
           key={`${pr.repo}#${pr.number}`}
           className="upstream__row"
         >
-          <td className={`upstream__cell ${MONO} upstream__cell--repo`}>{pr.repo}</td>
+          <td className={`upstream__cell ${META_CLASS} upstream__cell--repo`}>{pr.repo}</td>
           <td className="upstream__cell upstream__cell--title">
             <a
               href={pr.url}
@@ -43,8 +45,8 @@ function PrRows({
               {pr.title}
             </a>
           </td>
-          <td className={`upstream__cell ${MONO} upstream__cell--state`}>{state}</td>
-          <td className={`upstream__cell ${MONO} upstream__cell--date`}>
+          <td className={`upstream__cell ${META_CLASS} upstream__cell--state`}>{state}</td>
+          <td className={`upstream__cell ${META_CLASS} upstream__cell--date`}>
             {formatDate(pr.date)}
           </td>
         </tr>
@@ -59,14 +61,14 @@ function PrTable({
   label,
 }: {
   rows: UpstreamPr[];
-  state: "Merged" | "Open" | "Closed";
+  state: PrState;
   label: string;
 }) {
   return (
     <table className="upstream__table">
       <caption className="sr-only">{label}</caption>
       <thead className="upstream__head">
-        <tr className={MONO}>
+        <tr className={META_CLASS}>
           <th scope="col" className="upstream__th">Repository</th>
           <th scope="col" className="upstream__th">Title</th>
           <th scope="col" className="upstream__th">State</th>
@@ -87,7 +89,7 @@ function Group({
 }: {
   title: string;
   rows: UpstreamPr[];
-  state: "Merged" | "Open" | "Closed";
+  state: PrState;
 }) {
   if (rows.length === 0) return null;
   const heading = `${title} (${rows.length})`;
@@ -103,9 +105,9 @@ function Group({
       </details>
     );
   }
-  const head = rows.slice(0, OPEN_VISIBLE);
-  const rest = state === "Open" ? rows.slice(OPEN_VISIBLE) : [];
-  const shown = state === "Open" ? head : rows;
+  const open = state === "Open";
+  const shown = open ? rows.slice(0, OPEN_VISIBLE) : rows;
+  const rest = open ? rows.slice(OPEN_VISIBLE) : [];
   return (
     <section className="upstream__section" aria-label={title}>
       <SectionHeading title={heading} />
@@ -149,7 +151,7 @@ function Curated() {
             ) : (
               <span className="upstream__title">{item.title}</span>
             )}
-            <span className={MONO}>
+            <span className={META_CLASS}>
               {item.target} · {item.status}
             </span>
           </li>
@@ -185,14 +187,14 @@ export function UpstreamContributions({
   );
 }
 
-/** Compact {merged, open} strip for /hire (U7). Never shows zero on failure. */
+/** Compact {merged, open} strip for /hire. Never shows zero on failure. */
 export function UpstreamSummary({
   data,
 }: {
   data: UpstreamContributionsData | null;
 }) {
   return (
-    <p className={MONO}>
+    <p className={META_CLASS}>
       {data
         ? `${data.merged.length} merged · ${data.open.length} open pull requests upstream`
         : "Upstream pull request counts unavailable"}

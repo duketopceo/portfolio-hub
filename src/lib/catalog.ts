@@ -2,8 +2,6 @@ import { projectConfigs } from "@/data/projects";
 import { isListedProject } from "@/lib/catalog-filter";
 import type { ProjectConfig } from "@/lib/types";
 
-export { isListedProject };
-
 /** Entries that get a dossier and homepage/grid placement. Every consumer that
  *  iterates the catalog reads through here so filtering lives in one place. */
 export function listedProjects(

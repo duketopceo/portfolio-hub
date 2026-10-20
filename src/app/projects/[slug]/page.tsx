@@ -64,21 +64,20 @@ export default async function ProjectDetailPage({
   const { project: baseProject, prev: prevProject, next: nextProject } =
     adjacent;
 
-  const project = await enrichProjectActivity(baseProject);
-  const hasShowcase = Boolean(project.private && project.showcase);
-  const githubActivity = hasShowcase
-    ? null
-    : await getProjectActivityTimeline(slug);
-
-  const readme =
-    !project.private && !project.siteOnly
-      ? await fetchReadme(project.repoName, project.repoOwner)
-      : null;
-
-  const showcaseMd =
-    project.private && !project.showcase && !project.siteOnly
-      ? await fetchShowcaseMd(project.repoName, project.repoOwner)
-      : null;
+  // Gating fields (private/showcase/siteOnly/repoName/repoOwner) are untouched
+  // by enrichProjectActivity, so the independent fetches can start together.
+  // `showcase` is the hand-written card; `showcaseMd` is the runtime-fetched SHOWCASE.md.
+  const hasShowcase = Boolean(baseProject.private && baseProject.showcase);
+  const [project, githubActivity, readme, showcaseMd] = await Promise.all([
+    enrichProjectActivity(baseProject),
+    hasShowcase ? null : getProjectActivityTimeline(slug),
+    !baseProject.private && !baseProject.siteOnly
+      ? fetchReadme(baseProject.repoName, baseProject.repoOwner)
+      : null,
+    baseProject.private && !hasShowcase && !baseProject.siteOnly
+      ? fetchShowcaseMd(baseProject.repoName, baseProject.repoOwner)
+      : null,
+  ]);
 
   const meta = categoryMeta[project.category];
   const hasDemo = isProjectLive(project);
@@ -125,6 +124,7 @@ export default async function ProjectDetailPage({
         accentColor={accentColor}
         readme={readme}
         showcaseMd={showcaseMd}
+        hasShowcase={hasShowcase}
         relatedProjects={relatedProjects}
       />
 

@@ -65,8 +65,8 @@ describe("activity-scrubber", () => {
   });
 
   it("strips email-bearing branch refs even on public repos", () => {
-    expect(scrubBranchRef("feature/jane@example.com", false)).toBeUndefined();
-    expect(scrubBranchRef("feature/login-fix", false)).toBe("feature/login-fix");
-    expect(scrubBranchRef("release/1.2.0", true)).toBe("release/1.2.0");
+    expect(scrubBranchRef("feature/jane@example.com")).toBeUndefined();
+    expect(scrubBranchRef("feature/login-fix")).toBe("feature/login-fix");
+    expect(scrubBranchRef("release/1.2.0")).toBe("release/1.2.0");
   });
 });

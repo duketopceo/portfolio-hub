@@ -21,48 +21,47 @@ export const metadata = {
 
 export default async function HirePage() {
   const listed = listedProjects();
-  const featured = HOMEPAGE_FEATURED_SLUGS.flatMap((slug) => {
-    const p = listed.find((x) => x.slug === slug);
-    return p ? [p] : [];
-  });
+  const featured = HOMEPAGE_FEATURED_SLUGS.map((slug) =>
+    listed.find((x) => x.slug === slug)
+  ).filter((p): p is NonNullable<typeof p> => p !== undefined);
   const upstream = await getUpstreamContributions();
   const { city, region, remote } = basics.location;
 
   return (
     <PageShell measure="readable">
       <div className="hire-hero">
-      <HireBackdrop />
-      <PageHeader
-        metadata={[
-          { content: "CI / Engagement" },
-          { content: basics.label, className: "hidden sm:inline" },
-          { content: "Sheet 07" },
-        ]}
-        eyebrow="Transmission"
-        title="Engage"
-        lede={`${basics.label} · ${city}, ${region}${remote ? " · remote" : ""}`}
-      />
+        <HireBackdrop />
+        <PageHeader
+          metadata={[
+            { content: "CI / Engagement" },
+            { content: basics.label, className: "hidden sm:inline" },
+            { content: "Sheet 07" },
+          ]}
+          eyebrow="Transmission"
+          title="Engage"
+          lede={`${basics.label} · ${city}, ${region}${remote ? " · remote" : ""}`}
+        />
 
-      <ActionRow className="hire-page__actions">
-        <a
-          href="/resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="detail-cta"
-          data-umami-event="resume-download"
-          data-umami-event-format="pdf"
-        >
-          Résumé (PDF)
-        </a>
-        <a
-          href={`mailto:${basics.email}`}
-          className="detail-cta detail-cta--secondary"
-          data-umami-event="contact-email"
-          data-umami-event-source="hire"
-        >
-          Email
-        </a>
-      </ActionRow>
+        <ActionRow className="hire-page__actions">
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-cta"
+            data-umami-event="resume-download"
+            data-umami-event-format="pdf"
+          >
+            Résumé (PDF)
+          </a>
+          <a
+            href={`mailto:${basics.email}`}
+            className="detail-cta detail-cta--secondary"
+            data-umami-event="contact-email"
+            data-umami-event-source="hire"
+          >
+            Email
+          </a>
+        </ActionRow>
       </div>
 
       <FeaturedWork projects={featured} />

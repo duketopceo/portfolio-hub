@@ -1,5 +1,5 @@
 import type { ProjectConfig } from "@/lib/types";
-import { GITHUB_ACCOUNT_LOGIN } from "@/lib/github-constants";
+import { publicGithubUrl } from "@/lib/github-public-url";
 import { DossierSection } from "./DossierSection";
 
 /**
@@ -15,29 +15,34 @@ export function ComponentsList({
   return (
     <div className="cosmic-page dossier-page__two-col">
       <div className="dossier-page__main-stack">
-      <DossierSection title="Components" id="components" surface="glass">
-        <ul className="dossier-components">
-          {components.map((c) => (
-            <li key={c.slug} className="dossier-components__item">
-              <span className="dossier-components__name">
-                {c.private ? (
-                  c.displayName
-                ) : (
-                  <a
-                    href={`https://github.com/${c.repoOwner ?? GITHUB_ACCOUNT_LOGIN}/${c.repoName}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="detail-nav-link"
-                  >
-                    {c.displayName} ↗
-                  </a>
-                )}
-              </span>
-              <span className="dossier-components__tagline">{c.tagline}</span>
-            </li>
-          ))}
-        </ul>
-      </DossierSection>
+        <DossierSection title="Components" id="components" surface="glass">
+          <ul className="dossier-components">
+            {components.map((c) => {
+              const href = publicGithubUrl(c.private, c.repoName);
+              return (
+                <li key={c.slug} className="dossier-components__item">
+                  <span className="dossier-components__name">
+                    {href ? (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="detail-nav-link"
+                      >
+                        {c.displayName} ↗
+                      </a>
+                    ) : (
+                      c.displayName
+                    )}
+                  </span>
+                  <span className="dossier-components__tagline">
+                    {c.tagline}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </DossierSection>
       </div>
     </div>
   );

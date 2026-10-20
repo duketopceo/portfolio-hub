@@ -342,7 +342,7 @@ export async function fetchAllOpenPullsAggregated(): Promise<
         number: pr.number,
         title: scrubActivityText(pr.title, meta.private, "Pull request"),
         author: pr.user?.login ?? "unknown",
-        branch: scrubBranchRef(pr.head.ref, meta.private) ?? "restricted",
+        branch: scrubBranchRef(pr.head.ref) ?? "restricted",
         updatedAt: pr.updated_at,
         htmlUrl: pr.html_url,
         draft: !!pr.draft,

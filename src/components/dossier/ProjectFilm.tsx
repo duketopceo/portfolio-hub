@@ -29,49 +29,45 @@ export function ProjectFilmView({
 }: ProjectFilmViewProps) {
   const caption = film.transcript;
 
-  if (status === "error") {
-    return (
-      <MediaFrame className="dossier-film" caption={caption}>
-        <div className="dossier-film__stage">
-          {film.poster && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={film.poster} alt="" className="dossier-film__poster" />
-          )}
-        </div>
-      </MediaFrame>
-    );
-  }
-
   return (
     <MediaFrame className="dossier-film" caption={caption}>
       <div className="dossier-film__stage">
-        <video
-          ref={videoRef}
-          className="dossier-film__video"
-          src={film.url}
-          poster={film.poster}
-          preload="none"
-          playsInline
-          controls={status === "playing"}
-          aria-label={`${title} film`}
-          onPlaying={onPlaying}
-          onWaiting={onWaiting}
-          onError={onError}
-        />
-        {status === "idle" && (
-          <button
-            type="button"
-            className="dossier-film__play"
-            aria-label={`Play ${title} film`}
-            onClick={onPlay}
-          >
-            <span aria-hidden>Play</span>
-          </button>
-        )}
-        {status === "loading" && (
-          <span className="dossier-film__status" role="status">
-            Loading
-          </span>
+        {status === "error" ? (
+          film.poster && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={film.poster} alt="" className="dossier-film__poster" />
+          )
+        ) : (
+          <>
+            <video
+              ref={videoRef}
+              className="dossier-film__video"
+              src={film.url}
+              poster={film.poster}
+              preload="none"
+              playsInline
+              controls={status === "playing"}
+              aria-label={`${title} film`}
+              onPlaying={onPlaying}
+              onWaiting={onWaiting}
+              onError={onError}
+            />
+            {status === "idle" && (
+              <button
+                type="button"
+                className="dossier-film__play"
+                aria-label={`Play ${title} film`}
+                onClick={onPlay}
+              >
+                <span aria-hidden>Play</span>
+              </button>
+            )}
+            {status === "loading" && (
+              <span className="dossier-film__status" role="status">
+                Loading
+              </span>
+            )}
+          </>
         )}
       </div>
     </MediaFrame>
