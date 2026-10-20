@@ -12,6 +12,7 @@
     "test:visual:update": "playwright test --update-snapshots",
     "check:design": "node scripts/check-design-system.mjs",
     "check:privacy": "node scripts/check-privacy.mjs",
+    "check:privacy:built": "node scripts/check-privacy-built.mjs",
     "notion:seed": "node scripts/notion/seed-episodes.mjs"
   },
   "dependencies": {

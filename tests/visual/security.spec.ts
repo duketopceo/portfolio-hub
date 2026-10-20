@@ -46,4 +46,32 @@ test.describe("production security boundaries", () => {
     expect(body.githubPath).toBeUndefined();
     expect(JSON.stringify(body)).not.toContain("github.com/duketopceo/Khan");
   });
+
+  test("private dossiers carry no github.com URL", async ({ request }) => {
+    for (const slug of ["kate", "pace-server", "khan"]) {
+      const response = await request.get(`/projects/${slug}`);
+      expect(response.status(), slug).toBe(200);
+      expect(await response.text(), slug).not.toContain("github.com");
+    }
+  });
+
+  test("home, a film dossier, and /hire raise no CSP violation", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      const w = window as unknown as { __csp: string[] };
+      w.__csp = [];
+      document.addEventListener("securitypolicyviolation", (event) => {
+        w.__csp.push(`${event.violatedDirective} ${event.blockedURI}`);
+      });
+    });
+    for (const path of ["/", "/projects/kurultai", "/hire"]) {
+      await page.goto(path, { waitUntil: "load" });
+      await page.waitForTimeout(1000);
+      const violations = await page.evaluate(
+        () => (window as unknown as { __csp: string[] }).__csp,
+      );
+      expect(violations, path).toEqual([]);
+    }
+  });
 });
