@@ -115,6 +115,9 @@ test.describe("Portfolio visual acceptance matrix", () => {
 
         await expectNoHorizontalOverflow(page);
         await expect(page.locator("main")).toBeVisible();
+        // The fixed full-viewport starfield would paint over the hero in a
+        // full-page capture; hide that decorative layer for baselines only.
+        await page.addStyleTag({ content: ".cosmic-bg { display: none !important; }" });
         await expect(page).toHaveScreenshot(
           `${route.name}-${viewport.name}.png`,
           { fullPage: true, mask: masked.map((selector) => page.locator(selector)) },

@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import type { ProjectConfig } from "@/lib/types";
 
 /** Featured-work strip for /hire. Poster when the film has one, otherwise a
  *  typographic plate; never a placeholder thumbnail. */
 export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
+  const [failed, setFailed] = useState<ReadonlySet<string>>(new Set());
   return (
     <section
       className="hire-featured"
@@ -22,13 +26,16 @@ export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
               data-umami-event="hire-featured-open"
               data-umami-event-slug={p.slug}
             >
-              {p.film?.poster ? (
+              {p.film?.poster && !failed.has(p.slug) ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={p.film.poster}
                   alt=""
                   loading="lazy"
                   className="hire-featured__media"
+                  onError={() =>
+                    setFailed((prev) => new Set(prev).add(p.slug))
+                  }
                 />
               ) : (
                 <span className="hire-featured__plate" aria-hidden="true">

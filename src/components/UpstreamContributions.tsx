@@ -16,8 +16,7 @@ function formatDate(iso: string): string {
   return Number.isNaN(d.getTime()) ? "" : dateFormat.format(d);
 }
 
-const CELL = "px-3 py-2 align-top max-sm:block max-sm:px-0 max-sm:py-0";
-const MONO = "font-mono text-[var(--text-xs)] text-[var(--color-text-muted)]";
+const MONO = "upstream__meta";
 
 function PrRows({
   rows,
@@ -31,21 +30,21 @@ function PrRows({
       {rows.map((pr) => (
         <tr
           key={`${pr.repo}#${pr.number}`}
-          className="border-t border-[var(--color-divider)] max-sm:flex max-sm:flex-wrap max-sm:gap-x-3 max-sm:py-3"
+          className="upstream__row"
         >
-          <td className={`${CELL} ${MONO} max-sm:order-2`}>{pr.repo}</td>
-          <td className={`${CELL} max-sm:order-1 max-sm:w-full`}>
+          <td className={`upstream__cell ${MONO} upstream__cell--repo`}>{pr.repo}</td>
+          <td className="upstream__cell upstream__cell--title">
             <a
               href={pr.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[var(--color-text)] hover:text-[var(--color-accent)]"
+              className="upstream__link"
             >
               {pr.title}
             </a>
           </td>
-          <td className={`${CELL} ${MONO} max-sm:order-3`}>{state}</td>
-          <td className={`${CELL} ${MONO} max-sm:order-4`}>
+          <td className={`upstream__cell ${MONO} upstream__cell--state`}>{state}</td>
+          <td className={`upstream__cell ${MONO} upstream__cell--date`}>
             {formatDate(pr.date)}
           </td>
         </tr>
@@ -64,14 +63,14 @@ function PrTable({
   label: string;
 }) {
   return (
-    <table className="w-full border-collapse text-left text-[var(--text-sm)]">
+    <table className="upstream__table">
       <caption className="sr-only">{label}</caption>
-      <thead className="max-sm:sr-only">
+      <thead className="upstream__head">
         <tr className={MONO}>
-          <th scope="col" className="px-3 py-2 font-normal">Repository</th>
-          <th scope="col" className="px-3 py-2 font-normal">Title</th>
-          <th scope="col" className="px-3 py-2 font-normal">State</th>
-          <th scope="col" className="px-3 py-2 font-normal">Date</th>
+          <th scope="col" className="upstream__th">Repository</th>
+          <th scope="col" className="upstream__th">Title</th>
+          <th scope="col" className="upstream__th">State</th>
+          <th scope="col" className="upstream__th">Date</th>
         </tr>
       </thead>
       <tbody>
@@ -94,11 +93,11 @@ function Group({
   const heading = `${title} (${rows.length})`;
   if (state === "Closed") {
     return (
-      <details className="mt-10">
-        <summary className="cursor-pointer font-mono text-[var(--text-sm)] text-[var(--color-text-muted)]">
+      <details className="upstream__section">
+        <summary className="upstream__summary">
           {heading}
         </summary>
-        <div className="mt-4">
+        <div className="upstream__body">
           <PrTable rows={rows} state={state} label={title} />
         </div>
       </details>
@@ -108,16 +107,16 @@ function Group({
   const rest = state === "Open" ? rows.slice(OPEN_VISIBLE) : [];
   const shown = state === "Open" ? head : rows;
   return (
-    <section className="mt-10" aria-label={title}>
+    <section className="upstream__section" aria-label={title}>
       <SectionHeading title={heading} />
-      <div className="mt-4">
+      <div className="upstream__body">
         <PrTable rows={shown} state={state} label={title} />
         {rest.length > 0 && (
-          <details className="mt-2">
-            <summary className="cursor-pointer font-mono text-[var(--text-sm)] text-[var(--color-text-muted)]">
+          <details className="upstream__more">
+            <summary className="upstream__summary">
               Show {rest.length} more open
             </summary>
-            <div className="mt-2">
+            <div className="upstream__body">
               <PrTable rows={rest} state={state} label={`${title}, continued`} />
             </div>
           </details>
@@ -129,13 +128,13 @@ function Group({
 
 function Curated() {
   return (
-    <section className="mt-10" aria-label="Other contributions">
+    <section className="upstream__section" aria-label="Other contributions">
       <SectionHeading title="Other contributions" />
-      <ul className="mt-4 divide-y divide-[var(--color-divider)]">
+      <ul className="upstream__curated">
         {UPSTREAM_CURATED.map((item) => (
           <li
             key={item.title}
-            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-3"
+            className="upstream__curated-item"
           >
             <StatusMark>{item.type}</StatusMark>
             {item.url ? (
@@ -143,12 +142,12 @@ function Curated() {
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[var(--color-text)] hover:text-[var(--color-accent)]"
+                className="upstream__link"
               >
                 {item.title}
               </a>
             ) : (
-              <span className="text-[var(--color-text)]">{item.title}</span>
+              <span className="upstream__title">{item.title}</span>
             )}
             <span className={MONO}>
               {item.target} · {item.status}
@@ -176,7 +175,7 @@ export function UpstreamContributions({
       ) : (
         <p
           role="status"
-          className="mt-10 border border-[var(--color-border)] px-4 py-3 font-mono text-[var(--text-sm)] text-[var(--color-text-muted)]"
+          className="upstream__notice"
         >
           Pull request data is unavailable right now. Check back shortly.
         </p>

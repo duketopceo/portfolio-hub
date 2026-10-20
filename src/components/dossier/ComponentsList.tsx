@@ -13,7 +13,8 @@ export function ComponentsList({
 }) {
   if (components.length === 0) return null;
   return (
-    <div className="cosmic-page">
+    <div className="cosmic-page dossier-page__two-col">
+      <div className="dossier-page__main-stack">
       <DossierSection title="Components" id="components" surface="glass">
         <ul className="dossier-components">
           {components.map((c) => (
@@ -37,6 +38,7 @@ export function ComponentsList({
           ))}
         </ul>
       </DossierSection>
+      </div>
     </div>
   );
 }
