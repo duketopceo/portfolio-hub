@@ -5,6 +5,7 @@ export const siteNavItems = [
   { href: "/openrouter", label: "OpenRouter" },
   { href: "/demos", label: "Demos" },
   { href: "/now", label: "Now" },
+  { href: "/contributions", label: "Contributions" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/resume", label: "Resume" },
