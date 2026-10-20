@@ -8,6 +8,10 @@
 
 export const SITE = "https://luke-the-duke.com";
 
+// ISO date printed on the PDF and shown beside its link. Bump it when
+// public/resume.pdf is re-exported.
+export const resumeRevisionDate = "2026-10-20";
+
 export const basics = {
   name: "Luke Kimball",
   label: "Applied AI Engineer",

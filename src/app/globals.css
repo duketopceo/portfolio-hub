@@ -5990,6 +5990,84 @@
   line-height: 1.65;
 }
 
+.hire-page__actions {
+  margin-bottom: 2rem;
+}
+
+.hire-featured {
+  margin-bottom: 1.5rem;
+}
+
+.hire-featured__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.hire-featured__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hire-featured__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  height: 100%;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.hire-featured__media,
+.hire-featured__plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.hire-featured__plate {
+  padding: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.hire-featured__item:hover .hire-featured__name {
+  color: var(--color-accent);
+}
+
+.hire-featured__name {
+  font-weight: 600;
+}
+
+.hire-featured__tagline {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.hire-featured__film {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
 /* Homepage breathing room */
 .cosmic-hero--compact {
   margin-bottom: clamp(1.25rem, 3vw, 2.25rem);
