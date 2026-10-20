@@ -119,7 +119,6 @@ export const projectConfigs: ProjectConfig[] = [
     featured: false,
     orbitTier: "secondary",
     demoUrl: "/demos/argus",
-    demoVideoUrl: ARGUS_WITNESS_VIDEO_URL,
     techStack: [
       "TypeScript",
       "Playwright",
@@ -128,6 +127,8 @@ export const projectConfigs: ProjectConfig[] = [
       "Docker",
     ],
     private: false,
+    demoVideoUrl: "https://media.luke-the-duke.com/launch/argus-16x9.mp4",
+    demoVideoPosterUrl: "https://media.luke-the-duke.com/launch/argus-poster.jpg",
     highlights: [
       "Cache-first replay — zero vision calls on unchanged UI",
       "Cost-explicit — per-run dollar figure on the PR report",
@@ -217,7 +218,9 @@ export const projectConfigs: ProjectConfig[] = [
       "Railway",
     ],
     private: true,
-    demoVideoUrl: PACE_DEBUT_VIDEO_URL,
+    demoVideoUrl: "https://media.luke-the-duke.com/launch/pace-16x9.mp4",
+    demoVideoPosterUrl: "https://media.luke-the-duke.com/launch/pace-poster.jpg",
+    demoVideoPublic: true,
     highlights: [
       "Platform live — gateway, auth, Stripe billing at pacehq.io",
       "Tenant-aware agent pipeline with TierGate and tool registry",
