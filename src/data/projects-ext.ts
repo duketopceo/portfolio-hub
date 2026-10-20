@@ -877,23 +877,4 @@ export const projectExtensionConfigs: ProjectConfig[] = [
   },
   /* Personal */
 
-  {
-    slug: "kate",
-    repoName: "kate",
-    displayName: "Kate",
-    tagline: "Private two-person hub for plans, to-dos, and a what-we-did log",
-    description:
-      "Private two-person hub covering camping, movies, and to-dos, with a what-we-did log and optional voice journaling.",
-    category: "apps",
-    type: "app",
-    featured: false,
-    techStack: ["TypeScript", "Voice"],
-    private: true,
-    highlights: [
-      "Shared to-do and plans surface",
-      "What-we-did log",
-      "Optional voice journaling",
-    ],
-    architecture: "Client UI → entries store → shared log → optional voice capture",
-  },
 ];

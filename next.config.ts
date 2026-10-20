@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
       // statically-generated pages (no nonce available at build time).
       "script-src 'self' 'unsafe-inline' https://analytics.pacehq.io",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://avatars.githubusercontent.com https://raw.githubusercontent.com",
+      "img-src 'self' data: blob: https://avatars.githubusercontent.com https://raw.githubusercontent.com https://media.luke-the-duke.com",
       "media-src 'self' https://media.luke-the-duke.com",
       "font-src 'self' data:",
       "connect-src 'self' https://analytics.pacehq.io",

@@ -854,8 +854,8 @@ export const projectConfigs: ProjectConfig[] = [
     ],
   },
   {
-    slug: "kate-ios",
-    repoName: "kate-ios",
+    slug: "kate",
+    repoName: "kate",
     displayName: "Kate",
     tagline:
       "A shared field journal for any crew — native iOS built and deployed entirely on Linux via xtool",
@@ -864,7 +864,7 @@ export const projectConfigs: ProjectConfig[] = [
     category: "apps",
     type: "app",
     featured: false,
-    liveUrl: "https://kate.luke-the-duke.com",
+    liveUrl: "https://kate.shippedit.dev",
     demoVideoUrl: KATE_LAUNCH_VIDEO_URL,
     techStack: ["Swift", "SwiftUI", "SwiftPM", "Cloudflare Workers", "xtool"],
     private: true,
@@ -876,6 +876,24 @@ export const projectConfigs: ProjectConfig[] = [
     ],
     architecture:
       "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync",
+  },
+  {
+    slug: "kate-ios",
+    repoName: "kate-ios",
+    displayName: "Kate iOS",
+    tagline: "SwiftUI client for Kate, built and signed on Linux with xtool",
+    description:
+      "The native iOS client for Kate: pure SwiftUI and SwiftPM with no third-party dependencies, built, signed and installed from Linux with xtool.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    techStack: ["Swift", "SwiftUI", "SwiftPM", "xtool"],
+    private: true,
+    highlights: [
+      "Zero-dependency SwiftUI client",
+      "Built and signed on Linux via xtool",
+    ],
+    architecture: "SwiftUI tabs → KateCore client → Kate API",
   },
 
   ...projectExtensionConfigs,
