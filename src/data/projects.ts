@@ -1,8 +1,15 @@
 import { ProjectConfig } from "@/lib/types";
 import { projectExtensionConfigs } from "./projects-ext";
 
-export const OPENROUTER_DEMO_VIDEO_URL =
-  "https://pub-9e45e5f7be6f4c9989852b4989e83a23.r2.dev/demos/openrouter-demos-walkthrough.mp4";
+export const MEDIA_BASE_URL = "https://media.luke-the-duke.com/demos";
+
+export const OPENROUTER_DEMO_VIDEO_URL = `${MEDIA_BASE_URL}/openrouter-demos-walkthrough.mp4`;
+export const KURULTAI_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/kurultai-launch.mp4`;
+export const DAYFLOW_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/dayflow-launch.mp4`;
+export const ORCHESTRAL_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/orchestral-launch.mp4`;
+export const ARGUS_WITNESS_VIDEO_URL = `${MEDIA_BASE_URL}/argus-witness.mp4`;
+export const PACE_DEBUT_VIDEO_URL = `${MEDIA_BASE_URL}/pace-debut.mp4`;
+export const KATE_LAUNCH_VIDEO_URL = `${MEDIA_BASE_URL}/kate-launch.mp4`;
 
 /**
  * Master project configuration — curated for recruiter/professional viewing.
@@ -89,6 +96,7 @@ export const projectConfigs: ProjectConfig[] = [
       "OpenRouter",
     ],
     private: false,
+    demoVideoUrl: KURULTAI_LAUNCH_VIDEO_URL,
     highlights: [
       "Rust + axum API with MCP tool surface",
       "SQLite FTS5 + sqlite-vec — no Postgres dependency",
@@ -111,6 +119,7 @@ export const projectConfigs: ProjectConfig[] = [
     featured: false,
     orbitTier: "secondary",
     demoUrl: "/demos/argus",
+    demoVideoUrl: ARGUS_WITNESS_VIDEO_URL,
     techStack: [
       "TypeScript",
       "Playwright",
@@ -152,6 +161,7 @@ export const projectConfigs: ProjectConfig[] = [
     featured: false,
     orbitTier: "secondary",
     demoUrl: "/demos/dayflow",
+    demoVideoUrl: DAYFLOW_LAUNCH_VIDEO_URL,
     techStack: ["Go", "QML", "SQLite", "OpenRouter", "Wayland"],
     private: false,
     highlights: [
@@ -207,6 +217,7 @@ export const projectConfigs: ProjectConfig[] = [
       "Railway",
     ],
     private: true,
+    demoVideoUrl: PACE_DEBUT_VIDEO_URL,
     highlights: [
       "Platform live — gateway, auth, Stripe billing at pacehq.io",
       "Tenant-aware agent pipeline with TierGate and tool registry",
@@ -841,6 +852,30 @@ export const projectConfigs: ProjectConfig[] = [
       "Docker-hosted backend with PostgreSQL",
       "36 passing backend tests with CI pipeline",
     ],
+  },
+  {
+    slug: "kate-ios",
+    repoName: "kate-ios",
+    displayName: "Kate",
+    tagline:
+      "A shared field journal for any crew — native iOS built and deployed entirely on Linux via xtool",
+    description:
+      "Kate is a field journal for crews and small groups: journal entries with photos, hangout ideas, a movie shelf, places and outings with live GPS tracks, and week windows that find when everyone's free. The iOS client is pure SwiftUI + SwiftPM with zero third-party dependencies — signed, compiled, and installed from Arch Linux ARM via xtool, no Xcode machine required. A typed API on Cloudflare Workers (D1 + R2) keeps every member's view in sync behind invite-only crews, with an offline outbox for writes.",
+    category: "apps",
+    type: "app",
+    featured: false,
+    liveUrl: "https://kate.luke-the-duke.com",
+    demoVideoUrl: KATE_LAUNCH_VIDEO_URL,
+    techStack: ["Swift", "SwiftUI", "SwiftPM", "Cloudflare Workers", "xtool"],
+    private: true,
+    highlights: [
+      "Native iOS built end-to-end on Linux — xtool signs and deploys",
+      "Zero-dependency SwiftUI client, Linux-tested pure core",
+      "Crew model — members, colors, and ratings come from the API",
+      "Offline outbox for journal and idea writes",
+    ],
+    architecture:
+      "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync",
   },
 
   ...projectExtensionConfigs,

@@ -13,11 +13,38 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
 
+  // Hash-based Subresource Integrity: strict CSP compatible with static
+  // generation (no per-request nonce needed) — integrity attrs on chunks.
+  experimental: {
+    sri: { algorithm: "sha384" },
+  },
+
   async headers() {
+    const csp = [
+      "default-src 'self'",
+      // 'unsafe-inline' is required for Next.js hydration payloads on
+      // statically-generated pages (no nonce available at build time).
+      "script-src 'self' 'unsafe-inline' https://analytics.pacehq.io",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https://avatars.githubusercontent.com https://raw.githubusercontent.com",
+      "media-src 'self' https://media.luke-the-duke.com",
+      "font-src 'self' data:",
+      "connect-src 'self' https://analytics.pacehq.io",
+      "frame-src 'self' https://*.luke-the-duke.com https://open.spotify.com",
+      "worker-src 'self' blob:",
+      "manifest-src 'self'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "upgrade-insecure-requests",
+    ].join("; ");
+
     return [
       {
         source: "/:path*",
         headers: [
+          { key: "Content-Security-Policy", value: csp },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
