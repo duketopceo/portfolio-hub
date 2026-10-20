@@ -51,6 +51,20 @@ function MoonChip({
     </span>
   );
 
+  if (moon.href && moon.kind !== "stack" && moon.href.startsWith("/")) {
+    // Component moon: on-site link to the parent dossier's #components anchor.
+    return (
+      <Link
+        href={moon.href}
+        className="planet-node__moon-link"
+        onClick={(e) => e.stopPropagation()}
+        aria-label={`${moon.label} (${moon.kind})`}
+      >
+        {body}
+      </Link>
+    );
+  }
+
   if (moon.href && moon.kind !== "stack") {
     return (
       <a

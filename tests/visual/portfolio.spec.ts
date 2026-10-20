@@ -5,6 +5,8 @@ const routes = [
   { path: "/", name: "home" },
   { path: "/projects", name: "projects" },
   { path: "/projects/khan", name: "project-dossier" },
+  { path: "/projects/kate", name: "project-dossier-kate" },
+  { path: "/projects/kurultai", name: "project-dossier-kurultai" },
   { path: "/openrouter", name: "openrouter" },
   { path: "/demos", name: "demos" },
   { path: "/demos/argus", name: "demo-argus" },

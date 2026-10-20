@@ -5,3 +5,7 @@ export { DossierFooterNav } from "./DossierFooterNav";
 export { DossierServicesTable } from "./DossierServicesTable";
 export { DossierActivityTimeline } from "./DossierActivityTimeline";
 export { DossierBackendSection } from "./DossierBackendSection";
+export { DossierBody } from "./DossierBody";
+export { ShowcaseCard } from "./ShowcaseCard";
+export { ProjectFilm, ProjectFilmView } from "./ProjectFilm";
+export { ComponentsList } from "./ComponentsList";

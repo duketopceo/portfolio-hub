@@ -277,7 +277,12 @@ export const projectExtensionConfigs: ProjectConfig[] = [
     },
     techStack: ["Python", "OpenRouter", "Eval", "LLM"],
     private: false,
-    film: { url: "https://media.luke-the-duke.com/demos/orchestral-launch.mp4" },
+    film: {
+      url: "https://media.luke-the-duke.com/demos/orchestral-launch.mp4",
+      poster: "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
+      // TODO(luke): review film transcript
+      transcript: "A launch film for orchestral, the OpenRouter eval harness for cheap orchestrator and worker stacks.",
+    },
     highlights: [
       "Orchestrator + worker eval design",
       "OpenRouter multi-model routing",

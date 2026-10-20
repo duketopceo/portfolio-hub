@@ -51,6 +51,18 @@ export const projectConfigs: ProjectConfig[] = [
       "Rust CLI",
     ],
     private: true,
+    // TODO(luke): review showcase copy
+    showcase: {
+      whatItIs:
+        "A personal, Linux-backed agent harness with OpenRouter as the default model path. It is a private fork of Agent Zero with Khan's own CLI, secret vault and memory layer on top.",
+      whoItsFor:
+        "One operator running their own agent on their own box, with any model behind it.",
+      whatLukeBuilt:
+        "OpenRouter-native routing through LiteLLM, a host CLI (up, login, ask, chat, memory, sync, remote), a secret vault that keeps keys out of settings files, typed contracts for memory, verification, trust and task runtime, an optional Temporal durable-execution adapter, and the khanai.app landing site and installer.",
+      stack: ["Python", "Docker", "LiteLLM", "OpenRouter", "Temporal", "MCP"],
+      status:
+        "Built in a concentrated burst in August 2026. The CLI, vault and memory persistence work; the live agent loop is not fully wired to the typed contracts yet, and release downloads are not published.",
+    },
     highlights: [
       "Temporal + OpenRouter orchestration with LiteLLM workers",
       "Risk scoring and MCP tool surfaces for agent workflows",
@@ -96,7 +108,11 @@ export const projectConfigs: ProjectConfig[] = [
       "OpenRouter",
     ],
     private: false,
-    film: { url: KURULTAI_LAUNCH_VIDEO_URL },
+    film: {
+      url: KURULTAI_LAUNCH_VIDEO_URL,
+      // TODO(luke): review film transcript
+      transcript: "A launch film for Kurultai, the Rust knowledge brain with MCP retrieval and a 3D graph view.",
+    },
     highlights: [
       "Rust + axum API with MCP tool surface",
       "SQLite FTS5 + sqlite-vec — no Postgres dependency",
@@ -128,7 +144,12 @@ export const projectConfigs: ProjectConfig[] = [
       ],
     },
     demoUrl: "/demos/argus",
-    film: { url: ARGUS_WITNESS_VIDEO_URL },
+    film: {
+      url: ARGUS_WITNESS_VIDEO_URL,
+      poster: "https://media.luke-the-duke.com/launch/argus-poster.jpg",
+      // TODO(luke): review film transcript
+      transcript: "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift.",
+    },
     techStack: [
       "TypeScript",
       "Playwright",
@@ -170,7 +191,11 @@ export const projectConfigs: ProjectConfig[] = [
     featured: false,
     orbitTier: "secondary",
     demoUrl: "/demos/dayflow",
-    film: { url: DAYFLOW_LAUNCH_VIDEO_URL },
+    film: {
+      url: DAYFLOW_LAUNCH_VIDEO_URL,
+      // TODO(luke): review film transcript
+      transcript: "A launch film for Dayflow, the private automatic work journal for Linux.",
+    },
     techStack: ["Go", "QML", "SQLite", "OpenRouter", "Wayland"],
     private: false,
     highlights: [
@@ -226,7 +251,24 @@ export const projectConfigs: ProjectConfig[] = [
       "Railway",
     ],
     private: true,
-    film: { url: PACE_DEBUT_VIDEO_URL },
+    film: {
+      url: PACE_DEBUT_VIDEO_URL,
+      poster: "https://media.luke-the-duke.com/launch/pace-poster.jpg",
+      // TODO(luke): review film transcript
+      transcript: "A launch film for Pace, the production platform for identity, billing and AI for small businesses.",
+    },
+    // TODO(luke): review showcase copy
+    showcase: {
+      whatItIs:
+        "A private business cloud for small businesses: one login, one shell, integrated open-source business apps, and an agent layer that acts across them.",
+      whoItsFor:
+        "Small and mid-sized businesses that want cloud productivity without enterprise complexity.",
+      whatLukeBuilt:
+        "The platform end to end: a Rust/Axum gateway, a Go/Chi control service for entitlements and the agent harness, and a Python/LangGraph reasoning service, on Supabase Postgres with row-level security for tenant isolation. Stripe billing, Stytch auth, a React shell, and Grafana dashboards kept as code.",
+      stack: ["Rust", "Axum", "Go", "Chi", "Python", "LangGraph", "React", "Supabase Postgres", "Stripe", "Stytch", "OpenRouter", "Cloudflare", "Railway", "Hetzner"],
+      status:
+        "Private beta, invite-only. Gateway, auth and billing are live at pacehq.io; the agent system is built but not yet taking real actions in production.",
+    },
     highlights: [
       "Platform live — gateway, auth, Stripe billing at pacehq.io",
       "Tenant-aware agent pipeline with TierGate and tool registry",
@@ -272,7 +314,11 @@ export const projectConfigs: ProjectConfig[] = [
     liveUrl: "https://luke-the-duke.com/openrouter",
     demoUrl: "https://luke-the-duke.com/openrouter",
     embeddable: true,
-    film: { url: OPENROUTER_DEMO_VIDEO_URL },
+    film: {
+      url: OPENROUTER_DEMO_VIDEO_URL,
+      // TODO(luke): review film transcript
+      transcript: "A walkthrough of the role-aligned application demos: Deflect, Motion, Bakeoff and Caesar.",
+    },
     highlights: [
       "Deflect — support routing with Guardrails and eval fixtures",
       "Motion — GTM next-action with Auto Router and presets",
@@ -779,12 +825,28 @@ export const projectConfigs: ProjectConfig[] = [
     tagline:
       "A shared field journal for any crew — native iOS built and deployed entirely on Linux via xtool",
     description:
-      "Kate is a field journal for crews and small groups: journal entries with photos, hangout ideas, a movie shelf, places and outings with live GPS tracks, and week windows that find when everyone's free. The iOS client is pure SwiftUI + SwiftPM with zero third-party dependencies — signed, compiled, and installed from Arch Linux ARM via xtool, no Xcode machine required. A typed API on Cloudflare Workers (D1 + R2) keeps every member's view in sync behind invite-only crews, with an offline outbox for writes.",
+      "Kate is a field journal for crews and small groups: journal entries with photos, hangout ideas, a movie shelf, places and outings with live GPS tracks, and week windows that find when everyone's free. The iOS client is pure SwiftUI + SwiftPM with zero third-party dependencies — signed, compiled, and installed from Arch Linux ARM via xtool, no Xcode machine required. A typed API on Cloudflare Workers (D1 + R2) keeps every member's view in sync: anyone can sign up and start a crew, members join by invitation, and writes queue in an offline outbox.",
     category: "apps",
     type: "app",
     featured: false,
     liveUrl: "https://kate.shippedit.dev",
-    film: { url: KATE_LAUNCH_VIDEO_URL },
+    film: {
+      url: KATE_LAUNCH_VIDEO_URL,
+      // TODO(luke): review film transcript
+      transcript: "A launch film for Kate, the shared field journal for crews and small groups, with native iOS built on Linux.",
+    },
+    // TODO(luke): review showcase copy
+    showcase: {
+      whatItIs:
+        "A shared field journal for the spontaneous things a crew does together: journal entries with photos, hangout ideas, a movie shelf, places and outings, and week windows that find when everyone is free.",
+      whoItsFor:
+        "Any small group or household that wants one shared log. Anyone can sign up at kate.shippedit.dev and start a crew; members join by invitation.",
+      whatLukeBuilt:
+        "A native iOS client in pure SwiftUI and SwiftPM with no third-party dependencies, signed, built and installed from Linux with xtool. A typed API on Cloudflare Workers with D1 and R2 keeps every member's view in sync, with an offline outbox for writes.",
+      stack: ["Swift", "SwiftUI", "SwiftPM", "xtool", "Next.js", "Cloudflare Workers", "D1", "R2"],
+      status:
+        "Live with open sign-up. The site and API run on Cloudflare Workers; the iOS app is the main client and is being prepared for the App Store.",
+    },
     techStack: ["Swift", "SwiftUI", "SwiftPM", "Cloudflare Workers", "xtool"],
     private: true,
     highlights: [
