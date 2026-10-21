@@ -122,14 +122,6 @@ export const deployments: DeploymentConfig[] = [
     online: true,
   },
   {
-    slug: "republic-atlas",
-    url: "https://republicatlas.com",
-    host: "other",
-    role: "Political data platform",
-    healthCheck: "/",
-    online: true,
-  },
-  {
     slug: "chronicle-weaver",
     url: "https://chronicleweaver.com",
     host: "other",

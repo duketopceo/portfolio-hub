@@ -14,7 +14,7 @@
       "Firmware",
       "Hardware"
     ],
-    "private": true,
+    "private": false,
     "highlights": [
       "6-key + knob QMK macropad",
       "CAD and firmware source",

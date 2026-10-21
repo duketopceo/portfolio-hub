@@ -11,7 +11,6 @@ const EARLIER_WORK_YEAR: Record<string, number> = {
   "ai-debate-arena": 2026,
   "finance-frenzy": 2025,
   "quiz-the-best": 2025,
-  "republic-atlas": 2025,
   "etl-pipeline": 2025,
   "chronicle-weaver": 2025,
   "collaborative-essay": 2026,

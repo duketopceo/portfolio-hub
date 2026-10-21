@@ -45,7 +45,6 @@ export const retiredSlugs: RetiredSlug[] = [
   { from: "skyguard-ai", to: "/projects#earlier-work", reason: "earlier" },
   { from: "quiz-the-best", to: "/projects#earlier-work", reason: "earlier" },
   { from: "optimezer", to: "/projects#earlier-work", reason: "earlier" },
-  { from: "republic-atlas", to: "/projects#earlier-work", reason: "earlier" },
   { from: "etl-pipeline", to: "/projects#earlier-work", reason: "earlier" },
   { from: "series65-study-app", to: "/projects#earlier-work", reason: "earlier" },
   { from: "chronicle-weaver", to: "/projects#earlier-work", reason: "earlier" },
@@ -62,8 +61,9 @@ export const retiredSlugs: RetiredSlug[] = [
   { from: "luke-the-duke-show", to: "/projects", reason: "removed" },
   { from: "openclaw-macmini-hardened", to: "/projects", reason: "removed" },
   { from: "stratum-hq", to: "/projects", reason: "removed" },
-  // Repo went private (2026-10-21 sync); demo removed with it.
+  // Repos went private (2026-10-21 sync).
   { from: "pixel-tycoon", to: "/projects", reason: "removed" },
+  { from: "republic-atlas", to: "/projects", reason: "removed" },
 ];
 
 /** Next.js `redirects()` entries for the retired slugs (308). */

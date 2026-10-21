@@ -59,16 +59,15 @@ import entry56 from "./pinetree-solari-demo.json";
 import entry57 from "./portfolio-hub.json";
 import entry58 from "./project-atlas.json";
 import entry59 from "./quiz-the-best.json";
-import entry60 from "./republic-atlas.json";
-import entry61 from "./rts-skyrim.json";
-import entry62 from "./scooter-ios.json";
-import entry63 from "./series65-study-app.json";
-import entry64 from "./skyguard-ai.json";
-import entry65 from "./tallyline.json";
-import entry66 from "./trading-bot.json";
-import entry67 from "./void-sleep.json";
-import entry68 from "./wisp.json";
-import entry69 from "./wordink.json";
+import entry60 from "./rts-skyrim.json";
+import entry61 from "./scooter-ios.json";
+import entry62 from "./series65-study-app.json";
+import entry63 from "./skyguard-ai.json";
+import entry64 from "./tallyline.json";
+import entry65 from "./trading-bot.json";
+import entry66 from "./void-sleep.json";
+import entry67 from "./wisp.json";
+import entry68 from "./wordink.json";
 
 /** Raw catalog entries; `src/data/projects.ts` validates them with the zod schema. */
 export const catalogEntries: readonly unknown[] = [
@@ -141,5 +140,4 @@ export const catalogEntries: readonly unknown[] = [
   entry66,
   entry67,
   entry68,
-  entry69,
 ];
