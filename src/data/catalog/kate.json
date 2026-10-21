@@ -30,7 +30,11 @@
         "D1",
         "R2"
       ],
-      "status": "Live with open sign-up. The site and API run on Cloudflare Workers; the iOS app is the main client and is being prepared for the App Store."
+      "status": "Live with open sign-up. The site and API run on Cloudflare Workers; the iOS app is the main client and is being prepared for the App Store.",
+      "problem": "Shared group memories end up scattered across chat threads, camera rolls and notes, and a planning app built for one household does not fit a crew whose members come and go. Kate started as a two-person journal and had to become something any small group could run.",
+      "approach": "Journal entries are the core and every other module (ideas, movies, places, availability) hangs off the same crew and member model. Growth is by invitation with a per-member invite budget, and the whole server can be self-hosted on a free Cloudflare account so a crew never has to live on the hosted instance.",
+      "architecture": "A Next.js app on Cloudflare Workers (via OpenNext) serves a typed v1 API backed by D1 for records and R2 for photos. The iOS client is pure SwiftUI/SwiftPM with one shared API client and an offline outbox that queues journal entries and ideas until the network returns. A generated design-token file keeps colours and sizes in one place across web and iOS.",
+      "outcomes": "Open sign-up works with Sign in with Apple or pairing code, crews have invites and a waitlist, and the same API serves the hosted and self-hosted deployments. The iOS app builds, signs and installs from Linux with xtool and is being prepared for App Store submission."
     },
     "techStack": [
       "Swift",

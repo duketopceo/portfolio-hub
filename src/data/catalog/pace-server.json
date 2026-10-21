@@ -79,7 +79,11 @@
         "Railway",
         "Hetzner"
       ],
-      "status": "Private beta, invite-only. Gateway, auth and billing are live at pacehq.io; the agent system is built but not yet taking real actions in production."
+      "status": "Private beta, invite-only. Gateway, auth and billing are live; the agent system is built but not yet taking real actions in production, and its end-to-end run is not proven yet.",
+      "problem": "Small businesses run on a patchwork of separate tools with separate logins, and the AI features bolted onto each one cannot see or act across the others. Pace asks whether one login, one shell and one agent layer can sit over open-source business apps without giving up tenant isolation or billing control.",
+      "approach": "I built the control plane first and the agent layer behind it: identity, entitlements and billing had to be real before an agent was allowed to touch anything. Each tenant gets its own stack of apps, and every request carries a tenant identity that the database enforces, so isolation does not depend on application code being right.",
+      "architecture": "A Rust/Axum gateway is the only public surface; it validates the session token, writes the audit trail and forwards to a Go/Chi control service. The control service owns entitlements, the workspace API and the agent harness, and calls a Python/LangGraph reasoning service for planning and structured tool output. Data lives in Supabase Postgres with row-level security keyed on a per-request tenant id; side effects move over a Redis event bus; models are reached through OpenRouter. The React shell opens each business app in its own tab on a separate domain from the login, which keeps app cookies away from the session.",
+      "outcomes": "Auth (Stytch), billing (Stripe), the shell and the gateway are live in an invite-only beta, with CI that runs Go, Rust and Python suites and Grafana dashboards kept as code. The marketing site shows real product screens produced by a deterministic capture pipeline on sample data, and a sample-data demo runs with no network calls."
     },
     "highlights": [
       "Platform live — gateway, auth, Stripe billing at pacehq.io",

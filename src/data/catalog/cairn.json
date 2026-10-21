@@ -40,7 +40,11 @@
         "Queues",
         "OpenRouter"
       ],
-      "status": "Early development. The backend is deployed; an internal TestFlight build is being prepared."
+      "status": "Early development. The backend is deployed; an internal TestFlight build is being prepared.",
+      "problem": "Students collect notes, slides and readings but studying from them is mostly rereading, which research on retrieval practice says is the weak way to learn. Cairn tries to turn whatever you upload into something you are quizzed on until it sticks.",
+      "approach": "The learning model drives the product: retrieval practice and successive relearning (quiz until you pass, then again across days), with spaced review. Generated questions pass a quality gate before a student sees them, and model cost is kept down by preferring open-weight models through one gateway and using Apple's on-device models for cheap tasks.",
+      "architecture": "A Next.js backend on Cloudflare Workers uses D1 for records, R2 for uploads, Vectorize for retrieval and Queues for generation jobs, with one AI gateway to OpenRouter. The iOS-first SwiftUI app is built on Linux with xtool and talks to the backend through written API and auth contracts. Pure logic is split into a target that tests on Linux without the iOS SDK.",
+      "outcomes": "The backend is deployed and the contracts are written for the iOS client. An internal TestFlight build is being prepared; there are no learning-outcome results yet."
     },
     "media": {
       "release": "to-record",

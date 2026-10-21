@@ -33,7 +33,11 @@
         "XcodeGen",
         "Python (reference client)"
       ],
-      "status": "Working client. UUIDs, frame layout and CRC are high confidence; telemetry decoding is provisional until checked against the scooter's display."
+      "status": "Working client. UUIDs, frame layout and CRC are high confidence; telemetry decoding is provisional until checked against the scooter's display.",
+      "problem": "The vendor's app ties the scooter to a cloud account and a backend, so an owner cannot use it locally or on their own terms. The question was whether the scooter's Bluetooth protocol could be recovered well enough to drive it with no account at all.",
+      "approach": "I worked out the protocol from the vendor's Android app, ported it to Swift, and kept a Python reference client to check frames against. Anything that could brick the scooter (unbind, reset, firmware update) is deliberately not implemented.",
+      "architecture": "A SwiftUI app sits on a CoreBluetooth layer that scans, connects and exchanges framed messages with a checksum, and a decoder turns telemetry frames into a live dashboard. The project is generated with XcodeGen and has no server, cloud or account component.",
+      "outcomes": "Scan and connect, lock and unlock, lights, gear, speed limit and cruise control work. UUIDs, frame layout and CRC are high confidence; telemetry decoding is provisional until checked against the scooter's display."
     },
     "media": {
       "release": "to-record",

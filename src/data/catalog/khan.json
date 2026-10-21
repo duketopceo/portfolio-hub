@@ -59,7 +59,11 @@
         "Temporal",
         "MCP"
       ],
-      "status": "Built in a concentrated burst in August 2026. The CLI, vault and memory persistence work; the live agent loop is not fully wired to the typed contracts yet, and release downloads are not published."
+      "status": "Built in a concentrated burst in August 2026. The CLI, vault and memory persistence work; the live agent loop is not fully wired to the typed contracts yet, and release downloads are not published.",
+      "problem": "Agent harnesses tend to assume one vendor's models and keep API keys in plain settings files, which is awkward for one person running their own agent on their own machine. Khan asks what a personal harness looks like when any model is a drop-in and keys never touch config.",
+      "approach": "I forked Agent Zero rather than rewriting its runtime, and put Khan's own pieces in separate packages on top: routing, a host CLI, a secret vault and typed contracts for memory, verification, trust and task runtime. The rest of Agent Zero stays untouched underneath.",
+      "architecture": "The host CLI (a Python package, started with `khan`) brings up the Dockerised Agent Zero runtime and bridges the terminal to it. Model calls go through LiteLLM with OpenRouter as the default provider in a YAML provider config; secrets live in a vault plugin that writes to a local env file instead of settings. A separate package defines the typed contracts and persists memory, with an optional Temporal adapter for durable execution.",
+      "outcomes": "The CLI, vault and memory persistence work today, along with a landing site and a one-line installer. The live agent loop is not yet driven by the typed contracts, and release downloads are not published."
     },
     "highlights": [
       "Temporal + OpenRouter orchestration with LiteLLM workers",
