@@ -2,6 +2,8 @@
 
 How to add a **29th** (or any new) repository to portfolio-hub without guessing orbit placement, privacy rules, or dossier fields.
 
+> **Curation bar:** whether a repo may be listed at all, the 30-40 target, and how mirrors become components are defined in [`docs/CURATION.md`](./CURATION.md). That page is the source of truth; check it before adding an entry. Every join, removal or tier change needs Luke's approval.
+
 ## 1. Add the entry in `src/data/projects.ts`
 
 Append one object to the `projectConfigs` array. Required fields:
