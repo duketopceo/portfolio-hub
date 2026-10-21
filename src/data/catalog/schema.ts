@@ -32,6 +32,8 @@ const mediaAsset = z.strictObject({
   /** Path under the site origin, e.g. /media/captions/<slug>-release.vtt */
   captions: z.string().optional(),
   transcript: z.string(),
+  /** Set once Luke has reviewed the contact sheet (docs/MEDIA.md, step 5). */
+  sanitized: z.literal(true).optional(),
 });
 
 const mediaSlot = z.union([mediaAsset, z.literal("to-record"), z.literal("n/a")]);
