@@ -80,6 +80,11 @@ export interface MediaAsset {
 /** Present, still to be recorded, or not applicable. */
 export type MediaSlot = MediaAsset | "to-record" | "n/a";
 
+/** The video asset in a slot, or null when it is unrecorded or not applicable. */
+export function mediaAsset(slot: MediaSlot): MediaAsset | null {
+  return typeof slot === "string" ? null : slot;
+}
+
 export type MediaKind = "release" | "demo";
 
 export interface ProjectMedia {

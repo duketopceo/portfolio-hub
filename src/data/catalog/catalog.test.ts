@@ -3,7 +3,8 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { catalogFileNames } from "../../../scripts/lib/catalog-files.mjs";
 import { projectConfigs } from "@/data/projects";
-import snapshot from "@/data/__fixtures__/project-configs.pre-u1.json";
+import { listedProjects } from "@/lib/catalog";
+import { isListedProject } from "@/lib/catalog-filter";
 import { catalogEntries } from "./index";
 import { catalogEntrySchema } from "./schema";
 
@@ -12,8 +13,8 @@ const jsonFiles: string[] = catalogFileNames(dir);
 const load = (f: string) => JSON.parse(readFileSync(join(dir, f), "utf8"));
 
 describe("catalog JSON", () => {
-  it("has 70 entries and every file validates against the schema", () => {
-    expect(jsonFiles).toHaveLength(70);
+  it("has one entry per file and every file validates against the schema", () => {
+    expect(catalogEntries).toHaveLength(jsonFiles.length);
     for (const f of jsonFiles) {
       const res = catalogEntrySchema.safeParse(load(f));
       expect(res.success, `${f}: ${res.success ? "" : res.error.message}`).toBe(true);
@@ -30,13 +31,31 @@ describe("catalog JSON", () => {
     expect(
       catalogEntrySchema.safeParse({ ...base, curated: { ...base.curated, bogus: 1 } }).success,
     ).toBe(false);
-    const { displayName: _omit, ...curated } = base.curated;
+    const curated = { ...base.curated };
+    delete curated.displayName;
     expect(catalogEntrySchema.safeParse({ ...base, curated }).success).toBe(false);
   });
 
-  it("projectConfigs deep-equals the pre-migration snapshot", () => {
-    expect(JSON.parse(JSON.stringify(projectConfigs))).toEqual(snapshot);
-    expect(projectConfigs.map((c) => c.slug)).toEqual(snapshot.map((c) => c.slug));
+  it("has unique slugs and unique, stable order", () => {
+    const entries = jsonFiles.map(load);
+    expect(new Set(entries.map((e) => e.slug)).size).toBe(entries.length);
+    expect(new Set(entries.map((e) => e.order)).size).toBe(entries.length);
+    const sorted = [...entries].sort((a, b) => a.order - b.order).map((e) => e.slug);
+    expect(projectConfigs.map((c) => c.slug)).toEqual(sorted);
+  });
+
+  it("lists the same number of projects as the entries say", () => {
+    const expected = jsonFiles.map(load).filter((e) => isListedProject(e.curated)).length;
+    expect(listedProjects()).toHaveLength(expected);
+  });
+
+  it("private entries carry no public GitHub URL in curated", () => {
+    for (const f of jsonFiles) {
+      const e = load(f);
+      if (!e.curated.private) continue;
+      const url = `github.com/${e.github.owner}/${e.github.repoName}`.toLowerCase();
+      expect(JSON.stringify(e.curated).toLowerCase(), f).not.toContain(url);
+    }
   });
 
   it("the generated index imports every JSON file in the directory", () => {

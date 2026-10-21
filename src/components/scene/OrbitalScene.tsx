@@ -274,6 +274,10 @@ function BodyLines({ bodies, focusIndex }: { bodies: BodyInfo[]; focusIndex: num
   const spin = useRef(0);
   const lastQuat = useRef(new THREE.Quaternion(0, 0, 0, 0));
   const v = useMemo(() => new THREE.Vector3(), []);
+  // A rebuilt geometry has stale limb positions; force the billboard pass.
+  useEffect(() => {
+    lastQuat.current.set(0, 0, 0, 0);
+  }, [geometry]);
 
   useFrame((state, dt) => {
     spin.current += dt * 0.35;

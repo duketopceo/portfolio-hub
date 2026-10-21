@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { catalogEntrySchema, githubSchema, type CatalogEntry } from "../data/catalog/schema";
-import { rangeWarning, scoreRepo, summarizeCatalog, type CurationGithub } from "./curation";
+import { CURATION_BAR, rangeWarning, scoreRepo, summarizeCatalog, type CurationGithub } from "./curation";
 
 /**
  * Pure logic behind scripts/sync-catalog.mjs (KTD6). The sync proposes; it
@@ -93,6 +93,16 @@ export class PrivateNodeError extends Error {
   }
 }
 
+/** Thrown when the public node set is implausibly small for the catalog. Names nothing. */
+export class SparseNodesError extends Error {
+  constructor() {
+    super(
+      "aborted: fewer than half of the cataloged public repositories were visible (token may not see the owner's repositories); nothing was written",
+    );
+    this.name = "SparseNodesError";
+  }
+}
+
 export function assertAllPublic(nodes: readonly RepoNode[]): void {
   if (nodes.some((n) => n.isPrivate !== false)) throw new PrivateNodeError();
 }
@@ -140,6 +150,12 @@ export async function fetchRepoNodes(opts: {
 
 export type GithubFacts = CatalogEntry["github"];
 
+/**
+ * Stored commit counts stop at ten times the bar: above that the count cannot
+ * change a verdict, so an active repo no longer rewrites its file every week.
+ */
+export const COMMIT_COUNT_CAP = CURATION_BAR.minCommits * 10;
+
 /** Map a GraphQL node to the schema's `github` shape. Fast-changing values are not kept. */
 export function nodeToGithub(node: RepoNode, fallbackOwner: string): GithubFacts {
   const history = node.defaultBranchRef?.target?.history;
@@ -158,7 +174,7 @@ export function nodeToGithub(node: RepoNode, fallbackOwner: string): GithubFacts
     isFork: node.isFork,
     isArchived: node.isArchived,
     readmeLength: node.object?.byteSize ?? 0,
-    commitCount: history?.totalCount ?? 0,
+    commitCount: Math.min(history?.totalCount ?? 0, COMMIT_COUNT_CAP),
     lastCommitMonth: committed ? committed.slice(0, 7) : null,
     latestRelease: node.latestRelease?.tagName ?? null,
   };
@@ -218,6 +234,7 @@ export function computeSync(input: {
 
   const privateEntries = input.entries.filter((e) => e.curated.private);
   const sharedEntries = input.entries.filter((e) => !e.curated.private && !e.curated.siteOnly);
+  if (nodes.length * 2 < sharedEntries.length) throw new SparseNodesError();
 
   // A public repo named like a private entry: slug only, never a listing candidate.
   const privateNameMatches = new Set<string>();

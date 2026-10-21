@@ -12,7 +12,7 @@ import {
 } from "react";
 import { Canvas, useFrame, useThree, type CameraProps, type RootState } from "@react-three/fiber";
 import { useMediaQuery } from "@/lib/use-media-query";
-import { readRendererString, shouldUseShader } from "@/lib/render-capability";
+import { framePolicy, readRendererString, shouldUseShader } from "@/lib/render-capability";
 
 /** Frame-rate cap while a software rasteriser is drawing the scene. */
 const SOFTWARE_FPS = 10;
@@ -181,17 +181,19 @@ export default function SceneFrame({
   const onFirstFrame = useCallback(() => onReadyChange?.(true), [onReadyChange]);
   const onSceneError = useCallback(() => onReadyChange?.(false), [onReadyChange]);
 
+  const policy = framePolicy({ inView, software, dpr });
+
   return (
     <div ref={setHostEl} className={className}>
       {live ? (
         <SceneOverlayContext.Provider value={overlayEl}>
           <SceneBoundary plate={fallback} onError={onSceneError}>
             <Canvas
-              frameloop={!inView ? "never" : software ? "demand" : "always"}
-              dpr={software ? 1 : dpr}
+              frameloop={policy.frameloop}
+              dpr={policy.dpr}
               camera={camera}
               gl={{
-                antialias: !software,
+                antialias: policy.antialias,
                 alpha: true,
                 powerPreference: "low-power",
                 preserveDrawingBuffer: true,
@@ -203,7 +205,7 @@ export default function SceneFrame({
               {overlayEl ? (
                 <>
                   {children}
-                  {software && inView && <SoftwareThrottle />}
+                  {policy.throttle && <SoftwareThrottle />}
                   <FirstFrameSignal onFirstFrame={onFirstFrame} />
                 </>
               ) : null}

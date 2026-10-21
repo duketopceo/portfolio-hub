@@ -40,6 +40,7 @@ only extend `UmamiOutbound` for scroll/visibility/lifecycle signals.
 | `catalog-sort` | `sort` | recent/name/stars |
 | `scroll-depth` | `depth` (25/50/75/100), `page` | `/projects/*`, `/demos/*` — once per threshold |
 | `dossier-section-view` | `page`, `section` | `DossierSection`/`EvidencePanel` entering viewport (deep pages only) |
+| `media-play` | `kind` (release/demo), `slug` | Play button on a dossier video |
 | `not-found` | `path` | 404 page mount |
 | `outbound-link` | `url` (host), `from` | Any external link without an explicit event |
 

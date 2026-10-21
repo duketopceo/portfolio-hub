@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { ProjectConfig } from "@/lib/types";
+import { mediaAsset, type ProjectConfig } from "@/lib/types";
 
-const poster = (p: ProjectConfig) =>
-  typeof p.media.release === "string" ? undefined : p.media.release.poster;
+const poster = (p: ProjectConfig) => mediaAsset(p.media.release)?.poster;
 
 /** Featured-work strip for /hire. Poster when the release video has one, otherwise a
  *  typographic plate; never a placeholder thumbnail. */
@@ -50,7 +49,7 @@ export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
                 )}
                 <span className="hire-featured__name">{p.displayName}</span>
                 <span className="hire-featured__tagline">{p.tagline}</span>
-                {typeof p.media.release !== "string" && (
+                {mediaAsset(p.media.release) && (
                   <span className="hire-featured__film">Launch film</span>
                 )}
               </Link>

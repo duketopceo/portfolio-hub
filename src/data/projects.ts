@@ -1,6 +1,7 @@
 import { ProjectConfig } from "@/lib/types";
 import { catalogEntries } from "./catalog";
 import { catalogEntrySchema } from "./catalog/schema";
+import { DEFAULT_REPO_OWNER } from "./private-denylist";
 
 export const MEDIA_BASE_URL = "https://media.luke-the-duke.com/demos";
 
@@ -13,8 +14,6 @@ export const OPENROUTER_DEMO_VIDEO_URL = `${MEDIA_BASE_URL}/openrouter-demos-wal
  * Loaded from `src/data/catalog/<slug>.json` (validated by zod, ordered by
  * `order`). `curated` is human-owned, `github` is bot-owned (KTD1).
  */
-const DEFAULT_REPO_OWNER = "duketopceo";
-
 export const projectConfigs: ProjectConfig[] = catalogEntries
   .map((entry) => catalogEntrySchema.parse(entry))
   .sort((a, b) => a.order - b.order)

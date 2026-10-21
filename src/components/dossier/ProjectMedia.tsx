@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { MediaAsset, MediaKind, MediaSlot, ProjectMedia as ProjectMediaConfig } from "@/lib/types";
+import { mediaAsset, type MediaAsset, type MediaKind, type MediaSlot, type ProjectMedia as ProjectMediaConfig } from "@/lib/types";
 import { MediaFrame, PageShell } from "@/components/design";
 
 export type MediaStatus = "idle" | "loading" | "playing" | "error";
@@ -19,6 +19,7 @@ interface ProjectMediaViewProps {
   kind: MediaKind;
   media: MediaAsset;
   title: string;
+  slug?: string;
   status: MediaStatus;
   onPlay: () => void;
   onPlaying?: () => void;
@@ -31,6 +32,7 @@ export function ProjectMediaView({
   kind,
   media,
   title,
+  slug,
   status,
   onPlay,
   onPlaying,
@@ -88,6 +90,9 @@ export function ProjectMediaView({
                 className="dossier-media__play"
                 aria-label={`Play ${name}`}
                 onClick={onPlay}
+                data-umami-event="media-play"
+                data-umami-event-kind={kind}
+                data-umami-event-slug={slug}
               >
                 <span aria-hidden>Play</span>
               </button>
@@ -109,20 +114,24 @@ export function ProjectMedia({
   kind,
   slot,
   title,
+  slug,
 }: {
   kind: MediaKind;
   slot: MediaSlot;
   title: string;
+  slug?: string;
 }) {
   const [status, setStatus] = useState<MediaStatus>("idle");
   const ref = useRef<HTMLVideoElement>(null);
-  if (typeof slot === "string") return null;
+  const media = mediaAsset(slot);
+  if (!media) return null;
 
   return (
     <ProjectMediaView
       kind={kind}
-      media={slot}
+      media={media}
       title={title}
+      slug={slug}
       status={status}
       videoRef={ref}
       onPlay={() => {
@@ -140,17 +149,19 @@ export function ProjectMedia({
 export function ProjectMediaSection({
   media,
   title,
+  slug,
 }: {
   media: ProjectMediaConfig;
   title: string;
+  slug?: string;
 }) {
-  if (typeof media.release === "string" && typeof media.demo === "string") {
+  if (!mediaAsset(media.release) && !mediaAsset(media.demo)) {
     return null;
   }
   return (
     <PageShell className="dossier-page__demo dossier-page__media">
-      <ProjectMedia kind="release" slot={media.release} title={title} />
-      <ProjectMedia kind="demo" slot={media.demo} title={title} />
+      <ProjectMedia kind="release" slot={media.release} title={title} slug={slug} />
+      <ProjectMedia kind="demo" slot={media.demo} title={title} slug={slug} />
     </PageShell>
   );
 }

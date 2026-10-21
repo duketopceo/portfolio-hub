@@ -110,6 +110,7 @@ export default async function ProjectDetailPage({
       <ProjectMediaSection
         media={project.media}
         title={project.displayName}
+        slug={project.slug}
       />
 
       {githubActivity && (

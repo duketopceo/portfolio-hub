@@ -5,7 +5,7 @@
  * and inflates main-thread time, so the scenes stay line-art there.
  */
 
-const SOFTWARE_RENDERER = /llvmpipe|swiftshader|software/i;
+const SOFTWARE_RENDERER = /llvmpipe|swiftshader|software|microsoft basic render driver/i;
 
 /**
  * True when the WebGL renderer string identifies a real GPU. Software
@@ -31,4 +31,30 @@ export function readRendererString(
   } catch {
     return null;
   }
+}
+
+export interface FramePolicy {
+  frameloop: "always" | "demand" | "never";
+  dpr: [number, number] | number;
+  antialias: boolean;
+  /** Drive a throttled invalidate loop (software rasteriser, on screen). */
+  throttle: boolean;
+}
+
+/**
+ * Canvas frame policy: paused off screen; on a software rasteriser demand
+ * frames with DPR 1, no antialiasing and a throttled invalidate loop.
+ */
+export function framePolicy(opts: {
+  inView: boolean;
+  software: boolean;
+  dpr: [number, number];
+}): FramePolicy {
+  const { inView, software, dpr } = opts;
+  return {
+    frameloop: !inView ? "never" : software ? "demand" : "always",
+    dpr: software ? 1 : dpr,
+    antialias: !software,
+    throttle: software && inView,
+  };
 }

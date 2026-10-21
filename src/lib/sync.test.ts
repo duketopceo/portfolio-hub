@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  COMMIT_COUNT_CAP,
   PrivateNodeError,
+  SparseNodesError,
   computeSync,
   fetchRepoNodes,
   nodeToGithub,
@@ -79,10 +81,44 @@ describe("computeSync", () => {
   });
 
   it("proposes a cataloged public entry missing from the public set as stale, slug only", () => {
-    const { proposals, updates } = run([], [makeEntry("gone")]);
+    const { proposals, updates } = run([makeNode("kept")], [makeEntry("kept"), makeEntry("gone")]);
     expect(proposals.stale).toEqual(["gone"]);
     expect(updates).toEqual({});
     expect(JSON.stringify(proposals.stale)).toBe(JSON.stringify(["gone"]));
+  });
+
+  it("does not mark a siteOnly entry with no matching node stale", () => {
+    const site = makeEntry("site", { curated: { siteOnly: true } });
+    const { proposals, updates } = run([], [site]);
+    expect(proposals.stale).toEqual([]);
+    expect(updates).toEqual({});
+    expect(proposals.rangeWarning).toContain("0 listed");
+  });
+
+  it("caps the stored commit count so a busy repo does not churn", () => {
+    const busy = (n: number) =>
+      makeNode("busy", {
+        defaultBranchRef: { target: { history: { totalCount: n, nodes: [{ committedDate: "2026-10-02T10:00:00Z" }] } } },
+      });
+    expect(nodeToGithub(busy(5000), "duketopceo").commitCount).toBe(COMMIT_COUNT_CAP);
+    expect(nodeToGithub(busy(7), "duketopceo").commitCount).toBe(7);
+    const entry = makeEntry("busy", { github: { commitCount: COMMIT_COUNT_CAP } });
+    expect(run([busy(5001)], [entry]).updates).toEqual({});
+    expect(run([busy(5001)], [entry]).proposals.demotions).toEqual([]);
+  });
+
+  it("aborts when fewer than half of the cataloged public entries are visible", () => {
+    const entries = ["a", "b", "c"].map((s) => makeEntry(s));
+    expect(() => run([makeNode("a")], entries)).toThrow(SparseNodesError);
+    expect(() => run([makeNode("a"), makeNode("b")], entries)).not.toThrow();
+    let message = "";
+    try {
+      run([], entries);
+    } catch (e) {
+      message = (e as Error).message;
+    }
+    expect(message).toContain("nothing was written");
+    expect(message).not.toMatch(/\b[abc]\b.*repositor/);
   });
 
   it("reports a public repo named like a private entry by slug only and never lists it", () => {

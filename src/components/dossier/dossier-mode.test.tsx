@@ -215,7 +215,7 @@ describe("U4 dossier media and showcase mode", () => {
     expect(without).not.toContain("<track");
   });
 
-  it("two players have distinct accessible names and fail independently", () => {
+  it("two players have distinct accessible names and each view renders from its own status prop", () => {
     const html = renderToStaticMarkup(
       <ProjectMediaSection
         media={{ release: asset, demo: { ...asset, url: "https://m/d.mp4" } }}
@@ -225,7 +225,7 @@ describe("U4 dossier media and showcase mode", () => {
     expect(html).toContain('aria-label="Argus release video"');
     expect(html).toContain('aria-label="Argus demo recording"');
     expect(html.match(/<video/g)).toHaveLength(2);
-    // status is per-player: one in error, the other idle
+    // views take status as a prop: one in error, the other idle
     const failed = renderToStaticMarkup(
       <>
         <ProjectMediaView kind="release" media={asset} title="Argus" status="error" onPlay={() => {}} />

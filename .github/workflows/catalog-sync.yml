@@ -62,8 +62,18 @@ jobs:
           echo "bot_name=${bot}" >> "$GITHUB_OUTPUT"
           echo "bot_email=${email}" >> "$GITHUB_OUTPUT"
           foreign=false
-          # A missing branch makes compare fail; that means nothing to protect.
-          if authors="$(gh api "repos/${REPO}/compare/main...${BRANCH}" --jq '.commits[].commit.author.email' 2>/dev/null)"; then
+          # Only a 404 means the branch does not exist (nothing to protect).
+          # Any other probe failure must stop the job rather than fail open.
+          if probe="$(gh api -i "repos/${REPO}/branches/${BRANCH}" 2>&1)"; then
+            branch_exists=true
+          elif printf '%s' "$probe" | grep -q 'HTTP 404\|Not Found'; then
+            branch_exists=false
+          else
+            echo "Could not determine whether ${BRANCH} exists; refusing to continue." >&2
+            exit 1
+          fi
+          if [ "$branch_exists" = true ]; then
+            authors="$(gh api "repos/${REPO}/compare/main...${BRANCH}" --jq '.commits[].commit.author.email')"
             while IFS= read -r a; do
               if [ -n "$a" ] && [ "$a" != "$email" ]; then foreign=true; fi
             done <<< "$authors"

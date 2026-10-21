@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shouldUseShader } from "./render-capability";
+import { framePolicy, shouldUseShader } from "./render-capability";
 
 describe("shouldUseShader", () => {
   it("is false for llvmpipe, SwiftShader and generic software renderers", () => {
@@ -19,6 +19,10 @@ describe("shouldUseShader", () => {
     expect(shouldUseShader("LLVMPIPE")).toBe(false);
   });
 
+  it("is false for the Windows WARP rasteriser", () => {
+    expect(shouldUseShader("ANGLE (Microsoft, Microsoft Basic Render Driver Direct3D11 vs_5_0 ps_5_0, D3D11)")).toBe(false);
+  });
+
   it("is true for a typical GPU renderer string", () => {
     expect(shouldUseShader("Apple M1 Max")).toBe(true);
     expect(
@@ -31,5 +35,17 @@ describe("shouldUseShader", () => {
   it("is false when the renderer cannot be identified", () => {
     expect(shouldUseShader(null)).toBe(false);
     expect(shouldUseShader("")).toBe(false);
+  });
+});
+
+describe("framePolicy", () => {
+  const dpr: [number, number] = [1, 1.5];
+  it.each([
+    { inView: true, software: false, expected: { frameloop: "always", dpr, antialias: true, throttle: false } },
+    { inView: false, software: false, expected: { frameloop: "never", dpr, antialias: true, throttle: false } },
+    { inView: true, software: true, expected: { frameloop: "demand", dpr: 1, antialias: false, throttle: true } },
+    { inView: false, software: true, expected: { frameloop: "never", dpr: 1, antialias: false, throttle: false } },
+  ])("inView=$inView software=$software", ({ inView, software, expected }) => {
+    expect(framePolicy({ inView, software, dpr })).toEqual(expected);
   });
 });
