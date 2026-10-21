@@ -8,7 +8,7 @@ import { catalogEntrySchema } from "./schema";
 
 const dir = join(process.cwd(), "src/data/catalog");
 const jsonFiles = readdirSync(dir)
-  .filter((f) => f.endsWith(".json"))
+  .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
   .sort();
 const load = (f: string) => JSON.parse(readFileSync(join(dir, f), "utf8"));
 

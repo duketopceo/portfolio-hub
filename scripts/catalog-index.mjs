@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const dir = fileURLToPath(new URL("../src/data/catalog", import.meta.url));
 const files = readdirSync(dir)
-  .filter((f) => f.endsWith(".json"))
+  .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
   .sort();
 const ident = (i) => `entry${i}`;
 

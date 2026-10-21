@@ -29,7 +29,7 @@ HUB = pathlib.Path.home() / "workspace" / "portfolio-hub"
 
 
 def slugs(d):
-    return [json.loads(f.read_text())["slug"] for f in sorted(d.glob("*.json"))] if d.exists() else []
+    return [json.loads(f.read_text())["slug"] for f in sorted(d.glob("*.json")) if not f.name.startswith("_")] if d.exists() else []
 
 
 catalog = {s.lower().replace("_", "-") for s in slugs(HUB / "src/data/catalog")}

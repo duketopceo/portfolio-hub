@@ -31,7 +31,7 @@ const bareNames = new Set(); // private repoNames, for the quoted-token scan
 const publicNames = new Set(); // slugs + displayNames: public by design
 const catalogDir = join(repoRoot, "src/data/catalog");
 const catalogFiles = existsSync(catalogDir)
-  ? readdirSync(catalogDir).filter((f) => f.endsWith(".json"))
+  ? readdirSync(catalogDir).filter((f) => f.endsWith(".json") && !f.startsWith("_"))
   : [];
 for (const file of catalogFiles) {
   const entry = JSON.parse(read(join(catalogDir, file)));
