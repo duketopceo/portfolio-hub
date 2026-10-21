@@ -62,6 +62,8 @@ export const retiredSlugs: RetiredSlug[] = [
   { from: "luke-the-duke-show", to: "/projects", reason: "removed" },
   { from: "openclaw-macmini-hardened", to: "/projects", reason: "removed" },
   { from: "stratum-hq", to: "/projects", reason: "removed" },
+  // Repo went private (2026-10-21 sync); demo removed with it.
+  { from: "pixel-tycoon", to: "/projects", reason: "removed" },
 ];
 
 /** Next.js `redirects()` entries for the retired slugs (308). */

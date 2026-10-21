@@ -84,6 +84,7 @@ const nextConfig: NextConfig = {
         destination: "https://show.luke-the-duke.com/podcast/:path*",
         permanent: true,
       },
+      { source: "/demos/pixel-tycoon", destination: "/demos", permanent: true },
       ...retiredSlugRedirects(),
     ];
   },

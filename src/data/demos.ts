@@ -28,15 +28,6 @@ export const demos: DemoEntry[] = [
     href: "/demos/argus",
   },
   {
-    slug: "pixel-tycoon",
-    name: "Pixel Tycoon",
-    projectSlug: "pixel-tycoon",
-    tier: "replay",
-    tagline:
-      "Godot 4.7 city-block tycoon — headless perf baseline + regression gate ledger, day/night/weather capture reel.",
-    href: "/demos/pixel-tycoon",
-  },
-  {
     slug: "kurultai",
     name: "Kurultai",
     projectSlug: "kurultai",
