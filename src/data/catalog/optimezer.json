@@ -1,0 +1,29 @@
+{
+  "slug": "optimezer",
+  "order": 15,
+  "curated": {
+    "era": "earlier",
+    "displayName": "OptiMezer",
+    "tagline": "Small business AI integration platform for workflow automation",
+    "description": "Platform that helps small businesses adopt AI by automating repetitive workflows. Provides pre-built integrations for common business processes — invoicing, scheduling, customer follow-ups — powered by ML models that learn from usage patterns.",
+    "category": "ai",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "AI/ML",
+      "REST APIs",
+      "Automation"
+    ],
+    "private": true,
+    "highlights": [
+      "Pre-built workflow automation templates",
+      "ML models that adapt to usage patterns",
+      "Small business-focused integrations"
+    ]
+  },
+  "github": {
+    "repoName": "Zer_solutions",
+    "owner": "duketopceo"
+  }
+}

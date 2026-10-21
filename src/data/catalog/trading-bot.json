@@ -1,0 +1,31 @@
+{
+  "slug": "trading-bot",
+  "order": 9,
+  "curated": {
+    "era": "earlier",
+    "displayName": "TradingBot",
+    "tagline": "Algorithmic trading system with ML-driven signal generation and automated execution",
+    "description": "End-to-end algorithmic trading pipeline that ingests real-time market data from multiple brokerage APIs, generates buy/sell signals through ensemble machine learning models, and executes trades automatically with configurable risk parameters. The backtesting framework processes years of historical data to validate strategies before live deployment. Includes a performance analytics dashboard showing P&L curves, Sharpe ratios, and drawdown analysis. Implements position sizing algorithms and stop-loss guardrails for risk management.",
+    "category": "finance",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Machine Learning",
+      "REST APIs",
+      "Pandas",
+      "NumPy"
+    ],
+    "private": true,
+    "highlights": [
+      "ML signal generation with backtesting framework",
+      "Real-time market data ingestion pipeline",
+      "Automated risk management and position sizing"
+    ],
+    "architecture": "Data ingestion layer → ML signal engine → Risk management → Execution engine → Analytics dashboard"
+  },
+  "github": {
+    "repoName": "TradingBot",
+    "owner": "duketopceo"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "slug": "omarchy-connections",
+  "order": 33,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Connections",
+    "tagline": "Network connections at a glance on the Omarchy bar",
+    "description": "Omarchy plugin surfacing NetworkManager state — active connections, VPN, and signal details — as a bar widget with a dropdown panel.",
+    "category": "apps",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "QML",
+      "Omarchy",
+      "NetworkManager"
+    ],
+    "private": false,
+    "highlights": [
+      "Active connection + VPN status in the bar",
+      "Dropdown panel for detail",
+      "Listed on the official Omarchy plugin marketplace"
+    ],
+    "architecture": "nmcli probe → connection model → bar widget + panel"
+  },
+  "github": {
+    "repoName": "omarchy-connections",
+    "owner": "duketopceo"
+  }
+}

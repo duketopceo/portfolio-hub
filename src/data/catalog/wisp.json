@@ -1,0 +1,32 @@
+{
+  "slug": "wisp",
+  "order": 51,
+  "curated": {
+    "displayName": "Wisp",
+    "tagline": "Push-to-talk voice computer-use agent for Omarchy, decided by Jev",
+    "description": "Jev-powered voice computer-use agent for Omarchy on Hyprland and Asahi. Push-to-talk feeds whisper.cpp, Jev returns a typed decision, and the result drives a guarded hyprctl launch with a breathing dim overlay.",
+    "category": "ai",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Jev",
+      "whisper.cpp",
+      "PipeWire",
+      "Hyprland",
+      "Omarchy"
+    ],
+    "private": false,
+    "highlights": [
+      "Push-to-talk voice control of the desktop",
+      "Typed decision model rather than free-text prompting",
+      "Guarded launch path — actions are gated, not freeform",
+      "Breathing dim overlay for visible agent state"
+    ],
+    "architecture": "Push-to-talk → whisper.cpp transcription → Jev typed decision → guarded hyprctl launch → dim overlay"
+  },
+  "github": {
+    "repoName": "wisp",
+    "owner": "duketopceo"
+  }
+}

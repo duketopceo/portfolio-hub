@@ -84,13 +84,13 @@ describe("check:privacy:built", () => {
   it("fails when zero private patterns can be derived", () => {
     const sandbox = mkdtempSync(join(tmpdir(), "privacy-built-empty-"));
     mkdirSync(join(sandbox, "scripts"));
-    mkdirSync(join(sandbox, "src/data"), { recursive: true });
+    mkdirSync(join(sandbox, "src/data/catalog"), { recursive: true });
     copyFileSync(script, join(sandbox, "scripts/check-privacy-built.mjs"));
     copyFileSync(
       join(process.cwd(), "src/data/private-denylist.ts"),
       join(sandbox, "src/data/private-denylist.ts"),
     );
-    writeFileSync(join(sandbox, "src/data/projects.ts"), "export const projectConfigs = [];\n");
+    // An empty catalog directory: no entries, so no private patterns derive.
     const root = fixture("<p>clean</p>");
     const res = spawnSync(
       process.execPath,

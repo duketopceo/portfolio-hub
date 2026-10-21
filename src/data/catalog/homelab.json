@@ -1,0 +1,51 @@
+{
+  "slug": "homelab",
+  "order": 6,
+  "curated": {
+    "displayName": "Homelab",
+    "tagline": "Three Tailscale nodes (cluster1–cluster3) — Mac Mini Swarm with Traefik, tunnels, agents, and monitoring",
+    "description": "Personal home lab Docker Swarm on a three-node Tailscale mesh (cluster1 manager, cluster2 and cluster3 workers) running Apple Silicon Mac Minis: Traefik ingress, Cloudflare Tunnel for public routes, asset tracking, monitoring, and auto-discovery. Hosts public showcases such as Cosmic Intelligence and Open Military Hardware DB alongside internal agent stacks. The showcasable infra story for how luke-the-duke.com subdomains are meant to run.",
+    "category": "infra",
+    "type": "infra",
+    "featured": false,
+    "planetVisual": {
+      "size": "md",
+      "shape": "hex",
+      "color": "#F472B6",
+      "moons": [
+        {
+          "label": "Traefik",
+          "kind": "stack"
+        },
+        {
+          "label": "Tailscale",
+          "kind": "stack"
+        }
+      ]
+    },
+    "techStack": [
+      "Docker",
+      "Swarm",
+      "Traefik",
+      "Cloudflare",
+      "Tailscale"
+    ],
+    "private": true,
+    "highlights": [
+      "Multi-node Swarm on Apple Silicon",
+      "Traefik + Cloudflare Tunnel public routing",
+      "Agent stacks, monitoring, and auto-discovery"
+    ],
+    "architecture": "GitHub deploy → Docker Swarm → Traefik → Cloudflare Tunnel → Public subdomains",
+    "businessContext": "Self-hosted infrastructure that proves production patterns — ingress, TLS, CI deploy, and observability — without a hyperscaler bill.",
+    "scopeAndScale": "Three Tailscale nodes (cluster1–cluster3) hosting portfolio, databases, chat, and agent workloads.",
+    "engineeringDecisions": [
+      "Swarm over k8s — Matches three-node Mac Mini footprint and operator simplicity",
+      "Tunnel over port-forward — Public exposure without opening the LAN edge"
+    ]
+  },
+  "github": {
+    "repoName": "homelab",
+    "owner": "duketopceo"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "slug": "ai-debate-arena",
+  "order": 8,
+  "curated": {
+    "era": "earlier",
+    "displayName": "AI Debate Arena",
+    "tagline": "Two AI agents debate any topic — OpenRouter routing and rich terminal UI",
+    "description": "Open-source terminal experience where two AI agents debate a topic using a Venn-diagram prompt system. Routes models through OpenRouter with a rich terminal UI for arguments, rebuttals, and synthesis.",
+    "category": "ai",
+    "type": "experiment",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "OpenRouter",
+      "Terminal UI"
+    ],
+    "private": false,
+    "highlights": [
+      "Dual-agent debate with structured Venn prompts",
+      "OpenRouter model routing for cloud models",
+      "Rich terminal UI for following the exchange"
+    ],
+    "architecture": "CLI → Prompt orchestrator → OpenRouter → Dual agent turns → Terminal renderer"
+  },
+  "github": {
+    "repoName": "ai-debate-arena",
+    "owner": "duketopceo"
+  }
+}

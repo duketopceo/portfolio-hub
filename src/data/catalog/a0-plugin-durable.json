@@ -1,0 +1,30 @@
+{
+  "slug": "a0-plugin-durable",
+  "order": 61,
+  "curated": {
+    "parentSlug": "agent-zero-plugins",
+    "displayName": "Agent Zero Plugin — Durable Tasks",
+    "tagline": "Restart-survivable agent tasks with a zero-dependency journal",
+    "description": "Agent Zero plugin making agent tasks durable and restart-survivable: a zero-dependency SQLite journal engine with an optional Restate adapter.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "SQLite",
+      "Durability"
+    ],
+    "private": false,
+    "highlights": [
+      "Tasks survive process restarts",
+      "Zero-dependency SQLite journal",
+      "Optional Restate adapter for stronger guarantees"
+    ],
+    "architecture": "Task start → SQLite journal append → restart → journal replay → resume"
+  },
+  "github": {
+    "repoName": "a0-plugin-durable",
+    "owner": "duketopceo"
+  }
+}

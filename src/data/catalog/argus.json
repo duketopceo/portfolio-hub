@@ -1,0 +1,67 @@
+{
+  "slug": "argus",
+  "order": 2,
+  "curated": {
+    "displayName": "Argus",
+    "tagline": "Vision-model E2E testing — record once, fingerprint-cache every step, heal on drift, cost-metered per run",
+    "description": "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced.",
+    "category": "ai",
+    "type": "library",
+    "featured": true,
+    "planetVisual": {
+      "size": "lg",
+      "shape": "diamond",
+      "color": "#F472B6",
+      "rings": [
+        {
+          "opacity": 0.3,
+          "tilt": -16
+        }
+      ],
+      "moons": [
+        {
+          "label": "Playwright",
+          "kind": "stack"
+        },
+        {
+          "label": "OpenRouter",
+          "kind": "stack"
+        }
+      ]
+    },
+    "demoUrl": "/demos/argus",
+    "film": {
+      "url": "https://media.luke-the-duke.com/demos/argus-witness.mp4",
+      "poster": "https://media.luke-the-duke.com/launch/argus-poster.jpg",
+      "transcript": "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift."
+    },
+    "techStack": [
+      "TypeScript",
+      "Playwright",
+      "OpenRouter",
+      "GitHub Actions",
+      "Docker"
+    ],
+    "private": false,
+    "highlights": [
+      "Cache-first replay — zero vision calls on unchanged UI",
+      "Cost-explicit — per-run dollar figure on the PR report",
+      "Heal-on-drift with reviewable cache diffs",
+      "Sandbox lane reproduces review findings, stamped not suspected",
+      "CodeRabbit-style review surface — formal GitHub reviews that satisfy required-approvals",
+      "Published npm package argus-reviewer-e2e (v0.3.x)"
+    ],
+    "architecture": "Record (Playwright + vision model) → fingerprint cache → replay/heal → GitHub check + formal review with per-call cost ledger",
+    "businessContext": "Selector-based E2E is brittle and vision E2E is expensive. Argus makes vision testing cost-predictable: cache hits are free, heals are reviewable, and every run carries an exact dollar figure.",
+    "scopeAndScale": "Published npm package (argus-reviewer-e2e), GitHub Action runner, self-hosted. BYOK via OPENROUTER_API_KEY with hard budget caps.",
+    "engineeringDecisions": [
+      "Fingerprint cache over re-invocation — Vision calls only on drift, not every run",
+      "DOM-verified grounding — Model coordinate output checked against the DOM before any click",
+      "Cost ledger first-class — Per-call OpenRouter pricing rolled into the run report"
+    ]
+  },
+  "github": {
+    "repoName": "Argus",
+    "owner": "duketopceo"
+  }
+}

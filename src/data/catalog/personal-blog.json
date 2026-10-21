@@ -1,0 +1,31 @@
+{
+  "slug": "personal-blog",
+  "order": 23,
+  "curated": {
+    "displayName": "Technical Blog",
+    "tagline": "Personal blog and writing platform",
+    "description": "Custom-built blogging platform with a headless CMS backend, server-side rendered with Next.js for SEO optimization. Features a clean reading experience with automatic dark mode, code syntax highlighting with language detection, and RSS feed generation. The editing interface supports markdown with live preview and image optimization.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://blog.luke-the-duke.com",
+    "demoUrl": "https://blog.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "TypeScript",
+      "Next.js",
+      "CMS"
+    ],
+    "private": true,
+    "demoOffline": true,
+    "highlights": [
+      "Custom CMS integration",
+      "SEO optimization and RSS generation",
+      "Syntax highlighting for code blocks"
+    ]
+  },
+  "github": {
+    "repoName": "Luke-the-Duke-Blogger",
+    "owner": "duketopceo"
+  }
+}

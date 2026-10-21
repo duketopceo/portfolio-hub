@@ -1,0 +1,28 @@
+{
+  "slug": "crucible",
+  "order": 44,
+  "curated": {
+    "displayName": "Crucible",
+    "tagline": "Experimental AI / LLM project",
+    "description": "Experimental AI/LLM project currently in active development. README and scope to be finalized; treated as a work-in-progress dossier.",
+    "category": "ai",
+    "type": "experiment",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "LLM",
+      "Experiment"
+    ],
+    "private": false,
+    "highlights": [
+      "Active experimental AI work",
+      "README and scope being finalized",
+      "Dossier will expand as project matures"
+    ],
+    "architecture": "TBD — follow README once scope is documented"
+  },
+  "github": {
+    "repoName": "crucible",
+    "owner": "duketopceo"
+  }
+}

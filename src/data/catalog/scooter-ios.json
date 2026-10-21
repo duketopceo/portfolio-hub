@@ -1,0 +1,43 @@
+{
+  "slug": "scooter-ios",
+  "order": 66,
+  "curated": {
+    "displayName": "Scooter",
+    "tagline": "No-account iPhone remote for an electric scooter, over Bluetooth LE",
+    "description": "A lightweight Swift/SwiftUI app that talks to a HopCycle W3 Max electric scooter directly over Bluetooth LE: a native port of the Voltix FF60 protocol recovered from the vendor's Android app. No backend, no cloud, no account. Private repository.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "Swift",
+      "SwiftUI",
+      "CoreBluetooth",
+      "XcodeGen"
+    ],
+    "private": true,
+    "highlights": [
+      "BLE protocol recovered from the vendor's Android app: service UUIDs, frame layout, CRC-16",
+      "Live dashboard (speed, battery, fault code), lock, lights, gear, speed limit, cruise control",
+      "Unbind, reset and OTA commands deliberately not implemented",
+      "No backend, no cloud, no account binding"
+    ],
+    "architecture": "SwiftUI → CoreBluetooth → scooter BLE service FF60 (notify and write characteristics)",
+    "showcase": {
+      "whatItIs": "An iPhone remote for a HopCycle W3 Max electric scooter that talks to it directly over Bluetooth LE, with no backend, cloud or account.",
+      "whoItsFor": "Owners of a HopCycle W3 Max who want control without binding to the vendor's cloud account.",
+      "whatLukeBuilt": "A native Swift/SwiftUI port of the Voltix FF60 BLE protocol, decoded from the vendor's Android app: scan and connect, a live dashboard, lock and unlock, lights, gear, speed limit and cruise control. Unbind, reset and OTA commands are deliberately left out so the app cannot brick the scooter.",
+      "stack": [
+        "Swift",
+        "SwiftUI",
+        "CoreBluetooth",
+        "XcodeGen",
+        "Python (reference client)"
+      ],
+      "status": "Working client. UUIDs, frame layout and CRC are high confidence; telemetry decoding is provisional until checked against the scooter's display."
+    }
+  },
+  "github": {
+    "repoName": "scooter-ios",
+    "owner": "duketopceo"
+  }
+}

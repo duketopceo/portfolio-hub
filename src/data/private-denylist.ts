@@ -2,7 +2,7 @@
  * Identifiers that must never appear in rendered output (R8, R12).
  *
  * Private catalog entries are NOT hand-listed here: `scripts/check-privacy-built.mjs`
- * derives their `owner/repo` slugs and GitHub URLs from `src/data/projects*.ts`
+ * derives their `owner/repo` slugs and GitHub URLs from `src/data/catalog/*.json`
  * on every run, so new private entries are covered automatically.
  * `derivePrivateRepoSlugs` is the typed twin of that derivation; a unit test
  * keeps the two in agreement.

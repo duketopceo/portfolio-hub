@@ -1,0 +1,29 @@
+{
+  "slug": "omaseal",
+  "order": 43,
+  "curated": {
+    "displayName": "OmaSeal",
+    "tagline": "First-party keyring manager for Omarchy",
+    "description": "First-party keyring manager for the Omarchy environment. Securely stores and retrieves credentials for plugins and services.",
+    "category": "apps",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "Omarchy",
+      "Security",
+      "Keyring"
+    ],
+    "private": false,
+    "highlights": [
+      "First-party keyring for Omarchy",
+      "Plugin credential store",
+      "Secure retrieval API"
+    ],
+    "architecture": "Keyring backend → encrypted store → plugin credential API → Omarchy UI"
+  },
+  "github": {
+    "repoName": "OmaSeal",
+    "owner": "duketopceo"
+  }
+}

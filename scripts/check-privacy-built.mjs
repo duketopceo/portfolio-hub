@@ -24,23 +24,23 @@ const defaultOwner = quoted(
 const workOrgs = listOf("workOrgNames");
 const domains = listOf("employerDomains");
 
-// Private catalog entries, read from the data files. Each entry opens at
-// `repoName:`; `repoOwner:` and `private:` follow inside the same entry.
+// Private catalog entries, read from src/data/catalog/*.json (one file per
+// entry: `slug`, `curated.displayName`, `curated.private`, `github.repoName/owner`).
 const slugs = new Set();
 const bareNames = new Set(); // private repoNames, for the quoted-token scan
 const publicNames = new Set(); // slugs + displayNames: public by design
-for (const file of readdirSync(join(repoRoot, "src/data")).filter((f) => /^projects.*\.ts$/.test(f))) {
-  const src = read(join(repoRoot, "src/data", file));
-  for (const m of src.matchAll(/\n\s*(?:slug|displayName):\s*"([^"]+)"/g)) publicNames.add(m[1].toLowerCase());
-  const chunks = src.split(/\n\s*repoName:/).slice(1);
-  for (const chunk of chunks) {
-    const name = chunk.match(/^\s*"([^"]+)"/)?.[1];
-    const entry = chunk.split(/\n\s*slug:/)[0];
-    if (!name || !/\n\s*private:\s*true\b/.test(entry)) continue;
-    const owner = entry.match(/\n\s*repoOwner:\s*"([^"]+)"/)?.[1] ?? defaultOwner;
-    slugs.add(`${owner}/${name}`);
-    bareNames.add(name);
-  }
+const catalogDir = join(repoRoot, "src/data/catalog");
+const catalogFiles = existsSync(catalogDir)
+  ? readdirSync(catalogDir).filter((f) => f.endsWith(".json"))
+  : [];
+for (const file of catalogFiles) {
+  const entry = JSON.parse(read(join(catalogDir, file)));
+  publicNames.add(String(entry.slug).toLowerCase());
+  if (entry.curated?.displayName) publicNames.add(entry.curated.displayName.toLowerCase());
+  const name = entry.github?.repoName;
+  if (!name || entry.curated?.private !== true) continue;
+  slugs.add(`${entry.github.owner ?? defaultOwner}/${name}`);
+  bareNames.add(name);
 }
 // A bare repoName that equals a listed slug or displayName is public anyway.
 const exempt = [...bareNames].filter((n) => publicNames.has(n.toLowerCase()));

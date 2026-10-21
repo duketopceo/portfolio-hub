@@ -28,12 +28,11 @@ import pathlib
 HUB = pathlib.Path.home() / "workspace" / "portfolio-hub"
 
 
-def slugs(p):
-    return re.findall(r"^\s*slug:\s*['\"]([^'\"]+)['\"]", p.read_text(), re.M) if p.exists() else []
+def slugs(d):
+    return [json.loads(f.read_text())["slug"] for f in sorted(d.glob("*.json"))] if d.exists() else []
 
 
-catalog = {s.lower().replace("_", "-")
-           for s in slugs(HUB / "src/data/projects.ts") + slugs(HUB / "src/data/projects-ext.ts")}
+catalog = {s.lower().replace("_", "-") for s in slugs(HUB / "src/data/catalog")}
 
 TEST_RE = re.compile(r"(^|/)(tests?|__tests__|spec)/|(_test|\.test|_spec|\.spec)\.[a-z]+$", re.I)
 originals = [r for r in meta if not r.get("isFork") and not r.get("isArchived")]

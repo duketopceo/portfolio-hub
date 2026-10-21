@@ -1,0 +1,28 @@
+{
+  "slug": "open-computer",
+  "order": 52,
+  "curated": {
+    "displayName": "Open Computer",
+    "tagline": "Open-source multi-model computer-use agent with disposable sandboxes",
+    "description": "Open-source equivalent of a cloud computer-use agent: multi-model routing, disposable sandboxed execution, and hybrid local/cloud placement.",
+    "category": "ai",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Sandboxing",
+      "Multi-Model Routing"
+    ],
+    "private": false,
+    "highlights": [
+      "Multi-model routing across providers",
+      "Disposable sandboxed execution per task",
+      "Hybrid local and cloud placement"
+    ],
+    "architecture": "Task intake → model routing → disposable sandbox → execution → result capture"
+  },
+  "github": {
+    "repoName": "open-computer",
+    "owner": "duketopceo"
+  }
+}

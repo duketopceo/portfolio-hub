@@ -1,0 +1,30 @@
+{
+  "slug": "omarchy-wisp",
+  "order": 37,
+  "curated": {
+    "parentSlug": "wisp",
+    "displayName": "Wisp Shell",
+    "tagline": "Voice companion surface — orb, ghost cursor, agent panel",
+    "description": "Omarchy shell plugin for Wisp, the resident voice companion: renders wispd's live state as a companion orb with mode badge, cursor-adjacent answer bubble, listening pill, ghost cursor, and a full agent/telemetry panel.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "QML",
+      "Omarchy",
+      "whisper.cpp",
+      "MCP"
+    ],
+    "private": false,
+    "highlights": [
+      "Companion orb + ghost cursor + listening pill overlays",
+      "Panel with Now/Agents/Activity/Telemetry/Skills tabs",
+      "Pairs with wispd — push-to-talk voice → routed agent actions"
+    ],
+    "architecture": "wispd state.json → shell widgets (orb/bubble/pill/cursor) + panel"
+  },
+  "github": {
+    "repoName": "omarchy-wisp",
+    "owner": "duketopceo"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "slug": "omarchy-ticker",
+  "order": 31,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Omarchy Ticker",
+    "tagline": "Gold, tech, nuclear, energy, and rates in the Omarchy bar",
+    "description": "Market ticker for the Omarchy bar. Tracks gold, tech, nuclear, energy, and interest-rate signals in a compact, glanceable stream.",
+    "category": "finance",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "Omarchy",
+      "Market Data"
+    ],
+    "private": false,
+    "highlights": [
+      "Multi-asset market ticker in the menu bar",
+      "Gold, tech, nuclear, energy, rates coverage",
+      "Compact always-visible UI"
+    ],
+    "architecture": "Data feed → ticker engine → Omarchy bar widget"
+  },
+  "github": {
+    "repoName": "omarchy-ticker",
+    "owner": "duketopceo"
+  }
+}

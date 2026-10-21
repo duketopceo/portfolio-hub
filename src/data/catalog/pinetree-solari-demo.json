@@ -1,0 +1,30 @@
+{
+  "slug": "pinetree-solari-demo",
+  "order": 69,
+  "curated": {
+    "displayName": "Pinetree Solari Demo",
+    "tagline": "Browser-to-sandbox pipeline that turns live SaaS pricing pages into CSV and JSON",
+    "description": "A Solari demo built for a SWE intern application. One cloud browser loads each configured pricing page, a headless sandbox parses it with a shared parser in two modes (class-based for React pricing cards, heading-based heuristic for conventional pages), and the host merges the per-site output into one CSV and one JSON. The parser is unit-tested against sample HTML without an API key.",
+    "category": "data",
+    "type": "experiment",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Solari browser",
+      "Solari sandbox",
+      "html.parser"
+    ],
+    "private": false,
+    "highlights": [
+      "Multi-URL pipeline from cloud browser to isolated sandbox",
+      "Two parsing modes for different pricing-page layouts",
+      "Combined pricing.csv and pricing.json from a verified live run",
+      "Runs inside the Solari Free plan: one browser, one sandbox, released on exit"
+    ],
+    "architecture": "sites.json → cloud browser → HTML upload → sandbox parser → per-site output → merged CSV and JSON"
+  },
+  "github": {
+    "repoName": "pinetree-solari-demo",
+    "owner": "duketopceo"
+  }
+}

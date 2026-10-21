@@ -1,0 +1,30 @@
+{
+  "slug": "omarchy-agents",
+  "order": 27,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Omarchy Agents",
+    "tagline": "Claude Code, Codex, and Fireworks usage panel in the Omarchy bar",
+    "description": "Native Omarchy bar panel that tracks AI-coding agent usage — Claude Code, Codex, and Fireworks — showing limits, burn rates, and daily pace in a compact HUD.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "Omarchy",
+      "OpenRouter",
+      "Claude Code"
+    ],
+    "private": false,
+    "highlights": [
+      "Live usage telemetry for multiple agent runtimes",
+      "Limit and budget pacing UI",
+      "Native Omarchy bar widget"
+    ],
+    "architecture": "Omarchy bar widget → usage counters → per-model limit tracking → compact HUD"
+  },
+  "github": {
+    "repoName": "omarchy-agents",
+    "owner": "duketopceo"
+  }
+}

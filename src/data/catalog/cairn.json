@@ -1,0 +1,50 @@
+{
+  "slug": "cairn",
+  "order": 64,
+  "curated": {
+    "displayName": "Cairn",
+    "tagline": "iOS-first study app: upload anything, quiz until you know it",
+    "description": "Upload anything you are studying; Cairn turns it into a study set, quizzes you until you know it, and shows your mastery over time. Built around retrieval practice and successive relearning, with a quality gate on every generated question. Private repository.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "Swift",
+      "SwiftUI",
+      "Next.js",
+      "Cloudflare Workers",
+      "D1",
+      "OpenRouter"
+    ],
+    "private": true,
+    "highlights": [
+      "Retrieval practice and successive relearning: quiz until you pass, then again across days",
+      "Quality gate on every generated question",
+      "One AI gateway through OpenRouter, open-weight models preferred, with Apple on-device models for cheap tasks",
+      "iOS built from Linux with xtool, shipped to TestFlight from a Mac"
+    ],
+    "architecture": "SwiftUI app → Next.js API on Cloudflare Workers (OpenNext) → D1, R2, Vectorize, Queues → OpenRouter gateway",
+    "showcase": {
+      "whatItIs": "A study app. You upload what you are studying, Cairn turns it into a study set, quizzes you until you know it, and shows your mastery over time.",
+      "whoItsFor": "One student studying alone; accounts are for ages 13 and up.",
+      "whatLukeBuilt": "An iOS-first SwiftUI app built on Linux with xtool, and a Next.js backend on Cloudflare Workers with D1 and R2. One AI gateway through OpenRouter, preferring open-weight models, with Apple on-device Foundation Models for cheap tasks. A quality gate checks every generated question.",
+      "stack": [
+        "Swift",
+        "SwiftUI",
+        "xtool",
+        "Next.js",
+        "Cloudflare Workers",
+        "D1",
+        "R2",
+        "Vectorize",
+        "Queues",
+        "OpenRouter"
+      ],
+      "status": "Early development. The backend is deployed; an internal TestFlight build is being prepared."
+    }
+  },
+  "github": {
+    "repoName": "cairn",
+    "owner": "duketopceo"
+  }
+}

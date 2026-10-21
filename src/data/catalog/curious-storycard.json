@@ -1,0 +1,35 @@
+{
+  "slug": "curious-storycard",
+  "order": 24,
+  "curated": {
+    "era": "earlier",
+    "displayName": "Curious",
+    "tagline": "Instagram for curiosity — swipeable knowledge cards with rich media storytelling",
+    "description": "Native iOS app that reimagines content consumption as swipeable story cards. Each card presents a bite-sized topic with rich media — images, key facts, and narrative text — in a format designed for casual learning. Features a card creation workflow, discovery feed, and personal library. Built with Swift and SwiftUI, with a Docker-hosted backend API and PostgreSQL database.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://curious.luke-the-duke.com",
+    "demoUrl": "https://curious.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "Swift",
+      "SwiftUI",
+      "Docker",
+      "PostgreSQL",
+      "REST API"
+    ],
+    "private": true,
+    "demoOffline": true,
+    "highlights": [
+      "Native iOS with SwiftUI interface",
+      "Swipeable card-based content experience",
+      "Docker-hosted backend with PostgreSQL",
+      "36 passing backend tests with CI pipeline"
+    ]
+  },
+  "github": {
+    "repoName": "curious-storycard",
+    "owner": "duketopceo"
+  }
+}

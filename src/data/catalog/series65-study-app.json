@@ -1,0 +1,36 @@
+{
+  "slug": "series65-study-app",
+  "order": 19,
+  "curated": {
+    "era": "earlier",
+    "displayName": "Series 65 Study Hub",
+    "tagline": "Multi-course study platform — Series 65 exam prep with adaptive quizzing and progress tracking",
+    "description": "Full-stack study platform built for the Series 65 (Uniform Investment Adviser Law Examination) with a multi-course architecture designed to expand into additional subjects. Features chapter-by-chapter quizzing, cumulative exams, progress tracking, and anti-cheating enforcement. The platform includes a hub dashboard with course cards, full CI/CD pipeline with GitHub Actions, Playwright end-to-end tests, and security hardening. Built with Next.js and deployed on Docker Swarm.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://study.luke-the-duke.com",
+    "demoUrl": "https://study.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "TypeScript",
+      "Next.js",
+      "Playwright",
+      "Docker",
+      "CI/CD"
+    ],
+    "private": true,
+    "demoOffline": true,
+    "highlights": [
+      "Multi-course architecture with extensible schema",
+      "Adaptive quizzing with anti-cheating enforcement",
+      "Full CI/CD with Playwright e2e test suite",
+      "Progress tracking and performance analytics"
+    ],
+    "architecture": "Next.js SSR → Course content engine → Quiz system → Progress tracker → Docker Swarm deployment"
+  },
+  "github": {
+    "repoName": "series65-study-app",
+    "owner": "duketopceo"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "quiz-the-best",
+  "order": 14,
+  "curated": {
+    "era": "earlier",
+    "displayName": "QuizTheBest",
+    "tagline": "LLM-powered study tool — auto-generates quizzes and flashcards from any source",
+    "description": "Study tool that uses large language models to automatically generate quizzes and flashcards from web content. Extracts key concepts from any URL, generates question-answer pairs, and presents them in an adaptive learning interface.",
+    "category": "ai",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://quiz.luke-the-duke.com",
+    "demoUrl": "https://quiz.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "TypeScript",
+      "LLM APIs",
+      "React Native",
+      "NLP"
+    ],
+    "private": false,
+    "demoOffline": true,
+    "highlights": [
+      "Automatic quiz generation from web sources",
+      "Adaptive learning algorithm",
+      "Cross-platform mobile interface"
+    ]
+  },
+  "github": {
+    "repoName": "QuizTheBest",
+    "owner": "duketopceo"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "omarchy-numbat",
+  "order": 34,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Numbat",
+    "tagline": "AI-agent activity radar — Perplexity numbat findings on the bar",
+    "description": "Bar widget + panel over Perplexity's open-source numbat agentic monitor. Severity-gated toasts on new findings only (with per-rule cooldowns, burst coalescing, DND suppression), unseen-count badge, agent filters, and a rotation hint for the unbounded records file.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "QML",
+      "Omarchy",
+      "Python",
+      "Numbat"
+    ],
+    "private": false,
+    "highlights": [
+      "Severity-gated toasts — quiet by default, critical stays until clicked",
+      "Per-rule cooldown + burst coalescing keeps alerts honest",
+      "Read-only: tails records.ndjson, never writes to the monitor",
+      "Listed on the official Omarchy plugin marketplace"
+    ],
+    "architecture": "numbat records tail → findings feed (1MiB bounded tail) → severity gate → toasts + panel"
+  },
+  "github": {
+    "repoName": "omarchy-numbat",
+    "owner": "duketopceo"
+  }
+}

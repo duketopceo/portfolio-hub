@@ -1,0 +1,77 @@
+{
+  "slug": "khan",
+  "order": 0,
+  "curated": {
+    "displayName": "Khan",
+    "tagline": "OpenRouter-native Agent Zero fork — Temporal, LiteLLM workers, risk scoring, MCP, Rust CLI",
+    "description": "Khan is a real agent harness built in a concentrated Aug 7–13 sprint: Temporal orchestration, OpenRouter-backed routing, LiteLLM workers, risk scoring, MCP tool surfaces, and a Rust CLI. Ships alongside khanai.app as the public face of the stack. Plugin-first, secret-first operations with a multi-agent coordination board — not a self-hosted GPU or local inference cluster.",
+    "category": "ai",
+    "type": "platform",
+    "featured": true,
+    "planetVisual": {
+      "size": "xl",
+      "shape": "sphere",
+      "color": "#A78BFA",
+      "rings": [
+        {
+          "opacity": 0.38,
+          "tilt": -22
+        },
+        {
+          "opacity": 0.22,
+          "tilt": 28
+        }
+      ],
+      "moons": [
+        {
+          "label": "Temporal",
+          "kind": "stack"
+        },
+        {
+          "label": "MCP",
+          "kind": "stack"
+        },
+        {
+          "label": "khanai",
+          "kind": "live",
+          "href": "https://khanai.app"
+        }
+      ]
+    },
+    "techStack": [
+      "Python",
+      "Temporal",
+      "OpenRouter",
+      "LiteLLM",
+      "MCP",
+      "Rust CLI"
+    ],
+    "private": true,
+    "showcase": {
+      "whatItIs": "A personal, Linux-backed agent harness with OpenRouter as the default model path. It is a private fork of Agent Zero with Khan's own CLI, secret vault and memory layer on top.",
+      "whoItsFor": "One operator running their own agent on their own box, with any model behind it.",
+      "whatLukeBuilt": "OpenRouter-native routing through LiteLLM, a host CLI (up, login, ask, chat, memory, sync, remote), a secret vault that keeps keys out of settings files, typed contracts for memory, verification, trust and task runtime, an optional Temporal durable-execution adapter, and the khanai.app landing site and installer.",
+      "stack": [
+        "Python",
+        "Docker",
+        "LiteLLM",
+        "OpenRouter",
+        "Temporal",
+        "MCP"
+      ],
+      "status": "Built in a concentrated burst in August 2026. The CLI, vault and memory persistence work; the live agent loop is not fully wired to the typed contracts yet, and release downloads are not published."
+    },
+    "highlights": [
+      "Temporal + OpenRouter orchestration with LiteLLM workers",
+      "Risk scoring and MCP tool surfaces for agent workflows",
+      "Rust CLI for operator tasks",
+      "Public surface at khanai.app"
+    ],
+    "architecture": "Temporal workflows → OpenRouter/LiteLLM workers → Risk scoring → MCP tools → Rust CLI + khanai.app",
+    "finishLine": "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Rust CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild."
+  },
+  "github": {
+    "repoName": "Khan",
+    "owner": "duketopceo"
+  }
+}

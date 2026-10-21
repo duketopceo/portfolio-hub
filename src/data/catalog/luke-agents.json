@@ -1,0 +1,35 @@
+{
+  "slug": "luke-agents",
+  "order": 7,
+  "curated": {
+    "displayName": "Luke Agents",
+    "tagline": "King-file standards for AI-assisted engineering — Karpathy principles, guardrails, inheritance",
+    "description": "Source of truth for AI agent behavior across Luke Kimball repositories: constitution (AGENTS.md), Karpathy principles, guardrails, code and testing standards, and tool ecosystem docs. Other repos inherit via thin local AGENTS.md pointers so agents stay consistent without copy-paste drift.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Markdown",
+      "Agent Standards",
+      "MCP",
+      "Guardrails"
+    ],
+    "private": true,
+    "highlights": [
+      "Single inheritance root for agent behavior",
+      "Immutable Karpathy principles + evolving guardrails",
+      "Repo-local AGENTS.md specialization pattern"
+    ],
+    "architecture": "luke-agents constitution → Repo AGENTS.md pointers → Agent runtimes (Cursor, Claude, Codex)",
+    "businessContext": "Multi-repo agent work fails when each project invents its own rules. Luke Agents centralizes engineering gospel so every session starts from the same constitution.",
+    "scopeAndScale": "Cross-repo standards consumed by active application and infra repositories.",
+    "engineeringDecisions": [
+      "Inheritance over duplication — Thin repo pointers prevent forked standards",
+      "Principles immutable, patterns evolve — Separates gospel from tactical guidance"
+    ]
+  },
+  "github": {
+    "repoName": "luke-agents",
+    "owner": "duketopceo"
+  }
+}

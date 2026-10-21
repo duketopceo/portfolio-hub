@@ -13,6 +13,7 @@
     "check:design": "node scripts/check-design-system.mjs",
     "check:privacy": "node scripts/check-privacy.mjs",
     "check:privacy:built": "node scripts/check-privacy-built.mjs",
+    "catalog:index": "node scripts/catalog-index.mjs",
     "notion:seed": "node scripts/notion/seed-episodes.mjs"
   },
   "dependencies": {
@@ -25,7 +26,8 @@
     "next": "16.3.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "three": "^0.186.0"
+    "three": "^0.186.0",
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",

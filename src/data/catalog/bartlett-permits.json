@@ -1,0 +1,30 @@
+{
+  "slug": "bartlett-permits",
+  "order": 45,
+  "curated": {
+    "displayName": "Bartlett Permits",
+    "tagline": "Permit operations platform for Bartlett Roofing",
+    "description": "Permit operations platform for Bartlett Roofing: map dashboard, SOP-first /ops cockpit, and automation sidecar. Express + React + FastAPI + PostgreSQL.",
+    "category": "apps",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "Express",
+      "React",
+      "FastAPI",
+      "PostgreSQL",
+      "Maps"
+    ],
+    "private": true,
+    "highlights": [
+      "Permit map dashboard and SOP cockpit",
+      "Automation sidecar for permit workflows",
+      "Multi-service Express/React/FastAPI stack"
+    ],
+    "architecture": "Map UI → permit service → FastAPI workflows → PostgreSQL → automation sidecar"
+  },
+  "github": {
+    "repoName": "bartlett-permits",
+    "owner": "duketopceo"
+  }
+}

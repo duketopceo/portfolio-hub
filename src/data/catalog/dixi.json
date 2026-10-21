@@ -1,0 +1,33 @@
+{
+  "slug": "dixi",
+  "order": 20,
+  "curated": {
+    "displayName": "Dixi",
+    "tagline": "AI-powered interactive projection system with computer vision and gesture recognition",
+    "description": "AI-powered interactive projection system using computer vision, gesture recognition, and real-time AI to transform any surface into a responsive knowledge canvas. Features MediaPipe-based hand/face/pose tracking, WebGL 3D scene rendering, and a multi-service architecture with Express backend, Vite React frontend, and Python vision pipeline.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://dixi.luke-the-duke.com",
+    "demoUrl": "https://dixi.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "TypeScript",
+      "React",
+      "Node.js",
+      "Python",
+      "MediaPipe"
+    ],
+    "private": false,
+    "demoOffline": true,
+    "highlights": [
+      "End-to-end TypeScript type safety",
+      "Server-side rendering with API routes",
+      "Modern React patterns and responsive UI"
+    ]
+  },
+  "github": {
+    "repoName": "Dixi",
+    "owner": "duketopceo"
+  }
+}

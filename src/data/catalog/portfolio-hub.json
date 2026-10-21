@@ -1,0 +1,33 @@
+{
+  "slug": "portfolio-hub",
+  "order": 67,
+  "curated": {
+    "displayName": "Cosmic Intelligence",
+    "tagline": "This site: a star-chart portfolio with live GitHub activity and a dossier per project",
+    "description": "The Next.js app behind luke-the-duke.com. The homepage is a solar map with a primary orbit of featured systems and a secondary orbit of the rest of the catalog; each project has a dossier page. A GitHub App ingests about 90 days of activity, rendered as condensed charts and grouped pull requests. The catalog in src/data is the single source of truth, nothing is auto-discovered.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Three.js",
+      "GitHub App",
+      "Vitest",
+      "Playwright"
+    ],
+    "private": false,
+    "highlights": [
+      "Solar-map homepage: primary and secondary orbits driven from catalog data",
+      "About 90 days of GitHub App activity, shown as charts and grouped PRs with a 7d / 30d / 90d toggle",
+      "Dossier page per project, with private work shown through scrubbed labels only",
+      "Catalog SOP and tests keep the single source of truth consistent"
+    ],
+    "architecture": "Catalog (src/data) → GitHub App ingest (ISR) → activity aggregation → orbit and dossier pages"
+  },
+  "github": {
+    "repoName": "portfolio-hub",
+    "owner": "duketopceo"
+  }
+}

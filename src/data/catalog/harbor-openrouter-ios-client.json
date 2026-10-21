@@ -1,0 +1,29 @@
+{
+  "slug": "harbor-openrouter-ios-client",
+  "order": 49,
+  "curated": {
+    "displayName": "Harbor OpenRouter iOS Client",
+    "tagline": "Unofficial OpenRouter iOS client with BYOK",
+    "description": "Unofficial OpenRouter iOS client. BYOK, not affiliated with OpenRouter. Private mobile app project.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "Swift",
+      "iOS",
+      "OpenRouter",
+      "BYOK"
+    ],
+    "private": true,
+    "highlights": [
+      "OpenRouter chat interface on iOS",
+      "Bring-your-own-key model",
+      "Unofficial, private client"
+    ],
+    "architecture": "iOS client → OpenRouter chat API → keyring → BYOK chat UI"
+  },
+  "github": {
+    "repoName": "harbor-openrouter-ios-client",
+    "owner": "duketopceo"
+  }
+}

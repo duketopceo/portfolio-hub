@@ -1,0 +1,31 @@
+{
+  "slug": "a0-plugin-omaseal",
+  "order": 58,
+  "curated": {
+    "parentSlug": "agent-zero-plugins",
+    "displayName": "Agent Zero Plugin — OmaSeal",
+    "tagline": "One secrets interface for Agent Zero, with masked values only",
+    "description": "One secrets interface for Agent Zero. Resolves keys through the OmaSeal keyring, 1Password, environment, or an encrypted vault; agents see names and masked values only.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "OmaSeal",
+      "1Password",
+      "Secrets"
+    ],
+    "private": false,
+    "highlights": [
+      "Single resolution path across four secret backends",
+      "Agents never receive plaintext values",
+      "Keyring, 1Password, env, and encrypted vault support"
+    ],
+    "architecture": "Agent request → secret resolver → backend (keyring/1Password/env/vault) → masked value"
+  },
+  "github": {
+    "repoName": "a0-plugin-omaseal",
+    "owner": "duketopceo"
+  }
+}

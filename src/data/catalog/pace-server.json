@@ -1,0 +1,100 @@
+{
+  "slug": "pace-server",
+  "order": 4,
+  "curated": {
+    "displayName": "Pace Server",
+    "tagline": "Sustained production platform — Hetzner, Railway, Cloudflare, Grafana-as-code",
+    "description": "Pace Server (Pace HQ) is the sustained production platform: Rust/Axum gateway, Go/Chi agent backend, and scaffolded Python/LangGraph reasoning on Supabase Postgres with RLS. Identity, billing (Stripe), and auth (Stytch) are live at pacehq.io and app.pacehq.io. Remaining ~20%: real tool execution and the Python reasoning service — not vapor.",
+    "category": "ai",
+    "type": "platform",
+    "featured": true,
+    "planetVisual": {
+      "size": "lg",
+      "shape": "cube",
+      "color": "#A78BFA",
+      "rings": [
+        {
+          "opacity": 0.35,
+          "tilt": -18
+        },
+        {
+          "opacity": 0.18,
+          "tilt": 24
+        }
+      ],
+      "moons": [
+        {
+          "label": "pacehq",
+          "kind": "live",
+          "href": "https://pacehq.io"
+        },
+        {
+          "label": "Stripe",
+          "kind": "stack"
+        },
+        {
+          "label": "Grafana",
+          "kind": "stack"
+        }
+      ]
+    },
+    "techStack": [
+      "Rust",
+      "Axum",
+      "Go",
+      "Chi",
+      "Python",
+      "LangGraph",
+      "React",
+      "Supabase",
+      "Stripe",
+      "Railway"
+    ],
+    "private": true,
+    "film": {
+      "url": "https://media.luke-the-duke.com/demos/pace-debut.mp4",
+      "poster": "https://media.luke-the-duke.com/launch/pace-poster.jpg",
+      "transcript": "A launch film for Pace, the production platform for identity, billing and AI for small businesses."
+    },
+    "showcase": {
+      "whatItIs": "A private business cloud for small businesses: one login, one shell, integrated open-source business apps, and an agent layer that acts across them.",
+      "whoItsFor": "Small and mid-sized businesses that want cloud productivity without enterprise complexity.",
+      "whatLukeBuilt": "The platform end to end: a Rust/Axum gateway, a Go/Chi control service for entitlements and the agent harness, and a Python/LangGraph reasoning service, on Supabase Postgres with row-level security for tenant isolation. Stripe billing, Stytch auth, a React shell, and Grafana dashboards kept as code.",
+      "stack": [
+        "Rust",
+        "Axum",
+        "Go",
+        "Chi",
+        "Python",
+        "LangGraph",
+        "React",
+        "Supabase Postgres",
+        "Stripe",
+        "Stytch",
+        "OpenRouter",
+        "Cloudflare",
+        "Railway",
+        "Hetzner"
+      ],
+      "status": "Private beta, invite-only. Gateway, auth and billing are live at pacehq.io; the agent system is built but not yet taking real actions in production."
+    },
+    "highlights": [
+      "Platform live — gateway, auth, Stripe billing at pacehq.io",
+      "Tenant-aware agent pipeline with TierGate and tool registry",
+      "Multi-language stack: Rust gateway, Go agents, Python reasoning",
+      "Grafana-as-code observability on Railway and Hetzner"
+    ],
+    "architecture": "React shell → Rust/Axum gateway → Go/Chi agent backend → Python/LangGraph reasoning → Supabase Postgres + RLS",
+    "businessContext": "Small businesses need cloud productivity without enterprise complexity. Pace packages identity, billing, and AI into one operator-controlled story on real production infra.",
+    "scopeAndScale": "Production-stage multi-tenant platform; public surfaces at pacehq.io, app.pacehq.io, observe.pacehq.io, and status.pacehq.io.",
+    "engineeringDecisions": [
+      "Multi-host production — Hetzner compute, Railway app hosting, Cloudflare edge",
+      "Grafana-as-code — dashboards and alerts as versioned infrastructure"
+    ],
+    "finishLine": "Gateway, auth, and Stripe billing are live (pacehq.io, app.pacehq.io). Remaining ~20%: real tool execution and Python reasoning service hardening — hire is for last-mile finishing."
+  },
+  "github": {
+    "repoName": "Pace-Server",
+    "owner": "duketopceo"
+  }
+}

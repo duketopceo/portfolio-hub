@@ -1,0 +1,32 @@
+{
+  "slug": "collaborative-essay",
+  "order": 22,
+  "curated": {
+    "era": "earlier",
+    "displayName": "Collaborative Essay",
+    "tagline": "Real-time collaborative writing and editing tool",
+    "description": "Real-time collaborative writing tool that allows multiple users to edit documents simultaneously. Features conflict resolution, version history, and a clean editing interface built with WebSocket-based synchronization.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://essay.luke-the-duke.com",
+    "demoUrl": "https://essay.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "TypeScript",
+      "Real-time",
+      "WebSockets"
+    ],
+    "private": false,
+    "demoOffline": true,
+    "highlights": [
+      "Real-time multi-user collaboration",
+      "Conflict resolution and version history",
+      "WebSocket-based synchronization"
+    ]
+  },
+  "github": {
+    "repoName": "Collaborative-essay",
+    "owner": "duketopceo"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "slug": "rts-skyrim",
+  "order": 65,
+  "curated": {
+    "displayName": "RTS-Skyrim",
+    "tagline": "Command Skyrim NPCs like an RTS, simulated by 0 A.D. over a local WebSocket",
+    "description": "0 A.D. runs the simulation headless, a Python host mirrors it over a local WebSocket, and an SKSE plugin renders it as real Skyrim actors from a top-down command camera. Built around the Age of Skyrim mod. Private repository, work in progress.",
+    "category": "apps",
+    "type": "experiment",
+    "featured": false,
+    "techStack": [
+      "C++",
+      "SKSE",
+      "Python",
+      "WebSocket",
+      "0 A.D."
+    ],
+    "private": true,
+    "highlights": [
+      "Two-process design: headless 0 A.D. plus a Python host, mirrored to the game over WebSocket",
+      "SKSE plugin with an RTS camera, box selection, orders and a command grid",
+      "Written message protocol between host and plugin",
+      "Host covered by offline tests"
+    ],
+    "architecture": "0 A.D. (headless) ↔ Python host (RL HTTP) ↔ WebSocket ↔ SKSE plugin → Skyrim NPCs",
+    "showcase": {
+      "whatItIs": "A mod that lets you command Skyrim NPCs like an RTS. 0 A.D. owns economy, pathing and combat; Skyrim is the renderer and input device.",
+      "whoItsFor": "Skyrim Special Edition players; it is built around the Age of Skyrim mod.",
+      "whatLukeBuilt": "The Python bridge host that mirrors the 0 A.D. simulation, the SKSE plugin that renders it as Skyrim actors with a top-down camera, selection, orders and a command grid, and the WebSocket protocol between them.",
+      "stack": [
+        "C++",
+        "SKSE",
+        "CommonLibSSE-NG",
+        "Python",
+        "WebSocket",
+        "0 A.D."
+      ],
+      "status": "Work in progress, Windows only. The host is covered by offline tests; the plugin UI has not had a long human playtest."
+    }
+  },
+  "github": {
+    "repoName": "RTS-Skyrim",
+    "owner": "duketopceo"
+  }
+}

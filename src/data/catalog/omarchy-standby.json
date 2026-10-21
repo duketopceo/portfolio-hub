@@ -1,0 +1,29 @@
+{
+  "slug": "omarchy-standby",
+  "order": 30,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Omarchy Standby",
+    "tagline": "Fullscreen nightstand overlay for Omarchy",
+    "description": "Nightstand overlay with clock, weather, red-tint low-brightness mode, and caffeine toggles. Built as a fullscreen companion for Omarchy.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "Omarchy",
+      "UI"
+    ],
+    "private": false,
+    "highlights": [
+      "Red-tint low-brightness night mode",
+      "Clock and weather overlay",
+      "Caffeine toggle integration"
+    ],
+    "architecture": "Fullscreen overlay → clock/weather data → brightness and caffeine toggles"
+  },
+  "github": {
+    "repoName": "omarchy-standby",
+    "owner": "duketopceo"
+  }
+}

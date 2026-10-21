@@ -1,0 +1,29 @@
+{
+  "slug": "a0-plugin-jev-compact",
+  "order": 59,
+  "curated": {
+    "parentSlug": "agent-zero-plugins",
+    "displayName": "Agent Zero Plugin — Jev Compact",
+    "tagline": "Jev-scored context compaction with tombstone restore",
+    "description": "Agent Zero plugin for context compaction scored by Jev, with tombstone restore so compacted context can be recovered rather than lost.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "Jev",
+      "Context Management"
+    ],
+    "private": false,
+    "highlights": [
+      "Decision-model scoring drives what gets compacted",
+      "Tombstone restore for compacted spans"
+    ],
+    "architecture": "Context window → Jev span scoring → compaction → tombstone store → restore"
+  },
+  "github": {
+    "repoName": "a0-plugin-jev-compact",
+    "owner": "duketopceo"
+  }
+}

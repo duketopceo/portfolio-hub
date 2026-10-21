@@ -1,0 +1,30 @@
+{
+  "slug": "omarchy-power",
+  "order": 32,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Power",
+    "tagline": "Battery model + power profiles on the Omarchy bar",
+    "description": "Omarchy power plugin: battery percentage, charge state, and profile switching in the bar, backed by a small helper that reads /proc power data. Reworked battery model with consumer/history test coverage.",
+    "category": "apps",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "QML",
+      "Omarchy",
+      "Python",
+      "systemd"
+    ],
+    "private": false,
+    "highlights": [
+      "Bar battery state with profile switching",
+      "Helper reads /proc directly — no heavyweight deps",
+      "Listed on the official Omarchy plugin marketplace"
+    ],
+    "architecture": "sysfs/power_supply reader → percent/state model → bar widget + panel"
+  },
+  "github": {
+    "repoName": "omarchy-power",
+    "owner": "duketopceo"
+  }
+}
