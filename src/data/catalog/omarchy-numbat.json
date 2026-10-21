@@ -30,6 +30,22 @@
   },
   "github": {
     "repoName": "omarchy-numbat",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUeUIXg",
+    "description": "AI-agent activity radar for the Omarchy bar: a live agent list, a 24-hour findings count and a findings feed, from a read-only consumer.",
+    "topics": [
+      "agents",
+      "monitoring",
+      "omarchy",
+      "qml",
+      "widget"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 5865,
+    "commitCount": 23,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

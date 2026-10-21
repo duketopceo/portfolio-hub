@@ -28,6 +28,27 @@
   },
   "github": {
     "repoName": "omarchy-fan",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUOzNeQ",
+    "description": "RAM, CPU/GPU/NVMe thermals, top processes, and fan presets in the Omarchy bar.",
+    "topics": [
+      "fan",
+      "fan-control",
+      "hardware",
+      "hyprland",
+      "linux",
+      "monitoring",
+      "omarchy",
+      "qml",
+      "quickshell",
+      "wayland"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 5769,
+    "commitCount": 26,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

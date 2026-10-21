@@ -28,6 +28,23 @@
   },
   "github": {
     "repoName": "OmaSeal",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUP1xVQ",
+    "description": "One keyring for an Omarchy desktop: stores API keys in gnome-keyring and gives agents and plugins a single service/account interface.",
+    "topics": [
+      "gnome-keyring",
+      "go",
+      "keyring",
+      "omarchy",
+      "quickshell",
+      "secrets"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 17288,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v0.4.0"
   }
 }

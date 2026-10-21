@@ -55,6 +55,20 @@
   },
   "github": {
     "repoName": "openrouter-demos",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOT9Oq8g",
+    "description": "OpenRouter hiring demos: support deflect, GTM motion, model bakeoff.",
+    "topics": [
+      "llm-evals",
+      "openrouter",
+      "tool-calling"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 5851,
+    "commitCount": 36,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

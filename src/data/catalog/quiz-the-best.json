@@ -32,6 +32,27 @@
   },
   "github": {
     "repoName": "QuizTheBest",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOQSduOQ",
+    "description": "AI-powered study companion — generates flashcards, quizzes, and summaries from any topic. Web + Android with text-to-speech and export. Built with React, Node.js, and AWS Bedrock.",
+    "topics": [
+      "ai",
+      "aws-bedrock",
+      "education",
+      "firebase",
+      "flashcards",
+      "nodejs",
+      "quiz",
+      "react",
+      "react-native",
+      "typescript"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": true,
+    "readmeLength": 5306,
+    "commitCount": 21,
+    "lastCommitMonth": "2026-03",
+    "latestRelease": "v1.0.0"
   }
 }

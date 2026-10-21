@@ -28,6 +28,27 @@
   },
   "github": {
     "repoName": "ETL-Pipeline",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOPk7ztA",
+    "description": "Automated ETL pipeline for CSV data processing with intelligent cleaning, schema validation, and Google BigQuery integration. Built with Python, pandas, and Jupyter.",
+    "topics": [
+      "bigquery",
+      "csv",
+      "data-cleaning",
+      "data-engineering",
+      "data-pipeline",
+      "etl",
+      "google-cloud",
+      "jupyter",
+      "pandas",
+      "python"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": true,
+    "readmeLength": 4446,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-04",
+    "latestRelease": "v1.0.0"
   }
 }

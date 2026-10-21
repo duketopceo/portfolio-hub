@@ -30,6 +30,22 @@
   },
   "github": {
     "repoName": "omarchy-bumblebee",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUeUIMA",
+    "description": "Supply-chain exposure radar for the Omarchy bar. Scans packages, lockfiles, extension manifests and MCP configs against a catalog of known-compromised components.",
+    "topics": [
+      "omarchy",
+      "qml",
+      "security",
+      "supply-chain",
+      "widget"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 5292,
+    "commitCount": 17,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

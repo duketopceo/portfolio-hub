@@ -41,6 +41,27 @@
   },
   "github": {
     "repoName": "dayflow-linux",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUOuFSg",
+    "description": "Private, automatic work journal for Linux — a Dayflow (macOS) port. Local-first screen journal: timeline, standup, agent-session recaps, FTS5 search, forecasts. Omarchy panel or standalone CLI/TUI/MCP.",
+    "topics": [
+      "activity-tracker",
+      "hyprland",
+      "journaling",
+      "linux",
+      "omarchy",
+      "openrouter",
+      "productivity",
+      "quickshell",
+      "sqlite",
+      "wayland"
+    ],
+    "homepage": "https://www.dayflow.so/",
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 18601,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v1.6.0"
   }
 }

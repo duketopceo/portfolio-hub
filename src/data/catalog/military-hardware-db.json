@@ -44,6 +44,27 @@
   },
   "github": {
     "repoName": "open-military-hardware-db",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDORj0Brw",
+    "description": "Comprehensive open-source military hardware database. Weapons systems data across air, land, sea, and munitions categories with specifications, economics, operational history, and media references.",
+    "topics": [
+      "api",
+      "database",
+      "defense",
+      "fastapi",
+      "military",
+      "open-data",
+      "osint",
+      "python",
+      "sqlite",
+      "weapons-systems"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 19549,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-04",
+    "latestRelease": "v1.0.0"
   }
 }

@@ -29,6 +29,22 @@
   },
   "github": {
     "repoName": "agentflow",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOVBqlqQ",
+    "description": "Cross-harness dynamic workflows: script-driven multi-agent orchestration for devin, claude, codex, opencode",
+    "topics": [
+      "agent-orchestration",
+      "claude-code-plugin",
+      "gemini-cli-extension",
+      "multi-agent",
+      "opencode-plugin"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 9855,
+    "commitCount": 32,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

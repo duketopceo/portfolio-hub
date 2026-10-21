@@ -32,6 +32,20 @@
   },
   "github": {
     "repoName": "portfolio-hub",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDORkwxcw",
+    "description": "Cosmic Intelligence — Luke Kimball’s engineering portfolio (Next.js, luke-the-duke.com)",
+    "topics": [
+      "nextjs",
+      "portfolio",
+      "typescript"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 6111,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v3.1.0"
   }
 }

@@ -28,6 +28,22 @@
   },
   "github": {
     "repoName": "a0-plugin-argus",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUhLadA",
+    "description": "Agent Zero plugin adding argus_review and argus_flow tools, backed by Argus, a self-hosted bring-your-own-key pull-request reviewer.",
+    "topics": [
+      "agent-zero",
+      "argus",
+      "code-review",
+      "plugin",
+      "python"
+    ],
+    "homepage": "https://github.com/duketopceo/Argus",
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 11202,
+    "commitCount": 30,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

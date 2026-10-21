@@ -28,6 +28,22 @@
   },
   "github": {
     "repoName": "omarchy-connections",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUYgUQA",
+    "description": "Omarchy bar widget showing Bluetooth and Wi-Fi state side by side, with per-radio toggles and status colour.",
+    "topics": [
+      "bluetooth",
+      "omarchy",
+      "qml",
+      "widget",
+      "wifi"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1704,
+    "commitCount": 5,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

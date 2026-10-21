@@ -65,6 +65,25 @@
   },
   "github": {
     "repoName": "Argus",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUTBZ2Q",
+    "description": "Open-source vision-model E2E testing harness — record, replay, heal, assert. BYOK OpenRouter, hard budget caps, self-hosted runner, GitHub PR reporting. (The open TestDriver alternative.)",
+    "topics": [
+      "ai-testing",
+      "byok",
+      "code-review",
+      "e2e-testing",
+      "github-actions",
+      "openrouter",
+      "playwright",
+      "vision-model"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 12272,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v0.4.2"
   }
 }

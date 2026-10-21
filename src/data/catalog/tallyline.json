@@ -27,6 +27,16 @@
   },
   "github": {
     "repoName": "tallyline",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOVBz-Qw",
+    "description": "Self-hostable, agent-native issue tracker — MIT-licensed Linear-class UX where humans and AI agents work the same board",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 7470,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v1.0.0"
   }
 }

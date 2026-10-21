@@ -29,6 +29,16 @@
   },
   "github": {
     "repoName": "a0-plugin-durable",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOVAMKSA",
+    "description": "Agent Zero plugin: durable, restart-survivable agent tasks — zero-dep SQLite journal engine + optional Restate adapter",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 12136,
+    "commitCount": 4,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

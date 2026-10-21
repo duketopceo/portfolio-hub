@@ -27,6 +27,16 @@
   },
   "github": {
     "repoName": "open-computer",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOVEG5qA",
+    "description": "Open-source Perplexity Computer (cloud) equivalent: multi-model routing, disposable sandboxed execution, hybrid local/cloud placement.",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 4633,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

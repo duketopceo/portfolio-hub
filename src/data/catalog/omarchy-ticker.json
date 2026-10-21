@@ -28,6 +28,28 @@
   },
   "github": {
     "repoName": "omarchy-ticker",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUOzNmg",
+    "description": "Gold, tech, nuclear, energy, and rates in the Omarchy bar.",
+    "topics": [
+      "finance",
+      "hyprland",
+      "linux",
+      "market",
+      "markets",
+      "omarchy",
+      "qml",
+      "quickshell",
+      "quotes",
+      "stocks",
+      "wayland"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1139,
+    "commitCount": 18,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

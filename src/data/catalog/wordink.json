@@ -27,6 +27,23 @@
   },
   "github": {
     "repoName": "WordInk",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOU6421g",
+    "description": "AI-Powered Speech-to-Text — A Wispr Flow alternative using Groq's blazing-fast API.",
+    "topics": [
+      "dictation",
+      "groq",
+      "python",
+      "sdk",
+      "speech-to-text",
+      "whisper"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 6017,
+    "commitCount": 27,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

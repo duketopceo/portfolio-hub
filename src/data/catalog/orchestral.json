@@ -58,6 +58,22 @@
   },
   "github": {
     "repoName": "orchestral",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUUVChg",
+    "description": "OpenRouter eval harness: does a cheap orchestrator + cheap workers produce frontier-quality output?",
+    "topics": [
+      "agents",
+      "evaluation",
+      "llm",
+      "openrouter",
+      "orchestration"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 23133,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

@@ -28,6 +28,22 @@
   },
   "github": {
     "repoName": "harbor-openrouter-ios-client",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUMsDDg",
+    "description": "Unofficial native iOS client for OpenRouter. Bring-your-own-key only, key held in the iOS Keychain, no backend. Not affiliated with OpenRouter.",
+    "topics": [
+      "byok",
+      "client",
+      "ios",
+      "openrouter",
+      "swift"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1644,
+    "commitCount": 7,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

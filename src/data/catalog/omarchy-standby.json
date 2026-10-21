@@ -28,6 +28,26 @@
   },
   "github": {
     "repoName": "omarchy-standby",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUOzN2A",
+    "description": "Fullscreen nightstand overlay for Omarchy: clock, weather, red tint, low brightness, caffeine.",
+    "topics": [
+      "clock",
+      "hyprland",
+      "linux",
+      "nightstand",
+      "oled",
+      "omarchy",
+      "qml",
+      "quickshell",
+      "wayland"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1075,
+    "commitCount": 21,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

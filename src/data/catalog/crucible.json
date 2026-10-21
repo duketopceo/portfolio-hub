@@ -27,6 +27,23 @@
   },
   "github": {
     "repoName": "crucible",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUJHFcg",
+    "description": "Research-grounded synthetic industrial-data platform. First reference model: Archify Foundry Twin, a generic investment-casting line.",
+    "topics": [
+      "discrete-event",
+      "industrial",
+      "isa-95",
+      "python",
+      "research",
+      "simulation"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 3441,
+    "commitCount": 17,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

@@ -29,6 +29,22 @@
   },
   "github": {
     "repoName": "kurultai_people",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUGkyYA",
+    "description": "Kurultai Memory: an Agent Zero plugin that searches, recalls and cites the Kurultai brain with excerpt-sized results instead of whole files.",
+    "topics": [
+      "agent-zero",
+      "kurultai",
+      "memory",
+      "plugin",
+      "python"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1981,
+    "commitCount": 28,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

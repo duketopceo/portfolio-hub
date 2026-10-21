@@ -28,6 +28,23 @@
   },
   "github": {
     "repoName": "helm-qmk-macropad",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUMsC8w",
+    "description": "Design and firmware for a made-to-order USB-C macropad: 6 MX keys and one clickable EC11 knob on a Seeed XIAO RP2040, for QMK and Vial.",
+    "topics": [
+      "firmware",
+      "hardware",
+      "keyboard",
+      "macropad",
+      "openscad",
+      "qmk"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 4458,
+    "commitCount": 9,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

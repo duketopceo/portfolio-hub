@@ -29,6 +29,22 @@
   },
   "github": {
     "repoName": "omarchy-nexus",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUPgpUA",
+    "description": "Omarchy bar widget that opens a live hardware topology radar: USB, Bluetooth, network and VPNs, storage and internal silicon as an animated map.",
+    "topics": [
+      "hardware",
+      "omarchy",
+      "qml",
+      "visualization",
+      "widget"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1275,
+    "commitCount": 10,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

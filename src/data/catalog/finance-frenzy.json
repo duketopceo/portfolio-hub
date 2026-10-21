@@ -31,6 +31,27 @@
   },
   "github": {
     "repoName": "FinanceFrenzy",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOQKcgwA",
+    "description": "Financial literacy simulation game using real historical market data (2000-2020). Hackathon winner rebuilt for Unreal Engine 5. Originally Python/PyQt.",
+    "topics": [
+      "education",
+      "finance",
+      "financial-literacy",
+      "fintech",
+      "game",
+      "hackathon-winner",
+      "pyqt",
+      "python",
+      "simulation",
+      "unreal-engine"
+    ],
+    "homepage": "https://devpost.com/software/finance-frenzy/",
+    "isFork": true,
+    "isArchived": true,
+    "readmeLength": 4621,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-04",
+    "latestRelease": "v1.0.0"
   }
 }
