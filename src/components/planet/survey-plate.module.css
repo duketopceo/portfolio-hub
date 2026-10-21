@@ -1,0 +1,117 @@
+/*
+ * Survey-plate planet bodies — CSS fallback and live-scene overlay rules.
+ * States (see U8): default = limb + two meridians + hairline orbit + label;
+ * hover/focus = limb weight doubles, label brightens, orbit highlighted;
+ * private = lock marker beside the label; focal = two extra meridians.
+ * All selectors use two classes so they win over the global planet-node rules
+ * regardless of stylesheet order.
+ */
+
+.plate :global(.planet-node__core) {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--planet-color) 55%, var(--color-text));
+  box-shadow: none;
+  transition:
+    border-width var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.plate :global(.planet-node__core--hex) {
+  clip-path: none;
+  border-radius: 4px;
+}
+
+.plate :global(.planet-node__core--cube) {
+  background: transparent;
+  border-radius: 2px;
+  transform: rotate(0deg);
+}
+
+/* Two meridians: narrow and wide ellipses inside the limb. */
+.plate :global(.planet-node__core)::before,
+.plate :global(.planet-node__core)::after {
+  content: "";
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--planet-color) 45%, var(--color-text));
+  border-radius: 50%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.plate :global(.planet-node__core)::before {
+  inset: -1px 30%;
+}
+
+.plate :global(.planet-node__core)::after {
+  inset: -1px 8%;
+  transform: rotate(0deg);
+}
+
+/* Focal: extra meridians when no contour shader is drawing. */
+.meridianExtra {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--planet-size) * 0.55);
+  height: var(--planet-size);
+  transform: translate(-50%, -50%) rotate(var(--meridian-tilt, 0deg));
+  border: 1px solid color-mix(in srgb, var(--planet-color) 45%, var(--color-text));
+  border-radius: 50%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Hover or keyboard focus: limb weight doubles, label brightens. */
+.plate :global(.planet-node:hover .planet-node__core),
+.plate :global(.planet-node:focus-visible .planet-node__core),
+.plate :global(.planet-node--focused .planet-node__core) {
+  background: transparent;
+  border-width: 2px;
+  border-color: var(--color-accent);
+  transform: none;
+}
+
+.plate :global(.planet-node:hover .planet-node__name),
+.plate :global(.planet-node:focus-visible .planet-node__name),
+.plate :global(.planet-node--focused .planet-node__name) {
+  color: var(--color-text);
+}
+
+.plate :global(.planet-node:not(:hover):not(:focus-visible):not(.planet-node--focused) .planet-node__name) {
+  color: var(--color-text-muted);
+}
+
+/* Orbit highlighted on the SSR plate: the focused body's orbit hairline. */
+:global(.solar-plate):has(:global(.planet-node--focused)) :global(.solar-orbit-line--a) {
+  stroke: var(--color-accent);
+  opacity: 0.55;
+}
+
+/* Private: lock marker beside the label, classification orange. */
+.lock {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-left: 0.25rem;
+  vertical-align: -0.05rem;
+  color: var(--color-signal);
+}
+
+/* Live scene: canvas draws the body; the DOM body stays as hit target. */
+.live :global(.planet-node__core),
+.live :global(.planet-node__ring),
+.live :global(.planet-node__moon-dot),
+.live .meridianExtra {
+  visibility: hidden;
+}
+
+.live :global(.planet-node__body)::before,
+.live :global(.planet-node__body)::after {
+  background: transparent;
+}
+
+.live[data-label-above="true"] :global(.planet-node__label) {
+  top: auto;
+  bottom: 100%;
+}

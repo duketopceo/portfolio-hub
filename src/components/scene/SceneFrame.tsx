@@ -89,7 +89,7 @@ export default function SceneFrame({
   fallback = null,
   className,
   camera,
-  dpr = [1, 2],
+  dpr = [1, 1.5],
   onReadyChange,
 }: SceneFrameProps) {
   const [hostEl, setHostEl] = useState<HTMLDivElement | null>(null);

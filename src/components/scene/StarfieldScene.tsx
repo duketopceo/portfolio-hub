@@ -1,87 +1,127 @@
 "use client";
 
-import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { seededRandom } from "@/components/scene/random";
+import { setUniform } from "@/components/scene/contour-shader";
+import { buildStarfield } from "@/components/scene/starfield-data";
 
 const STARLIGHT = new THREE.Color("#E9ECEF");
 
+// Parallax happens in the vertex shader from a per-vertex depth layer, so the
+// stars (one Points) and their constellation links (one LineSegments) move
+// together with zero per-frame CPU geometry work.
+const VERTEX = /* glsl */ `
+attribute float aDepth;
+uniform vec2 uPointer;
+uniform float uTime;
+uniform float uSize;
+varying float vDepth;
+void main() {
+  vDepth = aDepth;
+  vec3 p = position;
+  p.xy += uPointer * (0.5 + aDepth * 2.5);
+  p.y += sin(uTime * 0.05) * 0.8 * (0.4 + aDepth);
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+  gl_PointSize = uSize * (0.75 + aDepth * 0.75);
+}
+`;
+
+const FRAGMENT = /* glsl */ `
+uniform vec3 uColor;
+uniform float uOpacity;
+varying float vDepth;
+void main() {
+  gl_FragColor = vec4(uColor, uOpacity * (0.45 + vDepth * 0.55));
+}
+`;
+
+function makeMaterial(opacity: number, size: number) {
+  return new THREE.ShaderMaterial({
+    vertexShader: VERTEX,
+    fragmentShader: FRAGMENT,
+    transparent: true,
+    depthWrite: false,
+    uniforms: {
+      uPointer: { value: new THREE.Vector2() },
+      uTime: { value: 0 },
+      uSize: { value: size },
+      uColor: { value: STARLIGHT },
+      uOpacity: { value: opacity },
+    },
+  });
+}
+
 export default function StarfieldScene() {
   const group = useRef<THREE.Group>(null);
+  const pointerTarget = useRef(new THREE.Vector2());
+  const pixelRatio = useThree((s) => s.gl.getPixelRatio());
 
-  const { positions, segmentPositions } = useMemo(() => {
-    const r = seededRandom(20260911);
-    const n = 90;
-    const pts: THREE.Vector3[] = [];
-    for (let i = 0; i < n; i++) {
-      pts.push(
-        new THREE.Vector3(
-          (r() - 0.5) * 90,
-          (r() - 0.5) * 50,
-          (r() - 0.5) * 30 - 8
-        )
+  const { pointsGeometry, linesGeometry, pointsMaterial, linesMaterial } =
+    useMemo(() => {
+      const data = buildStarfield(20260911);
+      const pg = new THREE.BufferGeometry();
+      pg.setAttribute("position", new THREE.BufferAttribute(data.positions, 3));
+      pg.setAttribute("aDepth", new THREE.BufferAttribute(data.depths, 1));
+      const lg = new THREE.BufferGeometry();
+      lg.setAttribute(
+        "position",
+        new THREE.BufferAttribute(data.segmentPositions, 3)
       );
-    }
-    const pos = new Float32Array(n * 3);
-    pts.forEach((p, i) => p.toArray(pos, i * 3));
+      lg.setAttribute(
+        "aDepth",
+        new THREE.BufferAttribute(data.segmentDepths, 1)
+      );
+      return {
+        pointsGeometry: pg,
+        linesGeometry: lg,
+        pointsMaterial: makeMaterial(0.8, 2.4),
+        linesMaterial: makeMaterial(0.1, 1),
+      };
+    }, []);
 
-    // Constellation links — each point connects to its nearest neighbor(s),
-    // packed into one lineSegments draw call.
-    const linked = new Set<string>();
-    const seg: number[] = [];
-    for (let i = 0; i < n; i++) {
-      const dists = pts
-        .map((p, j) => ({ j, d: pts[i].distanceToSquared(p) }))
-        .filter(({ j }) => j !== i)
-        .sort((a, b) => a.d - b.d);
-      for (const { j } of dists.slice(0, 2)) {
-        const key = i < j ? `${i}-${j}` : `${j}-${i}`;
-        if (!linked.has(key)) {
-          linked.add(key);
-          seg.push(pts[i].x, pts[i].y, pts[i].z, pts[j].x, pts[j].y, pts[j].z);
-        }
-      }
-    }
-    return { positions: pos, segmentPositions: new Float32Array(seg) };
+  useEffect(() => {
+    setUniform(pointsMaterial, "uSize", 2.4 * pixelRatio);
+  }, [pointsMaterial, pixelRatio]);
+
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      pointerTarget.current.set(
+        (e.clientX / window.innerWidth - 0.5) * 2,
+        -(e.clientY / window.innerHeight - 0.5) * 2
+      );
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
   }, []);
 
-  useFrame(({ clock }) => {
+  useEffect(
+    () => () => {
+      pointsGeometry.dispose();
+      linesGeometry.dispose();
+      pointsMaterial.dispose();
+      linesMaterial.dispose();
+    },
+    [pointsGeometry, linesGeometry, pointsMaterial, linesMaterial]
+  );
+
+  useFrame(({ clock }, dt) => {
     if (!group.current) return;
     const t = clock.getElapsedTime();
     group.current.rotation.z = t * 0.004;
-    group.current.position.y = Math.sin(t * 0.05) * 0.8;
+    for (const m of [pointsMaterial, linesMaterial]) {
+      setUniform(m, "uTime", t);
+      (m.uniforms.uPointer.value as THREE.Vector2).lerp(
+        pointerTarget.current,
+        Math.min(1, dt * 2)
+      );
+    }
   });
 
   return (
     <group ref={group}>
-      <points>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-        </bufferGeometry>
-        <pointsMaterial
-          color={STARLIGHT}
-          size={0.14}
-          sizeAttenuation
-          transparent
-          opacity={0.7}
-          depthWrite={false}
-        />
-      </points>
-      <lineSegments>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[segmentPositions, 3]}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial
-          color={STARLIGHT}
-          transparent
-          opacity={0.08}
-          depthWrite={false}
-        />
-      </lineSegments>
+      <points geometry={pointsGeometry} material={pointsMaterial} />
+      <lineSegments geometry={linesGeometry} material={linesMaterial} />
     </group>
   );
 }
