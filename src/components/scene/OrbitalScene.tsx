@@ -166,7 +166,6 @@ interface BodyInfo {
   rings: { tilt: number; opacity: number }[];
   isPrivate: boolean;
   meridians: number;
-  focused: boolean;
 }
 
 /** Static survey lines: orbit hairlines, focus arc and planet rings. */
@@ -176,6 +175,7 @@ function StaticLines({
   ringOuter,
   ringInner,
   focusSlot,
+  focusIndex,
   rx,
   rz,
 }: {
@@ -184,6 +184,7 @@ function StaticLines({
   ringOuter: Vec3[];
   ringInner: Vec3[];
   focusSlot: OrbitSlot | undefined;
+  focusIndex: number;
   rx: number;
   rz: number;
 }) {
@@ -197,18 +198,18 @@ function StaticLines({
       b.line(orbitArcPoints(focusSlot, rx, rz), TEAL, 0.85);
       b.line(orbitArcPoints(focusSlot, rx, rz, 1.012), TEAL, 0.85);
     }
-    bodies.forEach((body) => {
+    bodies.forEach((body, bi) => {
       body.rings.forEach((ring, i) => {
         b.line(
           ringLoop(body.radius * (1.75 + i * 0.3), ring.tilt),
           body.tint,
-          Math.min(1, ring.opacity * (body.focused ? 1.6 : 1.1)),
+          Math.min(1, ring.opacity * (bi === focusIndex ? 1.6 : 1.1)),
           [body.slot.x, 0, body.slot.z]
         );
       });
     });
     return b;
-  }, [bodies, ringMain, ringOuter, ringInner, focusSlot, rx, rz]);
+  }, [bodies, ringMain, ringOuter, ringInner, focusSlot, focusIndex, rx, rz]);
   const geometry = useBatchGeometry(batch, false);
   return (
     <lineSegments geometry={geometry} frustumCulled={false}>
@@ -222,7 +223,7 @@ function StaticLines({
  * meridians. One LineSegments; positions are rewritten from templates each
  * frame, which is trivial CPU next to a draw call per body.
  */
-function BodyLines({ bodies }: { bodies: BodyInfo[] }) {
+function BodyLines({ bodies, focusIndex }: { bodies: BodyInfo[]; focusIndex: number }) {
   const { batch, billboard, meridian } = useMemo(() => {
     const b = new SegmentBatch();
     const bb: { start: number; local: number[]; cx: number; cz: number }[] = [];
@@ -232,13 +233,14 @@ function BodyLines({ bodies }: { bodies: BodyInfo[] }) {
       fn();
       return { start, local: b.pos.slice(start) };
     };
-    bodies.forEach((body) => {
-      const color = body.focused ? TEAL : body.tint;
+    bodies.forEach((body, bi) => {
+      const focused = bi === focusIndex;
+      const color = focused ? TEAL : body.tint;
       const { slot, radius } = body;
       const addBillboard = (fn: () => void) => bb.push({ ...take(fn), cx: slot.x, cz: slot.z });
       addBillboard(() => b.line(body.limb, color, 0.95));
       // 1px lines only: the focused limb is doubled outward to read heavier.
-      if (body.focused) {
+      if (focused) {
         addBillboard(() =>
           b.line(body.limb.map(([x, y, z]) => [x * 1.05, y * 1.05, z] as Vec3), color, 0.95)
         );
@@ -259,7 +261,7 @@ function BodyLines({ bodies }: { bodies: BodyInfo[] }) {
       const circle = circlePoints(radius);
       for (let k = 0; k < body.meridians; k++) {
         mer.push({
-          ...take(() => b.line(circle, color, body.focused ? 0.7 : 0.4)),
+          ...take(() => b.line(circle, color, focused ? 0.7 : 0.4)),
           cx: slot.x,
           cz: slot.z,
           phase: (k * Math.PI) / body.meridians,
@@ -267,7 +269,7 @@ function BodyLines({ bodies }: { bodies: BodyInfo[] }) {
       }
     });
     return { batch: b, billboard: bb, meridian: mer };
-  }, [bodies]);
+  }, [bodies, focusIndex]);
   const geometry = useBatchGeometry(batch, true);
   const spin = useRef(0);
   const lastQuat = useRef(new THREE.Quaternion(0, 0, 0, 0));
@@ -589,10 +591,9 @@ export default function OrbitalScene({
           })),
           isPrivate: !!p.private,
           meridians: meridianCount(isFocalSlug(p.slug), shader),
-          focused: i === focusIndex,
         };
       }),
-    [projects, visuals, slots, shader, focusIndex]
+    [projects, visuals, slots, shader]
   );
 
   const ringScales = useMemo(
@@ -621,13 +622,14 @@ export default function OrbitalScene({
   );
 
   const focusSlot = slots[focusIndex];
-  const focused = focusSlot
-    ? new THREE.Vector3(focusSlot.x, 0, focusSlot.z)
-    : ORIGIN;
+  const focusX = focusSlot?.x;
+  const focusZ = focusSlot?.z;
   const focusedVec = useMemo(
-    () => focused.clone(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [focusSlot?.x, focusSlot?.z]
+    () =>
+      focusX === undefined || focusZ === undefined
+        ? ORIGIN.clone()
+        : new THREE.Vector3(focusX, 0, focusZ),
+    [focusX, focusZ]
   );
 
   return (
@@ -644,12 +646,13 @@ export default function OrbitalScene({
           ringOuter={ringOuter}
           ringInner={ringInner}
           focusSlot={focusSlot}
+          focusIndex={focusIndex}
           rx={rx}
           rz={rz}
         />
         {/* Decorative survey-plate bodies — PlanetNode markers below are the
             interactive layer at the same slots. */}
-        <BodyLines bodies={bodies} />
+        <BodyLines bodies={bodies} focusIndex={focusIndex} />
         {shader &&
           projects.map((p, i) =>
             isFocalSlug(p.slug) ? (

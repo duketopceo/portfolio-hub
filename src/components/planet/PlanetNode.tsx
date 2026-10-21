@@ -3,13 +3,13 @@
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import {
+  isFocalSlug,
   planetVisualStyle,
   resolvePlanetVisual,
   shapeClass,
   shortPlanetLabel,
   type OrbitVisualTier,
 } from "@/lib/planet-visual";
-import { isFocalSlug } from "@/lib/planet-visual";
 import { LockIcon } from "@/components/Icons";
 import styles from "./survey-plate.module.css";
 

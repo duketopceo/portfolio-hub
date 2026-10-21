@@ -1,6 +1,15 @@
 import type { ProjectShowcase } from "@/lib/types";
 import { EvidencePanel, SurveyPlate } from "@/components/design";
 
+function Section({ label, children }: { label: string; children: string }) {
+  return (
+    <div className="dossier-section">
+      <div className="dossier-section__label">{label}</div>
+      <p className="dossier-section__body">{children}</p>
+    </div>
+  );
+}
+
 /**
  * Hand-written card for private entries. Renders `showcase` fields only:
  * no fetched text, no repo link, no activity data.
@@ -30,10 +39,9 @@ export function ShowcaseCard({ showcase }: { showcase: ProjectShowcase }) {
         description="Written for this page. The source stays private."
       >
         {rows.map(([label, text]) => (
-          <div key={label} className="dossier-section">
-            <div className="dossier-section__label">{label}</div>
-            <p className="dossier-section__body">{text}</p>
-          </div>
+          <Section key={label} label={label}>
+            {text}
+          </Section>
         ))}
         <div className="dossier-section">
           <div className="dossier-section__label">Stack</div>
@@ -47,10 +55,9 @@ export function ShowcaseCard({ showcase }: { showcase: ProjectShowcase }) {
         </div>
         {extra.map(([label, text]) =>
           text ? (
-            <div key={label} className="dossier-section">
-              <div className="dossier-section__label">{label}</div>
-              <p className="dossier-section__body">{text}</p>
-            </div>
+            <Section key={label} label={label}>
+              {text}
+            </Section>
           ) : null
         )}
       </EvidencePanel>

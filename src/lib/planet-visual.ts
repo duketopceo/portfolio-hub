@@ -143,7 +143,7 @@ export function resolvePlanetVisual(
  * Focal planets get the contour-shader fill (when the renderer is a real GPU)
  * or extra meridians. At most two, both from HOMEPAGE_FEATURED_SLUGS.
  */
-export const FOCAL_SLUGS = ["pace-server", "kurultai"] as const;
+export const FOCAL_SLUGS = ["pace-server", "kurultai"] as const satisfies readonly (typeof HOMEPAGE_FEATURED_SLUGS)[number][];
 
 export function isFocalSlug(slug: string): boolean {
   return (FOCAL_SLUGS as readonly string[]).includes(slug);

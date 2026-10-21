@@ -116,8 +116,6 @@ void main() {
 }
 `;
 
-export const CONTOUR_SHADER = { vertex: VERTEX, fragment: FRAGMENT } as const;
-
 export function createContourMaterial(
   line: THREE.Color,
   seed: number

@@ -1,14 +1,13 @@
 // Regenerates src/data/catalog/index.ts: one static import per catalog JSON.
 // A static index (not a directory read) keeps the data in the standalone build.
 // Usage: node scripts/catalog-index.mjs   (npm run catalog:index)
-import { readdirSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { catalogFileNames } from "./lib/catalog-files.mjs";
 
 const dir = fileURLToPath(new URL("../src/data/catalog", import.meta.url));
-const files = readdirSync(dir)
-  .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
-  .sort();
+const files = catalogFileNames(dir);
 const ident = (i) => `entry${i}`;
 
 const out = [

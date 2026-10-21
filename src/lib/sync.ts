@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { catalogEntrySchema, type CatalogEntry } from "../data/catalog/schema";
-import { CURATION_BAR, scoreRepo, summarizeCatalog, type CurationGithub } from "./curation";
+import { catalogEntrySchema, githubSchema, type CatalogEntry } from "../data/catalog/schema";
+import { rangeWarning, scoreRepo, summarizeCatalog, type CurationGithub } from "./curation";
 
 /**
  * Pure logic behind scripts/sync-catalog.mjs (KTD6). The sync proposes; it
@@ -164,20 +164,7 @@ export function nodeToGithub(node: RepoNode, fallbackOwner: string): GithubFacts
   };
 }
 
-const GITHUB_KEYS = [
-  "repoName",
-  "owner",
-  "node_id",
-  "description",
-  "topics",
-  "homepage",
-  "isFork",
-  "isArchived",
-  "readmeLength",
-  "commitCount",
-  "lastCommitMonth",
-  "latestRelease",
-] as const;
+const GITHUB_KEYS = githubSchema.keyof().options;
 
 function sameGithub(a: GithubFacts, b: GithubFacts): boolean {
   return GITHUB_KEYS.every((k) => JSON.stringify(a[k] ?? null) === JSON.stringify(b[k] ?? null));
@@ -304,10 +291,6 @@ export function computeSync(input: {
     input.now,
   );
   const listed = summary.listable + privateEntries.length;
-  const rangeWarning =
-    listed < CURATION_BAR.minListed || listed > CURATION_BAR.maxListed
-      ? `${listed} listed projects, outside the ${CURATION_BAR.minListed}-${CURATION_BAR.maxListed} target`
-      : null;
 
   const proposals: Proposals = {
     newCandidates: newCandidates.sort((a, b) => byText(a.repoName, b.repoName)),
@@ -317,7 +300,7 @@ export function computeSync(input: {
     nowFork: nowFork.sort(byText),
     stale: stale.sort(byText),
     privateNameMatches: [...privateNameMatches].sort(byText),
-    rangeWarning,
+    rangeWarning: rangeWarning(listed, "listed"),
   };
   proposalsSchema.parse(proposals);
   return { updates, proposals };

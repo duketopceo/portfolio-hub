@@ -36,15 +36,24 @@ void main() {
 }
 `;
 
-function makeMaterial(opacity: number, size: number) {
+type SharedUniforms = {
+  uPointer: { value: THREE.Vector2 };
+  uTime: { value: number };
+};
+
+function setSharedTime(shared: SharedUniforms, t: number) {
+  shared.uTime.value = t;
+}
+
+function makeMaterial(opacity: number, size: number, shared: SharedUniforms) {
   return new THREE.ShaderMaterial({
     vertexShader: VERTEX,
     fragmentShader: FRAGMENT,
     transparent: true,
     depthWrite: false,
     uniforms: {
-      uPointer: { value: new THREE.Vector2() },
-      uTime: { value: 0 },
+      uPointer: shared.uPointer,
+      uTime: shared.uTime,
       uSize: { value: size },
       uColor: { value: STARLIGHT },
       uOpacity: { value: opacity },
@@ -57,7 +66,7 @@ export default function StarfieldScene() {
   const pointerTarget = useRef(new THREE.Vector2());
   const pixelRatio = useThree((s) => s.gl.getPixelRatio());
 
-  const { pointsGeometry, linesGeometry, pointsMaterial, linesMaterial } =
+  const { pointsGeometry, linesGeometry, pointsMaterial, linesMaterial, shared } =
     useMemo(() => {
       const data = buildStarfield(20260911);
       const pg = new THREE.BufferGeometry();
@@ -72,11 +81,17 @@ export default function StarfieldScene() {
         "aDepth",
         new THREE.BufferAttribute(data.segmentDepths, 1)
       );
+      // One pointer/time uniform pair drives both materials.
+      const shared: SharedUniforms = {
+        uPointer: { value: new THREE.Vector2() },
+        uTime: { value: 0 },
+      };
       return {
         pointsGeometry: pg,
         linesGeometry: lg,
-        pointsMaterial: makeMaterial(0.8, 2.4),
-        linesMaterial: makeMaterial(0.1, 1),
+        pointsMaterial: makeMaterial(0.8, 2.4, shared),
+        linesMaterial: makeMaterial(0.1, 1, shared),
+        shared,
       };
     }, []);
 
@@ -109,13 +124,8 @@ export default function StarfieldScene() {
     if (!group.current) return;
     const t = clock.getElapsedTime();
     group.current.rotation.z = t * 0.004;
-    for (const m of [pointsMaterial, linesMaterial]) {
-      setUniform(m, "uTime", t);
-      (m.uniforms.uPointer.value as THREE.Vector2).lerp(
-        pointerTarget.current,
-        Math.min(1, dt * 2)
-      );
-    }
+    setSharedTime(shared, t);
+    shared.uPointer.value.lerp(pointerTarget.current, Math.min(1, dt * 2));
   });
 
   return (

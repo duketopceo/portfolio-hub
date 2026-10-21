@@ -1,15 +1,14 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { catalogFileNames } from "../../../scripts/lib/catalog-files.mjs";
 import { projectConfigs } from "@/data/projects";
 import snapshot from "@/data/__fixtures__/project-configs.pre-u1.json";
 import { catalogEntries } from "./index";
 import { catalogEntrySchema } from "./schema";
 
 const dir = join(process.cwd(), "src/data/catalog");
-const jsonFiles = readdirSync(dir)
-  .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
-  .sort();
+const jsonFiles: string[] = catalogFileNames(dir);
 const load = (f: string) => JSON.parse(readFileSync(join(dir, f), "utf8"));
 
 describe("catalog JSON", () => {

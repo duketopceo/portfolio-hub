@@ -21,39 +21,42 @@ export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
         Featured work
       </h2>
       <ul className="hire-featured__list">
-        {projects.map((p) => (
-          <li key={p.slug}>
-            <Link
-              href={`/projects/${p.slug}`}
-              className="hire-featured__item"
-              data-umami-event="survey-file-open"
-              data-umami-event-slug={p.slug}
-              data-umami-event-source="hire"
-            >
-              {poster(p) && !failed.has(p.slug) ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={poster(p)}
-                  alt=""
-                  loading="lazy"
-                  className="hire-featured__media"
-                  onError={() =>
-                    setFailed((prev) => new Set(prev).add(p.slug))
-                  }
-                />
-              ) : (
-                <span className="hire-featured__plate" aria-hidden="true">
-                  {p.displayName}
-                </span>
-              )}
-              <span className="hire-featured__name">{p.displayName}</span>
-              <span className="hire-featured__tagline">{p.tagline}</span>
-              {typeof p.media.release !== "string" && (
-                <span className="hire-featured__film">Launch film</span>
-              )}
-            </Link>
-          </li>
-        ))}
+        {projects.map((p) => {
+          const posterUrl = poster(p);
+          return (
+            <li key={p.slug}>
+              <Link
+                href={`/projects/${p.slug}`}
+                className="hire-featured__item"
+                data-umami-event="survey-file-open"
+                data-umami-event-slug={p.slug}
+                data-umami-event-source="hire"
+              >
+                {posterUrl && !failed.has(p.slug) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={posterUrl}
+                    alt=""
+                    loading="lazy"
+                    className="hire-featured__media"
+                    onError={() =>
+                      setFailed((prev) => new Set(prev).add(p.slug))
+                    }
+                  />
+                ) : (
+                  <span className="hire-featured__plate" aria-hidden="true">
+                    {p.displayName}
+                  </span>
+                )}
+                <span className="hire-featured__name">{p.displayName}</span>
+                <span className="hire-featured__tagline">{p.tagline}</span>
+                {typeof p.media.release !== "string" && (
+                  <span className="hire-featured__film">Launch film</span>
+                )}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

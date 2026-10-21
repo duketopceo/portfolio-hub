@@ -74,6 +74,14 @@ export type CatalogSummary = {
   warning: string | null;
 };
 
+/** Warning text when `count` falls outside the target range, else null. `noun` names what was counted. */
+export function rangeWarning(count: number, noun: "listable" | "listed"): string | null {
+  const { minListed, maxListed } = CURATION_BAR;
+  return count < minListed || count > maxListed
+    ? `${count} ${noun} projects, outside the ${minListed}-${maxListed} target`
+    : null;
+}
+
 /** R2: count listable results; warn (never cut) when outside the target range. */
 export function summarizeCatalog(catalog: readonly CatalogEntry[], now: Date): CatalogSummary {
   const verdicts: Record<string, CurationResult> = {};
@@ -83,10 +91,5 @@ export function summarizeCatalog(catalog: readonly CatalogEntry[], now: Date): C
     verdicts[e.slug] = r;
     if (r.verdict === "listable") listable += 1;
   }
-  const { minListed, maxListed } = CURATION_BAR;
-  const warning =
-    listable < minListed || listable > maxListed
-      ? `${listable} listable projects, outside the ${minListed}-${maxListed} target`
-      : null;
-  return { listable, verdicts, warning };
+  return { listable, verdicts, warning: rangeWarning(listable, "listable") };
 }

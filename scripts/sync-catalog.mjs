@@ -8,11 +8,12 @@
 // Options: --page-size <1-100> (GraphQL page size, default 25),
 //          --summary <path outside the repo> (markdown PR body of the proposals).
 // Token: GITHUB_TOKEN or GH_TOKEN. It is never printed.
-import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import * as nodeModule from "node:module";
 const { register, registerHooks } = nodeModule;
 import { dirname, join, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
+import { catalogFileNames } from "./lib/catalog-files.mjs";
 
 // Node strips TypeScript types natively; this hook only resolves the
 // extensionless relative imports the app's bundler-style sources use.
@@ -64,11 +65,15 @@ const dryRun = flag("--dry-run");
 const write = flag("--write");
 if (dryRun === write) fail("pass exactly one of --dry-run (with --out <path>) or --write");
 
+function assertOutsideRepo(flagName, path) {
+  const rel = relative(root, resolve(path));
+  if (!rel.startsWith("..") && !isAbsolute(rel)) fail(`${flagName} must be outside the repository`);
+}
+
 const out = value("--out");
 if (dryRun) {
   if (!out) fail("--dry-run needs --out <path outside the repo>");
-  const rel = relative(root, resolve(out));
-  if (!rel.startsWith("..") && !isAbsolute(rel)) fail("--out must be outside the repository");
+  assertOutsideRepo("--out", out);
 }
 
 const pageSizeArg = value("--page-size");
@@ -77,10 +82,7 @@ if (!Number.isInteger(pageSize) || pageSize < 1 || pageSize > 100) fail("--page-
 
 const summaryPath = value("--summary");
 if (flag("--summary") && !summaryPath) fail("--summary needs a path");
-if (summaryPath) {
-  const rel = relative(root, resolve(summaryPath));
-  if (!rel.startsWith("..") && !isAbsolute(rel)) fail("--summary must be outside the repository");
-}
+if (summaryPath) assertOutsideRepo("--summary", summaryPath);
 
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 if (!token) fail("set GITHUB_TOKEN or GH_TOKEN");
@@ -88,9 +90,7 @@ if (!token) fail("set GITHUB_TOKEN or GH_TOKEN");
 const sync = await import("../src/lib/sync.ts");
 const { catalogEntrySchema } = await import("../src/data/catalog/schema.ts");
 
-const files = readdirSync(catalogDir)
-  .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
-  .sort();
+const files = catalogFileNames(catalogDir);
 const raw = new Map(files.map((f) => [f, readFileSync(join(catalogDir, f), "utf8")]));
 
 let entries;

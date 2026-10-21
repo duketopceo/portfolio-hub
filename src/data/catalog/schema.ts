@@ -46,6 +46,7 @@ const showcase = z.strictObject({
   status: z.string(),
   problem: z.string().optional(),
   approach: z.string().optional(),
+  /** Hand-written prose section (showcase.architecture); curated.architecture is the one-line pipeline summary. */
   architecture: z.string().optional(),
   outcomes: z.string().optional(),
 });

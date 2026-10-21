@@ -203,7 +203,7 @@ export default function SceneFrame({
               {overlayEl ? (
                 <>
                   {children}
-                  {software && <SoftwareThrottle />}
+                  {software && inView && <SoftwareThrottle />}
                   <FirstFrameSignal onFirstFrame={onFirstFrame} />
                 </>
               ) : null}
