@@ -10,8 +10,47 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { Canvas, useFrame, type CameraProps, type RootState } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, type CameraProps, type RootState } from "@react-three/fiber";
 import { useMediaQuery } from "@/lib/use-media-query";
+import { readRendererString, shouldUseShader } from "@/lib/render-capability";
+
+/** Frame-rate cap while a software rasteriser is drawing the scene. */
+const SOFTWARE_FPS = 10;
+
+let softwareRenderer: boolean | undefined;
+
+/**
+ * True when WebGL here is a software rasteriser (llvmpipe, SwiftShader).
+ * Probed once on a throwaway context so antialias / DPR / frame rate can be
+ * chosen before the real context exists. Unknown renderers count as software.
+ */
+function isSoftwareRenderer(): boolean {
+  if (softwareRenderer !== undefined) return softwareRenderer;
+  if (typeof document === "undefined") return false;
+  let gl: WebGLRenderingContext | null = null;
+  try {
+    gl = document.createElement("canvas").getContext("webgl");
+    softwareRenderer = !shouldUseShader(readRendererString(gl));
+  } catch {
+    softwareRenderer = true;
+  }
+  gl?.getExtension("WEBGL_lose_context")?.loseContext();
+  return softwareRenderer;
+}
+
+/**
+ * Software GL only: the Canvas runs frameloop "demand" and this drives a
+ * throttled invalidate loop, so animation stays time-based but the CPU
+ * rasteriser draws ~SOFTWARE_FPS frames per second instead of every rAF.
+ */
+function SoftwareThrottle() {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    const id = window.setInterval(() => invalidate(), 1000 / SOFTWARE_FPS);
+    return () => window.clearInterval(id);
+  }, [invalidate]);
+  return null;
+}
 
 /**
  * Sibling overlay that drei <Html> markers portal into — outside the
@@ -131,6 +170,7 @@ export default function SceneFrame({
   }, []);
 
   const live = motionOK && !ctxLost;
+  const software = live && isSoftwareRenderer();
 
   // A live scene that dies (context loss, boundary error) must hand the
   // stage back to the SSR plate — report the drop so the host un-hides it.
@@ -147,11 +187,11 @@ export default function SceneFrame({
         <SceneOverlayContext.Provider value={overlayEl}>
           <SceneBoundary plate={fallback} onError={onSceneError}>
             <Canvas
-              frameloop={inView ? "always" : "never"}
-              dpr={dpr}
+              frameloop={!inView ? "never" : software ? "demand" : "always"}
+              dpr={software ? 1 : dpr}
               camera={camera}
               gl={{
-                antialias: true,
+                antialias: !software,
                 alpha: true,
                 powerPreference: "low-power",
                 preserveDrawingBuffer: true,
@@ -163,6 +203,7 @@ export default function SceneFrame({
               {overlayEl ? (
                 <>
                   {children}
+                  {software && <SoftwareThrottle />}
                   <FirstFrameSignal onFirstFrame={onFirstFrame} />
                 </>
               ) : null}
