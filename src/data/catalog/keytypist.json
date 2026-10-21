@@ -1,0 +1,34 @@
+{
+  "slug": "keytypist",
+  "order": 70,
+  "curated": {
+    "displayName": "keytypist",
+    "tagline": "Terminal next-key prediction that learns from your own typing",
+    "description": "A terminal UI that draws an on-screen keyboard and predicts your next character as you type. Every keystroke and guess goes into a local SQLite log, so the model keeps learning from your typing. Two engines: a dependency-free character n-gram trained on your history, and an optional local model through llama-cpp-python. A companion daemon reads input events, computes rolling WPM and maps it to keyboard backlight brightness.",
+    "category": "ai",
+    "type": "experiment",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "SQLite",
+      "llama-cpp-python",
+      "evdev"
+    ],
+    "private": false,
+    "highlights": [
+      "Character n-gram engine trained on local typing history, zero dependencies",
+      "Optional local-model engine via llama-cpp-python and a .gguf file",
+      "Every keystroke and prediction logged to SQLite for continuous learning",
+      "WPM daemon drives keyboard backlight from real typing speed"
+    ],
+    "architecture": "Keystrokes → SQLite log → n-gram or local model → on-screen prediction; input events → rolling WPM → backlight",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "keytypist",
+    "owner": "duketopceo"
+  }
+}
