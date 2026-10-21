@@ -21,7 +21,11 @@
       "Zero-dependency SQLite journal",
       "Optional Restate adapter for stronger guarantees"
     ],
-    "architecture": "Task start → SQLite journal append → restart → journal replay → resume"
+    "architecture": "Task start → SQLite journal append → restart → journal replay → resume",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-plugin-durable",

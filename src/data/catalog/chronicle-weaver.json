@@ -22,7 +22,11 @@
       "Branching narrative engine",
       "Rich media storytelling",
       "Mobile-first with offline support"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "rork-chronicle-weaver",

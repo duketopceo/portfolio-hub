@@ -21,7 +21,11 @@
       "Compact radar-style widget",
       "Hardware discovery in the menu bar"
     ],
-    "architecture": "Omarchy bar widget → system discovery → device graph → radar UI"
+    "architecture": "Omarchy bar widget → system discovery → device graph → radar UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-nexus",

@@ -20,7 +20,11 @@
       "Clock and weather overlay",
       "Caffeine toggle integration"
     ],
-    "architecture": "Fullscreen overlay → clock/weather data → brightness and caffeine toggles"
+    "architecture": "Fullscreen overlay → clock/weather data → brightness and caffeine toggles",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-standby",

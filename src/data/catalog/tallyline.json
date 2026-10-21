@@ -19,7 +19,11 @@
       "Linear-class interface, MIT licensed",
       "Self-hostable with no vendor dependency"
     ],
-    "architecture": "Web board → issue store → agent API surface → human and agent actors on one model"
+    "architecture": "Web board → issue store → agent API surface → human and agent actors on one model",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "tallyline",

@@ -20,7 +20,11 @@
       "Argus plugin exposes pull-request review as agent tools",
       "Notion plugin runs as a local stdio MCP server"
     ],
-    "architecture": "Agent Zero runtime → plugin adapters → external service (Argus, Notion, GlitchTip, OmaSeal)"
+    "architecture": "Agent Zero runtime → plugin adapters → external service (Argus, Notion, GlitchTip, OmaSeal)",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "a0-plugins",

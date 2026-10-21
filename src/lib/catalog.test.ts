@@ -23,6 +23,7 @@ function cfg(slug: string, extra: Partial<ProjectConfig> = {}): ProjectConfig {
     techStack: [],
     private: false,
     highlights: [],
+    media: { release: "to-record", demo: "to-record" },
     ...extra,
   };
 }

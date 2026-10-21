@@ -36,6 +36,10 @@
         "0 A.D."
       ],
       "status": "Work in progress, Windows only. The host is covered by offline tests; the plugin UI has not had a long human playtest."
+    },
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
     }
   },
   "github": {

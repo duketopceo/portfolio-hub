@@ -23,7 +23,11 @@
       "Real-time multi-user collaboration",
       "Conflict resolution and version history",
       "WebSocket-based synchronization"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "Collaborative-essay",

@@ -20,7 +20,11 @@
       "OpenRouter model routing for cloud models",
       "Rich terminal UI for following the exchange"
     ],
-    "architecture": "CLI → Prompt orchestrator → OpenRouter → Dual agent turns → Terminal renderer"
+    "architecture": "CLI → Prompt orchestrator → OpenRouter → Dual agent turns → Terminal renderer",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "ai-debate-arena",

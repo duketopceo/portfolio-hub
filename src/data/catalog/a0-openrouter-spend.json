@@ -20,7 +20,11 @@
       "Budget analytics helpers",
       "Companion to OpenRouter Usage"
     ],
-    "architecture": "OpenRouter spend data → budget helpers → lightweight UI"
+    "architecture": "OpenRouter spend data → budget helpers → lightweight UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-openrouter-spend",

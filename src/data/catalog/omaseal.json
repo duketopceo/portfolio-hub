@@ -20,7 +20,11 @@
       "Plugin credential store",
       "Secure retrieval API"
     ],
-    "architecture": "Keyring backend → encrypted store → plugin credential API → Omarchy UI"
+    "architecture": "Keyring backend → encrypted store → plugin credential API → Omarchy UI",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "OmaSeal",

@@ -95,7 +95,7 @@ describe("U3 catalog restructure", () => {
     expect(projectConfigs.some((p) => p.slug === "openrouter")).toBe(false);
     const d = projectConfigs.filter((p) => p.slug === "openrouter-demos");
     expect(d).toHaveLength(1);
-    expect(d[0].film?.url).toMatch(/openrouter-demos-walkthrough\.mp4$/);
+    expect((d[0].media.release as { url: string }).url).toMatch(/openrouter-demos-walkthrough\.mp4$/);
     expect(d[0].liveUrl).toBeTruthy();
     expect(retiredSlugRedirects()).toContainEqual({
       source: "/projects/openrouter",
@@ -107,11 +107,11 @@ describe("U3 catalog restructure", () => {
     );
   });
 
-  it("every demoVideoUrl is migrated to film", () => {
+  it("every demoVideoUrl is migrated to media.release", () => {
     expect(
       projectConfigs.filter((p) => "demoVideoUrl" in p).map((p) => p.slug)
     ).toEqual([]);
-    expect(projectConfigs.filter((p) => p.film).length).toBeGreaterThanOrEqual(7);
+    expect(projectConfigs.filter((p) => typeof p.media.release !== "string").length).toBeGreaterThanOrEqual(7);
   });
 
   it("redirect targets: components to parent, earlier to #earlier-work, removed to /projects", () => {

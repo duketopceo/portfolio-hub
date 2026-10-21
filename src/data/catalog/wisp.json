@@ -23,7 +23,11 @@
       "Guarded launch path — actions are gated, not freeform",
       "Breathing dim overlay for visible agent state"
     ],
-    "architecture": "Push-to-talk → whisper.cpp transcription → Jev typed decision → guarded hyprctl launch → dim overlay"
+    "architecture": "Push-to-talk → whisper.cpp transcription → Jev typed decision → guarded hyprctl launch → dim overlay",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "wisp",

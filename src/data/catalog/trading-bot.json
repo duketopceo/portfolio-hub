@@ -22,7 +22,11 @@
       "Real-time market data ingestion pipeline",
       "Automated risk management and position sizing"
     ],
-    "architecture": "Data ingestion layer → ML signal engine → Risk management → Execution engine → Analytics dashboard"
+    "architecture": "Data ingestion layer → ML signal engine → Risk management → Execution engine → Analytics dashboard",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "TradingBot",

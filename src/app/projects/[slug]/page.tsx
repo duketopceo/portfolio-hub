@@ -23,7 +23,7 @@ import {
   DossierFooterNav,
   DossierActivityTimeline,
   DossierBody,
-  ProjectFilm,
+  ProjectMediaSection,
   ComponentsList,
 } from "@/components/dossier";
 import { getProjectActivityTimeline } from "@/lib/github-activity";
@@ -107,11 +107,10 @@ export default async function ProjectDetailPage({
         registryIndex={registryIndex}
       />
 
-      {project.film && (
-        <PageShell className="dossier-page__demo">
-          <ProjectFilm film={project.film} title={project.displayName} />
-        </PageShell>
-      )}
+      <ProjectMediaSection
+        media={project.media}
+        title={project.displayName}
+      />
 
       {githubActivity && (
         <DossierActivityTimeline

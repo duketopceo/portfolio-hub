@@ -21,7 +21,11 @@
       "Limit and budget pacing UI",
       "Native Omarchy bar widget"
     ],
-    "architecture": "Omarchy bar widget → usage counters → per-model limit tracking → compact HUD"
+    "architecture": "Omarchy bar widget → usage counters → per-model limit tracking → compact HUD",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-agents",

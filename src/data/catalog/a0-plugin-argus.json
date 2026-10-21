@@ -20,7 +20,11 @@
       "Exposes review and flow tools to an Agent Zero runtime",
       "Bring-your-own-key, self-hosted"
     ],
-    "architecture": "Agent Zero tool call → plugin adapter → Argus reviewer → findings"
+    "architecture": "Agent Zero tool call → plugin adapter → Argus reviewer → findings",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-plugin-argus",

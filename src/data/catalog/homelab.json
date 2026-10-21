@@ -42,7 +42,11 @@
     "engineeringDecisions": [
       "Swarm over k8s — Matches three-node Mac Mini footprint and operator simplicity",
       "Tunnel over port-forward — Public exposure without opening the LAN edge"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "homelab",

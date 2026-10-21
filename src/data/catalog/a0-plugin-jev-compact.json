@@ -20,7 +20,11 @@
       "Decision-model scoring drives what gets compacted",
       "Tombstone restore for compacted spans"
     ],
-    "architecture": "Context window → Jev span scoring → compaction → tombstone store → restore"
+    "architecture": "Context window → Jev span scoring → compaction → tombstone store → restore",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-plugin-jev-compact",

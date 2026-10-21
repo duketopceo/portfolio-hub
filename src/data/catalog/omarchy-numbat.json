@@ -22,7 +22,11 @@
       "Read-only: tails records.ndjson, never writes to the monitor",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "numbat records tail → findings feed (1MiB bounded tail) → severity gate → toasts + panel"
+    "architecture": "numbat records tail → findings feed (1MiB bounded tail) → severity gate → toasts + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-numbat",

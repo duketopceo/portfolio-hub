@@ -20,7 +20,11 @@
       "context-restore MCP server rehydrates tombstoned spans",
       "Stdlib-only Python; Claude Code adapter ready, Codex and OpenCode next"
     ],
-    "architecture": "Transcript → spans → highlight → score → budget knapsack → kept spans + tombstones → MCP restore"
+    "architecture": "Transcript → spans → highlight → score → budget knapsack → kept spans + tombstones → MCP restore",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "jev-compact",

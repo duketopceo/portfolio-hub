@@ -68,7 +68,11 @@
       "Public surface at khanai.app"
     ],
     "architecture": "Temporal workflows → OpenRouter/LiteLLM workers → Risk scoring → MCP tools → Rust CLI + khanai.app",
-    "finishLine": "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Rust CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild."
+    "finishLine": "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Rust CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild.",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "kurultai",
@@ -116,9 +120,12 @@
       "OpenRouter"
     ],
     "private": false,
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/kurultai-launch.mp4",
-      "transcript": "A launch film for Kurultai, the Rust knowledge brain with MCP retrieval and a 3D graph view."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/kurultai-launch.mp4",
+        "transcript": "A launch film for Kurultai, the Rust knowledge brain with MCP retrieval and a 3D graph view."
+      },
+      "demo": "to-record"
     },
     "highlights": [
       "Rust + axum API with MCP tool surface",
@@ -159,10 +166,13 @@
       ]
     },
     "demoUrl": "/demos/argus",
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/argus-witness.mp4",
-      "poster": "https://media.luke-the-duke.com/launch/argus-poster.jpg",
-      "transcript": "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/argus-witness.mp4",
+        "poster": "https://media.luke-the-duke.com/launch/argus-poster.jpg",
+        "transcript": "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift."
+      },
+      "demo": "to-record"
     },
     "techStack": [
       "TypeScript",
@@ -200,9 +210,12 @@
     "featured": false,
     "orbitTier": "secondary",
     "demoUrl": "/demos/dayflow",
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/dayflow-launch.mp4",
-      "transcript": "A launch film for Dayflow, the private automatic work journal for Linux."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/dayflow-launch.mp4",
+        "transcript": "A launch film for Dayflow, the private automatic work journal for Linux."
+      },
+      "demo": "to-record"
     },
     "techStack": [
       "Go",
@@ -278,10 +291,13 @@
       "Railway"
     ],
     "private": true,
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/pace-debut.mp4",
-      "poster": "https://media.luke-the-duke.com/launch/pace-poster.jpg",
-      "transcript": "A launch film for Pace, the production platform for identity, billing and AI for small businesses."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/pace-debut.mp4",
+        "poster": "https://media.luke-the-duke.com/launch/pace-poster.jpg",
+        "transcript": "A launch film for Pace, the production platform for identity, billing and AI for small businesses."
+      },
+      "demo": "to-record"
     },
     "showcase": {
       "whatItIs": "A private business cloud for small businesses: one login, one shell, integrated open-source business apps, and an agent layer that acts across them.",
@@ -359,9 +375,12 @@
     "liveUrl": "https://luke-the-duke.com/openrouter",
     "demoUrl": "https://luke-the-duke.com/openrouter",
     "embeddable": true,
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/openrouter-demos-walkthrough.mp4",
-      "transcript": "A walkthrough of the role-aligned application demos: Deflect, Motion, Bakeoff and Caesar."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/openrouter-demos-walkthrough.mp4",
+        "transcript": "A walkthrough of the role-aligned application demos: Deflect, Motion, Bakeoff and Caesar."
+      },
+      "demo": "to-record"
     },
     "highlights": [
       "Deflect — support routing with Guardrails and eval fixtures",
@@ -414,7 +433,11 @@
     "engineeringDecisions": [
       "Swarm over k8s — Matches three-node Mac Mini footprint and operator simplicity",
       "Tunnel over port-forward — Public exposure without opening the LAN edge"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "luke-agents",
@@ -443,7 +466,11 @@
     "engineeringDecisions": [
       "Inheritance over duplication — Thin repo pointers prevent forked standards",
       "Principles immutable, patterns evolve — Separates gospel from tactical guidance"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "ai-debate-arena",
@@ -466,7 +493,11 @@
       "OpenRouter model routing for cloud models",
       "Rich terminal UI for following the exchange"
     ],
-    "architecture": "CLI → Prompt orchestrator → OpenRouter → Dual agent turns → Terminal renderer"
+    "architecture": "CLI → Prompt orchestrator → OpenRouter → Dual agent turns → Terminal renderer",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "trading-bot",
@@ -491,7 +522,11 @@
       "Real-time market data ingestion pipeline",
       "Automated risk management and position sizing"
     ],
-    "architecture": "Data ingestion layer → ML signal engine → Risk management → Execution engine → Analytics dashboard"
+    "architecture": "Data ingestion layer → ML signal engine → Risk management → Execution engine → Analytics dashboard",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "alphahedge",
@@ -519,7 +554,11 @@
       "Portfolio construction and risk allocation engine",
       "Real-time P&L tracking with interactive charts"
     ],
-    "architecture": "Next.js SSR → Simulation engine → Financial APIs → Chart.js visualizations → Portfolio analytics"
+    "architecture": "Next.js SSR → Simulation engine → Financial APIs → Chart.js visualizations → Portfolio analytics",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "ikbr-dashboard",
@@ -546,7 +585,11 @@
       "Real-time IBKR API integration",
       "Interactive Plotly visualizations",
       "Account analytics and position tracking"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "finance-frenzy",
@@ -572,7 +615,11 @@
       "Hackathon winner: Best Finance Hack & Top 6",
       "Gamified financial literacy through simulation",
       "Interactive portfolio management gameplay"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "skyguard-ai",
@@ -601,7 +648,11 @@
       "Automated permit coordination workflow",
       "Multi-channel customer communications"
     ],
-    "architecture": "FastAPI backend → Gemini LLM pipeline → Document processor → Gradio interface → Google Cloud services"
+    "architecture": "FastAPI backend → Gemini LLM pipeline → Document processor → Gradio interface → Google Cloud services",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "quiz-the-best",
@@ -628,7 +679,11 @@
       "Automatic quiz generation from web sources",
       "Adaptive learning algorithm",
       "Cross-platform mobile interface"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "optimezer",
@@ -651,7 +706,11 @@
       "Pre-built workflow automation templates",
       "ML models that adapt to usage patterns",
       "Small business-focused integrations"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "republic-atlas",
@@ -678,7 +737,11 @@
       "Real-time data aggregation pipelines",
       "Geographic visualization with GIS"
     ],
-    "architecture": "Firebase hosting → Python data pipelines → GIS visualization layer → Interactive election maps"
+    "architecture": "Firebase hosting → Python data pipelines → GIS visualization layer → Interactive election maps",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "military-hardware-db",
@@ -717,7 +780,11 @@
       "Structured data for research and analysis",
       "Open-source intelligence methodology"
     ],
-    "architecture": "SQLite database → FastAPI REST API → React intelligence console → Docker container → Swarm deployment"
+    "architecture": "SQLite database → FastAPI REST API → React intelligence console → Docker container → Swarm deployment",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "etl-pipeline",
@@ -740,7 +807,11 @@
       "Modular pipeline architecture",
       "Configurable transformation steps",
       "Multiple data source connectors"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "series65-study-app",
@@ -770,7 +841,11 @@
       "Full CI/CD with Playwright e2e test suite",
       "Progress tracking and performance analytics"
     ],
-    "architecture": "Next.js SSR → Course content engine → Quiz system → Progress tracker → Docker Swarm deployment"
+    "architecture": "Next.js SSR → Course content engine → Quiz system → Progress tracker → Docker Swarm deployment",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "dixi",
@@ -797,7 +872,11 @@
       "End-to-end TypeScript type safety",
       "Server-side rendering with API routes",
       "Modern React patterns and responsive UI"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "chronicle-weaver",
@@ -822,7 +901,11 @@
       "Branching narrative engine",
       "Rich media storytelling",
       "Mobile-first with offline support"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "collaborative-essay",
@@ -848,7 +931,11 @@
       "Real-time multi-user collaboration",
       "Conflict resolution and version history",
       "WebSocket-based synchronization"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "personal-blog",
@@ -873,7 +960,11 @@
       "Custom CMS integration",
       "SEO optimization and RSS generation",
       "Syntax highlighting for code blocks"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "curious-storycard",
@@ -902,7 +993,11 @@
       "Swipeable card-based content experience",
       "Docker-hosted backend with PostgreSQL",
       "36 passing backend tests with CI pipeline"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "kate",
@@ -914,9 +1009,12 @@
     "type": "app",
     "featured": false,
     "liveUrl": "https://kate.shippedit.dev",
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/kate-launch.mp4",
-      "transcript": "A launch film for Kate, the shared field journal for crews and small groups, with native iOS built on Linux."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/kate-launch.mp4",
+        "transcript": "A launch film for Kate, the shared field journal for crews and small groups, with native iOS built on Linux."
+      },
+      "demo": "to-record"
     },
     "showcase": {
       "whatItIs": "A shared field journal for the spontaneous things a crew does together: journal entries with photos, hangout ideas, a movie shelf, places and outings, and week windows that find when everyone is free.",
@@ -971,7 +1069,11 @@
       "Zero-dependency SwiftUI client",
       "Built and signed on Linux via xtool"
     ],
-    "architecture": "SwiftUI tabs → KateCore client → Kate API"
+    "architecture": "SwiftUI tabs → KateCore client → Kate API",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-agents",
@@ -995,7 +1097,11 @@
       "Limit and budget pacing UI",
       "Native Omarchy bar widget"
     ],
-    "architecture": "Omarchy bar widget → usage counters → per-model limit tracking → compact HUD"
+    "architecture": "Omarchy bar widget → usage counters → per-model limit tracking → compact HUD",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-fan",
@@ -1018,7 +1124,11 @@
       "Configurable fan presets",
       "Top-process overlay"
     ],
-    "architecture": "Omarchy bar widget → system sensors → process list → fan controller"
+    "architecture": "Omarchy bar widget → system sensors → process list → fan controller",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-nexus",
@@ -1042,7 +1152,11 @@
       "Compact radar-style widget",
       "Hardware discovery in the menu bar"
     ],
-    "architecture": "Omarchy bar widget → system discovery → device graph → radar UI"
+    "architecture": "Omarchy bar widget → system discovery → device graph → radar UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-standby",
@@ -1065,7 +1179,11 @@
       "Clock and weather overlay",
       "Caffeine toggle integration"
     ],
-    "architecture": "Fullscreen overlay → clock/weather data → brightness and caffeine toggles"
+    "architecture": "Fullscreen overlay → clock/weather data → brightness and caffeine toggles",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-ticker",
@@ -1088,7 +1206,11 @@
       "Gold, tech, nuclear, energy, rates coverage",
       "Compact always-visible UI"
     ],
-    "architecture": "Data feed → ticker engine → Omarchy bar widget"
+    "architecture": "Data feed → ticker engine → Omarchy bar widget",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-power",
@@ -1112,7 +1234,11 @@
       "Helper reads /proc directly — no heavyweight deps",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "sysfs/power_supply reader → percent/state model → bar widget + panel"
+    "architecture": "sysfs/power_supply reader → percent/state model → bar widget + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-connections",
@@ -1135,7 +1261,11 @@
       "Dropdown panel for detail",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "nmcli probe → connection model → bar widget + panel"
+    "architecture": "nmcli probe → connection model → bar widget + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-numbat",
@@ -1160,7 +1290,11 @@
       "Read-only: tails records.ndjson, never writes to the monitor",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "numbat records tail → findings feed (1MiB bounded tail) → severity gate → toasts + panel"
+    "architecture": "numbat records tail → findings feed (1MiB bounded tail) → severity gate → toasts + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-bumblebee",
@@ -1185,7 +1319,11 @@
       "Mute list keeps accepted exposures visible but quiet",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "bumblebee scan → catalog diff → severity-tagged exposure rows → toasts + panel"
+    "architecture": "bumblebee scan → catalog diff → severity-tagged exposure rows → toasts + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-pplx",
@@ -1210,7 +1348,11 @@
       "BYOK — env or keyring",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "QML dropdown → pplx CLI → Search API → rendered results + copy"
+    "architecture": "QML dropdown → pplx CLI → Search API → rendered results + copy",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-wisp",
@@ -1234,7 +1376,11 @@
       "Panel with Now/Agents/Activity/Telemetry/Skills tabs",
       "Pairs with wispd — push-to-talk voice → routed agent actions"
     ],
-    "architecture": "wispd state.json → shell widgets (orb/bubble/pill/cursor) + panel"
+    "architecture": "wispd state.json → shell widgets (orb/bubble/pill/cursor) + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omarchy-plugins",
@@ -1259,7 +1405,11 @@
       "Toast correctness layer: severity gates, cooldowns, burst coalescing, DND",
       "275-test suite covering helpers and manifest schema"
     ],
-    "architecture": "Umbrella catalog → per-plugin subtrees → `omarchy plugin add` repos → marketplace listings"
+    "architecture": "Umbrella catalog → per-plugin subtrees → `omarchy plugin add` repos → marketplace listings",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "orchestral",
@@ -1298,10 +1448,13 @@
       "LLM"
     ],
     "private": false,
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/orchestral-launch.mp4",
-      "poster": "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
-      "transcript": "A launch film for orchestral, the OpenRouter eval harness for cheap orchestrator and worker stacks."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/orchestral-launch.mp4",
+        "poster": "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
+        "transcript": "A launch film for orchestral, the OpenRouter eval harness for cheap orchestrator and worker stacks."
+      },
+      "demo": "to-record"
     },
     "highlights": [
       "Orchestrator + worker eval design",
@@ -1331,7 +1484,11 @@
       "Budget and limit tracking",
       "Routing recommendations"
     ],
-    "architecture": "OpenRouter API → usage aggregation → budget engine → dashboard UI"
+    "architecture": "OpenRouter API → usage aggregation → budget engine → dashboard UI",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "a0-openrouter-spend",
@@ -1354,7 +1511,11 @@
       "Budget analytics helpers",
       "Companion to OpenRouter Usage"
     ],
-    "architecture": "OpenRouter spend data → budget helpers → lightweight UI"
+    "architecture": "OpenRouter spend data → budget helpers → lightweight UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "kurultai-people",
@@ -1378,7 +1539,11 @@
       "Recall and citation pipeline",
       "Agent Zero plugin interface"
     ],
-    "architecture": "Agent Zero hook → Kurultai search → recall ranking → cited response"
+    "architecture": "Agent Zero hook → Kurultai search → recall ranking → cited response",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "omaseal",
@@ -1401,7 +1566,11 @@
       "Plugin credential store",
       "Secure retrieval API"
     ],
-    "architecture": "Keyring backend → encrypted store → plugin credential API → Omarchy UI"
+    "architecture": "Keyring backend → encrypted store → plugin credential API → Omarchy UI",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "crucible",
@@ -1423,7 +1592,11 @@
       "README and scope being finalized",
       "Dossier will expand as project matures"
     ],
-    "architecture": "TBD — follow README once scope is documented"
+    "architecture": "TBD — follow README once scope is documented",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "bartlett-permits",
@@ -1447,7 +1620,11 @@
       "Automation sidecar for permit workflows",
       "Multi-service Express/React/FastAPI stack"
     ],
-    "architecture": "Map UI → permit service → FastAPI workflows → PostgreSQL → automation sidecar"
+    "architecture": "Map UI → permit service → FastAPI workflows → PostgreSQL → automation sidecar",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "project-atlas",
@@ -1471,7 +1648,11 @@
       "Automated follow-up and review flows",
       "Production operations backend"
     ],
-    "architecture": "Voice AI → CRM → workflow engine → review automation → customer comms"
+    "architecture": "Voice AI → CRM → workflow engine → review automation → customer comms",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "helm-qmk-macropad",
@@ -1494,7 +1675,11 @@
       "CAD and firmware source",
       "Working hardware build"
     ],
-    "architecture": "Custom PCB → QMK firmware → USB-C HID → keymap + encoder logic"
+    "architecture": "Custom PCB → QMK firmware → USB-C HID → keymap + encoder logic",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "void-sleep",
@@ -1517,7 +1702,11 @@
       "iOS HealthKit integration",
       "Private mobile product experiment"
     ],
-    "architecture": "iOS app → HealthKit sleep data → personality engine → daily judgment UI"
+    "architecture": "iOS app → HealthKit sleep data → personality engine → daily judgment UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "harbor-openrouter-ios-client",
@@ -1540,7 +1729,11 @@
       "Bring-your-own-key model",
       "Unofficial, private client"
     ],
-    "architecture": "iOS client → OpenRouter chat API → keyring → BYOK chat UI"
+    "architecture": "iOS client → OpenRouter chat API → keyring → BYOK chat UI",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "pixel-tycoon",
@@ -1587,7 +1780,11 @@
       "JSON-driven modular buildings (BuildingZone + data rows)",
       "Day/night cycle, four weather states, occlusion pass"
     ],
-    "architecture": "Godot scenes → EventBus autoloads → JSON building data → EconomyMath lib → headless perf harness → regression diff"
+    "architecture": "Godot scenes → EventBus autoloads → JSON building data → EconomyMath lib → headless perf harness → regression diff",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "wisp",
@@ -1613,7 +1810,11 @@
       "Guarded launch path — actions are gated, not freeform",
       "Breathing dim overlay for visible agent state"
     ],
-    "architecture": "Push-to-talk → whisper.cpp transcription → Jev typed decision → guarded hyprctl launch → dim overlay"
+    "architecture": "Push-to-talk → whisper.cpp transcription → Jev typed decision → guarded hyprctl launch → dim overlay",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "open-computer",
@@ -1635,7 +1836,11 @@
       "Disposable sandboxed execution per task",
       "Hybrid local and cloud placement"
     ],
-    "architecture": "Task intake → model routing → disposable sandbox → execution → result capture"
+    "architecture": "Task intake → model routing → disposable sandbox → execution → result capture",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "agentflow",
@@ -1659,7 +1864,11 @@
       "Script-driven rather than prompt-driven orchestration",
       "Per-harness plugin adapters"
     ],
-    "architecture": "Workflow script → harness adapter → agent execution → step results → next step"
+    "architecture": "Workflow script → harness adapter → agent execution → step results → next step",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "tallyline",
@@ -1681,7 +1890,11 @@
       "Linear-class interface, MIT licensed",
       "Self-hostable with no vendor dependency"
     ],
-    "architecture": "Web board → issue store → agent API surface → human and agent actors on one model"
+    "architecture": "Web board → issue store → agent API surface → human and agent actors on one model",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "wordink",
@@ -1703,7 +1916,11 @@
       "Low-latency dictation over a fast inference API",
       "Client SDK plus app"
     ],
-    "architecture": "Audio capture → Groq transcription → text insertion"
+    "architecture": "Audio capture → Groq transcription → text insertion",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "agent-zero-plugins",
@@ -1726,7 +1943,11 @@
       "Argus plugin exposes pull-request review as agent tools",
       "Notion plugin runs as a local stdio MCP server"
     ],
-    "architecture": "Agent Zero runtime → plugin adapters → external service (Argus, Notion, GlitchTip, OmaSeal)"
+    "architecture": "Agent Zero runtime → plugin adapters → external service (Argus, Notion, GlitchTip, OmaSeal)",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "a0-plugin-argus",
@@ -1749,7 +1970,11 @@
       "Exposes review and flow tools to an Agent Zero runtime",
       "Bring-your-own-key, self-hosted"
     ],
-    "architecture": "Agent Zero tool call → plugin adapter → Argus reviewer → findings"
+    "architecture": "Agent Zero tool call → plugin adapter → Argus reviewer → findings",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "a0-plugin-omaseal",
@@ -1774,7 +1999,11 @@
       "Agents never receive plaintext values",
       "Keyring, 1Password, env, and encrypted vault support"
     ],
-    "architecture": "Agent request → secret resolver → backend (keyring/1Password/env/vault) → masked value"
+    "architecture": "Agent request → secret resolver → backend (keyring/1Password/env/vault) → masked value",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "a0-plugin-jev-compact",
@@ -1797,7 +2026,11 @@
       "Decision-model scoring drives what gets compacted",
       "Tombstone restore for compacted spans"
     ],
-    "architecture": "Context window → Jev span scoring → compaction → tombstone store → restore"
+    "architecture": "Context window → Jev span scoring → compaction → tombstone store → restore",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "a0-plugin-device-sync",
@@ -1820,7 +2053,11 @@
       "Settings, chat, and memory kept in sync across instances",
       "Tailscale transport with no secrets in the payload"
     ],
-    "architecture": "Instance state → sync pack → Tailscale transport → peer instance apply"
+    "architecture": "Instance state → sync pack → Tailscale transport → peer instance apply",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "a0-plugin-durable",
@@ -1844,7 +2081,11 @@
       "Zero-dependency SQLite journal",
       "Optional Restate adapter for stronger guarantees"
     ],
-    "architecture": "Task start → SQLite journal append → restart → journal replay → resume"
+    "architecture": "Task start → SQLite journal append → restart → journal replay → resume",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "a0-plugin-glitchtip",
@@ -1867,7 +2108,11 @@
       "Errors correlated to request IDs",
       "OpenTelemetry trace correlation"
     ],
-    "architecture": "Agent run → error capture → GlitchTip → request-ID and trace correlation"
+    "architecture": "Agent run → error capture → GlitchTip → request-ID and trace correlation",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "a0-plugin-notion",
@@ -1890,7 +2135,11 @@
       "Runs as a local stdio MCP server",
       "Ingestion atoms for Notion content"
     ],
-    "architecture": "Agent Zero → local stdio MCP server → Notion API → ingestion atoms"
+    "architecture": "Agent Zero → local stdio MCP server → Notion API → ingestion atoms",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   {
     "slug": "cairn",
@@ -1934,6 +2183,10 @@
         "OpenRouter"
       ],
       "status": "Early development. The backend is deployed; an internal TestFlight build is being prepared."
+    },
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
     }
   },
   {
@@ -1973,6 +2226,10 @@
         "0 A.D."
       ],
       "status": "Work in progress, Windows only. The host is covered by offline tests; the plugin UI has not had a long human playtest."
+    },
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
     }
   },
   {
@@ -2010,6 +2267,10 @@
         "Python (reference client)"
       ],
       "status": "Working client. UUIDs, frame layout and CRC are high confidence; telemetry decoding is provisional until checked against the scooter's display."
+    },
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
     }
   },
   {
@@ -2037,7 +2298,11 @@
       "Dossier page per project, with private work shown through scrubbed labels only",
       "Catalog SOP and tests keep the single source of truth consistent"
     ],
-    "architecture": "Catalog (src/data) → GitHub App ingest (ISR) → activity aggregation → orbit and dossier pages"
+    "architecture": "Catalog (src/data) → GitHub App ingest (ISR) → activity aggregation → orbit and dossier pages",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "jev-compact",
@@ -2060,7 +2325,11 @@
       "context-restore MCP server rehydrates tombstoned spans",
       "Stdlib-only Python; Claude Code adapter ready, Codex and OpenCode next"
     ],
-    "architecture": "Transcript → spans → highlight → score → budget knapsack → kept spans + tombstones → MCP restore"
+    "architecture": "Transcript → spans → highlight → score → budget knapsack → kept spans + tombstones → MCP restore",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   {
     "slug": "pinetree-solari-demo",
@@ -2084,6 +2353,10 @@
       "Combined pricing.csv and pricing.json from a verified live run",
       "Runs inside the Solari Free plan: one browser, one sandbox, released on exit"
     ],
-    "architecture": "sites.json → cloud browser → HTML upload → sandbox parser → per-site output → merged CSV and JSON"
+    "architecture": "sites.json → cloud browser → HTML upload → sandbox parser → per-site output → merged CSV and JSON",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   }
 ]

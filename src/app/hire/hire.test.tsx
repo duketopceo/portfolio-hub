@@ -44,6 +44,20 @@ describe("U7 /hire", () => {
     }
   });
 
+  it("uses each featured project's release poster", async () => {
+    upstream.data = null;
+    const html = await hire();
+    const posters = listedProjects()
+      .filter((p) => (HOMEPAGE_FEATURED_SLUGS as readonly string[]).includes(p.slug))
+      .flatMap((p) =>
+        typeof p.media.release === "string" || !p.media.release.poster
+          ? []
+          : [p.media.release.poster]
+      );
+    expect(posters.length).toBeGreaterThan(0);
+    for (const poster of posters) expect(html).toContain(`src="${poster}"`);
+  });
+
   it("puts the Résumé and Email actions before the featured strip", async () => {
     upstream.data = null;
     const html = await hire();

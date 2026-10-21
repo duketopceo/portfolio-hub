@@ -24,7 +24,11 @@
       "Real-time IBKR API integration",
       "Interactive Plotly visualizations",
       "Account analytics and position tracking"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "ibkr-portfolio-dashboard",

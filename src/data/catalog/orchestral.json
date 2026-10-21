@@ -36,10 +36,13 @@
       "LLM"
     ],
     "private": false,
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/orchestral-launch.mp4",
-      "poster": "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
-      "transcript": "A launch film for orchestral, the OpenRouter eval harness for cheap orchestrator and worker stacks."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/orchestral-launch.mp4",
+        "poster": "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
+        "transcript": "A launch film for orchestral, the OpenRouter eval harness for cheap orchestrator and worker stacks."
+      },
+      "demo": "to-record"
     },
     "highlights": [
       "Orchestrator + worker eval design",

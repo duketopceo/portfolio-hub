@@ -19,7 +19,11 @@
       "README and scope being finalized",
       "Dossier will expand as project matures"
     ],
-    "architecture": "TBD — follow README once scope is documented"
+    "architecture": "TBD — follow README once scope is documented",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "crucible",

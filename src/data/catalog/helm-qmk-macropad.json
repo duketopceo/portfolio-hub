@@ -20,7 +20,11 @@
       "CAD and firmware source",
       "Working hardware build"
     ],
-    "architecture": "Custom PCB → QMK firmware → USB-C HID → keymap + encoder logic"
+    "architecture": "Custom PCB → QMK firmware → USB-C HID → keymap + encoder logic",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "helm-qmk-macropad",

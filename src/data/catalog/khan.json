@@ -68,7 +68,11 @@
       "Public surface at khanai.app"
     ],
     "architecture": "Temporal workflows → OpenRouter/LiteLLM workers → Risk scoring → MCP tools → Rust CLI + khanai.app",
-    "finishLine": "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Rust CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild."
+    "finishLine": "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Rust CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild.",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "Khan",

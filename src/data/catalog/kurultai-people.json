@@ -21,7 +21,11 @@
       "Recall and citation pipeline",
       "Agent Zero plugin interface"
     ],
-    "architecture": "Agent Zero hook → Kurultai search → recall ranking → cited response"
+    "architecture": "Agent Zero hook → Kurultai search → recall ranking → cited response",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "kurultai_people",

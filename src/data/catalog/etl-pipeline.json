@@ -20,7 +20,11 @@
       "Modular pipeline architecture",
       "Configurable transformation steps",
       "Multiple data source connectors"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "ETL-Pipeline",

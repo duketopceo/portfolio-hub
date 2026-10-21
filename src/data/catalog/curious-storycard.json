@@ -26,7 +26,11 @@
       "Swipeable card-based content experience",
       "Docker-hosted backend with PostgreSQL",
       "36 passing backend tests with CI pipeline"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "curious-storycard",

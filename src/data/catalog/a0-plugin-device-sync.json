@@ -20,7 +20,11 @@
       "Settings, chat, and memory kept in sync across instances",
       "Tailscale transport with no secrets in the payload"
     ],
-    "architecture": "Instance state → sync pack → Tailscale transport → peer instance apply"
+    "architecture": "Instance state → sync pack → Tailscale transport → peer instance apply",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-plugin-device-sync",

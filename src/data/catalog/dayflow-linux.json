@@ -10,9 +10,12 @@
     "featured": false,
     "orbitTier": "secondary",
     "demoUrl": "/demos/dayflow",
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/dayflow-launch.mp4",
-      "transcript": "A launch film for Dayflow, the private automatic work journal for Linux."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/dayflow-launch.mp4",
+        "transcript": "A launch film for Dayflow, the private automatic work journal for Linux."
+      },
+      "demo": "to-record"
     },
     "techStack": [
       "Go",

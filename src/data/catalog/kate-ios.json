@@ -20,7 +20,11 @@
       "Zero-dependency SwiftUI client",
       "Built and signed on Linux via xtool"
     ],
-    "architecture": "SwiftUI tabs → KateCore client → Kate API"
+    "architecture": "SwiftUI tabs → KateCore client → Kate API",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "kate-ios",

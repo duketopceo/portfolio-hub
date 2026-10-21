@@ -25,7 +25,11 @@
       "Portfolio construction and risk allocation engine",
       "Real-time P&L tracking with interactive charts"
     ],
-    "architecture": "Next.js SSR → Simulation engine → Financial APIs → Chart.js visualizations → Portfolio analytics"
+    "architecture": "Next.js SSR → Simulation engine → Financial APIs → Chart.js visualizations → Portfolio analytics",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "AlphaHedge-Hedge-Fund-Simulator",

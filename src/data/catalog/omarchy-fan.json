@@ -20,7 +20,11 @@
       "Configurable fan presets",
       "Top-process overlay"
     ],
-    "architecture": "Omarchy bar widget → system sensors → process list → fan controller"
+    "architecture": "Omarchy bar widget → system sensors → process list → fan controller",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-fan",

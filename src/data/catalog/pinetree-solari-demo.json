@@ -21,7 +21,11 @@
       "Combined pricing.csv and pricing.json from a verified live run",
       "Runs inside the Solari Free plan: one browser, one sandbox, released on exit"
     ],
-    "architecture": "sites.json → cloud browser → HTML upload → sandbox parser → per-site output → merged CSV and JSON"
+    "architecture": "sites.json → cloud browser → HTML upload → sandbox parser → per-site output → merged CSV and JSON",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "pinetree-solari-demo",

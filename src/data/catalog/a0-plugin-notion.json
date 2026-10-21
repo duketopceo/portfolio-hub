@@ -20,7 +20,11 @@
       "Runs as a local stdio MCP server",
       "Ingestion atoms for Notion content"
     ],
-    "architecture": "Agent Zero → local stdio MCP server → Notion API → ingestion atoms"
+    "architecture": "Agent Zero → local stdio MCP server → Notion API → ingestion atoms",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-plugin-notion",

@@ -20,7 +20,11 @@
       "Budget and limit tracking",
       "Routing recommendations"
     ],
-    "architecture": "OpenRouter API → usage aggregation → budget engine → dashboard UI"
+    "architecture": "OpenRouter API → usage aggregation → budget engine → dashboard UI",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "openrouter_usage",

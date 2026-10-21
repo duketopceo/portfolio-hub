@@ -34,6 +34,10 @@
         "Python (reference client)"
       ],
       "status": "Working client. UUIDs, frame layout and CRC are high confidence; telemetry decoding is provisional until checked against the scooter's display."
+    },
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
     }
   },
   "github": {

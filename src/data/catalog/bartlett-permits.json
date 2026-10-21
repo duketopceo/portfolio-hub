@@ -21,7 +21,11 @@
       "Automation sidecar for permit workflows",
       "Multi-service Express/React/FastAPI stack"
     ],
-    "architecture": "Map UI → permit service → FastAPI workflows → PostgreSQL → automation sidecar"
+    "architecture": "Map UI → permit service → FastAPI workflows → PostgreSQL → automation sidecar",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "bartlett-permits",

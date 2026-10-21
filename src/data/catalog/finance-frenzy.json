@@ -23,7 +23,11 @@
       "Hackathon winner: Best Finance Hack & Top 6",
       "Gamified financial literacy through simulation",
       "Interactive portfolio management gameplay"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "FinanceFrenzy",

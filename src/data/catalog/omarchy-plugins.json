@@ -22,7 +22,11 @@
       "Toast correctness layer: severity gates, cooldowns, burst coalescing, DND",
       "275-test suite covering helpers and manifest schema"
     ],
-    "architecture": "Umbrella catalog → per-plugin subtrees → `omarchy plugin add` repos → marketplace listings"
+    "architecture": "Umbrella catalog → per-plugin subtrees → `omarchy plugin add` repos → marketplace listings",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "omarchy-plugins",

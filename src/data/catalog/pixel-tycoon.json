@@ -44,7 +44,11 @@
       "JSON-driven modular buildings (BuildingZone + data rows)",
       "Day/night cycle, four weather states, occlusion pass"
     ],
-    "architecture": "Godot scenes → EventBus autoloads → JSON building data → EconomyMath lib → headless perf harness → regression diff"
+    "architecture": "Godot scenes → EventBus autoloads → JSON building data → EconomyMath lib → headless perf harness → regression diff",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "pixel-tycoon",

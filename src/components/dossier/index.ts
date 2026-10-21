@@ -7,5 +7,5 @@ export { DossierActivityTimeline } from "./DossierActivityTimeline";
 export { DossierBackendSection } from "./DossierBackendSection";
 export { DossierBody } from "./DossierBody";
 export { ShowcaseCard } from "./ShowcaseCard";
-export { ProjectFilm, ProjectFilmView } from "./ProjectFilm";
+export { ProjectMedia, ProjectMediaView, ProjectMediaSection } from "./ProjectMedia";
 export { ComponentsList } from "./ComponentsList";

@@ -21,7 +21,11 @@
       "Panel with Now/Agents/Activity/Telemetry/Skills tabs",
       "Pairs with wispd — push-to-talk voice → routed agent actions"
     ],
-    "architecture": "wispd state.json → shell widgets (orb/bubble/pill/cursor) + panel"
+    "architecture": "wispd state.json → shell widgets (orb/bubble/pill/cursor) + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-wisp",

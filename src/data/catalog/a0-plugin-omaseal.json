@@ -22,7 +22,11 @@
       "Agents never receive plaintext values",
       "Keyring, 1Password, env, and encrypted vault support"
     ],
-    "architecture": "Agent request → secret resolver → backend (keyring/1Password/env/vault) → masked value"
+    "architecture": "Agent request → secret resolver → backend (keyring/1Password/env/vault) → masked value",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-plugin-omaseal",

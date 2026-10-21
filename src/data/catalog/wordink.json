@@ -19,7 +19,11 @@
       "Low-latency dictation over a fast inference API",
       "Client SDK plus app"
     ],
-    "architecture": "Audio capture → Groq transcription → text insertion"
+    "architecture": "Audio capture → Groq transcription → text insertion",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "WordInk",

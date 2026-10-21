@@ -69,10 +69,22 @@ export interface PlanetVisualConfig {
   moons?: PlanetMoonConfig[];
 }
 
-export interface ProjectFilm {
+/** One recorded video. `captions` is a path under the site origin. */
+export interface MediaAsset {
   url: string;
   poster?: string;
-  transcript?: string;
+  captions?: string;
+  transcript: string;
+}
+
+/** Present, still to be recorded, or not applicable. */
+export type MediaSlot = MediaAsset | "to-record" | "n/a";
+
+export type MediaKind = "release" | "demo";
+
+export interface ProjectMedia {
+  release: MediaSlot;
+  demo: MediaSlot;
 }
 
 /** Hand-written showcase copy for a private project. Never fetched at runtime. */
@@ -105,9 +117,9 @@ export interface ProjectConfig {
   liveUrl?: string;
   /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
   demoUrl?: string;
-  /** Launch film for the dossier; shown on private entries too. Assets live on
-   *  the existing media host only. */
-  film?: ProjectFilm;
+  /** Release video and demo recording for the dossier; shown on private
+   *  entries too. Video assets live on the existing media host only. */
+  media: ProjectMedia;
   /** Hand-written card shown in place of activity/README on private entries. */
   showcase?: ProjectShowcase;
   /** Marks this entry as a component of the named parent: no dossier of its own. */

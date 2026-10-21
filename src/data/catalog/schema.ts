@@ -26,11 +26,17 @@ const planetVisual = z.strictObject({
   moons: z.array(planetMoon).optional(),
 });
 
-const film = z.strictObject({
+const mediaAsset = z.strictObject({
   url: z.string(),
   poster: z.string().optional(),
-  transcript: z.string().optional(),
+  /** Path under the site origin, e.g. /media/captions/<slug>-release.vtt */
+  captions: z.string().optional(),
+  transcript: z.string(),
 });
+
+const mediaSlot = z.union([mediaAsset, z.literal("to-record"), z.literal("n/a")]);
+
+const media = z.strictObject({ release: mediaSlot, demo: mediaSlot });
 
 const showcase = z.strictObject({
   whatItIs: z.string(),
@@ -54,7 +60,7 @@ export const curatedSchema = z.strictObject({
   planetVisual: planetVisual.optional(),
   liveUrl: z.string().optional(),
   demoUrl: z.string().optional(),
-  film: film.optional(),
+  media,
   showcase: showcase.optional(),
   parentSlug: z.string().optional(),
   era: z.literal("earlier").optional(),

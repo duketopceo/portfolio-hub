@@ -4,7 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import type { ProjectConfig } from "@/lib/types";
 
-/** Featured-work strip for /hire. Poster when the film has one, otherwise a
+const poster = (p: ProjectConfig) =>
+  typeof p.media.release === "string" ? undefined : p.media.release.poster;
+
+/** Featured-work strip for /hire. Poster when the release video has one, otherwise a
  *  typographic plate; never a placeholder thumbnail. */
 export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
   const [failed, setFailed] = useState<ReadonlySet<string>>(new Set());
@@ -27,10 +30,10 @@ export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
               data-umami-event-slug={p.slug}
               data-umami-event-source="hire"
             >
-              {p.film?.poster && !failed.has(p.slug) ? (
+              {poster(p) && !failed.has(p.slug) ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={p.film.poster}
+                  src={poster(p)}
                   alt=""
                   loading="lazy"
                   className="hire-featured__media"
@@ -45,7 +48,7 @@ export function FeaturedWork({ projects }: { projects: ProjectConfig[] }) {
               )}
               <span className="hire-featured__name">{p.displayName}</span>
               <span className="hire-featured__tagline">{p.tagline}</span>
-              {p.film && (
+              {typeof p.media.release !== "string" && (
                 <span className="hire-featured__film">Launch film</span>
               )}
             </Link>

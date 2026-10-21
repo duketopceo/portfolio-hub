@@ -41,6 +41,10 @@
         "OpenRouter"
       ],
       "status": "Early development. The backend is deployed; an internal TestFlight build is being prepared."
+    },
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
     }
   },
   "github": {

@@ -22,7 +22,11 @@
       "Custom CMS integration",
       "SEO optimization and RSS generation",
       "Syntax highlighting for code blocks"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "Luke-the-Duke-Blogger",

@@ -24,7 +24,11 @@
       "End-to-end TypeScript type safety",
       "Server-side rendering with API routes",
       "Modern React patterns and responsive UI"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "Dixi",

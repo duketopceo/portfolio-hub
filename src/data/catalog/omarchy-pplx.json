@@ -22,7 +22,11 @@
       "BYOK — env or keyring",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "QML dropdown → pplx CLI → Search API → rendered results + copy"
+    "architecture": "QML dropdown → pplx CLI → Search API → rendered results + copy",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-pplx",

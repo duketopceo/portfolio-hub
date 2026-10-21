@@ -9,9 +9,12 @@
     "type": "app",
     "featured": false,
     "liveUrl": "https://kate.shippedit.dev",
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/kate-launch.mp4",
-      "transcript": "A launch film for Kate, the shared field journal for crews and small groups, with native iOS built on Linux."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/kate-launch.mp4",
+        "transcript": "A launch film for Kate, the shared field journal for crews and small groups, with native iOS built on Linux."
+      },
+      "demo": "to-record"
     },
     "showcase": {
       "whatItIs": "A shared field journal for the spontaneous things a crew does together: journal entries with photos, hangout ideas, a movie shelf, places and outings, and week windows that find when everyone is free.",

@@ -19,7 +19,11 @@
       "Disposable sandboxed execution per task",
       "Hybrid local and cloud placement"
     ],
-    "architecture": "Task intake → model routing → disposable sandbox → execution → result capture"
+    "architecture": "Task intake → model routing → disposable sandbox → execution → result capture",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "open-computer",

@@ -26,7 +26,11 @@
       "Automated permit coordination workflow",
       "Multi-channel customer communications"
     ],
-    "architecture": "FastAPI backend → Gemini LLM pipeline → Document processor → Gradio interface → Google Cloud services"
+    "architecture": "FastAPI backend → Gemini LLM pipeline → Document processor → Gradio interface → Google Cloud services",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "BartlettBot",

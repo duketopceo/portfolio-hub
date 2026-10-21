@@ -20,7 +20,11 @@
       "Bring-your-own-key model",
       "Unofficial, private client"
     ],
-    "architecture": "iOS client → OpenRouter chat API → keyring → BYOK chat UI"
+    "architecture": "iOS client → OpenRouter chat API → keyring → BYOK chat UI",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "harbor-openrouter-ios-client",

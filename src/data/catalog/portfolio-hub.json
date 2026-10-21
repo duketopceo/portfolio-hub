@@ -24,7 +24,11 @@
       "Dossier page per project, with private work shown through scrubbed labels only",
       "Catalog SOP and tests keep the single source of truth consistent"
     ],
-    "architecture": "Catalog (src/data) → GitHub App ingest (ISR) → activity aggregation → orbit and dossier pages"
+    "architecture": "Catalog (src/data) → GitHub App ingest (ISR) → activity aggregation → orbit and dossier pages",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "portfolio-hub",

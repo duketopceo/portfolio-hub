@@ -27,7 +27,11 @@
       "Full CI/CD with Playwright e2e test suite",
       "Progress tracking and performance analytics"
     ],
-    "architecture": "Next.js SSR → Course content engine → Quiz system → Progress tracker → Docker Swarm deployment"
+    "architecture": "Next.js SSR → Course content engine → Quiz system → Progress tracker → Docker Swarm deployment",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "series65-study-app",

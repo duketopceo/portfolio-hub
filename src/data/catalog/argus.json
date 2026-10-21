@@ -30,10 +30,13 @@
       ]
     },
     "demoUrl": "/demos/argus",
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/argus-witness.mp4",
-      "poster": "https://media.luke-the-duke.com/launch/argus-poster.jpg",
-      "transcript": "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/argus-witness.mp4",
+        "poster": "https://media.luke-the-duke.com/launch/argus-poster.jpg",
+        "transcript": "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift."
+      },
+      "demo": "to-record"
     },
     "techStack": [
       "TypeScript",

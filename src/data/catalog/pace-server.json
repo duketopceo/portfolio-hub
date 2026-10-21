@@ -51,10 +51,13 @@
       "Railway"
     ],
     "private": true,
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/pace-debut.mp4",
-      "poster": "https://media.luke-the-duke.com/launch/pace-poster.jpg",
-      "transcript": "A launch film for Pace, the production platform for identity, billing and AI for small businesses."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/pace-debut.mp4",
+        "poster": "https://media.luke-the-duke.com/launch/pace-poster.jpg",
+        "transcript": "A launch film for Pace, the production platform for identity, billing and AI for small businesses."
+      },
+      "demo": "to-record"
     },
     "showcase": {
       "whatItIs": "A private business cloud for small businesses: one login, one shell, integrated open-source business apps, and an agent layer that acts across them.",

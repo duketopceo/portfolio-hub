@@ -26,7 +26,11 @@
     "engineeringDecisions": [
       "Inheritance over duplication — Thin repo pointers prevent forked standards",
       "Principles immutable, patterns evolve — Separates gospel from tactical guidance"
-    ]
+    ],
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "luke-agents",

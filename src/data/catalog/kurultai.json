@@ -45,9 +45,12 @@
       "OpenRouter"
     ],
     "private": false,
-    "film": {
-      "url": "https://media.luke-the-duke.com/demos/kurultai-launch.mp4",
-      "transcript": "A launch film for Kurultai, the Rust knowledge brain with MCP retrieval and a 3D graph view."
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/kurultai-launch.mp4",
+        "transcript": "A launch film for Kurultai, the Rust knowledge brain with MCP retrieval and a 3D graph view."
+      },
+      "demo": "to-record"
     },
     "highlights": [
       "Rust + axum API with MCP tool surface",

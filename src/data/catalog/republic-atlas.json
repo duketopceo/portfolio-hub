@@ -24,7 +24,11 @@
       "Real-time data aggregation pipelines",
       "Geographic visualization with GIS"
     ],
-    "architecture": "Firebase hosting → Python data pipelines → GIS visualization layer → Interactive election maps"
+    "architecture": "Firebase hosting → Python data pipelines → GIS visualization layer → Interactive election maps",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "republic-atlas",

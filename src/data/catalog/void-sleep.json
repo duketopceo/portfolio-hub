@@ -20,7 +20,11 @@
       "iOS HealthKit integration",
       "Private mobile product experiment"
     ],
-    "architecture": "iOS app → HealthKit sleep data → personality engine → daily judgment UI"
+    "architecture": "iOS app → HealthKit sleep data → personality engine → daily judgment UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "void-sleep",

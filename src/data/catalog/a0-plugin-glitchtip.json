@@ -20,7 +20,11 @@
       "Errors correlated to request IDs",
       "OpenTelemetry trace correlation"
     ],
-    "architecture": "Agent run → error capture → GlitchTip → request-ID and trace correlation"
+    "architecture": "Agent run → error capture → GlitchTip → request-ID and trace correlation",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "a0-plugin-glitchtip",

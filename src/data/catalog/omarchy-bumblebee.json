@@ -22,7 +22,11 @@
       "Mute list keeps accepted exposures visible but quiet",
       "Listed on the official Omarchy plugin marketplace"
     ],
-    "architecture": "bumblebee scan → catalog diff → severity-tagged exposure rows → toasts + panel"
+    "architecture": "bumblebee scan → catalog diff → severity-tagged exposure rows → toasts + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-bumblebee",

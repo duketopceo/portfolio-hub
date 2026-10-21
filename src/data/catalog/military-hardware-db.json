@@ -36,7 +36,11 @@
       "Structured data for research and analysis",
       "Open-source intelligence methodology"
     ],
-    "architecture": "SQLite database → FastAPI REST API → React intelligence console → Docker container → Swarm deployment"
+    "architecture": "SQLite database → FastAPI REST API → React intelligence console → Docker container → Swarm deployment",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "open-military-hardware-db",

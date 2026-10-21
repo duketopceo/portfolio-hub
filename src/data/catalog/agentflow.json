@@ -21,7 +21,11 @@
       "Script-driven rather than prompt-driven orchestration",
       "Per-harness plugin adapters"
     ],
-    "architecture": "Workflow script → harness adapter → agent execution → step results → next step"
+    "architecture": "Workflow script → harness adapter → agent execution → step results → next step",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
   },
   "github": {
     "repoName": "agentflow",

@@ -20,7 +20,11 @@
       "Gold, tech, nuclear, energy, rates coverage",
       "Compact always-visible UI"
     ],
-    "architecture": "Data feed → ticker engine → Omarchy bar widget"
+    "architecture": "Data feed → ticker engine → Omarchy bar widget",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "omarchy-ticker",

@@ -21,7 +21,11 @@
       "Automated follow-up and review flows",
       "Production operations backend"
     ],
-    "architecture": "Voice AI → CRM → workflow engine → review automation → customer comms"
+    "architecture": "Voice AI → CRM → workflow engine → review automation → customer comms",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "project-atlas",

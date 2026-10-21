@@ -24,7 +24,11 @@
       "Automatic quiz generation from web sources",
       "Adaptive learning algorithm",
       "Cross-platform mobile interface"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "QuizTheBest",

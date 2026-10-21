@@ -2,8 +2,15 @@ import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { listedProjects, componentsOf } from "@/lib/catalog";
 import type { EnrichedProject } from "@/lib/types";
-import { ProjectFilmView } from "./ProjectFilm";
+import { ProjectMediaSection, ProjectMediaView } from "./ProjectMedia";
+import type { MediaAsset } from "@/lib/types";
 import { PlanetNode } from "@/components/planet/PlanetNode";
+
+const asset: MediaAsset = {
+  url: "https://media.luke-the-duke.com/demos/x.mp4",
+  poster: "https://media.luke-the-duke.com/launch/x-poster.jpg",
+  transcript: "A plain description.",
+};
 
 function enrich(cfg: ReturnType<typeof listedProjects>[number]): EnrichedProject {
   return {
@@ -50,8 +57,8 @@ async function dossier(slug: string): Promise<string> {
   );
 }
 
-describe("U4 dossier film and showcase mode", () => {
-  it("private entry with showcase and film renders card and film, no repo link, activity, or README", async () => {
+describe("U4 dossier media and showcase mode", () => {
+  it("private entry with showcase and release video renders card and video, no repo link, activity, or README", async () => {
     const html = await dossier("kate");
     expect(html).toContain("<video");
     expect(html).toContain("kate-launch.mp4");
@@ -63,11 +70,11 @@ describe("U4 dossier film and showcase mode", () => {
     expect(html).not.toContain("Restricted survey");
   });
 
-  it("khan has a showcase and no film slot", async () => {
+  it("khan has a showcase and no video slots", async () => {
     const html = await dossier("khan");
     expect(html).toContain('data-umami-section="Showcase card"');
     expect(html).not.toContain("<video");
-    expect(html).not.toContain("dossier-film");
+    expect(html).not.toContain("dossier-media");
   });
 
   it("private entry without showcase keeps today's restricted body", async () => {
@@ -78,13 +85,17 @@ describe("U4 dossier film and showcase mode", () => {
     expect(html).not.toContain('data-umami-section="Showcase card"');
   });
 
-  it("public entry without film renders no film element and no coming-soon text", async () => {
+  it("public entry with both slots unrecorded renders no media element and no coming-soon text", async () => {
     const slug = listedProjects().find(
-      (p) => !p.private && !p.film && !p.siteOnly && componentsOf(p.slug).length === 0
+      (p) =>
+        !p.private &&
+        typeof p.media.release === "string" &&
+        typeof p.media.demo === "string" &&
+        !p.siteOnly && componentsOf(p.slug).length === 0
     )!.slug;
     const html = await dossier(slug);
     expect(html).not.toContain("<video");
-    expect(html).not.toContain("dossier-film");
+    expect(html).not.toContain("dossier-media");
     expect(html.toLowerCase()).not.toContain("coming soon");
   });
 
@@ -127,14 +138,11 @@ describe("U4 dossier film and showcase mode", () => {
     expect(m![0]).not.toContain("target=");
   });
 
-  it("film element: preload none, poster, playsinline, no crossorigin, labelled with project name", () => {
+  it("release element: preload none, poster, playsinline, no crossorigin, labelled with project name", () => {
     const html = renderToStaticMarkup(
-      <ProjectFilmView
-        film={{
-          url: "https://media.luke-the-duke.com/demos/x.mp4",
-          poster: "https://media.luke-the-duke.com/launch/x-poster.jpg",
-          transcript: "A plain description.",
-        }}
+      <ProjectMediaView
+        kind="release"
+        media={asset}
         title="Argus"
         status="idle"
         onPlay={() => {}}
@@ -144,18 +152,16 @@ describe("U4 dossier film and showcase mode", () => {
     expect(html).toContain('poster="https://media.luke-the-duke.com/launch/x-poster.jpg"');
     expect(html.toLowerCase()).toContain("playsinline");
     expect(html.toLowerCase()).not.toContain("crossorigin");
-    expect(html).toContain('aria-label="Play Argus film"');
+    expect(html).toContain('aria-label="Argus release video"');
+    expect(html).toContain('aria-label="Play Argus release video"');
     expect(html).toContain("A plain description.");
   });
 
-  it("a film that fails to load shows poster and transcript, not a player", () => {
+  it("a failing release player falls back to poster and transcript", () => {
     const html = renderToStaticMarkup(
-      <ProjectFilmView
-        film={{
-          url: "https://media.luke-the-duke.com/demos/x.mp4",
-          poster: "https://media.luke-the-duke.com/launch/x-poster.jpg",
-          transcript: "A plain description.",
-        }}
+      <ProjectMediaView
+        kind="release"
+        media={asset}
         title="Argus"
         status="error"
         onPlay={() => {}}
@@ -164,7 +170,96 @@ describe("U4 dossier film and showcase mode", () => {
     expect(html).not.toContain("<video");
     expect(html).toContain("x-poster.jpg");
     expect(html).toContain("A plain description.");
-    expect(html.toLowerCase()).not.toContain("error");
+    expect(html).not.toContain("unavailable");
+  });
+
+  it("a failing player with no poster shows the unavailable line and a file link", () => {
+    const noPoster: MediaAsset = { url: asset.url, transcript: asset.transcript };
+    const html = renderToStaticMarkup(
+      <ProjectMediaView
+        kind="demo"
+        media={noPoster}
+        title="Argus"
+        status="error"
+        onPlay={() => {}}
+      />
+    );
+    expect(html).toContain("Demo recording unavailable");
+    expect(html).toContain(`href="${asset.url}"`);
+    expect(html).toContain("A plain description.");
+  });
+
+  it("a captions path renders a track element; none renders no track", () => {
+    const withTrack = renderToStaticMarkup(
+      <ProjectMediaView
+        kind="release"
+        media={{ ...asset, captions: "/media/captions/argus-release.vtt" }}
+        title="Argus"
+        status="idle"
+        onPlay={() => {}}
+      />
+    );
+    expect(withTrack).toMatch(
+      /<track[^>]*kind="captions"[^>]*src="\/media\/captions\/argus-release\.vtt"/
+    );
+    const without = renderToStaticMarkup(
+      <ProjectMediaView
+        kind="release"
+        media={asset}
+        title="Argus"
+        status="idle"
+        onPlay={() => {}}
+      />
+    );
+    expect(without).not.toContain("<track");
+  });
+
+  it("two players have distinct accessible names and fail independently", () => {
+    const html = renderToStaticMarkup(
+      <ProjectMediaSection
+        media={{ release: asset, demo: { ...asset, url: "https://m/d.mp4" } }}
+        title="Argus"
+      />
+    );
+    expect(html).toContain('aria-label="Argus release video"');
+    expect(html).toContain('aria-label="Argus demo recording"');
+    expect(html.match(/<video/g)).toHaveLength(2);
+    // status is per-player: one in error, the other idle
+    const failed = renderToStaticMarkup(
+      <>
+        <ProjectMediaView kind="release" media={asset} title="Argus" status="error" onPlay={() => {}} />
+        <ProjectMediaView kind="demo" media={asset} title="Argus" status="idle" onPlay={() => {}} />
+      </>
+    );
+    expect(failed.match(/<video/g)).toHaveLength(1);
+    expect(failed).toContain('aria-label="Argus demo recording"');
+    expect(failed).toContain("x-poster.jpg");
+  });
+
+  it("release present and demo to-record renders one player and no placeholder", () => {
+    const html = renderToStaticMarkup(
+      <ProjectMediaSection media={{ release: asset, demo: "to-record" }} title="Argus" />
+    );
+    expect(html.match(/<video/g)).toHaveLength(1);
+    expect(html).not.toContain("demo recording");
+    expect(html.toLowerCase()).not.toContain("to record");
+  });
+
+  it("both n/a renders no media section", () => {
+    const html = renderToStaticMarkup(
+      <ProjectMediaSection media={{ release: "n/a", demo: "n/a" }} title="Argus" />
+    );
+    expect(html).toBe("");
+  });
+
+  it("media renders directly after the summary hero, release before demo", async () => {
+    const html = await dossier("kurultai");
+    const release = html.indexOf('aria-label="Kurultai release video"');
+    expect(release).toBeGreaterThan(-1);
+    const hero = html.indexOf("dossier-hero");
+    expect(hero).toBeGreaterThan(-1);
+    expect(release).toBeGreaterThan(hero);
+    expect(html.indexOf("GitHub activity")).toBeGreaterThan(release);
   });
 
   it("every dossier links to the résumé PDF", async () => {

@@ -20,7 +20,11 @@
       "Pre-built workflow automation templates",
       "ML models that adapt to usage patterns",
       "Small business-focused integrations"
-    ]
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
   },
   "github": {
     "repoName": "Zer_solutions",
