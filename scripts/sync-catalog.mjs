@@ -5,6 +5,8 @@
 // Usage:
 //   GH_TOKEN=... node scripts/sync-catalog.mjs --dry-run --out <path outside the repo>
 //   GH_TOKEN=... node scripts/sync-catalog.mjs --write        (npm run catalog:sync -- --write)
+// Options: --page-size <1-100> (GraphQL page size, default 25),
+//          --summary <path outside the repo> (markdown PR body of the proposals).
 // Token: GITHUB_TOKEN or GH_TOKEN. It is never printed.
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import * as nodeModule from "node:module";
@@ -69,6 +71,17 @@ if (dryRun) {
   if (!rel.startsWith("..") && !isAbsolute(rel)) fail("--out must be outside the repository");
 }
 
+const pageSizeArg = value("--page-size");
+const pageSize = pageSizeArg === undefined ? 25 : Number(pageSizeArg);
+if (!Number.isInteger(pageSize) || pageSize < 1 || pageSize > 100) fail("--page-size must be an integer from 1 to 100");
+
+const summaryPath = value("--summary");
+if (flag("--summary") && !summaryPath) fail("--summary needs a path");
+if (summaryPath) {
+  const rel = relative(root, resolve(summaryPath));
+  if (!rel.startsWith("..") && !isAbsolute(rel)) fail("--summary must be outside the repository");
+}
+
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 if (!token) fail("set GITHUB_TOKEN or GH_TOKEN");
 
@@ -91,7 +104,7 @@ const owner = value("--owner") || "duketopceo";
 
 let result;
 try {
-  const nodes = await sync.fetchRepoNodes({ token, owner });
+  const nodes = await sync.fetchRepoNodes({ token, owner, pageSize });
   result = sync.computeSync({ nodes, entries, now: new Date(), owner });
 } catch (e) {
   // Messages from sync.ts never contain repo names or the token.
@@ -107,6 +120,11 @@ try {
   }
 } catch {
   fail("a rewritten entry failed schema validation; nothing was written");
+}
+
+if (summaryPath) {
+  mkdirSync(dirname(resolve(summaryPath)), { recursive: true });
+  writeFileSync(resolve(summaryPath), sync.renderSummary(proposals));
 }
 
 const counts = Object.fromEntries(Object.entries(proposals).map(([k, v]) => [k, Array.isArray(v) ? v.length : v]));

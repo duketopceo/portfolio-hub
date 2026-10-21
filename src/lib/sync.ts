@@ -11,10 +11,10 @@ import { CURATION_BAR, scoreRepo, summarizeCatalog, type CurationGithub } from "
  */
 
 export const REPOS_QUERY = /* GraphQL */ `
-  query CatalogSync($owner: String!, $cursor: String) {
+  query CatalogSync($owner: String!, $cursor: String, $pageSize: Int!) {
     repositoryOwner(login: $owner) {
       repositories(
-        first: 25
+        first: $pageSize
         after: $cursor
         privacy: PUBLIC
         ownerAffiliations: OWNER
@@ -107,6 +107,7 @@ type FetchFn = (url: string, init: { method: string; headers: Record<string, str
 export async function fetchRepoNodes(opts: {
   token: string;
   owner: string;
+  pageSize?: number;
   fetchFn?: FetchFn;
 }): Promise<RepoNode[]> {
   const fetchFn = opts.fetchFn ?? (fetch as unknown as FetchFn);
@@ -116,7 +117,7 @@ export async function fetchRepoNodes(opts: {
     const res = await fetchFn("https://api.github.com/graphql", {
       method: "POST",
       headers: { authorization: `bearer ${opts.token}`, "content-type": "application/json" },
-      body: JSON.stringify({ query: REPOS_QUERY, variables: { owner: opts.owner, cursor } }),
+      body: JSON.stringify({ query: REPOS_QUERY, variables: { owner: opts.owner, cursor, pageSize: opts.pageSize ?? 25 } }),
     });
     if (!res.ok) throw new Error(`GitHub GraphQL request failed (HTTP ${res.status})`);
     const body = (await res.json()) as {
@@ -335,4 +336,38 @@ export function renderEntryWithGithub(rawText: string, github: GithubFacts): str
   const next = { ...parsed, github: Object.fromEntries(GITHUB_KEYS.map((k) => [k, github[k] ?? null])) };
   catalogEntrySchema.parse(next);
   return serialize(next);
+}
+
+const ZWSP = "\u200b";
+
+/** One line of repo-sourced text, safe inside a PR body: code-wrapped, no backticks, no live @mentions. */
+const inlineCode = (text: string): string =>
+  "`" + text.replace(/\s+/g, " ").trim().replace(/`/g, "'").replace(/@/g, "@" + ZWSP) + "`";
+
+/**
+ * Markdown PR body for the sync PR (public names only). Every repo-sourced
+ * string goes through inlineCode, so the body is safe to pass via body-path.
+ */
+export function renderSummary(p: Proposals): string {
+  const lines: string[] = ["Weekly catalog sync. This PR only proposes; nothing here is listed until you edit `curated`.", ""];
+  const section = (title: string, items: string[]) => {
+    if (items.length === 0) return;
+    lines.push(`### ${title}`, "", ...items.map((i) => `- ${i}`), "");
+  };
+  if (p.rangeWarning) lines.push(`> Range warning: ${inlineCode(p.rangeWarning)}`, "");
+  section(
+    "New candidates",
+    p.newCandidates.map(
+      (c) =>
+        `${inlineCode(c.repoName)}${c.description ? " " + inlineCode(c.description) : ""}${c.lastCommitMonth ? ` (last commit ${c.lastCommitMonth})` : ""}`,
+    ),
+  );
+  section("Below the bar", p.demotions.map((d) => `${inlineCode(d.slug)}: ${d.reasons.map(inlineCode).join(", ")}`));
+  section("Archived upstream (propose era: earlier)", p.archived.map((a) => inlineCode(a.slug)));
+  section("Renamed", p.renamed.map((r) => `${inlineCode(r.slug)}: ${inlineCode(r.from)} to ${inlineCode(r.to)}`));
+  section("Now a fork", p.nowFork.map(inlineCode));
+  section("No longer public", p.stale.map(inlineCode));
+  section("Public repo shares a name with a private entry", p.privateNameMatches.map(inlineCode));
+  if (lines.length === 2) lines.push("No proposals this week; only upstream `github` facts changed.", "");
+  return lines.join("\n");
 }

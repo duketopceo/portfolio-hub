@@ -5,6 +5,7 @@ import {
   fetchRepoNodes,
   nodeToGithub,
   renderEntryWithGithub,
+  renderSummary,
   serialize,
   type Proposals,
 } from "./sync";
@@ -193,5 +194,30 @@ describe("proposals schema", () => {
     expect(Object.keys(empty).sort()).toEqual(
       ["archived", "demotions", "newCandidates", "nowFork", "privateNameMatches", "rangeWarning", "renamed", "stale"],
     );
+  });
+});
+
+describe("renderSummary", () => {
+  it("code-wraps repo text and neutralizes mentions and backticks", () => {
+    const base = run([], []).proposals;
+    const md = renderSummary({
+      ...base,
+      newCandidates: [
+        {
+          repoName: "fresh",
+          node_id: "node-fresh",
+          description: "ping @octocat `x`\n# injected\n@org/team",
+          homepage: null,
+          lastCommitMonth: "2026-10",
+        },
+      ],
+      stale: ["old-slug"],
+    });
+    expect(md).toContain("`fresh`");
+    expect(md).toContain("`old-slug`");
+    expect(md).not.toMatch(/@(?!\u200b)/);
+    expect(md).toContain("@\u200boctocat");
+    expect(md).not.toContain("\n# injected");
+    expect(md).not.toContain("node-fresh");
   });
 });
