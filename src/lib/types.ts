@@ -94,6 +94,10 @@ export interface ProjectShowcase {
   whatLukeBuilt: string;
   stack: string[];
   status: string;
+  problem?: string;
+  approach?: string;
+  architecture?: string;
+  outcomes?: string;
 }
 
 export interface ProjectConfig {

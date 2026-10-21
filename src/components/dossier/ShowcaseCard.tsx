@@ -12,6 +12,12 @@ export function ShowcaseCard({ showcase }: { showcase: ProjectShowcase }) {
     ["What Luke built", showcase.whatLukeBuilt],
     ["Status", showcase.status],
   ];
+  const extra: Array<[string, string | undefined]> = [
+    ["Problem", showcase.problem],
+    ["Approach", showcase.approach],
+    ["Architecture", showcase.architecture],
+    ["Outcomes", showcase.outcomes],
+  ];
   return (
     <SurveyPlate
       className="dossier-page__showcase"
@@ -39,6 +45,14 @@ export function ShowcaseCard({ showcase }: { showcase: ProjectShowcase }) {
             ))}
           </ul>
         </div>
+        {extra.map(([label, text]) =>
+          text ? (
+            <div key={label} className="dossier-section">
+              <div className="dossier-section__label">{label}</div>
+              <p className="dossier-section__body">{text}</p>
+            </div>
+          ) : null
+        )}
       </EvidencePanel>
     </SurveyPlate>
   );

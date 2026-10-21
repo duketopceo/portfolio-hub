@@ -4,6 +4,7 @@ import { listedProjects, componentsOf } from "@/lib/catalog";
 import type { EnrichedProject } from "@/lib/types";
 import { ProjectMediaSection, ProjectMediaView } from "./ProjectMedia";
 import type { MediaAsset } from "@/lib/types";
+import { ShowcaseCard } from "./ShowcaseCard";
 import { PlanetNode } from "@/components/planet/PlanetNode";
 
 const asset: MediaAsset = {
@@ -265,6 +266,50 @@ describe("U4 dossier media and showcase mode", () => {
   it("every dossier links to the résumé PDF", async () => {
     for (const slug of ["kate", "khan", "kurultai", "argus", "omarchy-plugins"]) {
       expect(await dossier(slug), slug).toContain('href="/resume.pdf"');
+    }
+  });
+});
+
+describe("U4 showcase v2 sections", () => {
+  const five = {
+    whatItIs: "WHAT-IT-IS",
+    whoItsFor: "WHO-FOR",
+    whatLukeBuilt: "BUILT",
+    stack: ["Rust"],
+    status: "STATUS",
+  };
+
+  it("a five-field showcase renders none of the new sections", () => {
+    const html = renderToStaticMarkup(<ShowcaseCard showcase={five} />);
+    for (const label of ["What it is", "Who it is for", "What Luke built", "Status", "Stack"]) {
+      expect(html).toContain(label);
+    }
+    for (const label of ["Problem", "Approach", "Architecture", "Outcomes"]) {
+      expect(html).not.toContain(`>${label}<`);
+    }
+  });
+
+  it("renders problem, approach, architecture, outcomes in order under headings", () => {
+    const html = renderToStaticMarkup(
+      <ShowcaseCard
+        showcase={{
+          ...five,
+          problem: "PROB-TEXT",
+          approach: "APPR-TEXT",
+          architecture: "ARCH-TEXT",
+          outcomes: "OUT-TEXT",
+        }}
+      />
+    );
+    const idx = ["STATUS", ">Problem<", "PROB-TEXT", ">Approach<", "APPR-TEXT", ">Architecture<", "ARCH-TEXT", ">Outcomes<", "OUT-TEXT"].map((t) => html.indexOf(t));
+    expect(idx.every((i) => i >= 0)).toBe(true);
+    expect([...idx].sort((a, b) => a - b)).toEqual(idx);
+  });
+
+  it("no showcase section links to github.com", async () => {
+    for (const p of listedProjects().filter((x) => x.showcase)) {
+      const html = renderToStaticMarkup(<ShowcaseCard showcase={p.showcase!} />);
+      expect(html).not.toContain("github.com");
     }
   });
 });

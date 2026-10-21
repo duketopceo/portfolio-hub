@@ -44,6 +44,10 @@ const showcase = z.strictObject({
   whatLukeBuilt: z.string(),
   stack: z.array(z.string()),
   status: z.string(),
+  problem: z.string().optional(),
+  approach: z.string().optional(),
+  architecture: z.string().optional(),
+  outcomes: z.string().optional(),
 });
 
 export const curatedSchema = z.strictObject({
