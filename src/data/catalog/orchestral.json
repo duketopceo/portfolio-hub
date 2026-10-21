@@ -42,7 +42,12 @@
         "poster": "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
         "transcript": "A launch film for orchestral, the OpenRouter eval harness for cheap orchestrator and worker stacks."
       },
-      "demo": "to-record"
+      "demo": {
+        "url": "https://media.luke-the-duke.com/demos/orchestral-demo.mp4",
+        "poster": "https://media.luke-the-duke.com/demos/orchestral-demo-poster.jpg",
+        "transcript": "A 20-second terminal recording: orchestral's leaderboard ranks orchestrator and worker pairings by pass rate and cost per pass, then the pairings report shows quality per dollar. Model names are anonymized.",
+        "sanitized": true
+      }
     },
     "highlights": [
       "Orchestrator + worker eval design",
