@@ -28,6 +28,22 @@
   },
   "github": {
     "repoName": "a0-openrouter-spend",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUFvUrg",
+    "description": "Agent Zero plugin: OpenRouter organisation spend widget and dashboard, authenticated with a management key.",
+    "topics": [
+      "agent-zero",
+      "observability",
+      "openrouter",
+      "plugin",
+      "python"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1415,
+    "commitCount": 16,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

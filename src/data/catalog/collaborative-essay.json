@@ -31,6 +31,27 @@
   },
   "github": {
     "repoName": "Collaborative-essay",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDORE9joA",
+    "description": "Open-source collaborative writing platform with PR-based editing, AI-assisted improvements, and version-controlled essays. Built with Next.js, TypeScript, Prisma, and PostgreSQL.",
+    "topics": [
+      "ai",
+      "collaborative-editing",
+      "nextjs",
+      "open-source",
+      "postgresql",
+      "prisma",
+      "react",
+      "tailwindcss",
+      "typescript",
+      "vercel-ai-sdk"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": true,
+    "readmeLength": 4561,
+    "commitCount": 4,
+    "lastCommitMonth": "2026-03",
+    "latestRelease": "v1.0.0"
   }
 }

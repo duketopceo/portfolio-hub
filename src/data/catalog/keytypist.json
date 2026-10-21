@@ -29,6 +29,22 @@
   },
   "github": {
     "repoName": "keytypist",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUUh-lA",
+    "description": "A terminal next-key prediction TUI with n-gram and local-LLM engines, plus a daemon that maps your typing speed to keyboard backlight.",
+    "topics": [
+      "keyboard",
+      "ngram",
+      "prediction",
+      "python",
+      "tui"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1395,
+    "commitCount": 4,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

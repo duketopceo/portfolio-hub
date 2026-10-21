@@ -62,6 +62,22 @@
   },
   "github": {
     "repoName": "kurultai",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOTcyKvQ",
+    "description": "Unified knowledge retrieval for agents and humans. Indexes notes, chats, JSON exports and code checkouts into one local SQLite store with hybrid search.",
+    "topics": [
+      "agents",
+      "knowledge-retrieval",
+      "rust",
+      "search",
+      "sqlite"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 9394,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v0.7.0"
   }
 }

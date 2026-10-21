@@ -3,8 +3,10 @@
   "demotions": [],
   "archived": [],
   "renamed": [],
-  "nowFork": [],
+  "nowFork": [
+    "finance-frenzy"
+  ],
   "stale": [],
   "privateNameMatches": [],
-  "rangeWarning": null
+  "rangeWarning": "42 listed projects, outside the 30-40 target"
 }

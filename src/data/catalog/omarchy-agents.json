@@ -29,6 +29,27 @@
   },
   "github": {
     "repoName": "omarchy-agents",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUOzNsg",
+    "description": "Claude Code, Codex, and Fireworks usage, limits, and pace in a native Omarchy bar panel.",
+    "topics": [
+      "agents",
+      "ai",
+      "ai-usage",
+      "hyprland",
+      "linux",
+      "omarchy",
+      "qml",
+      "quickshell",
+      "usage",
+      "wayland"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1861,
+    "commitCount": 10,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

@@ -29,6 +29,22 @@
   },
   "github": {
     "repoName": "pinetree-solari-demo",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUKPkEA",
+    "description": "A Solari demo built for a SWE intern application: a multi-URL browser-to-sandbox pipeline that collects live SaaS pricing pages and writes combined CSV and JSON.",
+    "topics": [
+      "browser-automation",
+      "demo",
+      "python",
+      "sandbox",
+      "solari"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 2330,
+    "commitCount": 15,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

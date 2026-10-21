@@ -29,6 +29,22 @@
   },
   "github": {
     "repoName": "omarchy-power",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUYgUVQ",
+    "description": "Omarchy bar widget for laptop power: battery state, an ASCII charge-history graph, top resource consumers and power-profile switching.",
+    "topics": [
+      "battery",
+      "omarchy",
+      "power",
+      "qml",
+      "widget"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 938,
+    "commitCount": 10,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

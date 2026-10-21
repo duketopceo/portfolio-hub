@@ -31,6 +31,23 @@
   },
   "github": {
     "repoName": "wisp",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUgxxNg",
+    "description": "Jev-powered voice computer-use agent for Omarchy (Hyprland/Asahi): push-to-talk → whisper.cpp → Jev decision → guarded hyprctl launch, with a breathing dim overlay",
+    "topics": [
+      "hyprland",
+      "linux",
+      "omarchy",
+      "pipewire",
+      "voice-assistant",
+      "whisper-cpp"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 15079,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v0.9.0"
   }
 }

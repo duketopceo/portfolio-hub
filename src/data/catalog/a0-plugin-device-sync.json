@@ -28,6 +28,16 @@
   },
   "github": {
     "repoName": "a0-plugin-device-sync",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOVAQO5w",
+    "description": "Cross-instance settings/chat/memory sync packs for Agent Zero — Tailscale transport, secret-free",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 9796,
+    "commitCount": 4,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

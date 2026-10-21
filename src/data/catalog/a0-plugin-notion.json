@@ -28,6 +28,16 @@
   },
   "github": {
     "repoName": "a0-plugin-notion",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOVB845w",
+    "description": "Notion connector plugin for Agent Zero — local stdio MCP server + ingestion atoms (Khan#196)",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 7905,
+    "commitCount": 4,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

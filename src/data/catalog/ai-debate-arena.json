@@ -28,6 +28,16 @@
   },
   "github": {
     "repoName": "ai-debate-arena",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOSQZYug",
+    "description": "Two AI agents debate any topic — Venn diagram prompt system, Ollama + OpenRouter, rich terminal UI",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": true,
+    "readmeLength": 119,
+    "commitCount": 1,
+    "lastCommitMonth": "2026-04",
+    "latestRelease": null
   }
 }

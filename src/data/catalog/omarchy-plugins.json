@@ -30,6 +30,21 @@
   },
   "github": {
     "repoName": "omarchy-plugins",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUMvO3Q",
+    "description": "Umbrella catalog of Omarchy bar plugins: fan/thermals, market ticker, AI-agent usage, and OLED standby overlay.",
+    "topics": [
+      "linux",
+      "omarchy",
+      "plugins",
+      "quickshell"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 4672,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

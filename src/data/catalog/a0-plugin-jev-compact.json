@@ -28,6 +28,16 @@
   },
   "github": {
     "repoName": "a0-plugin-jev-compact",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOVCBNvg",
+    "description": "Agent Zero plugin: Jev span-scored context compaction + tombstone restore (Khan#197)",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 8565,
+    "commitCount": 4,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

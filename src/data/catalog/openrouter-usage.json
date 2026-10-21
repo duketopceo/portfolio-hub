@@ -28,6 +28,21 @@
   },
   "github": {
     "repoName": "openrouter_usage",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUGkyeg",
+    "description": "Agent Zero plugin: workspace-aware OpenRouter org spend dashboard — analytics, budgets, per-key/model/provider breakdowns, and routing recommendations (ORI).",
+    "topics": [
+      "agent-zero",
+      "openrouter",
+      "plugin",
+      "usage-analytics"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 2736,
+    "commitCount": 24,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": "v1.3.0"
   }
 }

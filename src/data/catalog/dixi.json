@@ -32,6 +32,27 @@
   },
   "github": {
     "repoName": "Dixi",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOQsbFIQ",
+    "description": "AI-powered interactive projection system using computer vision, gesture recognition, and real-time AI to transform any surface into a responsive knowledge canvas.",
+    "topics": [
+      "ai",
+      "computer-vision",
+      "gesture-recognition",
+      "interactive-projection",
+      "mediapipe",
+      "ollama",
+      "python",
+      "react",
+      "typescript",
+      "webgl"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 12834,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": "v2.3.3"
   }
 }

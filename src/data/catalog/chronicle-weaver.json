@@ -30,6 +30,27 @@
   },
   "github": {
     "repoName": "rork-chronicle-weaver",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOOzhwQQ",
+    "description": "AI-powered historical role-playing game with dynamic storytelling. Explore Ancient Rome, Medieval Europe, the Wild West, and more. Built with React Native, Expo, and TypeScript.",
+    "topics": [
+      "ai-storytelling",
+      "cross-platform",
+      "expo",
+      "firebase",
+      "game-development",
+      "historical-rpg",
+      "mobile-game",
+      "react-native",
+      "rpg",
+      "typescript"
+    ],
+    "homepage": "https://chronicleweaver.com",
+    "isFork": false,
+    "isArchived": true,
+    "readmeLength": 15026,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-05",
+    "latestRelease": "v1.1.0"
   }
 }

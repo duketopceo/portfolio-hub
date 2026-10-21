@@ -29,6 +29,16 @@
   },
   "github": {
     "repoName": "omarchy-wisp",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOU8Ts5g",
+    "description": "Wisp voice companion — Omarchy shell plugin (bar orb, ghost cursor, panels). Requires wispd: github.com/duketopceo/wisp",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 1285,
+    "commitCount": 40,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

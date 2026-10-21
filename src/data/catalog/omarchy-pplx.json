@@ -30,6 +30,22 @@
   },
   "github": {
     "repoName": "omarchy-pplx",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUeUIhQ",
+    "description": "Quick-ask UI for the Perplexity Search API from the Omarchy bar. Wraps the pplx CLI and is bring-your-own-key.",
+    "topics": [
+      "omarchy",
+      "perplexity",
+      "qml",
+      "search",
+      "widget"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 3679,
+    "commitCount": 12,
+    "lastCommitMonth": "2026-09",
+    "latestRelease": null
   }
 }

@@ -30,6 +30,16 @@
   },
   "github": {
     "repoName": "a0-plugin-omaseal",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOU0GH7w",
+    "description": "One secrets interface for Agent Zero — resolves keys via OmaSeal keyring, 1Password, env, or encrypted vault. Agents see names and masked values only.",
+    "topics": [],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 4853,
+    "commitCount": 6,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }

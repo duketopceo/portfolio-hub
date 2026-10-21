@@ -28,6 +28,22 @@
   },
   "github": {
     "repoName": "jev-compact",
-    "owner": "duketopceo"
+    "owner": "duketopceo",
+    "node_id": "R_kgDOUf4UsQ",
+    "description": "Context compaction for agent harnesses: a decision model scores transcript spans and tombstones the ones that stop mattering. Includes an MCP restore server.",
+    "topics": [
+      "agents",
+      "context-compaction",
+      "jev",
+      "mcp",
+      "python"
+    ],
+    "homepage": null,
+    "isFork": false,
+    "isArchived": false,
+    "readmeLength": 2736,
+    "commitCount": 11,
+    "lastCommitMonth": "2026-10",
+    "latestRelease": null
   }
 }
