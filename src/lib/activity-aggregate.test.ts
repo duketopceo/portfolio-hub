@@ -227,3 +227,69 @@ describe("condenseProjectActivity", () => {
     ).toBe("12 merged · 3 opened · 5 reviews · 1 finished");
   });
 });
+
+import { toClientActivityPayload, condenseProjectActivity as condenseForClient } from "./activity-aggregate";
+import type { HomepageActivityPayload } from "./github-activity-types";
+
+describe("toClientActivityPayload", () => {
+  const item = (id: string, at: string) => ({ id, kind: "pr_merged" as const, at, label: "PR #1 — x", ref: "1" });
+  const activity: ProjectActivityPayload = {
+    slug: "a",
+    displayName: "A",
+    private: false,
+    headline: "h",
+    fetchedAt: "2026-10-12T00:00:00Z",
+    source: "github",
+    items: [item("1", "2026-10-11T00:00:00Z")],
+    days: [
+      {
+        date: "2026-10-11",
+        prsOpened: 0,
+        prsMerged: 1,
+        reviews: 0,
+        releases: 0,
+        issuesOpened: 0,
+        issuesClosed: 0,
+        items: [item("1", "2026-10-11T00:00:00Z")],
+      },
+    ],
+  };
+  const data: HomepageActivityPayload = {
+    lines: [{ slug: "a", displayName: "A", private: false, line: "l", href: "/projects/a" }],
+    repos: [
+      {
+        slug: "a",
+        displayName: "A",
+        private: false,
+        href: "/projects/a",
+        headline: "h",
+        activity,
+        condensed: condenseForClient(activity),
+      },
+    ],
+    fetchedAt: activity.fetchedAt,
+    source: "github",
+    historyDays: 90,
+    defaultRangeDays: 7,
+  };
+
+  it("ships pre-condensed ranges, not the raw event history", () => {
+    const out = toClientActivityPayload(data);
+    expect("activity" in out.repos[0]).toBe(false);
+    expect("lines" in out).toBe(false);
+    expect(Object.keys(out.repos[0].byRange).sort()).toEqual(["30", "7", "90"]);
+  });
+
+  it("matches the full condense for totals, days and showcase", () => {
+    const out = toClientActivityPayload(data);
+    for (const range of [7, 30, 90] as const) {
+      const full = condenseForClient(activity, { windowDays: range });
+      const slim = out.repos[0].byRange[range];
+      expect(slim.totals).toEqual(full.totals);
+      expect(slim.days).toEqual(full.days);
+      expect(slim.showcase).toEqual(full.showcase.slice(0, 2));
+      expect(slim.groupedCount).toBe(full.grouped.length);
+      expect(slim.grouped).toEqual([]);
+    }
+  });
+});
