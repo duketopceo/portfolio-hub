@@ -73,7 +73,9 @@ export default async function ProjectDetailPage({
     enrichProjectActivity(baseProject),
     hasShowcase ? null : getProjectActivityTimeline(slug),
     !baseProject.private && !baseProject.siteOnly
-      ? fetchReadme(baseProject.repoName, baseProject.repoOwner)
+      ? fetchReadme(baseProject.repoName, baseProject.repoOwner, [
+          baseProject.displayName,
+        ])
       : null,
     baseProject.private && !hasShowcase && !baseProject.siteOnly
       ? fetchShowcaseMd(baseProject.repoName, baseProject.repoOwner)

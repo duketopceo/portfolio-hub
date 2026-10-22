@@ -13,6 +13,7 @@ import {
   type GithubRequestFailure,
 } from "./github-errors";
 import { scrubEmails } from "@/lib/readme-scrub";
+import { prepareReadmeHtml } from "@/lib/readme-html";
 import { fetchLatestCiState, type CiStateKind } from "@/lib/github-repo-api";
 
 export { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
@@ -139,12 +140,45 @@ async function fetchRepoLanguages(
 }
 
 /**
+ * Default branch and README path, needed to resolve relative image links.
+ * Best-effort: falls back to `main` and the repo root.
+ */
+async function fetchReadmeLocation(
+  repoName: string,
+  owner: string
+): Promise<{ branch: string; readmePath: string }> {
+  const headers = await githubAuthHeaders();
+  const base = `${GITHUB_API}/repos/${owner}/${encodeURIComponent(repoName)}`;
+  const get = async <T>(url: string): Promise<T | null> => {
+    try {
+      const res = await fetch(url, {
+        headers,
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(10_000),
+      });
+      return res.ok ? ((await res.json()) as T) : null;
+    } catch {
+      return null;
+    }
+  };
+  const [repo, readme] = await Promise.all([
+    get<{ default_branch?: string }>(base),
+    get<{ path?: string }>(`${base}/readme`),
+  ]);
+  return {
+    branch: repo?.default_branch || "main",
+    readmePath: readme?.path || "README.md",
+  };
+}
+
+/**
  * Fetch the README content for a public repo (rendered as HTML).
  * Never called for private repos on the dossier page.
  */
 export async function fetchReadme(
   repoName: string,
-  owner: string = GITHUB_USER
+  owner: string = GITHUB_USER,
+  projectNames: string[] = []
 ): Promise<string | null> {
   if (fixturesEnabled()) return null;
   const url = `${GITHUB_API}/repos/${owner}/${repoName}/readme`;
@@ -170,7 +204,17 @@ export async function fetchReadme(
       return null;
     }
 
-    return scrubEmails(await res.text());
+    const html = await res.text();
+    const { branch, readmePath } = await fetchReadmeLocation(repoName, owner);
+    return scrubEmails(
+      prepareReadmeHtml(html, {
+        owner,
+        repo: repoName,
+        branch,
+        readmePath,
+        projectNames: [repoName, ...projectNames],
+      })
+    );
   } catch (err) {
     const failure = failureFromUnknown(`fetchReadme ${repoName}`, err);
     logGithubFailure("fetchReadme", failure);
