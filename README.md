@@ -1,4 +1,8 @@
-# Cosmic Intelligence — portfolio-hub
+<p align="center">
+  <img src="assets/brand/wordmark.png" alt="Cosmic Intelligence" width="420" />
+</p>
+
+# portfolio-hub
 
 <p align="center">
   <img src="docs/assets/social.png" alt="portfolio-hub — cosmic portfolio" width="640" />
@@ -15,17 +19,19 @@ I build OpenRouter-native systems that compound — agent harnesses, knowledge l
 | [/hire](https://luke-the-duke.com/hire) | Hire conversation |
 | [/resume](https://luke-the-duke.com/resume) | Web résumé |
 | [/projects](https://luke-the-duke.com/projects) | Full catalog grid |
+| [/now](https://luke-the-duke.com/now) | Transmissions |
+| [/openrouter](https://luke-the-duke.com/openrouter) | OpenRouter demos |
 
 ---
 
 ## What Cosmic Intelligence is
 
-**Cosmic Intelligence** is the brand and design system for this portfolio — deep-space dark UI, teal accent, modular “worlds” on orbital rails, and dossier pages for each repository. It is the canonical hub; other projects in the ecosystem link back here.
+**Cosmic Intelligence** is the brand and design system for this portfolio — Star Chart survey-plate dark UI, one teal signal, modular “worlds” on orbital rails, and dossier pages for each repository. It is the canonical hub; other projects in the ecosystem link back here.
 
 The homepage is not a flat project list. It is a **solar map**:
 
 - **Primary orbit** — five featured systems (Khan, Kurultai, Pace Server, OpenRouter Demos, Stratum Engine)
-- **Secondary orbit** — ~20 smaller catalog worlds on offset double rings (same planet module, scaled down)
+- **Secondary orbit** — the remaining catalog worlds on offset double rings (same planet module, scaled down)
 - **Activity strip** — GitHub App history ingested (~90 days), displayed as condensed charts + grouped PRs with a **7d / 30d / 90d** range toggle
 
 Each planet is a **modular visual** (size, shape, color, optional rings and moons) driven from catalog data — not identical dots.
@@ -39,7 +45,7 @@ All projects live in **`src/data/projects.ts`** — the single source of truth. 
 | Tier | Homepage | How to set |
 |------|----------|------------|
 | **Featured** | Primary orbit (5) | `featured: true` + listed in `HOMEPAGE_FEATURED_SLUGS` |
-| **Secondary** | Catalog orbit (~20) | Default for every other catalog entry |
+| **Secondary** | Catalog orbit (rest) | Default for every other catalog entry |
 | **Catalog-only** | Grid + dossier only | `orbitTier: "catalog-only"` |
 
 **Adding a repo:** follow **[docs/PROJECT-CATALOG-SOP.md](docs/PROJECT-CATALOG-SOP.md)** — slug, dossier copy, optional `planetVisual`, deployments, privacy rules.
@@ -64,7 +70,8 @@ npm run dev                  # http://localhost:3000
 |---------|---------|
 | `npm run dev` | Dev server (port 3000) |
 | `npm run test` | Vitest (helpers + orbit/activity) |
-| `npm run lint` | ESLint |
+| `npm run lint` | ESLint + `check:design` + `check:privacy` |
+| `npm run test:visual` | Playwright route baselines (`tests/visual/`) |
 | `npm run build` | Production build |
 
 Fixtures for activity UI without GitHub: `ACTIVITY_USE_FIXTURES=1 npm run dev`.
@@ -99,7 +106,7 @@ src/
 │   ├── activity/        # ActivityCondensedPanel, range toggle, day chart
 │   └── dossier/         # Project detail sections
 ├── data/
-│   ├── projects.ts      # Catalog (28 repos)
+│   ├── projects.ts      # Catalog (source of truth)
 │   └── deployments.ts   # Live URL mapping
 └── lib/
     ├── github-activity.ts
@@ -138,6 +145,8 @@ The résumé is also served in machine-readable form at `/resume.json` and
 | [RAILWAY.md](docs/RAILWAY.md) | Production deploy |
 | [GITHUB-APP.md](docs/GITHUB-APP.md) | Activity + private repo access |
 | [CLUSTER.md](docs/CLUSTER.md) | Legacy Swarm (reference) |
+| [BRAND.md](BRAND.md) | Star Chart design standard |
+| [ROADMAP.md](ROADMAP.md) | Program roadmap |
 | [AGENTS.md](AGENTS.md) | Agent / cloud dev notes |
 
 **Version:** `3.1.0` (see [CHANGELOG.md](CHANGELOG.md)).
