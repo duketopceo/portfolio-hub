@@ -7621,3 +7621,46 @@
   .upstream__cell--state { order: 3; }
   .upstream__cell--date { order: 4; }
 }
+
+/* README mobile overflow (ported from audit #73): wrap long tokens, scroll
+   wide tables and code blocks inside the card instead of the page. */
+.prose-readme {
+  overflow-wrap: anywhere;
+}
+.prose-readme pre,
+.prose-readme table {
+  max-width: 100%;
+}
+.prose-readme table {
+  display: block;
+  overflow-x: auto;
+}
+.prose-readme img,
+.prose-readme video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Let dossier grid children shrink so wide README content wraps/scrolls
+   inside its card instead of stretching the page (audit #73). */
+.dossier-page__two-col {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 1024px) {
+  .dossier-page__two-col {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+.dossier-page__main-stack,
+.dossier-page__main-stack > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.prose-readme {
+  max-width: min(65ch, 100%);
+}
+
+/* GitHub permalink anchors in embedded READMEs are noise on our origin. */
+.prose-readme .anchor {
+  display: none;
+}
