@@ -32,7 +32,7 @@
     "demoUrl": "/demos/argus",
     "media": {
       "release": {
-        "url": "https://media.luke-the-duke.com/demos/argus-witness.mp4",
+        "url": "https://media.luke-the-duke.com/launch/argus-16x9.mp4",
         "poster": "https://media.luke-the-duke.com/launch/argus-poster.jpg",
         "transcript": "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift."
       },
