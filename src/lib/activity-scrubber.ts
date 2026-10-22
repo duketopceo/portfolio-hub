@@ -94,7 +94,7 @@ export function scrubActivityText(
 
 /** Strip merge target / branch refs when they look sensitive — PII/secrets are
  * never republished regardless of repo visibility (same policy as titles). */
-export function scrubBranchRef(ref: string): string | undefined {
+export function scrubBranchRef(ref: string, _isPrivate?: boolean): string | undefined {
   if (isSensitive(ref)) return undefined;
   return ref;
 }

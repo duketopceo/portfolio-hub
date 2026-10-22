@@ -145,7 +145,7 @@ export const projectConfigs: ProjectConfig[] = [
     },
     demoUrl: "/demos/argus",
     film: {
-      url: ARGUS_WITNESS_VIDEO_URL,
+      url: "https://media.luke-the-duke.com/launch/argus-16x9.mp4",
       poster: "https://media.luke-the-duke.com/launch/argus-poster.jpg",
       // TODO(luke): review film transcript
       transcript: "A launch film for Argus, the vision-model end-to-end testing tool that records once and heals on drift.",
@@ -252,7 +252,7 @@ export const projectConfigs: ProjectConfig[] = [
     ],
     private: true,
     film: {
-      url: PACE_DEBUT_VIDEO_URL,
+      url: "https://media.luke-the-duke.com/launch/pace-16x9.mp4",
       poster: "https://media.luke-the-duke.com/launch/pace-poster.jpg",
       // TODO(luke): review film transcript
       transcript: "A launch film for Pace, the production platform for identity, billing and AI for small businesses.",
