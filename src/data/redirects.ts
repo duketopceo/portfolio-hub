@@ -52,6 +52,7 @@ export const retiredSlugs: RetiredSlug[] = [
   { from: "curious-storycard", to: "/projects#earlier-work", reason: "earlier" },
   { from: "project-atlas", to: "/projects#earlier-work", reason: "earlier" },
   { from: "void-sleep", to: "/projects#earlier-work", reason: "earlier" },
+  { from: "crucible", to: "/projects#earlier-work", reason: "earlier" },
   { from: "nem-stock-pitch", to: "/projects", reason: "removed" },
   { from: "dayflow-screenshots", to: "/projects", reason: "removed" },
   { from: "server-cluster", to: "/projects", reason: "removed" },

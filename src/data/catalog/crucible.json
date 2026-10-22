@@ -23,7 +23,8 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
-    }
+    },
+    "era": "earlier"
   },
   "github": {
     "repoName": "crucible",
