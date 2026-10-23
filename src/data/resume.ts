@@ -46,8 +46,8 @@ export const skills = [
   {
     name: "Sandboxing, Secrets & Quality",
     detail:
-      "E2B & CubeSandbox isolated runtimes, Freedesktop Secret Service (gnome-keyring), 1Password CLI, AES-256-GCM vaults, SSRF egress allowlists, Vision E2E testing (Argus), Docker Swarm, GitHub Actions CI.",
-    keywords: ["E2B", "CubeSandbox", "gnome-keyring", "1Password", "Vaultwarden", "SSRF", "Argus", "Docker", "GitHub Actions"],
+      "E2B & CubeSandbox isolated runtimes, Freedesktop Secret Service (gnome-keyring), op CLI, AES-256-GCM vaults, SSRF egress allowlists, Vision E2E testing (Argus), Docker Swarm, GitHub Actions CI.",
+    keywords: ["E2B", "CubeSandbox", "gnome-keyring", "Vaultwarden", "SSRF", "Argus", "Docker", "GitHub Actions"],
   },
 ];
 
@@ -79,11 +79,11 @@ export const projects = [
     url: "https://github.com/duketopceo/OmaSeal",
     caseStudy: "https://github.com/duketopceo/a0-plugin-omaseal",
     description:
-      "Built a Go desktop keyring engine (v0.4.0) over the Freedesktop Secret Service API and MCP, plus a companion Python secrets resolver across gnome-keyring, 1Password, and AES-256-GCM vaults.",
+      "Built a Go desktop keyring engine (v0.4.0) over the Freedesktop Secret Service API and MCP, plus a companion Python secrets resolver across gnome-keyring, op CLI, and AES-256-GCM vaults.",
     highlights: [
       "Substitutes §§secret(NAME) placeholders in-process at tool execution and scrubs resolved values from tool output so sandboxed agents only ever see secret names and masked values.",
     ],
-    stack: ["Go", "Python", "gnome-keyring", "1Password", "AES-256-GCM", "MCP"],
+    stack: ["Go", "Python", "gnome-keyring", "Vaultwarden", "Freedesktop Secret Service", "MCP"],
   },
   {
     name: "jev-compact & Kurultai — Context Compaction & Hybrid Retrieval Daemon",
