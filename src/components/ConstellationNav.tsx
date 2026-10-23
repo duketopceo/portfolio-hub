@@ -10,7 +10,7 @@ import {
 } from "@/data/quadrant-positions";
 import { catColors } from "@/lib/utils";
 import SectorTerrain from "@/components/SectorTerrain";
-import { categoryMeta } from "@/data/projects";
+import { categoryMeta } from "@/data/category-meta";
 import { projectIconMap } from "./ProjectIcons";
 
 interface ConstellationNavProps {

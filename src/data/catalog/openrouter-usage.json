@@ -1,0 +1,33 @@
+{
+  "slug": "openrouter-usage",
+  "order": 40,
+  "curated": {
+    "displayName": "OpenRouter Usage",
+    "tagline": "Workspace-aware OpenRouter org spend dashboard",
+    "description": "Agent Zero plugin for OpenRouter org spend analytics — per-key, per-model, and per-provider breakdowns, budgets, and routing recommendations.",
+    "category": "ai",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "OpenRouter",
+      "Dashboard",
+      "Analytics"
+    ],
+    "private": false,
+    "highlights": [
+      "Per-key / model / provider spend breakdowns",
+      "Budget and limit tracking",
+      "Routing recommendations"
+    ],
+    "architecture": "OpenRouter API → usage aggregation → budget engine → dashboard UI",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "openrouter_usage",
+    "owner": "duketopceo"
+  }
+}

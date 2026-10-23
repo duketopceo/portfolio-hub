@@ -1,5 +1,5 @@
 import { GitHubRepo, EnrichedProject } from "./types";
-import { projectConfigs } from "@/data/projects";
+import { listedProjects } from "@/lib/catalog";
 import { applyDeploymentOverlay } from "@/lib/deployments";
 import { publicGithubUrl } from "@/lib/github-public-url";
 import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
@@ -12,6 +12,8 @@ import {
   rateLimitResetFromHeaders,
   type GithubRequestFailure,
 } from "./github-errors";
+import { scrubEmails } from "@/lib/readme-scrub";
+import { prepareReadmeHtml } from "@/lib/readme-html";
 import { fetchLatestCiState, type CiStateKind } from "@/lib/github-repo-api";
 
 export { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
@@ -19,6 +21,11 @@ export { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 const GITHUB_USER = GITHUB_ACCOUNT_LOGIN;
 const GITHUB_API = GITHUB_API_BASE;
 const SHOWCASE_FILENAME = "SHOWCASE.md";
+
+/** Builds and visual tests set this so output never depends on live GitHub. */
+function fixturesEnabled(): boolean {
+  return process.env.ACTIVITY_USE_FIXTURES === "1";
+}
 
 /**
  * Headers for GitHub API requests (server-side only).
@@ -57,6 +64,7 @@ async function handleFailedGithubResponse(
  * Fetch all repos for the configured GitHub user / app installation.
  */
 export async function fetchAllRepos(): Promise<GitHubRepo[]> {
+  if (fixturesEnabled()) return [];
   const token = await getGithubAccessToken();
   const allRepos: GitHubRepo[] = [];
   let page = 1;
@@ -113,6 +121,7 @@ async function fetchRepoLanguages(
   repoName: string,
   owner: string = GITHUB_USER
 ): Promise<string[]> {
+  if (fixturesEnabled()) return [];
   const url = `${GITHUB_API}/repos/${owner}/${repoName}/languages`;
   try {
     const res = await fetch(url, {
@@ -131,13 +140,47 @@ async function fetchRepoLanguages(
 }
 
 /**
+ * Default branch and README path, needed to resolve relative image links.
+ * Best-effort: falls back to `main` and the repo root.
+ */
+async function fetchReadmeLocation(
+  repoName: string,
+  owner: string
+): Promise<{ branch: string; readmePath: string }> {
+  const headers = await githubAuthHeaders();
+  const base = `${GITHUB_API}/repos/${owner}/${encodeURIComponent(repoName)}`;
+  const get = async <T>(url: string): Promise<T | null> => {
+    try {
+      const res = await fetch(url, {
+        headers,
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(10_000),
+      });
+      return res.ok ? ((await res.json()) as T) : null;
+    } catch {
+      return null;
+    }
+  };
+  const [repo, readme] = await Promise.all([
+    get<{ default_branch?: string }>(base),
+    get<{ path?: string }>(`${base}/readme`),
+  ]);
+  return {
+    branch: repo?.default_branch || "main",
+    readmePath: readme?.path || "README.md",
+  };
+}
+
+/**
  * Fetch the README content for a public repo (rendered as HTML).
  * Never called for private repos on the dossier page.
  */
 export async function fetchReadme(
   repoName: string,
-  owner: string = GITHUB_USER
+  owner: string = GITHUB_USER,
+  projectNames: string[] = []
 ): Promise<string | null> {
+  if (fixturesEnabled()) return null;
   const url = `${GITHUB_API}/repos/${owner}/${repoName}/readme`;
 
   try {
@@ -161,7 +204,17 @@ export async function fetchReadme(
       return null;
     }
 
-    return await res.text();
+    const html = await res.text();
+    const { branch, readmePath } = await fetchReadmeLocation(repoName, owner);
+    return scrubEmails(
+      prepareReadmeHtml(html, {
+        owner,
+        repo: repoName,
+        branch,
+        readmePath,
+        projectNames: [repoName, ...projectNames],
+      })
+    );
   } catch (err) {
     const failure = failureFromUnknown(`fetchReadme ${repoName}`, err);
     logGithubFailure("fetchReadme", failure);
@@ -182,7 +235,7 @@ export async function fetchShowcaseMd(
   repoName: string,
   owner: string = GITHUB_USER
 ): Promise<string | null> {
-  if (!repoName) return null;
+  if (!repoName || fixturesEnabled()) return null;
 
   const url = `${GITHUB_API}/repos/${owner}/${encodeURIComponent(repoName)}/contents/${SHOWCASE_FILENAME}`;
 
@@ -199,7 +252,7 @@ export async function fetchShowcaseMd(
     if (data.name !== SHOWCASE_FILENAME) return null;
     if (!data.content || data.encoding !== "base64") return null;
 
-    return Buffer.from(data.content, "base64").toString("utf8");
+    return scrubEmails(Buffer.from(data.content, "base64").toString("utf8"));
   } catch {
     return null;
   }
@@ -228,7 +281,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
   }
 
   const enriched = await Promise.all(
-    projectConfigs.map(async (config) => {
+    listedProjects().map(async (config) => {
       const withDeploy = applyDeploymentOverlay(config);
       if (withDeploy.siteOnly) {
         return {
@@ -309,7 +362,7 @@ export async function getProjectBySlug(
 }
 
 export function getAllSlugs(): string[] {
-  return projectConfigs.map((p) => p.slug);
+  return listedProjects().map((p) => p.slug);
 }
 
 /**
@@ -318,7 +371,7 @@ export function getAllSlugs(): string[] {
 export async function enrichProjectActivity(
   project: EnrichedProject
 ): Promise<EnrichedProject> {
-  if (project.siteOnly || !project.repoName) return project;
+  if (project.siteOnly || !project.repoName || fixturesEnabled()) return project;
 
   const owner = project.repoOwner ?? GITHUB_USER;
   const languages = await fetchRepoLanguages(project.repoName, owner);

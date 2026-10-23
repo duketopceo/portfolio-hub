@@ -1,0 +1,85 @@
+{
+  "slug": "khan",
+  "order": 0,
+  "curated": {
+    "displayName": "Khan",
+    "tagline": "OpenRouter-native Agent Zero fork — Temporal, LiteLLM workers, risk scoring, MCP, Python CLI",
+    "description": "Khan is a real agent harness built in a concentrated Aug 7–13 sprint: Temporal orchestration, OpenRouter-backed routing, LiteLLM workers, risk scoring, MCP tool surfaces, and a Python CLI. Ships alongside khanai.app as the public face of the stack. Plugin-first, secret-first operations with a multi-agent coordination board — not a self-hosted GPU or local inference cluster.",
+    "category": "ai",
+    "type": "platform",
+    "featured": true,
+    "planetVisual": {
+      "size": "xl",
+      "shape": "sphere",
+      "color": "#A78BFA",
+      "rings": [
+        {
+          "opacity": 0.38,
+          "tilt": -22
+        },
+        {
+          "opacity": 0.22,
+          "tilt": 28
+        }
+      ],
+      "moons": [
+        {
+          "label": "Temporal",
+          "kind": "stack"
+        },
+        {
+          "label": "MCP",
+          "kind": "stack"
+        },
+        {
+          "label": "khanai",
+          "kind": "live",
+          "href": "https://khanai.app"
+        }
+      ]
+    },
+    "techStack": [
+      "Python",
+      "Temporal",
+      "OpenRouter",
+      "LiteLLM",
+      "MCP",
+      "Python CLI"
+    ],
+    "private": true,
+    "showcase": {
+      "whatItIs": "A personal, Linux-backed agent harness with OpenRouter as the default model path. It is a private fork of Agent Zero with Khan's own CLI, secret vault and memory layer on top.",
+      "whoItsFor": "One operator running their own agent on their own box, with any model behind it.",
+      "whatLukeBuilt": "OpenRouter-native routing through LiteLLM, a host CLI (up, login, ask, chat, memory, sync, remote), a secret vault that keeps keys out of settings files, typed contracts for memory, verification, trust and task runtime, an optional Temporal durable-execution adapter, and the khanai.app landing site and installer.",
+      "stack": [
+        "Python",
+        "Docker",
+        "LiteLLM",
+        "OpenRouter",
+        "Temporal",
+        "MCP"
+      ],
+      "status": "Built in a concentrated burst in August 2026. The CLI, vault and memory persistence work; the live agent loop is not fully wired to the typed contracts yet, and release downloads are not published.",
+      "problem": "Agent harnesses tend to assume one vendor's models and keep API keys in plain settings files, which is awkward for one person running their own agent on their own machine. Khan asks what a personal harness looks like when any model is a drop-in and keys never touch config.",
+      "approach": "I forked Agent Zero rather than rewriting its runtime, and put Khan's own pieces in separate packages on top: routing, a host CLI, a secret vault and typed contracts for memory, verification, trust and task runtime. The rest of Agent Zero stays untouched underneath.",
+      "architecture": "The host CLI (a Python package, started with `khan`) brings up the Dockerised Agent Zero runtime and bridges the terminal to it. Model calls go through LiteLLM with OpenRouter as the default provider in a YAML provider config; secrets live in a vault plugin that writes to a local env file instead of settings. A separate package defines the typed contracts and persists memory, with an optional Temporal adapter for durable execution.",
+      "outcomes": "The CLI, vault and memory persistence work today, along with a landing site and a one-line installer. The live agent loop is not yet driven by the typed contracts, and release downloads are not published."
+    },
+    "highlights": [
+      "Temporal + OpenRouter orchestration with LiteLLM workers",
+      "Risk scoring and MCP tool surfaces for agent workflows",
+      "Python CLI for operator tasks",
+      "Public surface at khanai.app"
+    ],
+    "architecture": "Temporal workflows → OpenRouter/LiteLLM workers → Risk scoring → MCP tools → Python CLI + khanai.app",
+    "finishLine": "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Python CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild.",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "Khan",
+    "owner": "duketopceo"
+  }
+}

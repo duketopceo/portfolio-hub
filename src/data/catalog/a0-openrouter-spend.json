@@ -1,0 +1,33 @@
+{
+  "slug": "a0-openrouter-spend",
+  "order": 41,
+  "curated": {
+    "parentSlug": "openrouter-usage",
+    "displayName": "A0 OpenRouter Spend",
+    "tagline": "OpenRouter spend and budget tracking utility",
+    "description": "OpenRouter spend tracking and budget analytics utility. Work-in-progress companion to the main OpenRouter Usage dashboard.",
+    "category": "finance",
+    "type": "experiment",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "OpenRouter",
+      "Analytics"
+    ],
+    "private": false,
+    "highlights": [
+      "OpenRouter spend tracking",
+      "Budget analytics helpers",
+      "Companion to OpenRouter Usage"
+    ],
+    "architecture": "OpenRouter spend data → budget helpers → lightweight UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "a0-openrouter-spend",
+    "owner": "duketopceo"
+  }
+}

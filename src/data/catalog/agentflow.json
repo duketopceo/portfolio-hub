@@ -1,0 +1,34 @@
+{
+  "slug": "agentflow",
+  "order": 53,
+  "curated": {
+    "displayName": "AgentFlow",
+    "tagline": "Script-driven multi-agent orchestration across harnesses",
+    "description": "Cross-harness dynamic workflows: script-driven multi-agent orchestration spanning Devin, Claude Code, Codex, and OpenCode, with plugins for each.",
+    "category": "ai",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "JavaScript",
+      "Multi-Agent",
+      "Claude Code",
+      "Codex",
+      "OpenCode"
+    ],
+    "private": false,
+    "highlights": [
+      "One workflow definition drives multiple agent harnesses",
+      "Script-driven rather than prompt-driven orchestration",
+      "Per-harness plugin adapters"
+    ],
+    "architecture": "Workflow script → harness adapter → agent execution → step results → next step",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "agentflow",
+    "owner": "duketopceo"
+  }
+}

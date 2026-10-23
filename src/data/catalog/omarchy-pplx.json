@@ -1,0 +1,35 @@
+{
+  "slug": "omarchy-pplx",
+  "order": 36,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "PPLX",
+    "tagline": "Perplexity quick-ask search in a bar dropdown",
+    "description": "Omarchy plugin for the pplx CLI + Search API: type, enter, grounded results with sources, recency/context chips, one-click copy, BYOK via env or keyring.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "QML",
+      "Omarchy",
+      "pplx CLI",
+      "Perplexity"
+    ],
+    "private": false,
+    "highlights": [
+      "Grounded answers with source links",
+      "Recency + context chips",
+      "BYOK — env or keyring",
+      "Listed on the official Omarchy plugin marketplace"
+    ],
+    "architecture": "QML dropdown → pplx CLI → Search API → rendered results + copy",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "omarchy-pplx",
+    "owner": "duketopceo"
+  }
+}

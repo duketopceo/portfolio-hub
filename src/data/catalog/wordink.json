@@ -1,0 +1,32 @@
+{
+  "slug": "wordink",
+  "order": 55,
+  "curated": {
+    "displayName": "WordInk",
+    "tagline": "Speech-to-text dictation on Groq's inference API",
+    "description": "AI-powered speech-to-text dictation — an alternative to hosted dictation tools, built on Groq's low-latency inference API.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "Python",
+      "Groq",
+      "Whisper"
+    ],
+    "private": false,
+    "highlights": [
+      "Low-latency dictation over a fast inference API",
+      "Client SDK plus app"
+    ],
+    "architecture": "Audio capture → Groq transcription → text insertion",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "WordInk",
+    "owner": "duketopceo"
+  }
+}

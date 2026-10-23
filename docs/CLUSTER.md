@@ -1,5 +1,7 @@
 # Cluster hosting (Tailscale)
 
+> **Retired (2026-10-21).** Production runs on Railway (`railway.json`, built from the `Dockerfile`; confirmed by the `x-railway-*` response headers). The Swarm deploy workflow was removed. This page is kept for history only.
+
 **Cosmic Intelligence / portfolio-hub is self-hosted** on the three-node Mac Mini Docker Swarm joined over **Tailscale**. It is not the primary production path on Vercel or Cloudflare Pages.
 
 Canon infra inventory lives in [`duketopceo/homelab`](https://github.com/duketopceo/homelab). This doc is the portfolio-hub-facing summary so agents and operators do not invent a different topology.

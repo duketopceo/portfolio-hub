@@ -1,0 +1,38 @@
+{
+  "slug": "alphahedge",
+  "order": 10,
+  "curated": {
+    "era": "earlier",
+    "displayName": "AlphaHedge",
+    "tagline": "Full-stack hedge fund simulation platform with realistic market dynamics",
+    "description": "Interactive hedge fund simulation platform where users construct portfolios, allocate capital across sectors, and respond to realistic market scenarios. The simulation engine models market dynamics including volatility clustering, correlation breakdowns, and liquidity events. Features real-time portfolio valuation with interactive Chart.js visualizations, sector exposure analysis, and risk-adjusted return metrics. Built as a full-stack Next.js application with server-side rendering.",
+    "category": "finance",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://alphahedge.luke-the-duke.com",
+    "demoUrl": "https://alphahedge.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "TypeScript",
+      "Next.js",
+      "Financial APIs",
+      "Chart.js"
+    ],
+    "private": true,
+    "demoOffline": true,
+    "highlights": [
+      "Realistic market dynamics and scenario modeling",
+      "Portfolio construction and risk allocation engine",
+      "Real-time P&L tracking with interactive charts"
+    ],
+    "architecture": "Next.js SSR → Simulation engine → Financial APIs → Chart.js visualizations → Portfolio analytics",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "AlphaHedge-Hedge-Fund-Simulator",
+    "owner": "duketopceo"
+  }
+}

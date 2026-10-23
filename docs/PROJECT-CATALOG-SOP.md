@@ -2,6 +2,8 @@
 
 How to add a **29th** (or any new) repository to portfolio-hub without guessing orbit placement, privacy rules, or dossier fields.
 
+> **Curation bar:** whether a repo may be listed at all, the 30-40 target, and how mirrors become components are defined in [`docs/CURATION.md`](./CURATION.md). That page is the source of truth; check it before adding an entry. Every join, removal or tier change needs Luke's approval.
+
 ## 1. Add the entry in `src/data/projects.ts`
 
 Append one object to the `projectConfigs` array. Required fields:
@@ -38,10 +40,17 @@ Optional but recommended:
 
 **Default rule:** if a project is in `projectConfigs` and is not one of the featured five, it belongs on the **secondary orbit** (~20 planets). Only use `catalog-only` when a repo truly should not appear on the homepage (rare).
 
-- **Primary orbit** (main planets): fixed list in `HOMEPAGE_FEATURED_SLUGS` inside `src/lib/project-completeness.ts` — currently Khan, Kurultai, Pace Server, OpenRouter Demos, Stratum Engine.
+- **Primary orbit** (main planets): fixed list in `HOMEPAGE_FEATURED_SLUGS` inside `src/lib/project-completeness.ts` — currently orchestral, Argus, Kurultai, Pace Server, Khan (the five most active repos over the last 90 days; activity, not legacy, picks them).
 - **Secondary orbit**: all non-featured entries except `orbitTier: "catalog-only"`, sorted by completeness score, split across two offset rings for spacing.
 - To promote/demote a primary world: edit `HOMEPAGE_FEATURED_SLUGS` **and** flip `featured` flags — keep both in sync.
-- Hero repo count uses `projectConfigs.length` — do not remove entries to “clean up.”
+- Hero repo count is **listed projects** (`listedProjects()` in `src/lib/catalog.ts`): entries with neither `parentSlug` nor `era: "earlier"`. Components and earlier work do not count.
+
+### Components and earlier work
+
+- **Component** (`parentSlug: "<parent>"`): a mirror or companion repo (the ten `omarchy-*` widgets under `omarchy-plugins`, the seven `a0-plugin-*` repos under `agent-zero-plugins`, `kate-ios`, `omarchy-wisp`, `kurultai-people`, `a0-openrouter-spend`). One level only. It gets no dossier, no orbit slot, and no sitemap entry. On the parent dossier it links to its public GitHub repo (private components show no link). A private component never sits under a public parent (`validateCatalog`).
+- **Earlier work** (`era: "earlier"`): a repo that has been archived. No dossier and no orbit slot. Public entries appear in the `#earlier-work` table on `/projects` (name, one-line description, year, public GitHub link); private ones are never rendered.
+- **Retiring a slug**: every slug that ever had a dossier gets a row in `src/data/redirects.ts` (`retiredSlugs`): component or duplicate to `/projects/<kept slug>`, earlier work to `/projects#earlier-work`, removed to `/projects`. Do not delete a catalog entry without adding its row.
+- **Films**: set `film: { url }` (the old `demoVideoUrl` is gone). Private entries get hand-written `showcase` copy marked `// TODO(luke): review showcase copy` until Luke signs it off.
 
 ### Public vs private showcase
 

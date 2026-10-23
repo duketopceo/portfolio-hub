@@ -15,7 +15,6 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "homelab":           { x: -0.85, y:  0.55 },
   "luke-agents":       { x: -0.45, y:  0.35 },
   "ai-debate-arena":   { x:  0.45, y: -0.55 },
-  "luke-the-duke-show":{ x:  0.72, y: -0.20 },
   "trading-bot":       { x: -0.60, y:  0.55 },
   "alphahedge":        { x:  0.25, y:  0.65 },
   "ikbr-dashboard":    { x:  0.15, y: -0.35 },
@@ -23,19 +22,14 @@ export const quadrantPositions: Record<string, { x: number; y: number }> = {
   "skyguard-ai":       { x: -0.25, y:  0.75 },
   "quiz-the-best":     { x:  0.65, y: -0.45 },
   "optimezer":         { x: -0.35, y:  0.20 },
-  "republic-atlas":    { x:  0.05, y:  0.85 },
   "military-hardware-db": { x: -0.55, y: -0.50 },
-  "pixel-tycoon":      { x: -0.40, y:  0.15 },
   "etl-pipeline":      { x: -0.70, y: -0.70 },
-  "server-cluster":    { x: -0.80, y:  0.45 },
   "dixi":              { x:  0.70, y:  0.15 },
-  "stratum-hq":        { x:  0.55, y:  0.28 },
   "chronicle-weaver":  { x:  0.80, y:  0.00 },
   "collaborative-essay": { x: 0.30, y: -0.70 },
   "personal-blog":     { x:  0.80, y: -0.65 },
   "series65-study-app": { x: 0.35, y:  0.70 },
   "curious-storycard": { x:  0.75, y: -0.30 },
-  "nem-stock-pitch":   { x:  0.40, y:  0.40 },
 };
 
 export const quadrantLabels = {

@@ -1,0 +1,33 @@
+{
+  "slug": "a0-plugin-argus",
+  "order": 57,
+  "curated": {
+    "parentSlug": "agent-zero-plugins",
+    "displayName": "Agent Zero Plugin — Argus",
+    "tagline": "Pull-request review tools for Agent Zero, backed by Argus",
+    "description": "Agent Zero plugin adding argus_review and argus_flow tools, backed by Argus, a self-hosted bring-your-own-key pull-request reviewer.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "Argus",
+      "Code Review"
+    ],
+    "private": false,
+    "highlights": [
+      "Exposes review and flow tools to an Agent Zero runtime",
+      "Bring-your-own-key, self-hosted"
+    ],
+    "architecture": "Agent Zero tool call → plugin adapter → Argus reviewer → findings",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "a0-plugin-argus",
+    "owner": "duketopceo"
+  }
+}

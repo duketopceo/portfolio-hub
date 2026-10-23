@@ -6,6 +6,7 @@ import {
   work,
   education,
   awards,
+  resumeRevisionDate,
 } from "@/data/resume";
 
 export function ResumeDocument() {
@@ -169,6 +170,9 @@ export function ResumeDocument() {
         >
           PDF
         </a>
+        <span className="resume-doc__revision">
+          Revised <time dateTime={resumeRevisionDate}>{resumeRevisionDate}</time>
+        </span>
       </footer>
     </div>
   );

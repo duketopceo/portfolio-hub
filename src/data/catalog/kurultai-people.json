@@ -1,0 +1,34 @@
+{
+  "slug": "kurultai-people",
+  "order": 42,
+  "curated": {
+    "parentSlug": "kurultai",
+    "displayName": "Kurultai People",
+    "tagline": "Agent Zero plugin for Kurultai Memory",
+    "description": "Agent Zero plugin that adds search, recall, and citation against the Kurultai knowledge index. Brings long-term memory into agent runs.",
+    "category": "ai",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Kurultai",
+      "Agent Zero",
+      "Embeddings"
+    ],
+    "private": false,
+    "highlights": [
+      "Kurultai knowledge search from agents",
+      "Recall and citation pipeline",
+      "Agent Zero plugin interface"
+    ],
+    "architecture": "Agent Zero hook → Kurultai search → recall ranking → cited response",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "kurultai_people",
+    "owner": "duketopceo"
+  }
+}

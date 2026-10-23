@@ -42,3 +42,44 @@ describe("resolvePlanetVisual", () => {
     expect(shortPlanetLabel("Open Military Hardware DB", 14)).toContain("…");
   });
 });
+
+import {
+  FOCAL_SLUGS,
+  isFocalSlug,
+  limbPoints,
+  meridianCount,
+  planetBodyRadius,
+} from "./planet-visual";
+
+describe("survey-plate body helpers", () => {
+  it("marks at most two focal planets, both featured", () => {
+    expect(FOCAL_SLUGS.length).toBeLessThanOrEqual(2);
+    for (const slug of FOCAL_SLUGS) expect(isFeaturedSlug(slug)).toBe(true);
+    expect(isFocalSlug("pace-server")).toBe(true);
+    expect(isFocalSlug("kurultai")).toBe(true);
+    expect(isFocalSlug("argus")).toBe(false);
+  });
+
+  it("scales body radius with planet size", () => {
+    expect(planetBodyRadius("xl")).toBeGreaterThan(planetBodyRadius("md"));
+    expect(planetBodyRadius("md")).toBeGreaterThan(planetBodyRadius("xs"));
+  });
+
+  it("draws closed limb polygons per shape", () => {
+    const hex = limbPoints("hex", 1);
+    expect(hex).toHaveLength(7);
+    expect(hex[0]).toEqual(hex[6]);
+    expect(limbPoints("diamond", 1)).toHaveLength(5);
+    expect(limbPoints("cube", 1)).toHaveLength(5);
+    const sphere = limbPoints("sphere", 2);
+    expect(sphere.length).toBeGreaterThan(32);
+    for (const [x, y] of sphere) expect(Math.hypot(x, y)).toBeCloseTo(2, 6);
+  });
+
+  it("adds meridians only to focal planets without the shader", () => {
+    expect(meridianCount(false, false)).toBe(2);
+    expect(meridianCount(false, true)).toBe(2);
+    expect(meridianCount(true, true)).toBe(2);
+    expect(meridianCount(true, false)).toBe(4);
+  });
+});

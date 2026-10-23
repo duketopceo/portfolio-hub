@@ -69,6 +69,42 @@ export interface PlanetVisualConfig {
   moons?: PlanetMoonConfig[];
 }
 
+/** One recorded video. `captions` is a path under the site origin. */
+export interface MediaAsset {
+  url: string;
+  poster?: string;
+  captions?: string;
+  transcript: string;
+}
+
+/** Present, still to be recorded, or not applicable. */
+export type MediaSlot = MediaAsset | "to-record" | "n/a";
+
+/** The video asset in a slot, or null when it is unrecorded or not applicable. */
+export function mediaAsset(slot: MediaSlot): MediaAsset | null {
+  return typeof slot === "string" ? null : slot;
+}
+
+export type MediaKind = "release" | "demo";
+
+export interface ProjectMedia {
+  release: MediaSlot;
+  demo: MediaSlot;
+}
+
+/** Hand-written showcase copy for a private project. Never fetched at runtime. */
+export interface ProjectShowcase {
+  whatItIs: string;
+  whoItsFor: string;
+  whatLukeBuilt: string;
+  stack: string[];
+  status: string;
+  problem?: string;
+  approach?: string;
+  architecture?: string;
+  outcomes?: string;
+}
+
 export interface ProjectConfig {
   slug: string;
   repoName: string;
@@ -90,12 +126,15 @@ export interface ProjectConfig {
   liveUrl?: string;
   /** Embeddable demo URL (for iframe preview) — may differ from liveUrl */
   demoUrl?: string;
-  /** Hosted walkthrough video (e.g. R2 mp4) for project dossier */
-  demoVideoUrl?: string;
-  /** Poster frame (JPEG) for the hosted video */
-  demoVideoPosterUrl?: string;
-  /** Show the video on the dossier even when the repo is private (public product film) */
-  demoVideoPublic?: boolean;
+  /** Release video and demo recording for the dossier; shown on private
+   *  entries too. Video assets live on the existing media host only. */
+  media: ProjectMedia;
+  /** Hand-written card shown in place of activity/README on private entries. */
+  showcase?: ProjectShowcase;
+  /** Marks this entry as a component of the named parent: no dossier of its own. */
+  parentSlug?: string;
+  /** Marks archived work listed under "earlier work" on /projects: no dossier. */
+  era?: "earlier";
   /** If true, liveUrl can be iframed on the detail page */
   embeddable?: boolean;
   /** If true, the demo subdomain is offline — show a static preview instead of iframe */
@@ -106,8 +145,6 @@ export interface ProjectConfig {
   highlights: string[];
   /** Optional screenshots or preview image URLs */
   previewImages?: string[];
-  /** Captioned preview media rendered on the dossier (logos, design mocks) */
-  previewMedia?: { src: string; alt: string; caption: string; width?: number; height?: number }[];
   /** High-level architecture description */
   architecture?: string;
   /** Private project dossier — 2–4 sentences: problem, users, real-world impact */

@@ -1,0 +1,33 @@
+{
+  "slug": "agent-zero-plugins",
+  "order": 56,
+  "curated": {
+    "displayName": "Agent Zero plugins",
+    "tagline": "Seven public Agent Zero plugins: Argus review, OmaSeal, Jev compaction, device sync, durable runs, GlitchTip, Notion",
+    "description": "A suite of public plugins for the Agent Zero agent runtime, each in its own repository: pull-request review tools backed by Argus, OmaSeal secret access, Jev context compaction, device sync, durable run state, GlitchTip error reporting, and a Notion ingestion server. They appear here as components of one entry rather than seven.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "siteOnly": true,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "MCP"
+    ],
+    "private": false,
+    "highlights": [
+      "Seven plugins, one per capability, each in its own public repository",
+      "Argus plugin exposes pull-request review as agent tools",
+      "Notion plugin runs as a local stdio MCP server"
+    ],
+    "architecture": "Agent Zero runtime → plugin adapters → external service (Argus, Notion, GlitchTip, OmaSeal)",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "a0-plugins",
+    "owner": "duketopceo"
+  }
+}

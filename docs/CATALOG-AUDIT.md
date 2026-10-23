@@ -136,3 +136,9 @@ python3 scripts/audit-repo-audition.py        # writes docs/CATALOG-AUDIT.md
 Requires `gh` authenticated. Excludes forks and archived repos by default.
 Python rather than Node because it needs no dependency install and the repo's
 tooling does not already cover the GitHub API.
+
+---
+
+## 2026-10-20 restructure note
+
+The tier audit (`repo-tiers-2026-10-20`) was applied to the catalog (portfolio-hub overhaul, U3). The featured five are now orchestral, Argus, Kurultai, Pace-Server and Khan; `stratum-hq` is removed. Components: ten `omarchy-*` widgets under `omarchy-plugins`, seven `a0-plugin-*` repos under a new `agent-zero-plugins` entry, `omarchy-wisp` under `wisp`, `kate-ios` under `kate`, `kurultai-people` under `kurultai`, `a0-openrouter-spend` under `openrouter-usage`. Duplicates `openrouter` and `open-military-hardware-db` collapse into `openrouter-demos` and `military-hardware-db`. Sixteen archived repos moved to the earlier-work table; nine entries were removed. Added: cairn, rts-skyrim, scooter-ios (private, showcase copy), portfolio-hub, jev-compact, pinetree-solari-demo. Every pre-change slug resolves or redirects (`src/data/redirects.ts`).

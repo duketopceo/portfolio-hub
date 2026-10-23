@@ -7,6 +7,7 @@ import WelcomeIntro from "@/components/WelcomeIntro";
 import CardTorch from "@/components/CardTorch";
 import UmamiOutbound from "@/components/UmamiOutbound";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
+import Footer from "@/components/Footer";
 
 /** Star Chart system: Archivo industrial grotesk (display + body), JetBrains Mono for all meta/labels */
 const archivo = Archivo({
@@ -66,7 +67,9 @@ export default function RootLayout({
 
         <Header />
         <main className="flex-1 relative animate-page-in">{children}</main>
-        <SiteFooter />
+        <SiteFooter>
+          <Footer />
+        </SiteFooter>
         <UmamiOutbound />
         <CardTorch />
         <Script

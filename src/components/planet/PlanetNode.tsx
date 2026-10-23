@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { EnrichedProject } from "@/lib/types";
 import {
+  isFocalSlug,
   planetVisualStyle,
   resolvePlanetVisual,
   shapeClass,
@@ -10,6 +11,7 @@ import {
   type OrbitVisualTier,
 } from "@/lib/planet-visual";
 import { LockIcon } from "@/components/Icons";
+import styles from "./survey-plate.module.css";
 
 interface PlanetNodeProps {
   project: EnrichedProject;
@@ -51,22 +53,35 @@ function MoonChip({
     </span>
   );
 
-  if (moon.href && moon.kind !== "stack") {
+  const href = moon.kind !== "stack" ? moon.href : undefined;
+  if (!href) return body;
+
+  if (href.startsWith("/")) {
+    // Component moon: on-site link to the parent dossier's #components anchor.
     return (
-      <a
-        href={moon.href}
+      <Link
+        href={href}
         className="planet-node__moon-link"
-        target="_blank"
-        rel="noopener noreferrer"
         onClick={(e) => e.stopPropagation()}
         aria-label={`${moon.label} (${moon.kind})`}
       >
         {body}
-      </a>
+      </Link>
     );
   }
 
-  return body;
+  return (
+    <a
+      href={href}
+      className="planet-node__moon-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      aria-label={`${moon.label} (${moon.kind})`}
+    >
+      {body}
+    </a>
+  );
 }
 
 export function PlanetNode({
@@ -94,10 +109,13 @@ export function PlanetNode({
         ? " planet-node--label-above"
         : " planet-node--label-below";
 
+  const focal = isFocalSlug(project.slug);
+
   return (
     <span
-      className="planet-node-wrap"
+      className={`planet-node-wrap ${styles.plate}`}
       style={planetVisualStyle(visual, index)}
+      data-focal={focal ? "true" : undefined}
     >
       <Link
         href={href}
@@ -131,6 +149,15 @@ export function PlanetNode({
             className={`planet-node__core ${shapeClass(visual.shape)}`}
             aria-hidden
           />
+          {focal &&
+            [-30, 30].map((tilt) => (
+              <span
+                key={tilt}
+                className={styles.meridianExtra}
+                style={{ "--meridian-tilt": `${tilt}deg` } as React.CSSProperties}
+                aria-hidden
+              />
+            ))}
         </span>
         <span className="planet-node__label">
           <span className="planet-node__id" aria-hidden="true">
@@ -140,7 +167,7 @@ export function PlanetNode({
             {label}
             {project.private && (
               <>
-                <LockIcon className="inline w-2.5 h-2.5 ml-0.5 opacity-60" />
+                <LockIcon className={styles.lock} />
                 <span className="sr-only">Private</span>
               </>
             )}

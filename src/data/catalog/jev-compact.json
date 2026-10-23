@@ -1,0 +1,33 @@
+{
+  "slug": "jev-compact",
+  "order": 68,
+  "curated": {
+    "displayName": "jev-compact",
+    "tagline": "Context compaction for agent harnesses: keep what still matters, tombstone the rest",
+    "description": "A retention filter for agent transcripts, not a summarizer. A decision model scores each span against the conversation's moving highlight; top spans stay verbatim, the middle band becomes one-line tombstones, and the full transcript stays on disk. An MCP restore server rehydrates any tombstone on demand. A heuristic scorer works offline with no keys.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "MCP",
+      "Claude Code hooks"
+    ],
+    "private": false,
+    "highlights": [
+      "Scores spans on relevance to the current topic and how load-bearing they are",
+      "Token-budget knapsack: keep verbatim, tombstone, or drop",
+      "context-restore MCP server rehydrates tombstoned spans",
+      "Stdlib-only Python; Claude Code adapter ready, Codex and OpenCode next"
+    ],
+    "architecture": "Transcript → spans → highlight → score → budget knapsack → kept spans + tombstones → MCP restore",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "jev-compact",
+    "owner": "duketopceo"
+  }
+}

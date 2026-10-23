@@ -1,0 +1,34 @@
+{
+  "slug": "omarchy-nexus",
+  "order": 29,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Omarchy Nexus",
+    "tagline": "Hardware topology radar bar widget for Omarchy",
+    "description": "Live hardware topology radar for the Omarchy bar. Visualizes USB, Bluetooth, network, and storage connections in a compact, always-visible widget.",
+    "category": "apps",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "Omarchy",
+      "Hardware",
+      "Bluetooth"
+    ],
+    "private": false,
+    "highlights": [
+      "Live USB, Bluetooth, network, storage topology",
+      "Compact radar-style widget",
+      "Hardware discovery in the menu bar"
+    ],
+    "architecture": "Omarchy bar widget → system discovery → device graph → radar UI",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "omarchy-nexus",
+    "owner": "duketopceo"
+  }
+}

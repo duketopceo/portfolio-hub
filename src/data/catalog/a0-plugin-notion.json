@@ -1,0 +1,33 @@
+{
+  "slug": "a0-plugin-notion",
+  "order": 63,
+  "curated": {
+    "parentSlug": "agent-zero-plugins",
+    "displayName": "Agent Zero Plugin — Notion",
+    "tagline": "Local Notion stdio MCP server with ingestion atoms",
+    "description": "Notion connector plugin for Agent Zero: a local stdio MCP server plus ingestion atoms for pulling Notion content into an agent's reach.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "MCP",
+      "Notion"
+    ],
+    "private": false,
+    "highlights": [
+      "Runs as a local stdio MCP server",
+      "Ingestion atoms for Notion content"
+    ],
+    "architecture": "Agent Zero → local stdio MCP server → Notion API → ingestion atoms",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "a0-plugin-notion",
+    "owner": "duketopceo"
+  }
+}

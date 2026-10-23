@@ -1,0 +1,33 @@
+{
+  "slug": "kate-ios",
+  "order": 26,
+  "curated": {
+    "parentSlug": "kate",
+    "displayName": "Kate iOS",
+    "tagline": "SwiftUI client for Kate, built and signed on Linux with xtool",
+    "description": "The native iOS client for Kate: pure SwiftUI and SwiftPM with no third-party dependencies, built, signed and installed from Linux with xtool.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "Swift",
+      "SwiftUI",
+      "SwiftPM",
+      "xtool"
+    ],
+    "private": true,
+    "highlights": [
+      "Zero-dependency SwiftUI client",
+      "Built and signed on Linux via xtool"
+    ],
+    "architecture": "SwiftUI tabs → KateCore client → Kate API",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "kate-ios",
+    "owner": "duketopceo"
+  }
+}

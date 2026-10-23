@@ -17,3 +17,26 @@ export async function stubThirdParty(page: Page) {
     route.fulfill({ status: 204, body: "" }),
   );
 }
+
+/**
+ * The CSP's `upgrade-insecure-requests` makes Chromium rewrite same-origin
+ * RSC prefetches on the plain-http test server to https, which fails with
+ * ERR_SSL_PROTOCOL_ERROR. Drop only that directive from document responses
+ * so the console stays a faithful signal; every other directive still
+ * applies. Production serves https and never hits this.
+ */
+export async function dropHttpsUpgradeFromDocuments(page: Page) {
+  await page.route("**/*", async (route) => {
+    if (route.request().resourceType() !== "document") return route.fallback();
+    const response = await route.fetch();
+    const headers = response.headers();
+    const csp = headers["content-security-policy"];
+    if (csp) {
+      headers["content-security-policy"] = csp
+        .split(";")
+        .filter((part) => part.trim() !== "upgrade-insecure-requests")
+        .join(";");
+    }
+    await route.fulfill({ response, headers });
+  });
+}

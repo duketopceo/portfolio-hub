@@ -36,6 +36,10 @@ export function looksLikeSecret(text: string): boolean {
   return false;
 }
 
+function isSensitive(text: string): boolean {
+  return looksLikeSecret(text) || BARTLETT.test(text);
+}
+
 /**
  * Sanitize display text for activity timelines.
  * @param text Raw GitHub title/message
@@ -51,7 +55,7 @@ export function scrubActivityText(
     const s = text.trim();
     // Public titles keep verbatim text — but PII/secrets in a title are
     // never republished regardless of repo visibility (fail closed).
-    if (looksLikeSecret(s) || BARTLETT.test(s) || INTERNAL_HOST.test(s)) {
+    if (isSensitive(s)) {
       return fallback;
     }
     return s.slice(0, 140);
@@ -90,7 +94,7 @@ export function scrubActivityText(
 
 /** Strip merge target / branch refs when they look sensitive — PII/secrets are
  * never republished regardless of repo visibility (same policy as titles). */
-export function scrubBranchRef(ref: string, _isPrivate: boolean): string | undefined {
-  if (looksLikeSecret(ref) || BARTLETT.test(ref)) return undefined;
+export function scrubBranchRef(ref: string, _isPrivate?: boolean): string | undefined {
+  if (isSensitive(ref)) return undefined;
   return ref;
 }

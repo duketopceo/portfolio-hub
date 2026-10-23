@@ -1,0 +1,33 @@
+{
+  "slug": "a0-plugin-device-sync",
+  "order": 60,
+  "curated": {
+    "parentSlug": "agent-zero-plugins",
+    "displayName": "Agent Zero Plugin — Device Sync",
+    "tagline": "Cross-instance settings, chat, and memory sync over Tailscale",
+    "description": "Cross-instance sync packs for Agent Zero covering settings, chat, and memory, transported over Tailscale and carrying no secrets.",
+    "category": "ai",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "Tailscale",
+      "Sync"
+    ],
+    "private": false,
+    "highlights": [
+      "Settings, chat, and memory kept in sync across instances",
+      "Tailscale transport with no secrets in the payload"
+    ],
+    "architecture": "Instance state → sync pack → Tailscale transport → peer instance apply",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "a0-plugin-device-sync",
+    "owner": "duketopceo"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "slug": "kate",
+  "order": 25,
+  "curated": {
+    "displayName": "Kate",
+    "tagline": "A shared field journal for any crew — native iOS built and deployed entirely on Linux via xtool",
+    "description": "Kate is a field journal for crews and small groups: journal entries with photos, hangout ideas, a movie shelf, places and outings with live GPS tracks, and week windows that find when everyone's free. The iOS client is pure SwiftUI + SwiftPM with zero third-party dependencies — signed, compiled, and installed from Arch Linux ARM via xtool, no Xcode machine required. A typed API on Cloudflare Workers (D1 + R2) keeps every member's view in sync: anyone can sign up and start a crew, members join by invitation, and writes queue in an offline outbox.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://kate.shippedit.dev",
+    "media": {
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/kate-launch.mp4",
+        "transcript": "A launch film for Kate, the shared field journal for crews and small groups, with native iOS built on Linux."
+      },
+      "demo": "to-record"
+    },
+    "showcase": {
+      "whatItIs": "A shared field journal for the spontaneous things a crew does together: journal entries with photos, hangout ideas, a movie shelf, places and outings, and week windows that find when everyone is free.",
+      "whoItsFor": "Any small group or household that wants one shared log. Anyone can sign up at kate.shippedit.dev and start a crew; members join by invitation.",
+      "whatLukeBuilt": "A native iOS client in pure SwiftUI and SwiftPM with no third-party dependencies, signed, built and installed from Linux with xtool. A typed API on Cloudflare Workers with D1 and R2 keeps every member's view in sync, with an offline outbox for writes.",
+      "stack": [
+        "Swift",
+        "SwiftUI",
+        "SwiftPM",
+        "xtool",
+        "Next.js",
+        "Cloudflare Workers",
+        "D1",
+        "R2"
+      ],
+      "status": "Live with open sign-up. The site and API run on Cloudflare Workers; the iOS app is the main client and is being prepared for the App Store.",
+      "problem": "Shared group memories end up scattered across chat threads, camera rolls and notes, and a planning app built for one household does not fit a crew whose members come and go. Kate started as a two-person journal and had to become something any small group could run.",
+      "approach": "Journal entries are the core and every other module (ideas, movies, places, availability) hangs off the same crew and member model. Growth is by invitation with a per-member invite budget, and the whole server can be self-hosted on a free Cloudflare account so a crew never has to live on the hosted instance.",
+      "architecture": "A Next.js app on Cloudflare Workers (via OpenNext) serves a typed v1 API backed by D1 for records and R2 for photos. The iOS client is pure SwiftUI/SwiftPM with one shared API client and an offline outbox that queues journal entries and ideas until the network returns. A generated design-token file keeps colours and sizes in one place across web and iOS.",
+      "outcomes": "Open sign-up works with Sign in with Apple or pairing code, crews have invites and a waitlist, and the same API serves the hosted and self-hosted deployments. The iOS app builds, signs and installs from Linux with xtool and is being prepared for App Store submission."
+    },
+    "techStack": [
+      "Swift",
+      "SwiftUI",
+      "SwiftPM",
+      "Cloudflare Workers",
+      "xtool"
+    ],
+    "private": true,
+    "highlights": [
+      "Native iOS built end-to-end on Linux — xtool signs and deploys",
+      "Zero-dependency SwiftUI client, Linux-tested pure core",
+      "Crew model — members, colors, and ratings come from the API",
+      "Offline outbox for journal and idea writes"
+    ],
+    "architecture": "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync"
+  },
+  "github": {
+    "repoName": "kate",
+    "owner": "duketopceo"
+  }
+}

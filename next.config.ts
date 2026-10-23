@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import { fileURLToPath } from "node:url";
 import { withSentryConfig } from "@sentry/nextjs";
+import { retiredSlugRedirects } from "./src/data/redirects";
 
 const nextConfig: NextConfig = {
   // Keep worktree builds rooted here when the parent checkout also has a lockfile.
@@ -26,7 +27,7 @@ const nextConfig: NextConfig = {
       // statically-generated pages (no nonce available at build time).
       "script-src 'self' 'unsafe-inline' https://analytics.pacehq.io",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://avatars.githubusercontent.com https://raw.githubusercontent.com",
+      "img-src 'self' data: blob: https://avatars.githubusercontent.com https://raw.githubusercontent.com https://camo.githubusercontent.com https://media.luke-the-duke.com",
       "media-src 'self' https://media.luke-the-duke.com",
       "font-src 'self' data:",
       "connect-src 'self' https://analytics.pacehq.io",
@@ -83,6 +84,8 @@ const nextConfig: NextConfig = {
         destination: "https://show.luke-the-duke.com/podcast/:path*",
         permanent: true,
       },
+      { source: "/demos/pixel-tycoon", destination: "/demos", permanent: true },
+      ...retiredSlugRedirects(),
     ];
   },
 };

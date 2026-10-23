@@ -1,0 +1,33 @@
+{
+  "slug": "etl-pipeline",
+  "order": 18,
+  "curated": {
+    "era": "earlier",
+    "displayName": "ETL Pipeline",
+    "tagline": "Data engineering pipeline for extraction, transformation, and loading workflows",
+    "description": "Modular data engineering framework implementing ETL best practices. Supports multiple data sources, configurable transformation steps, and various output targets. Built with extensibility in mind for different data processing scenarios.",
+    "category": "data",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Jupyter",
+      "Pandas",
+      "ETL"
+    ],
+    "private": false,
+    "highlights": [
+      "Modular pipeline architecture",
+      "Configurable transformation steps",
+      "Multiple data source connectors"
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "ETL-Pipeline",
+    "owner": "duketopceo"
+  }
+}

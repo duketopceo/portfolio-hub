@@ -1,0 +1,36 @@
+{
+  "slug": "finance-frenzy",
+  "order": 12,
+  "curated": {
+    "era": "earlier",
+    "displayName": "Finance Frenzy",
+    "tagline": "Finance simulation game — Hackathon winner (Best Finance Hack & Top 6)",
+    "description": "Award-winning hackathon project that gamifies financial literacy through an interactive simulation. Players manage virtual portfolios, respond to market events, and learn investment concepts through gameplay. Won Best Finance Hack and placed Top 6 overall.",
+    "category": "finance",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://devpost.com/software/finance-frenzy/",
+    "demoUrl": "https://devpost.com/software/finance-frenzy/",
+    "embeddable": false,
+    "techStack": [
+      "Python",
+      "PyQt",
+      "Simulation",
+      "Game Design"
+    ],
+    "private": false,
+    "highlights": [
+      "Hackathon winner: Best Finance Hack & Top 6",
+      "Gamified financial literacy through simulation",
+      "Interactive portfolio management gameplay"
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "FinanceFrenzy",
+    "owner": "duketopceo"
+  }
+}

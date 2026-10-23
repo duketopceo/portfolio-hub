@@ -1,0 +1,34 @@
+{
+  "slug": "project-atlas",
+  "order": 46,
+  "curated": {
+    "era": "earlier",
+    "displayName": "Project Atlas",
+    "tagline": "AI-powered operations backend for home service contractors",
+    "description": "AI operations backend for home service contractors — voice AI, CRM, automated follow-ups, and review automation. Private production system.",
+    "category": "ai",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Voice AI",
+      "CRM",
+      "Automation"
+    ],
+    "private": true,
+    "highlights": [
+      "Voice AI and CRM for contractors",
+      "Automated follow-up and review flows",
+      "Production operations backend"
+    ],
+    "architecture": "Voice AI → CRM → workflow engine → review automation → customer comms",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "project-atlas",
+    "owner": "duketopceo"
+  }
+}

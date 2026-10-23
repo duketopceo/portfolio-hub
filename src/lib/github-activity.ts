@@ -1,4 +1,4 @@
-import { projectConfigs } from "@/data/projects";
+import { listedProjects } from "@/lib/catalog";
 import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
 import { scrubActivityText, scrubBranchRef } from "@/lib/activity-scrubber";
 import {
@@ -76,8 +76,9 @@ interface GhIssue {
 
 function featuredRepoTargets(): RepoTarget[] {
   const targets: RepoTarget[] = [];
+  const listed = listedProjects();
   for (const slug of HOMEPAGE_FEATURED_SLUGS) {
-    const cfg = projectConfigs.find((p) => p.slug === slug);
+    const cfg = listed.find((p) => p.slug === slug);
     if (!cfg || !cfg.repoName) continue;
     targets.push({
       slug,
@@ -91,7 +92,7 @@ function featuredRepoTargets(): RepoTarget[] {
 }
 
 function repoTargetForSlug(slug: string): RepoTarget | null {
-  const cfg = projectConfigs.find((p) => p.slug === slug);
+  const cfg = listedProjects().find((p) => p.slug === slug);
   if (!cfg || !cfg.repoName) return null;
   return {
     slug,
@@ -329,7 +330,7 @@ async function buildRepoActivity(
           : `PR #${pr.number} opened — ${title}`,
         ref: String(pr.number),
         url: publicUrl(target.private, pr.html_url),
-        mergeTarget: scrubBranchRef(pr.base.ref, target.private),
+        mergeTarget: scrubBranchRef(pr.base.ref),
       });
     }
 
@@ -349,7 +350,7 @@ async function buildRepoActivity(
           : `PR #${pr.number} merged — ${title}`,
         ref: String(pr.number),
         url: publicUrl(target.private, pr.html_url),
-        mergeTarget: scrubBranchRef(pr.base.ref, target.private),
+        mergeTarget: scrubBranchRef(pr.base.ref),
       });
     }
 

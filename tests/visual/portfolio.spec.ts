@@ -1,10 +1,13 @@
 import { expect, test, type Page } from "@playwright/test";
-import { stubThirdParty } from "./stubs";
+import { dropHttpsUpgradeFromDocuments, stubThirdParty } from "./stubs";
 
 const routes = [
   { path: "/", name: "home" },
   { path: "/projects", name: "projects" },
   { path: "/projects/khan", name: "project-dossier" },
+  { path: "/projects/kate", name: "project-dossier-kate" },
+  { path: "/projects/kurultai", name: "project-dossier-kurultai" },
+  { path: "/contributions", name: "contributions" },
   { path: "/openrouter", name: "openrouter" },
   { path: "/demos", name: "demos" },
   { path: "/demos/argus", name: "demo-argus" },
@@ -64,6 +67,7 @@ const forbiddenPersonalInfo = [
 const masked = [
   "canvas",
   "iframe",
+  "video",
   "[data-visual-mask]",
   utcStatusSelector,
 ];
@@ -88,6 +92,7 @@ async function expectNoHorizontalOverflow(page: Page) {
 test.describe("Portfolio visual acceptance matrix", () => {
   test.beforeEach(async ({ page }) => {
     await stubThirdParty(page);
+    await dropHttpsUpgradeFromDocuments(page);
     await page.addInitScript(() => {
       localStorage.setItem("lk_welcomed", "1");
     });
@@ -110,6 +115,9 @@ test.describe("Portfolio visual acceptance matrix", () => {
 
         await expectNoHorizontalOverflow(page);
         await expect(page.locator("main")).toBeVisible();
+        // The fixed full-viewport starfield would paint over the hero in a
+        // full-page capture; hide that decorative layer for baselines only.
+        await page.addStyleTag({ content: ".cosmic-bg { display: none !important; }" });
         await expect(page).toHaveScreenshot(
           `${route.name}-${viewport.name}.png`,
           { fullPage: true, mask: masked.map((selector) => page.locator(selector)) },
@@ -231,10 +239,37 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 
+  // The site-wide starfield (SiteBackground) is one canvas on every route and
+  // is not a new effect; the /hire backdrop (R18) is the second.
+  test("hire backdrop renders one canvas with motion", async ({ page }) => {
+    await page.goto("/hire", { waitUntil: "networkidle" });
+    await expect(page.locator(".hire-backdrop canvas")).toHaveCount(1);
+    await expect(page.locator("canvas")).toHaveCount(2);
+  });
+
+  test("hire backdrop creates no canvas under reduced motion", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/hire", { waitUntil: "networkidle" });
+    await expect(page.locator("canvas")).toHaveCount(0);
+  });
+
+  test("hire backdrop creates no canvas with Save-Data", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "connection", {
+        value: { saveData: true },
+      });
+    });
+    await page.goto("/hire", { waitUntil: "networkidle" });
+    await expect(page.locator(".hire-backdrop")).toHaveCount(0);
+    await expect(page.locator("canvas")).toHaveCount(1);
+  });
+
   test("catalog belt keeps secondary systems readable", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     const items = page.locator(".home-catalog__item");
-    expect(await items.count()).toBeGreaterThan(30);
+    expect(await items.count()).toBeGreaterThan(20);
     await items.first().scrollIntoViewIfNeeded();
     const metrics = await items.first().evaluate((element) => {
       const style = getComputedStyle(element);

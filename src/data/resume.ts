@@ -8,7 +8,7 @@
 export const SITE = "https://luke-the-duke.com";
 
 // ISO date printed on the PDF and shown beside its link.
-export const resumeRevisionDate = "2026-10-22";
+export const resumeRevisionDate = "2026-10-23";
 
 export const basics = {
   name: "Luke Kimball",
@@ -16,7 +16,7 @@ export const basics = {
   headline:
     "Multi-Model Agent Harnesses · Sandboxed Runtimes · CLI & OpenRouter Tooling",
   summary:
-    "Systems and applied AI engineer maintaining 50+ open-source repositories (github.com/duketopceo) across Rust, Go, TypeScript, and Python, focused on multi-model agent harnesses, CLI workflow runners, masked credential brokering, context compaction, and OpenRouter evaluation tooling. Built laptop-to-cloud agent runtimes (Khan, open-computer), cross-harness CLI adapters (agentflow), and OS keyring isolation (OmaSeal) so sandboxed agents switch models and execute tools without ever seeing raw credentials.",
+    "Systems and applied AI engineer maintaining 50+ open-source repositories (github.com/duketopceo · luke-the-duke.com) across Rust, Go, TypeScript, and Python, focused on multi-model agent harnesses, CLI workflow runners, masked credential brokering, context compaction, and OpenRouter evaluation tooling. Built laptop-to-cloud agent runtimes (Khan, open-computer), cross-harness CLI adapters (agentflow), and OS keyring isolation (OmaSeal) so sandboxed agents switch models and execute tools without ever seeing raw credentials.",
   // Public contact address is an alias routed through Cloudflare Email
   // Routing (luke-the-duke.com) — never the personal mailbox. No phone:
   // it is unrotatable and this data is explicitly offered to AI crawlers.
@@ -119,13 +119,13 @@ export const projects = [
     stack: ["Rust (Axum)", "Go (Chi)", "TypeScript (Hono)", "PostgreSQL 17", "RLS", "MCP"],
   },
   {
-    name: "dayflow-linux & portfolio-hub — Linux Desktop Journal & Telemetry",
-    url: "https://github.com/duketopceo/dayflow-linux",
-    caseStudy: "https://github.com/duketopceo/portfolio-hub",
+    name: "dayflow-linux & portfolio-hub (luke-the-duke.com) — Linux Desktop Journal & Telemetry",
+    url: "https://luke-the-duke.com",
+    caseStudy: "https://github.com/duketopceo/dayflow-linux",
     description:
       "Ported Dayflow natively to Linux in Go (v1.6.0, 212 commits) with local-first screen capture, OpenRouter vision summarization, standup generation, agent-session recaps, FTS5 search, and MCP tool exposure (including 6 merged external community PRs).",
     highlights: [
-      "Built portfolio-hub (luke-the-duke.com) with cached 90-day GitHub App engineering telemetry, machine-readable JSON Resume and llms.txt endpoints, and automated privacy and visual regression gates across 50+ repositories.",
+      "Built portfolio-hub (luke-the-duke.com · github.com/duketopceo/portfolio-hub) powering the Cosmic Intelligence Registry with live OpenRouter model bakeoffs (luke-the-duke.com/openrouter), project launch films, cached 90-day GitHub App telemetry, machine-readable /resume.json and /llms.txt endpoints, and automated privacy and visual regression CI gates across 50+ repositories.",
     ],
     stack: ["Go", "TypeScript", "Next.js", "SQLite FTS5", "OpenRouter", "MCP"],
   },

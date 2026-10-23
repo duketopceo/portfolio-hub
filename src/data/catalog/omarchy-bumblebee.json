@@ -1,0 +1,35 @@
+{
+  "slug": "omarchy-bumblebee",
+  "order": 35,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Bumblebee",
+    "tagline": "Supply-chain exposure radar — scans against a compromise catalog",
+    "description": "Omarchy plugin over Perplexity's bumblebee scanner: diffs installed packages and lockfiles against a known-compromise catalog, auto-refreshes on staleness, and toasts only on NEW exposures — muted exposures stay visible but silent.",
+    "category": "apps",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "QML",
+      "Omarchy",
+      "Python",
+      "Security"
+    ],
+    "private": false,
+    "highlights": [
+      "New-exposure-only toasts — silent when clean",
+      "Catalog auto-refresh with staleness probe",
+      "Mute list keeps accepted exposures visible but quiet",
+      "Listed on the official Omarchy plugin marketplace"
+    ],
+    "architecture": "bumblebee scan → catalog diff → severity-tagged exposure rows → toasts + panel",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "omarchy-bumblebee",
+    "owner": "duketopceo"
+  }
+}

@@ -19,7 +19,12 @@ const extensions = new Set([
   ".yml",
 ]);
 const skippedNames = new Set(["package-lock.json", "bun.lock"]);
-const skippedDirectories = new Set(["__screenshots__", "node_modules"]);
+const skippedDirectories = new Set([
+  "__screenshots__",
+  "node_modules",
+  ".artifacts",
+  "test-results",
+]);
 
 const forbidden = [
   {

@@ -1,5 +1,6 @@
 import type { EnrichedProject, OrbitTier } from "@/lib/types";
 import { isProjectLive } from "@/lib/deployments";
+import { isListedProject } from "@/lib/catalog-filter";
 
 /**
  * Portfolio "completeness" score for homepage solar-orbit ordering.
@@ -24,11 +25,11 @@ export const PORTFOLIO_LEAD_SLUG = "kurultai";
 
 /** Homepage solar orbit — top 5 featured systems (fixed order). */
 export const HOMEPAGE_FEATURED_SLUGS = [
-  "khan",
+  "orchestral",
+  "argus",
   "kurultai",
   "pace-server",
-  "openrouter",
-  "stratum-hq",
+  "khan",
 ] as const;
 
 const MS_DAY = 86_400_000;
@@ -105,7 +106,7 @@ export function getHomepageOrbitProjects(
   projects: EnrichedProject[]
 ): EnrichedProject[] {
   return HOMEPAGE_FEATURED_SLUGS.map((slug) =>
-    projects.find((p) => p.slug === slug)
+    projects.find((p) => p.slug === slug && isListedProject(p))
   ).filter((p): p is EnrichedProject => p !== undefined);
 }
 
@@ -118,6 +119,7 @@ export function getHomepageSecondaryOrbitProjects(
     projects.filter(
       (p) =>
         !featured.has(p.slug) &&
+        isListedProject(p) &&
         p.orbitTier !== "catalog-only"
     )
   );

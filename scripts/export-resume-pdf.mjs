@@ -29,6 +29,13 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
+function linkifyInlineUrls(escapedText) {
+  return escapedText.replace(
+    /\b((?:luke-the-duke\.com|github\.com\/duketopceo)(?:\/[A-Za-z0-9_.-]+)?)/g,
+    '<a href="https://$1">$1</a>',
+  );
+}
+
 function displayUrl(url) {
   return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 }
@@ -61,12 +68,15 @@ function buildHtml(data, { email, phone }) {
     .map((p) => {
       const bullets = [p.description, ...p.highlights]
         .filter(Boolean)
-        .map((h) => `<li>${escapeHtml(h)}</li>`)
+        .map((h) => `<li>${linkifyInlineUrls(escapeHtml(h))}</li>`)
         .join("");
+      const nameHtml = p.url
+        ? `<a href="${escapeHtml(p.url)}" class="proj-link">${escapeHtml(p.name)}</a>`
+        : escapeHtml(p.name);
       return `
       <div class="proj">
         <div class="proj-head">
-          <span class="proj-name">${escapeHtml(p.name)}</span>
+          <span class="proj-name">${nameHtml}</span>
           <span class="proj-stack">${escapeHtml(p.stack.join(" · "))}</span>
         </div>
         <ul class="bullets">${bullets}</ul>
@@ -195,6 +205,10 @@ function buildHtml(data, { email, phone }) {
     font-size: 8.0pt;
     color: #0f172a;
   }
+  .proj-link {
+    color: #0f172a;
+    text-decoration: none;
+  }
   .proj-stack {
     font-size: 7.25pt;
     color: #475569;
@@ -252,7 +266,7 @@ function buildHtml(data, { email, phone }) {
     <div class="contact">${contactParts.join(" &nbsp;·&nbsp; ")}</div>
   </header>
 
-  <p class="summary">${escapeHtml(basics.summary)}</p>
+  <p class="summary">${linkifyInlineUrls(escapeHtml(basics.summary))}</p>
 
   <section>
     <h2 class="sec-title">Technical Stack &amp; Harness Fluency</h2>

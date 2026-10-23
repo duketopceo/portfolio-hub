@@ -11,6 +11,7 @@ interface DossierFooterNavProps {
  */
 export function DossierFooterNav({ prev, next }: DossierFooterNavProps) {
   return (
+    <>
     <nav
       className="dossier-page__footer-nav cosmic-page"
       aria-label="Adjacent projects"
@@ -45,5 +46,17 @@ export function DossierFooterNav({ prev, next }: DossierFooterNavProps) {
         <span className="dossier-page__nav-spacer" />
       )}
     </nav>
+    <p className="dossier-page__resume cosmic-page">
+      <a
+        href="/resume.pdf"
+        className="detail-nav-link"
+        data-umami-event="resume-download"
+        data-umami-event-format="pdf"
+        data-umami-event-from="dossier-footer"
+      >
+        Résumé (PDF)
+      </a>
+    </p>
+    </>
   );
 }

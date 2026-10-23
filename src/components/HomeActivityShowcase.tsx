@@ -1,18 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { HomepageActivityPayload } from "@/lib/github-activity-types";
+import { useState } from "react";
+import type { HomepageActivityClientPayload } from "@/lib/github-activity-types";
 import {
   ACTIVITY_DEFAULT_RANGE,
   activityRangeLabel,
-  condenseProjectActivity,
   type ActivityRangeDays,
 } from "@/lib/activity-aggregate";
 import { ActivityCondensedPanel } from "@/components/activity/ActivityCondensedPanel";
 import { ActivityRangeToggle } from "@/components/activity/ActivityRangeToggle";
 
 interface HomeActivityShowcaseProps {
-  data: HomepageActivityPayload;
+  data: HomepageActivityClientPayload;
 }
 
 export function HomeActivityShowcase({ data }: HomeActivityShowcaseProps) {
@@ -20,16 +19,10 @@ export function HomeActivityShowcase({ data }: HomeActivityShowcaseProps) {
     data.defaultRangeDays ?? ACTIVITY_DEFAULT_RANGE
   );
 
-  const repos = useMemo(() => {
-    const anchor = new Date(data.fetchedAt);
-    return data.repos.slice(0, 4).map((repo) => ({
-      ...repo,
-      condensed: condenseProjectActivity(repo.activity, {
-        anchorDate: anchor,
-        windowDays: rangeDays,
-      }),
-    }));
-  }, [data.fetchedAt, data.repos, rangeDays]);
+  const repos = data.repos.map((repo) => ({
+    ...repo,
+    condensed: repo.byRange[rangeDays],
+  }));
 
   return (
     <div className="activity-strip activity-strip--home">

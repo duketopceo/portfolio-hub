@@ -1,0 +1,35 @@
+{
+  "slug": "chronicle-weaver",
+  "order": 21,
+  "curated": {
+    "era": "earlier",
+    "displayName": "Chronicle Weaver",
+    "tagline": "Interactive narrative and storytelling platform",
+    "description": "Platform for creating and experiencing interactive narratives. Users build branching storylines with rich media support, and readers navigate through them with choices that shape the narrative. Mobile-first design with offline support.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://chronicleweaver.com",
+    "demoUrl": "https://chronicleweaver.com",
+    "embeddable": false,
+    "techStack": [
+      "TypeScript",
+      "React",
+      "Mobile"
+    ],
+    "private": false,
+    "highlights": [
+      "Branching narrative engine",
+      "Rich media storytelling",
+      "Mobile-first with offline support"
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "rork-chronicle-weaver",
+    "owner": "duketopceo"
+  }
+}

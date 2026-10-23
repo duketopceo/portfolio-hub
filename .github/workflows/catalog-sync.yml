@@ -1,0 +1,116 @@
+name: Catalog sync
+
+# Weekly proposal PR (docs/CATALOG-SYNC.md). The bot only proposes: it edits
+# `github` facts and src/data/catalog/_proposals.json, never `curated`.
+on:
+  schedule:
+    - cron: "17 13 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: catalog-sync
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  sync:
+    name: Propose catalog updates
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      BRANCH: bot/catalog-sync
+    steps:
+      # Writes go through the App token, so the PR it opens triggers CI.
+      - name: Mint App token
+        id: app
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+        with:
+          app-id: ${{ secrets.SYNC_APP_ID }}
+          private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
+          repositories: portfolio-hub
+
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sync catalog
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: node scripts/sync-catalog.mjs --write --page-size 25 --summary "$RUNNER_TEMP/summary.md"
+
+      # If a human committed to the sync branch, leave it alone and comment.
+      - name: Guard against clobbering hand edits
+        id: guard
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+          REPO: ${{ github.repository }}
+        run: |
+          bot="${APP_SLUG}[bot]"
+          bot_id="$(gh api "/users/${bot}" --jq .id)"
+          email="${bot_id}+${bot}@users.noreply.github.com"
+          echo "bot_name=${bot}" >> "$GITHUB_OUTPUT"
+          echo "bot_email=${email}" >> "$GITHUB_OUTPUT"
+          foreign=false
+          # Only a 404 means the branch does not exist (nothing to protect).
+          # Any other probe failure must stop the job rather than fail open.
+          if probe="$(gh api -i "repos/${REPO}/branches/${BRANCH}" 2>&1)"; then
+            branch_exists=true
+          elif printf '%s' "$probe" | grep -q 'HTTP 404\|Not Found'; then
+            branch_exists=false
+          else
+            echo "Could not determine whether ${BRANCH} exists; refusing to continue." >&2
+            exit 1
+          fi
+          if [ "$branch_exists" = true ]; then
+            authors="$(gh api "repos/${REPO}/compare/main...${BRANCH}" --jq '.commits[].commit.author.email')"
+            while IFS= read -r a; do
+              if [ -n "$a" ] && [ "$a" != "$email" ]; then foreign=true; fi
+            done <<< "$authors"
+          fi
+          echo "foreign=${foreign}" >> "$GITHUB_OUTPUT"
+          if [ -n "$(git status --porcelain -- src/data/catalog)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Comment instead of updating
+        if: steps.guard.outputs.foreign == 'true' && steps.guard.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          pr="$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq '.[0].number')"
+          if [ -z "$pr" ]; then
+            echo "No open PR for ${BRANCH}; nothing to comment on."
+            exit 0
+          fi
+          gh pr comment "$pr" --repo "$REPO" --body "The weekly sync found new proposals, but this branch has commits that were not made by the sync bot, so it was left untouched. Merge or close this PR, then the next run opens a fresh one. Run: ${RUN_URL}"
+
+      - name: Open or update proposal PR
+        if: steps.guard.outputs.foreign != 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          token: ${{ steps.app.outputs.token }}
+          branch: bot/catalog-sync
+          base: main
+          title: "chore(catalog): weekly sync proposals"
+          body-path: ${{ runner.temp }}/summary.md
+          add-paths: src/data/catalog/**
+          commit-message: "chore(catalog): weekly sync proposals"
+          author: ${{ steps.guard.outputs.bot_name }} <${{ steps.guard.outputs.bot_email }}>
+          committer: ${{ steps.guard.outputs.bot_name }} <${{ steps.guard.outputs.bot_email }}>
+          draft: false
+          delete-branch: true

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { EnrichedProject, ProjectCategory } from "@/lib/types";
 import { catColors } from "@/lib/utils";
-import { categoryMeta } from "@/data/projects";
+import { categoryMeta } from "@/data/category-meta";
 import ProjectCard from "./ProjectCard";
 import PullRequestsPanel from "./PullRequestsPanel";
 

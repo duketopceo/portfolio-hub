@@ -1,0 +1,33 @@
+{
+  "slug": "omarchy-fan",
+  "order": 28,
+  "curated": {
+    "parentSlug": "omarchy-plugins",
+    "displayName": "Omarchy Fan",
+    "tagline": "RAM, CPU/GPU/NVMe thermals and fan presets in the Omarchy bar",
+    "description": "Hardware thermal monitor that surfaces RAM, CPU, GPU, and NVMe temperatures, top processes, and configurable fan presets directly in the Omarchy bar.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "Omarchy",
+      "Hardware Monitoring"
+    ],
+    "private": false,
+    "highlights": [
+      "Real-time CPU/GPU/NVMe thermal telemetry",
+      "Configurable fan presets",
+      "Top-process overlay"
+    ],
+    "architecture": "Omarchy bar widget → system sensors → process list → fan controller",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "omarchy-fan",
+    "owner": "duketopceo"
+  }
+}

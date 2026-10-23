@@ -1,0 +1,33 @@
+{
+  "slug": "a0-plugin-glitchtip",
+  "order": 62,
+  "curated": {
+    "parentSlug": "agent-zero-plugins",
+    "displayName": "Agent Zero Plugin — GlitchTip",
+    "tagline": "Error tracking with request-ID and trace correlation",
+    "description": "Agent Zero plugin wiring GlitchTip error tracking into agent runs, correlating errors with request IDs and OpenTelemetry traces.",
+    "category": "infra",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "Python",
+      "Agent Zero",
+      "GlitchTip",
+      "OpenTelemetry"
+    ],
+    "private": false,
+    "highlights": [
+      "Errors correlated to request IDs",
+      "OpenTelemetry trace correlation"
+    ],
+    "architecture": "Agent run → error capture → GlitchTip → request-ID and trace correlation",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "a0-plugin-glitchtip",
+    "owner": "duketopceo"
+  }
+}

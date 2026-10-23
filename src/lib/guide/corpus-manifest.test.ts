@@ -112,7 +112,7 @@ describe("real corpus manifest", () => {
     const ids = new Set(manifest.map((e) => e.sourceId));
     expect(ids.has("project-khan")).toBe(true);
     expect(ids.has("project-argus")).toBe(true);
-    expect(ids.has("project-pixel-tycoon")).toBe(true);
+    expect(ids.has("project-orchestral")).toBe(true);
   });
 
   it("contains résumé sections", () => {

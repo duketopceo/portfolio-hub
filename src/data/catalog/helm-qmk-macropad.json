@@ -1,0 +1,33 @@
+{
+  "slug": "helm-qmk-macropad",
+  "order": 47,
+  "curated": {
+    "displayName": "Helm QMK Macropad",
+    "tagline": "6-key + 1-knob USB-C QMK macropad",
+    "description": "Helm is a 6-key + 1-knob USB-C QMK macropad. Includes CAD files, firmware, and the first working build.",
+    "category": "apps",
+    "type": "experiment",
+    "featured": false,
+    "techStack": [
+      "QMK",
+      "CAD",
+      "Firmware",
+      "Hardware"
+    ],
+    "private": false,
+    "highlights": [
+      "6-key + knob QMK macropad",
+      "CAD and firmware source",
+      "Working hardware build"
+    ],
+    "architecture": "Custom PCB → QMK firmware → USB-C HID → keymap + encoder logic",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "helm-qmk-macropad",
+    "owner": "duketopceo"
+  }
+}

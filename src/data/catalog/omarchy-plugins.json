@@ -1,0 +1,35 @@
+{
+  "slug": "omarchy-plugins",
+  "order": 38,
+  "curated": {
+    "displayName": "Omarchy Plugins",
+    "tagline": "Umbrella catalog + subtree publisher for 11 bar plugins",
+    "description": "Authoring catalog and publish pipeline for the Omarchy plugin estate — hardware (fan, power), markets (ticker), AI-agent surfaces (agents, numbat, bumblebee, neo, pplx, wisp shell), and overlays (standby, nexus, connections). Each plugin subtree-publishes to its own repo for `omarchy plugin add`; most are listed on the official marketplace.",
+    "category": "apps",
+    "type": "library",
+    "featured": false,
+    "techStack": [
+      "QML",
+      "TypeScript",
+      "Omarchy",
+      "Plugins",
+      "pytest"
+    ],
+    "private": false,
+    "highlights": [
+      "11 published plugins, one manifest-validated catalog",
+      "Subtree-publish keeps one-repo-per-plugin compatibility",
+      "Toast correctness layer: severity gates, cooldowns, burst coalescing, DND",
+      "275-test suite covering helpers and manifest schema"
+    ],
+    "architecture": "Umbrella catalog → per-plugin subtrees → `omarchy plugin add` repos → marketplace listings",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "omarchy-plugins",
+    "owner": "duketopceo"
+  }
+}

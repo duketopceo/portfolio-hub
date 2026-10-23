@@ -139,6 +139,48 @@ export function resolvePlanetVisual(
   };
 }
 
+/**
+ * Focal planets get the contour-shader fill (when the renderer is a real GPU)
+ * or extra meridians. At most two, both from HOMEPAGE_FEATURED_SLUGS.
+ */
+export const FOCAL_SLUGS = ["pace-server", "kurultai"] as const satisfies readonly (typeof HOMEPAGE_FEATURED_SLUGS)[number][];
+
+export function isFocalSlug(slug: string): boolean {
+  return (FOCAL_SLUGS as readonly string[]).includes(slug);
+}
+
+/** Body radius in scene units (~rem) for the canvas survey plates. */
+export function planetBodyRadius(size: PlanetSize): number {
+  return 0.42 * SIZE_SCALE[size];
+}
+
+const LIMB_SIDES: Record<PlanetShape, { sides: number; offset: number }> = {
+  sphere: { sides: 64, offset: 0 },
+  hex: { sides: 6, offset: 0 },
+  diamond: { sides: 4, offset: Math.PI / 2 },
+  cube: { sides: 4, offset: Math.PI / 4 },
+};
+
+/** Closed limb outline in the XY plane (first point repeated at the end). */
+export function limbPoints(
+  shape: PlanetShape,
+  radius: number
+): [number, number, number][] {
+  const { sides, offset } = LIMB_SIDES[shape];
+  const pts: [number, number, number][] = [];
+  for (let i = 0; i < sides; i++) {
+    const a = offset + (i / sides) * Math.PI * 2;
+    pts.push([radius * Math.cos(a), radius * Math.sin(a), 0]);
+  }
+  pts.push([...pts[0]] as [number, number, number]);
+  return pts;
+}
+
+/** Default body has two meridians; a focal body without the shader gets four. */
+export function meridianCount(focal: boolean, shaderActive: boolean): number {
+  return focal && !shaderActive ? 4 : 2;
+}
+
 export function isFeaturedSlug(slug: string): boolean {
   return (HOMEPAGE_FEATURED_SLUGS as readonly string[]).includes(slug);
 }

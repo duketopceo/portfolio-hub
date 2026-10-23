@@ -1,0 +1,49 @@
+{
+  "slug": "military-hardware-db",
+  "order": 17,
+  "curated": {
+    "displayName": "Open Military Hardware DB",
+    "tagline": "Comprehensive open-source weapons systems database — air, land, sea, munitions",
+    "description": "Open-source intelligence database cataloging 183 military hardware platforms across air, land, sea, munitions, and software domains. Features a FastAPI REST API with filtering, pagination, and comparison endpoints. The React frontend provides an intelligence console with platform explorer, analytics dashboard, and side-by-side comparison tools. Includes SIPRI military expenditure data, 675 source citations, and role classification for every platform.",
+    "category": "osint",
+    "type": "library",
+    "featured": false,
+    "planetVisual": {
+      "size": "md",
+      "shape": "diamond",
+      "color": "#FBBF24",
+      "moons": [
+        {
+          "label": "omhdb",
+          "kind": "live",
+          "href": "https://omhdb.luke-the-duke.com/#/"
+        }
+      ]
+    },
+    "liveUrl": "https://omhdb.luke-the-duke.com/#/",
+    "demoUrl": "https://omhdb.luke-the-duke.com/#/",
+    "embeddable": true,
+    "techStack": [
+      "Data",
+      "OSINT",
+      "JSON",
+      "Documentation"
+    ],
+    "private": false,
+    "demoOffline": false,
+    "highlights": [
+      "Comprehensive multi-domain weapons catalog",
+      "Structured data for research and analysis",
+      "Open-source intelligence methodology"
+    ],
+    "architecture": "SQLite database → FastAPI REST API → React intelligence console → Docker container → Swarm deployment",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "open-military-hardware-db",
+    "owner": "duketopceo"
+  }
+}

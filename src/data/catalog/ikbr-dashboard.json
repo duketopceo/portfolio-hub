@@ -1,0 +1,37 @@
+{
+  "slug": "ikbr-dashboard",
+  "order": 11,
+  "curated": {
+    "era": "earlier",
+    "displayName": "IBKR Dashboard",
+    "tagline": "Interactive Brokers portfolio dashboard with real-time data visualization",
+    "description": "Custom portfolio monitoring dashboard that connects to Interactive Brokers' Client Portal API for real-time account data. Displays position-level P&L, sector allocation pie charts, historical equity curves, and trade execution logs using interactive Plotly visualizations. Built as a Python application with automatic data refresh and configurable alert thresholds for position size limits and drawdown warnings.",
+    "category": "finance",
+    "type": "app",
+    "featured": false,
+    "liveUrl": "https://ibkr.luke-the-duke.com",
+    "demoUrl": "https://ibkr.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "Python",
+      "Plotly",
+      "IBKR API",
+      "Pandas"
+    ],
+    "private": true,
+    "demoOffline": true,
+    "highlights": [
+      "Real-time IBKR API integration",
+      "Interactive Plotly visualizations",
+      "Account analytics and position tracking"
+    ],
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "ibkr-portfolio-dashboard",
+    "owner": "duketopceo"
+  }
+}

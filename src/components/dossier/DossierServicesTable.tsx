@@ -32,7 +32,9 @@ export function DossierServicesTable({ slug }: DossierServicesTableProps) {
             return (
               <tr key={`${svc.url}-${svc.host}`}>
                 <td>
-                  {isRelative ? (
+                  {!svc.online ? (
+                    <span className="dossier-services__offline-url">{label}</span>
+                  ) : isRelative ? (
                     <Link href={svc.url} className="detail-nav-link">
                       {label}
                     </Link>

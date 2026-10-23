@@ -27,7 +27,7 @@ export function fixtureHomepageActivity(): HomepageActivityPayload {
     fixtureProjectActivity("khan"),
     fixtureProjectActivity("kurultai"),
     fixtureProjectActivity("pace-server"),
-    fixtureProjectActivity("openrouter"),
+    fixtureProjectActivity("openrouter-demos"),
   ];
   const repos = summaries.map(homepageRepo);
   return {
@@ -227,7 +227,7 @@ export function fixtureProjectActivity(slug: string): ProjectActivityPayload {
     };
   }
 
-  if (slug === "openrouter") {
+  if (slug === "openrouter-demos") {
     return {
       ...base,
       displayName: "OpenRouter Demos",

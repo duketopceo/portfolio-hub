@@ -1,0 +1,32 @@
+{
+  "slug": "tallyline",
+  "order": 54,
+  "curated": {
+    "displayName": "Tallyline",
+    "tagline": "Self-hostable, agent-native issue tracker where humans and agents share one board",
+    "description": "Self-hostable, agent-native issue tracker — MIT-licensed Linear-class UX where humans and AI agents work the same board.",
+    "category": "apps",
+    "type": "platform",
+    "featured": false,
+    "techStack": [
+      "TypeScript",
+      "MIT",
+      "Self-Hosted"
+    ],
+    "private": false,
+    "highlights": [
+      "Humans and agents operate the same board",
+      "Linear-class interface, MIT licensed",
+      "Self-hostable with no vendor dependency"
+    ],
+    "architecture": "Web board → issue store → agent API surface → human and agent actors on one model",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "tallyline",
+    "owner": "duketopceo"
+  }
+}

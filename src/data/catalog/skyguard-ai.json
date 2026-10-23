@@ -1,0 +1,39 @@
+{
+  "slug": "skyguard-ai",
+  "order": 13,
+  "curated": {
+    "era": "earlier",
+    "displayName": "SkyGuard AI",
+    "tagline": "Intelligent roofing assistant — permit coordination, document analysis, customer comms",
+    "description": "AI-powered platform purpose-built for roofing contractors that automates the permit coordination workflow — from initial application through approval tracking. The document analysis pipeline uses Google's Gemini models to extract key information from construction plans, municipal codes, and insurance documents. Customer communication management handles scheduling, follow-ups, and status updates across channels. Backend runs on FastAPI with a Gradio interface for rapid internal prototyping.",
+    "category": "ai",
+    "type": "platform",
+    "featured": false,
+    "liveUrl": "https://skyguard.luke-the-duke.com",
+    "demoUrl": "https://skyguard.luke-the-duke.com",
+    "embeddable": true,
+    "techStack": [
+      "Python",
+      "FastAPI",
+      "Gemini",
+      "Gradio",
+      "Google Cloud"
+    ],
+    "private": true,
+    "demoOffline": true,
+    "highlights": [
+      "LLM-powered document analysis pipeline",
+      "Automated permit coordination workflow",
+      "Multi-channel customer communications"
+    ],
+    "architecture": "FastAPI backend → Gemini LLM pipeline → Document processor → Gradio interface → Google Cloud services",
+    "media": {
+      "release": "n/a",
+      "demo": "n/a"
+    }
+  },
+  "github": {
+    "repoName": "BartlettBot",
+    "owner": "duketopceo"
+  }
+}
