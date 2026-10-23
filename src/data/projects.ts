@@ -22,9 +22,9 @@ export const projectConfigs: ProjectConfig[] = [
     repoName: "Khan",
     displayName: "Khan",
     tagline:
-      "OpenRouter-native Agent Zero fork — Temporal, LiteLLM workers, risk scoring, MCP, Rust CLI",
+      "OpenRouter-native Agent Zero fork — Temporal, LiteLLM workers, risk scoring, MCP, Python CLI",
     description:
-      "Khan is a real agent harness built in a concentrated Aug 7–13 sprint: Temporal orchestration, OpenRouter-backed routing, LiteLLM workers, risk scoring, MCP tool surfaces, and a Rust CLI. Ships alongside khanai.app as the public face of the stack. Plugin-first, secret-first operations with a multi-agent coordination board — not a self-hosted GPU or local inference cluster.",
+      "Khan is a real agent harness built in a concentrated Aug 7–13 sprint: Temporal orchestration, OpenRouter-backed routing, LiteLLM workers, risk scoring, MCP tool surfaces, and a Python CLI. Ships alongside khanai.app as the public face of the stack. Plugin-first, secret-first operations with a multi-agent coordination board — not a self-hosted GPU or local inference cluster.",
     category: "ai",
     type: "platform",
     featured: true,
@@ -48,7 +48,7 @@ export const projectConfigs: ProjectConfig[] = [
       "OpenRouter",
       "LiteLLM",
       "MCP",
-      "Rust CLI",
+      "Python CLI",
     ],
     private: true,
     // TODO(luke): review showcase copy
@@ -66,13 +66,13 @@ export const projectConfigs: ProjectConfig[] = [
     highlights: [
       "Temporal + OpenRouter orchestration with LiteLLM workers",
       "Risk scoring and MCP tool surfaces for agent workflows",
-      "Rust CLI for operator tasks",
+      "Python CLI for operator tasks",
       "Public surface at khanai.app",
     ],
     architecture:
-      "Temporal workflows → OpenRouter/LiteLLM workers → Risk scoring → MCP tools → Rust CLI + khanai.app",
+      "Temporal workflows → OpenRouter/LiteLLM workers → Risk scoring → MCP tools → Python CLI + khanai.app",
     finishLine:
-      "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Rust CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild.",
+      "Shipped Aug 7–13: Temporal + OpenRouter routing, LiteLLM workers, risk scoring, MCP surfaces, Python CLI, and khanai.app. Remaining polish: harden eval fixtures for production guardrails and expand connector coverage — not a greenfield rebuild.",
   },
   {
     slug: "kurultai",
