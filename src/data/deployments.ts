@@ -107,9 +107,9 @@ export const deployments: DeploymentConfig[] = [
     slug: "portfolio-hub",
     url: "https://luke-the-duke.com",
     host: "railway",
-    role: "Cosmic Intelligence portfolio (this repo) — public via tunnel until Railway DNS",
+    role: "Cosmic Intelligence portfolio (this repo) — Railway primary",
     healthCheck: "/api/health",
-    online: false,
+    online: true,
   },
   // ── Other live / catalog deployments ────────────────────────────
   {
@@ -119,7 +119,7 @@ export const deployments: DeploymentConfig[] = [
     host: "swarm",
     role: "Open military hardware database",
     healthCheck: "/api/health",
-    online: true,
+    online: false,
   },
   {
     slug: "chronicle-weaver",
