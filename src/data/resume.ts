@@ -3,18 +3,20 @@
 //   - src/app/resume/page.tsx        (semantic HTML + JSON-LD for crawlers/AI)
 //   - src/app/resume.json/route.ts   (JSON Resume output)
 //   - src/app/resume.md/route.ts     (plain-markdown output)
-// public/resume.pdf is a separately produced static artifact with no generator
-// in this repository — update it by hand when this content changes.
+//   - scripts/export-resume-pdf.mjs  (renders public/resume.pdf)
 
 export const SITE = "https://luke-the-duke.com";
 
+// ISO date printed on the PDF and shown beside its link.
+export const resumeRevisionDate = "2026-10-22";
+
 export const basics = {
   name: "Luke Kimball",
-  label: "Applied AI Engineer",
+  label: "Software Engineer",
   headline:
-    "OpenRouter-Native Multi-Model Routing · Agent Harnesses · Build-Over-Buy Internal Tools",
+    "Multi-Model Agent Harnesses · Sandboxed Runtimes · CLI & OpenRouter Tooling",
   summary:
-    "OpenRouter-native operator-builder who ships internal agentic tooling instead of buying software built for the masses. Multi-model daily driver: routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model. Runs five agent harnesses daily and extends them with self-authored Agent Zero plugins published in the open. Designed a tenant-aware agent platform with security and evals built in. Support/GTM fluency from sales, ticketing, CRM, and ops.",
+    "Systems and applied AI engineer maintaining 50+ open-source repositories (github.com/duketopceo) across Rust, Go, TypeScript, and Python, focused on multi-model agent harnesses, CLI workflow runners, masked credential brokering, context compaction, and OpenRouter evaluation tooling. Built laptop-to-cloud agent runtimes (Khan, open-computer), cross-harness CLI adapters (agentflow), and OS keyring isolation (OmaSeal) so sandboxed agents switch models and execute tools without ever seeing raw credentials.",
   // Public contact address is an alias routed through Cloudflare Email
   // Routing (luke-the-duke.com) — never the personal mailbox. No phone:
   // it is unrotatable and this data is explicitly offered to AI crawlers.
@@ -30,123 +32,102 @@ export const basics = {
 
 export const skills = [
   {
-    name: "Multi-Model Routing & Cost",
+    name: "Languages & Systems",
     detail:
-      "OpenRouter as primary router. Routes frontier models to map a repo, smaller models to decode, large models for implementation, and small models to organize — each task to the cheapest capable model.",
-    keywords: ["OpenRouter", "model routing", "cost optimization", "frontier models"],
+      "Rust (Tokio, Axum, Serde, SQLite FTS5, sqlite-vec), Go (Chi, OS daemons, D-Bus), TypeScript / Node.js (Hono, Next.js, Drizzle), Python (FastAPI, LangGraph, asyncio), PostgreSQL 17 (RLS, skip-locked queues).",
+    keywords: ["Rust", "Tokio", "Axum", "Go", "Chi", "TypeScript", "Node.js", "Hono", "Next.js", "Drizzle", "Python", "FastAPI", "LangGraph", "PostgreSQL 17", "RLS"],
   },
   {
-    name: "Agent Harnesses",
+    name: "Agent Harnesses & Routing",
     detail:
-      "Daily use of Claude Code, Cursor, Agent Zero, Hermes, and Gemini; hands-on with Factory AI, OpenCode, Grok, and Perplexity Computer. Ships public Agent Zero plugins (a0-plugin-argus, a0-openrouter-spend) and an ecosystem index, and designed Pace's agentrun pipeline (TierGate, tool registry, approval gates).",
-    keywords: ["Claude Code", "Cursor", "Agent Zero", "Hermes", "Gemini", "agentic workflows"],
+      "OpenRouter API & Management Keys, LiteLLM, Temporal & Restate durable workflows, Model Context Protocol (MCP), Claude Code, Codex, OpenCode, Cursor, Devin, Agent Zero, Hermes, Ollama, llama.cpp (Vulkan).",
+    keywords: ["OpenRouter", "LiteLLM", "Temporal", "Restate", "MCP", "Claude Code", "Codex", "OpenCode", "Cursor", "Devin", "Agent Zero", "Hermes", "Ollama", "llama.cpp"],
   },
   {
-    name: "Agentic Tooling & LLM Infra",
+    name: "Sandboxing, Secrets & Quality",
     detail:
-      "Rust/Axum gateway + Go/Chi agent backend + Python/LangGraph reasoning; Supabase Postgres 17 with RLS tenant isolation; Redis Streams event bus; Stripe metering; Stytch B2B SSO.",
-    keywords: ["Rust", "Axum", "Go", "Chi", "LangGraph", "Supabase", "Postgres", "RLS", "Redis", "Stripe", "Stytch"],
-  },
-  {
-    name: "Build-Over-Buy Internal Tools",
-    detail:
-      "Wraps open-source tools (Snipe-IT, MeshCentral, Vaultwarden) into single internal products; built a helpdesk dashboard and web-app pitch decks instead of buying SaaS or making PDFs.",
-    keywords: ["Snipe-IT", "MeshCentral", "Vaultwarden", "Next.js", "internal tooling"],
-  },
-  {
-    name: "Security & Blast Radius",
-    detail:
-      "Outbound allowlist (SSRF prevention), approval gates, RLS isolation, read/write internal APIs gated behind auth, secrets in Vaultwarden.",
-    keywords: ["SSRF prevention", "approval gates", "RLS", "secrets management", "auth"],
-  },
-  {
-    name: "Evals & Reliability",
-    detail:
-      "Owns the unglamorous last 20% — reliability, edge cases, and finishing work: CI gates before merge, incident runbooks, and cross-tenant isolation enforcement (any RLS bypass halts and alerts the operator). Sentry + structlog observability on containerized bare-metal Linux; Stratum ships a 334+ test suite.",
-    keywords: ["reliability", "CI gates", "incident runbooks", "RLS", "testing", "Sentry", "structlog", "observability"],
+      "E2B & CubeSandbox isolated runtimes, Freedesktop Secret Service (gnome-keyring), 1Password CLI, AES-256-GCM vaults, SSRF egress allowlists, Vision E2E testing (Argus), Docker Swarm, GitHub Actions CI.",
+    keywords: ["E2B", "CubeSandbox", "gnome-keyring", "1Password", "Vaultwarden", "SSRF", "Argus", "Docker", "GitHub Actions"],
   },
 ];
 
 export const projects = [
   {
-    name: "Pace Server (Pace HQ)",
-    url: "https://pacehq.io",
-    caseStudy: `${SITE}/projects/pace-server`,
+    name: "Khan & OpenRouter Usage Plugin — Agent Harness & Spend Telemetry",
+    url: "https://github.com/duketopceo/openrouter_usage",
+    caseStudy: "https://github.com/duketopceo/a0-openrouter-spend",
     description:
-      "Private-cloud OS for SMBs — wraps open-source tools (chat, vault, e-sign, files) into one product with one login and one bill. Multi-language stack: Rust/Axum gateway, Go/Chi agent backend, scaffolded Python/LangGraph reasoning service, React, Supabase Postgres 17 + RLS.",
+      "OpenRouter-native fork of Agent Zero with Temporal workflow durability, LiteLLM multi-model worker pools, MCP tool integration, dynamic tool risk scoring, and a one-command PATH CLI plus macOS app wrapper.",
     highlights: [
-      "Designed the tenant-aware agent system: 8-step agentrun pipeline, TierGate autonomy tiers (1–5), tool registry, audit trail, approval gates, outbound allowlist (SSRF prevention); model routing via OpenRouter.",
-      "Platform live (gateway, auth, Stripe billing); real tool execution and Python reasoning service still in progress.",
+      "Built openrouter_usage (and a0-openrouter-spend), the published Agent Zero OpenRouter Usage Plugin featuring server-side management-key isolation, workspace-scoped /analytics/query cost attribution, local SQLite usage caching, and confirmation-gated model routing.",
     ],
-    stack: ["Rust", "Axum", "Go", "Chi", "Python", "LangGraph", "React", "Supabase", "Postgres 17", "RLS", "Redis", "Stripe", "Stytch"],
+    stack: ["Python", "OpenRouter", "Temporal", "LiteLLM", "SQLite", "MCP"],
   },
   {
-    name: "Agent Zero Plugins",
-    url: "https://github.com/duketopceo/a0-plugins",
-    caseStudy: "https://github.com/duketopceo/a0-plugin-argus",
+    name: "agentflow & open-computer — Cross-Harness CLI & Sandboxed Cloud Runtime",
+    url: "https://github.com/duketopceo/agentflow",
+    caseStudy: "https://github.com/duketopceo/open-computer",
     description:
-      "Public Agent Zero plugins plus an ecosystem index. a0-plugin-argus exposes Argus pull-request review as agent tools; a0-openrouter-spend surfaces OpenRouter organisation spend as a bar widget and dashboard.",
+      "Engineered @lukedaduke/agentflow (v0.2.0 on npm), a cross-harness .mjs CLI workflow runner that orchestrates bounded non-interactive sessions across Claude Code, Codex, Cursor, Devin, and OpenCode with disk-journaled state recovery.",
     highlights: [
-      "Ships against Agent Zero's extension API — tools, hooks, default_config, prompts and tests — instead of maintaining a fork.",
-      "a0-plugins indexes the wider Agent Zero plugin ecosystem with tags and authorship metadata.",
+      "Built open-computer with a benchmarked multi-model router (bench/router/), disposable CubeSandbox execution, a policy and PII approval gate, a portable /skills capability registry across models, and a /automations Temporal scheduler.",
     ],
-    stack: ["Agent Zero", "Python", "plugin API", "OpenRouter", "MCP"],
+    stack: ["TypeScript", "Node.js", "Python", "OpenRouter", "Temporal", "CubeSandbox"],
   },
   {
-    name: "orchestral",
+    name: "OmaSeal & a0-plugin-omaseal — OS Keyring & Masked Credential Brokering",
+    url: "https://github.com/duketopceo/OmaSeal",
+    caseStudy: "https://github.com/duketopceo/a0-plugin-omaseal",
+    description:
+      "Built a Go desktop keyring engine (v0.4.0) over the Freedesktop Secret Service API and MCP, plus a companion Python secrets resolver across gnome-keyring, 1Password, and AES-256-GCM vaults.",
+    highlights: [
+      "Substitutes §§secret(NAME) placeholders in-process at tool execution and scrubs resolved values from tool output so sandboxed agents only ever see secret names and masked values.",
+    ],
+    stack: ["Go", "Python", "gnome-keyring", "1Password", "AES-256-GCM", "MCP"],
+  },
+  {
+    name: "jev-compact & Kurultai — Context Compaction & Hybrid Retrieval Daemon",
+    url: "https://github.com/duketopceo/kurultai",
+    caseStudy: "https://github.com/duketopceo/jev-compact",
+    description:
+      "Created jev-compact (and a0-plugin-jev-compact), an agent session-compaction engine that uses a decision model to score transcript spans, keep load-bearing context verbatim, tombstone stale segments, and restore spans on demand over MCP.",
+    highlights: [
+      "Developed kurultai (v0.7.0, 342 commits) in async Rust to index notes, chat transcripts, and repositories into SQLite with two-hop tag FTS5 expansion, Reciprocal Rank Fusion (RRF) hybrid scoring, and deterministic graph_chain citation provenance over MCP.",
+    ],
+    stack: ["Rust", "Tokio", "Axum", "Python", "SQLite FTS5", "sqlite-vec", "MCP"],
+  },
+  {
+    name: "orchestral & Argus — Multi-Model Evaluation & Vision E2E Harness",
     url: "https://github.com/duketopceo/orchestral",
-    caseStudy: "https://github.com/duketopceo/orchestral",
-    description:
-      "OpenRouter eval harness — does a cheap orchestrator plus cheap workers produce frontier-quality output? Python; grew an E2B-compatible isolated code runtime so evals have somewhere safe to execute.",
-    highlights: [
-      "Turns model-routing and cost tradeoffs into a measurable result instead of a vibe; 417 commits, CI-gated.",
-      "Provider-agnostic by design — the harness runs BYOK against any OpenRouter model.",
-    ],
-    stack: ["Python", "OpenRouter", "evals", "E2B", "sandboxing", "CI"],
-  },
-  {
-    name: "Argus",
-    url: "https://github.com/duketopceo/Argus",
     caseStudy: "https://github.com/duketopceo/Argus",
     description:
-      "Open-source vision-model E2E testing harness — record, replay, heal, assert. BYOK through OpenRouter with hard budget caps, a self-hosted runner, and GitHub PR reporting. The open TestDriver alternative.",
+      "Built orchestral (422 commits, 125 test files) and an E2B-compatible isolated code runtime to evaluate whether low-cost orchestrator and worker model pairs match frontier-model output quality across OpenRouter providers under CI gates.",
     highlights: [
-      "Budget caps and failure recovery treated as part of the interface, not an afterthought.",
-      "TypeScript; 0.3.x releases with a CodeRabbit-style review surface.",
+      "Shipped Argus (argus-reviewer-e2e v0.5.0 on npm, 302 commits), a BYOK OpenRouter vision-model E2E testing harness and PR reviewer with fingerprint-cached replay, DOM-verified grounding, hard per-run budget caps, and networkless Docker reproduction; dogfooded across tallyline.",
     ],
-    stack: ["TypeScript", "OpenRouter", "vision models", "E2E testing", "GitHub Actions"],
+    stack: ["Python", "TypeScript", "Playwright", "OpenRouter", "E2B", "Docker", "CI"],
   },
   {
-    name: "wisp",
-    url: "https://github.com/duketopceo/wisp",
-    caseStudy: "https://github.com/duketopceo/wisp",
+    name: "Pace Server & tallyline — Multi-Tenant Cloud & Agent Dispatch Monorepo",
+    url: "https://github.com/duketopceo/tallyline",
+    caseStudy: "https://pacehq.io",
     description:
-      "Voice computer-use agent for the Omarchy desktop: push-to-talk → whisper.cpp → local decision model → guarded hyprctl launch, with a breathing dim overlay while it listens.",
+      "Designed Pace's multi-tenant cloud backend (Rust/Axum gateway, Go/Chi services, Postgres 17 RLS, Stripe Connect metering, Stytch B2B SSO) with an 8-step agentrun pipeline behind TierGate autonomy controls and SSRF egress allowlists.",
     highlights: [
-      "Local-first: the decision model runs on the machine, no round trip for the hot path.",
-      "Guardrails on every action the agent is allowed to take.",
+      "Built tallyline (v1.0.0), an agent-native issue tracker monorepo with an MCP server, CLI, and single-dependency PostgreSQL skip-locked agent dispatch worker; isolated and reported an upstream wake-queue attribution race in paperclipai/paperclip (#14121).",
     ],
-    stack: ["Python", "whisper.cpp", "Hyprland", "local inference", "computer use"],
+    stack: ["Rust (Axum)", "Go (Chi)", "TypeScript (Hono)", "PostgreSQL 17", "RLS", "MCP"],
   },
   {
-    name: "Kurultai",
-    url: "https://github.com/duketopceo/kurultai",
-    caseStudy: "https://github.com/duketopceo/kurultai",
+    name: "dayflow-linux & portfolio-hub — Linux Desktop Journal & Telemetry",
+    url: "https://github.com/duketopceo/dayflow-linux",
+    caseStudy: "https://github.com/duketopceo/portfolio-hub",
     description:
-      "Local knowledge brain for agents — indexes notes, chats, repos, and docs into one SQLite store with FTS5 full-text + sqlite-vec vector search, exposed through an MCP server. Rust + SQLite + axum.",
+      "Ported Dayflow natively to Linux in Go (v1.6.0, 212 commits) with local-first screen capture, OpenRouter vision summarization, standup generation, agent-session recaps, FTS5 search, and MCP tool exposure (including 6 merged external community PRs).",
     highlights: [
-      "One store for retrieval instead of whole-vault dumps — search/ask/MCP return excerpts with citations, not the full source.",
-      "Per-source connectors (notes, repos, docs) feed a single embeddings store; MCP makes it agent-native.",
+      "Built portfolio-hub (luke-the-duke.com) with cached 90-day GitHub App engineering telemetry, machine-readable JSON Resume and llms.txt endpoints, and automated privacy and visual regression gates across 50+ repositories.",
     ],
-    stack: ["Rust", "SQLite", "FTS5", "sqlite-vec", "MCP", "axum"],
-  },
-  {
-    name: "Stratum Engine",
-    url: "https://stratumhq.app",
-    description:
-      "Secondary production voice-agent project — 24/7 Retell agent for contractors (missed-call recovery, follow-ups). FastAPI + Supabase + Fly.io + Stripe; 334+ tests.",
-    highlights: [],
-    stack: ["FastAPI", "Supabase", "Fly.io", "Stripe", "Retell", "voice AI"],
+    stack: ["Go", "TypeScript", "Next.js", "SQLite FTS5", "OpenRouter", "MCP"],
   },
 ];
 
@@ -156,52 +137,50 @@ export const work = [
     position: "IT Support & Data Specialist",
     startDate: "2025",
     endDate: "Present",
-    location: "UT / ID",
-    summary: "IT support and data work across UT + ID for a ~200-person org.",
+    location: "Murray, UT (UT / ID)",
+    summary: "Internal systems, data automation, and multi-state IT infrastructure across Utah and Idaho for a 200-person organization.",
     highlights: [
-      "Promoted within 4 months; scope grew to IT support and data work across UT + ID for a ~200-person roofing org.",
-      "Containerized services (Snipe-IT, MeshCentral, Vaultwarden) on bare-metal Linux; built a helpdesk dashboard and web-app pitch decks instead of buying SaaS or making PDFs.",
-      "Built read/write internal APIs for the IT team, gated behind authentication; Python automations and a Next.js dashboard cut manual follow-up and reporting.",
-      "Asked to train the IT team on AI tooling in month one — runs Claude Code, Cursor, and OpenRouter routing daily across the org.",
+      "Promoted within 4 months to own internal systems, data automation, and multi-state IT infrastructure across Utah and Idaho for a 200-person commercial and residential roofing organization.",
+      "Deployed containerized internal services (Snipe-IT for 105+ assets, MeshCentral, Vaultwarden, Docker, Tailscale) on bare-metal Linux alongside authenticated read/write APIs, Python permit automations, and a Next.js operations dashboard.",
+      "Trained the engineering and IT team on daily Claude Code, Cursor, and multi-model OpenRouter workflows in month one.",
     ],
   },
   {
-    company: "LiveView Technologies",
-    position: "Data Intern / Manufacturing IT Liaison",
+    company: "LiveView Technologies (LVT)",
+    position: "Data Intern & Manufacturing IT Liaison",
     startDate: "2024",
     endDate: "2025",
-    location: "UT",
-    summary: "Cross-team liaison between engineering and production.",
+    location: "Orem, UT",
+    summary: "Cross-team liaison between engineering and manufacturing.",
     highlights: [
-      "Cross-team liaison coordinating between engineering and production teams; automated data-pipeline fixes in Python.",
-      "Built Tableau dashboards for production analytics — defect rates, throughput, and cycle times.",
+      "Automated production data-pipeline fixes in Python and built executive Tableau dashboards tracking defect rates, assembly throughput, and cycle times across manufacturing and engineering teams.",
     ],
   },
   {
     company: "Vivint Smart Home",
-    position: "Inside Sales & Trainer",
+    position: "Inside Sales & Onboarding Trainer",
     startDate: "2020",
     endDate: "2024",
-    location: "UT",
-    summary: "Commission sales; trained new hires.",
+    location: "Provo, UT",
+    summary: "Commission sales and technical product onboarding.",
     highlights: [
-      "Power-ranked top 6 in department for 4 consecutive months on commission-heavy, no-base comp; trained 30+ new hires.",
+      "Ranked top 6 in department for 4 consecutive months on commission-only compensation and trained 30+ new hires on technical product workflows.",
     ],
   },
 ];
 
 export const education = [
   {
-    institution: "MTECH Vocational",
+    institution: "Mountainland Technical College (MTECH)",
     area: "Data Analytics",
     studyType: "Certificate",
     startDate: "2024",
     endDate: "2025",
   },
   {
-    institution: "BYU-Idaho",
+    institution: "Brigham Young University-Idaho",
     area: "Computer Engineering & Economics",
-    studyType: "Coursework",
+    studyType: "Coursework (3 Semesters)",
     startDate: "2018",
     endDate: "2020",
   },
@@ -223,3 +202,4 @@ export const aiFiles = [
   { path: "/llms.txt", type: "text/plain", schema: "llms.txt", desc: "This index — start here." },
   { path: "/sitemap.xml", type: "application/xml", schema: "Sitemap", desc: "All crawlable routes." },
 ];
+
