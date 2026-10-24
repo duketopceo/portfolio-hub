@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import DecorativeEffectBoundary from "@/components/DecorativeEffectBoundary";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -13,6 +14,12 @@ const UplinkLoader = dynamic(
 );
 
 export default function Loading() {
+  // The visible label is client-only so it never appears in the SSR HTML.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const enabled = !useMediaQuery("(prefers-reduced-motion: reduce)", true);
 
   return (
@@ -23,7 +30,7 @@ export default function Loading() {
         </DecorativeEffectBoundary>
         <span className="sr-only">Loading…</span>
       </div>
-      <p className="uplink-loader-label">Establishing uplink</p>
+      {mounted && <p className="uplink-loader-label">Loading</p>}
     </div>
   );
 }

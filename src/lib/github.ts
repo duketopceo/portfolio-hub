@@ -294,6 +294,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
           languages: [],
           stars: 0,
           forks: 0,
+          topics: [],
           openIssuesCount: 0,
           ciStatus: null,
         } satisfies EnrichedProject;
@@ -315,6 +316,8 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         languages = [repo.language];
       }
 
+      const isPrivate = withDeploy.private || repo?.private === true;
+
       return {
         ...withDeploy,
         githubUrl,
@@ -327,6 +330,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         languages,
         stars: repo?.stargazers_count || 0,
         forks: repo?.forks_count || 0,
+        topics: isPrivate ? [] : (repo?.topics ?? []).slice(0, 3),
         openIssuesCount: repo?.open_issues_count ?? 0,
         ciStatus,
       } satisfies EnrichedProject;

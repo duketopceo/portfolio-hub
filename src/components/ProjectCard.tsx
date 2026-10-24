@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
-import { formatDate, languageColors, catColors } from "@/lib/utils";
+import { formatMonthYear, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/category-meta";
 import { isProjectLive } from "@/lib/deployments";
-import { LockIcon, getCategoryIcon } from "./Icons";
+import { getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
 import GithubLink from "./GithubLink";
 
@@ -23,6 +23,10 @@ export default function ProjectCard({
   const langColor = project.language
     ? languageColors[project.language] || "#6B7280"
     : null;
+  const topics = project.private ? [] : (project.topics ?? []).slice(0, 3);
+  const forks = project.private ? 0 : (project.forks ?? 0);
+  const issues = project.private ? 0 : (project.openIssuesCount ?? 0);
+  const updated = formatMonthYear(project.lastUpdated);
   const accentColor = catColors[project.category] || "#2DD4BF";
 
   return (
@@ -48,23 +52,17 @@ export default function ProjectCard({
                 {meta?.label || project.category}
               </span>
               {project.private && (
-                <LockIcon
-                  className="cosmic-project-card__lock w-3.5 h-3.5 opacity-50"
-                  aria-label="Private repository"
-                />
+                <span className="cosmic-card-pill cosmic-card-pill--private">
+                  Private
+                </span>
               )}
             </div>
           </div>
           <span className="cosmic-project-card__meta-right">
             {typeof registryIndex === "number" && registryIndex >= 0 && (
-              <span className="reg-num" aria-hidden="true">
+              <span className="reg-num cosmic-card-reg" aria-hidden="true">
                 CI-{String(registryIndex + 1).padStart(2, "0")}
               </span>
-            )}
-            {project.lastUpdated && (
-              <time className="cosmic-card-date" dateTime={project.lastUpdated}>
-                {formatDate(project.lastUpdated)}
-              </time>
             )}
           </span>
         </header>
@@ -77,11 +75,19 @@ export default function ProjectCard({
         </h3>
 
         <p
-          className="cosmic-card-desc line-clamp-3 break-words"
+          className="cosmic-card-desc line-clamp-2 break-words"
           title={project.tagline}
         >
           {project.tagline}
         </p>
+
+        {topics.length > 0 && (
+          <ul className="cosmic-card-topics" aria-label="Topics">
+            {topics.map((topic) => (
+              <li key={topic}>{topic}</li>
+            ))}
+          </ul>
+        )}
 
         <div className="cosmic-project-card__meta" aria-label="Project metadata">
           <div className="cosmic-project-card__pills">
@@ -107,6 +113,33 @@ export default function ProjectCard({
                 {project.stars}
               </span>
             )}
+            {forks > 0 && (
+              <span
+                className="cosmic-card-pill cosmic-card-pill--muted"
+                title={`${forks} forks`}
+              >
+                <svg
+                  className="w-3.5 h-3.5 opacity-70"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 16 16"
+                  aria-hidden
+                >
+                  <circle cx="4" cy="3" r="1.6" />
+                  <circle cx="12" cy="3" r="1.6" />
+                  <circle cx="8" cy="13" r="1.6" />
+                  <path d="M4 4.6v1.4c0 1 .8 1.8 1.8 1.8h4.4c1 0 1.8-.8 1.8-1.8V4.6M8 7.8v3.6" />
+                </svg>
+                <span className="sr-only">Forks </span>
+                {forks}
+              </span>
+            )}
+            {issues > 0 && (
+              <span className="cosmic-card-pill cosmic-card-pill--muted">
+                {issues} open {issues === 1 ? "issue" : "issues"}
+              </span>
+            )}
             {hasDemo && (
               <span className="cosmic-card-pill cosmic-card-pill--live">
                 <span className="cosmic-card-pill__pulse" />
@@ -114,8 +147,16 @@ export default function ProjectCard({
               </span>
             )}
           </div>
+          {updated && (
+            <time
+              className="cosmic-card-date cosmic-card-updated"
+              dateTime={project.lastUpdated}
+            >
+              Updated {updated}
+            </time>
+          )}
           <span className="cosmic-project-card__chevron" aria-hidden>
-            Survey file
+            Open dossier
             <span className="cosmic-project-card__chevron-arrow">→</span>
           </span>
         </div>

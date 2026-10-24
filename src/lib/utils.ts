@@ -2,6 +2,14 @@
  * Format a date string into an absolute human-readable format.
  * Uses absolute dates ("Mar 19, 2026") to avoid stale relative dates on ISR pages.
  */
+/** Month-and-year stamp for "Updated Oct 2026" labels. Stable across renders. */
+export function formatMonthYear(dateStr: string): string {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+}
+
 export function formatDate(dateStr: string): string {
   if (!dateStr) return "—";
   const date = new Date(dateStr);
