@@ -1,5 +1,6 @@
 import { getRecentProjects } from "@/lib/github";
 import ProjectCard from "@/components/ProjectCard";
+import PullRequestsPanel from "@/components/PullRequestsPanel";
 import { formatDate } from "@/lib/utils";
 import {
   MediaFrame,
@@ -24,12 +25,12 @@ export default async function NowPage() {
     <PageShell>
       <PageHeader
         metadata={[
-          { content: "CI / Mission log" },
+          { content: "CI / Now" },
           { content: "via GitHub feed", className: "hidden sm:inline" },
-          { content: "Sheet 04" },
+          { content: "Sheet 06" },
         ]}
-        title="Transmissions"
-        lede="Most recently active bodies. Updated from GitHub."
+        title="Now"
+        lede="Last 5 active projects, from GitHub."
       />
 
       <section
@@ -39,7 +40,7 @@ export default async function NowPage() {
         <div className="now-spotify-card">
           <div className="now-spotify-card__label">
             <span className="now-spotify-card__dot" aria-hidden />
-            On Repeat
+            Listening to
           </div>
           <div className="now-spotify-card__embed">
             <MediaFrame>
@@ -59,11 +60,9 @@ export default async function NowPage() {
       </section>
 
       <section className="cosmic-timeline" aria-labelledby="now-transmissions">
-        <SectionHeading
-          eyebrow="Recent activity"
-          title={<span id="now-transmissions">Latest repository motion</span>}
-          description="Ordered by repository activity rather than promotional priority."
-        />
+        <h2 id="now-transmissions" className="sr-only">
+          Recently active projects
+        </h2>
         {recent.map((project, i) => (
           <div
             key={project.slug}
@@ -96,6 +95,14 @@ export default async function NowPage() {
             </div>
           </div>
         ))}
+      </section>
+
+      <section aria-labelledby="now-prs">
+        <SectionHeading
+          title={<span id="now-prs">Open pull requests</span>}
+          description="Across catalog repositories."
+        />
+        <PullRequestsPanel />
       </section>
     </PageShell>
   );

@@ -21,18 +21,17 @@ export default function NotFound() {
 
         <div className="nf-plate__body">
           <p className="nf-plate__code" aria-hidden="true">404</p>
-          <h1 className="nf-plate__title">Signal lost</h1>
+          <h1 className="nf-plate__title">Page not found</h1>
           <p className="nf-plate__desc">
-            Requested coordinate falls outside the surveyed field. The body
-            may have moved, been reclassified, or never cataloged.
+            That page does not exist or has moved. Go to Projects or Home.
           </p>
 
           <ActionRow className="nf-plate__actions">
             <Link href="/projects" className="detail-cta">
-              Return to registry
+              Go to Projects
             </Link>
             <Link href="/" className="detail-nav-link">
-              Survey home
+              Go to Home
             </Link>
           </ActionRow>
         </div>

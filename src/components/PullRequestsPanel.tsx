@@ -52,7 +52,17 @@ export default function PullRequestsPanel() {
     fetch("/api/github/pulls", { signal: ac.signal })
       .then((r) => r.json())
       .then((j) => {
-        setRows(Array.isArray(j.pulls) ? j.pulls : []);
+        const pulls: Row[] = Array.isArray(j.pulls) ? j.pulls : [];
+        // Group by repo so each project's PRs sit together, newest first within a repo.
+        const byRepo = new Map<string, Row[]>();
+        for (const row of pulls) {
+          byRepo.set(row.slug, [...(byRepo.get(row.slug) ?? []), row]);
+        }
+        setRows(
+          [...byRepo.values()].flatMap((group) =>
+            group.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)),
+          ),
+        );
         setError(null);
       })
       .catch(() => setError("Could not load pull requests."))
@@ -73,7 +83,7 @@ export default function PullRequestsPanel() {
   if (rows.length === 0) {
     return (
       <p className="cosmic-pr-panel__muted">
-        No open pull requests across catalog repositories.
+        No open PRs. Everything is merged.
       </p>
     );
   }
@@ -93,9 +103,15 @@ export default function PullRequestsPanel() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
+            {rows.map((r, i) => (
               <tr key={`${r.repoName}-${r.number}`}>
-                <td title={r.displayName}>{r.displayName}</td>
+                <td title={r.displayName}>
+                  {i > 0 && rows[i - 1].slug === r.slug ? (
+                    <span className="sr-only">{r.displayName}</span>
+                  ) : (
+                    r.displayName
+                  )}
+                </td>
                 <td>
                   <a
                     href={r.htmlUrl}

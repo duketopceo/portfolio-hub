@@ -75,7 +75,7 @@ export function HomeCatalogBelt({
                   className="home-catalog__item"
                 >
                   <span className="home-catalog__index">
-                    CI-{String(registryIndex.get(project.slug) ?? 0).padStart(2, "0")}
+                    CI-{String((registryIndex.get(project.slug) ?? 0) + 1).padStart(2, "0")}
                   </span>
                   <span className="home-catalog__name">{project.displayName}</span>
                   <span className="home-catalog__type">{project.type}</span>

@@ -1514,10 +1514,27 @@
   color: var(--color-text-faint);
 }
 
-.home-lead__meta span + span::before {
+.home-lead__meta span:not(.home-lead__reg) + span:not(.home-lead__reg)::before {
   content: "·";
   margin-right: 0.45rem;
   color: var(--system-accent);
+}
+
+.home-lead__reg {
+  margin-left: auto;
+  letter-spacing: 0.06em;
+}
+
+.home-lead__proof {
+  position: relative;
+  z-index: 1;
+  color: var(--color-text-faint);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .home-lead__name {
@@ -1689,7 +1706,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.125rem;
+  margin-bottom: var(--space-control-1);
 }
 
 .cosmic-project-card__identity {
@@ -1750,7 +1767,7 @@
   color: var(--color-text);
   letter-spacing: -0.025em;
   line-height: 1.25;
-  margin-bottom: 0.875rem;
+  margin-bottom: var(--space-control-1);
 }
 
 .cosmic-card-desc {
@@ -1760,7 +1777,44 @@
   line-height: 1.65;
   margin-bottom: 0;
   flex: 1;
-  min-height: 4.5em;
+  min-height: 3.3em;
+}
+
+.cosmic-card-reg {
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+}
+
+.cosmic-card-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-micro-2);
+  margin: var(--space-control-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cosmic-card-topics li {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  padding: 0.125rem 0.4rem;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-sm);
+}
+
+.cosmic-card-pill--private {
+  padding: 0.125rem 0.4rem;
+  color: var(--color-text-muted);
+  border-style: dashed;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cosmic-card-updated {
+  margin-left: auto;
+  padding-top: 0;
 }
 
 .cosmic-project-card__meta {
@@ -1770,7 +1824,7 @@
   justify-content: space-between;
   gap: 0.75rem 1rem;
   margin-top: auto;
-  padding-top: 1.125rem;
+  padding-top: var(--space-control-1);
   border-top: 1px solid var(--color-divider);
 }
 
@@ -2151,6 +2205,27 @@
 }
 
 /* File margin strip — survey-file marginalia above the title */
+.dossier-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-control-1) var(--space-component-1);
+  margin: var(--space-control-2) 0 0;
+}
+
+.dossier-hero__facts dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.dossier-hero__facts dd {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
 .dossier-hero__margin {
   display: flex;
   justify-content: space-between;

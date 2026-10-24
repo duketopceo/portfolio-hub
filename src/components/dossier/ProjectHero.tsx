@@ -7,6 +7,7 @@ import {
   projectLiveHref,
   formatDeploymentUrl,
 } from "@/lib/deployments";
+import { formatMonthYear } from "@/lib/utils";
 import DossierArcField from "@/components/DossierArcField";
 
 type CategoryMeta = { label: string; icon: string };
@@ -27,6 +28,18 @@ export function ProjectHero({ project, accentColor, meta, registryIndex }: Proje
     typeof registryIndex === "number" && registryIndex >= 0
       ? `CI-${String(registryIndex + 1).padStart(2, "0")}`
       : null;
+
+  const facts: { label: string; value: string }[] = [];
+  if (!project.private) {
+    if (project.language) facts.push({ label: "Language", value: project.language });
+    const updated = formatMonthYear(project.lastUpdated);
+    if (updated) facts.push({ label: "Last commit", value: updated });
+    if (project.stars > 0) facts.push({ label: "Stars", value: String(project.stars) });
+    if (project.forks > 0) facts.push({ label: "Forks", value: String(project.forks) });
+    if ((project.openIssuesCount ?? 0) > 0) {
+      facts.push({ label: "Open issues", value: String(project.openIssuesCount) });
+    }
+  }
 
   return (
     <>
@@ -136,6 +149,17 @@ export function ProjectHero({ project, accentColor, meta, registryIndex }: Proje
                   </a>
                 )}
               </div>
+
+              {facts.length > 0 && (
+                <dl className="dossier-hero__facts" aria-label="Quick facts">
+                  {facts.map((fact) => (
+                    <div key={fact.label}>
+                      <dt>{fact.label}</dt>
+                      <dd>{fact.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
             </div>
           </div>
         </div>

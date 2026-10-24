@@ -167,6 +167,8 @@ export interface EnrichedProject extends ProjectConfig {
   languages: string[];
   stars: number;
   forks: number;
+  /** Public repo topics for card chips. Always empty for private entries. */
+  topics?: string[];
   /** Open issues count from GitHub when token can read the repo */
   openIssuesCount: number;
   /** Combined CI status when checks API available */
