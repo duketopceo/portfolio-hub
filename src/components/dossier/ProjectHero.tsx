@@ -29,11 +29,21 @@ export function ProjectHero({ project, accentColor, meta, registryIndex }: Proje
       ? `CI-${String(registryIndex + 1).padStart(2, "0")}`
       : null;
 
-  const facts: { label: string; value: string }[] = [];
+  const facts: { label: string; value: string; href?: string }[] = [];
   if (!project.private) {
     if (project.language) facts.push({ label: "Language", value: project.language });
     const updated = formatMonthYear(project.lastUpdated);
     if (updated) facts.push({ label: "Last commit", value: updated });
+    if (project.latestRelease) {
+      const released = formatMonthYear(project.latestRelease.publishedAt);
+      facts.push({
+        label: "Latest release",
+        value: released
+          ? `${project.latestRelease.tag} · ${released}`
+          : project.latestRelease.tag,
+        href: project.latestRelease.url,
+      });
+    }
     if (project.stars > 0) facts.push({ label: "Stars", value: String(project.stars) });
     if (project.forks > 0) facts.push({ label: "Forks", value: String(project.forks) });
     if ((project.openIssuesCount ?? 0) > 0) {
@@ -155,7 +165,19 @@ export function ProjectHero({ project, accentColor, meta, registryIndex }: Proje
                   {facts.map((fact) => (
                     <div key={fact.label}>
                       <dt>{fact.label}</dt>
-                      <dd>{fact.value}</dd>
+                      <dd>
+                        {fact.href ? (
+                          <a
+                            href={fact.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {fact.value}
+                          </a>
+                        ) : (
+                          fact.value
+                        )}
+                      </dd>
                     </div>
                   ))}
                 </dl>

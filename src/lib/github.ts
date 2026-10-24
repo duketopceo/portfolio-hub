@@ -1,4 +1,4 @@
-import { GitHubRepo, EnrichedProject } from "./types";
+import { GitHubRepo, EnrichedProject, LatestRelease } from "./types";
 import { listedProjects } from "@/lib/catalog";
 import { applyDeploymentOverlay } from "@/lib/deployments";
 import { publicGithubUrl } from "@/lib/github-public-url";
@@ -258,6 +258,54 @@ export async function fetchShowcaseMd(
   }
 }
 
+/**
+ * Latest published release for a PUBLIC repo. 404 means "no release" and every
+ * failure degrades to undefined, so a release lookup can never break a page or
+ * the build. Callers must not pass private repos (privacy gate).
+ */
+export async function fetchLatestRelease(
+  repoName: string,
+  owner: string = GITHUB_USER
+): Promise<LatestRelease | undefined> {
+  if (!repoName || fixturesEnabled()) return undefined;
+  const url = `${GITHUB_API}/repos/${owner}/${encodeURIComponent(repoName)}/releases/latest`;
+  try {
+    const res = await fetch(url, {
+      headers: await githubAuthHeaders(),
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) {
+      if (res.status !== 404) {
+        const failure = await handleFailedGithubResponse(
+          res,
+          `fetchLatestRelease ${repoName}`
+        );
+        logGithubFailure("fetchLatestRelease", failure);
+      }
+      return undefined;
+    }
+    const data = (await res.json()) as {
+      tag_name?: string;
+      published_at?: string | null;
+      html_url?: string;
+    };
+    if (!data.tag_name || !data.published_at || !data.html_url) return undefined;
+    if (!data.html_url.startsWith("https://github.com/")) return undefined;
+    return {
+      tag: data.tag_name,
+      publishedAt: data.published_at,
+      url: data.html_url,
+    };
+  } catch (err) {
+    logGithubFailure(
+      "fetchLatestRelease",
+      failureFromUnknown(`fetchLatestRelease ${repoName}`, err)
+    );
+    return undefined;
+  }
+}
+
 function mapCiStatus(ci: CiStateKind): EnrichedProject["ciStatus"] {
   if (ci === "success") return "success";
   if (ci === "failure" || ci === "error") return "failure";
@@ -318,6 +366,10 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
 
       const isPrivate = withDeploy.private || repo?.private === true;
 
+      const latestRelease = isPrivate
+        ? undefined
+        : await fetchLatestRelease(withDeploy.repoName, owner);
+
       return {
         ...withDeploy,
         githubUrl,
@@ -333,6 +385,7 @@ export async function getEnrichedProjects(): Promise<EnrichedProject[]> {
         topics: isPrivate ? [] : (repo?.topics ?? []).slice(0, 3),
         openIssuesCount: repo?.open_issues_count ?? 0,
         ciStatus,
+        ...(latestRelease ? { latestRelease } : {}),
       } satisfies EnrichedProject;
     })
   );
