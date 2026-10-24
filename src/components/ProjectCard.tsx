@@ -27,6 +27,8 @@ export default function ProjectCard({
   const forks = project.private ? 0 : (project.forks ?? 0);
   const issues = project.private ? 0 : (project.openIssuesCount ?? 0);
   const updated = formatMonthYear(project.lastUpdated);
+  const release = project.private ? undefined : project.latestRelease;
+  const releasedOn = release ? formatMonthYear(release.publishedAt) : "";
   const accentColor = catColors[project.category] || "#2DD4BF";
 
   return (
@@ -138,6 +140,17 @@ export default function ProjectCard({
             {issues > 0 && (
               <span className="cosmic-card-pill cosmic-card-pill--muted">
                 {issues} open {issues === 1 ? "issue" : "issues"}
+              </span>
+            )}
+            {release && (
+              <span
+                className="cosmic-card-pill cosmic-card-pill--muted"
+                data-testid="latest-release-pill"
+                data-release-url={release.url}
+                title="Latest release"
+              >
+                {release.tag}
+                {releasedOn ? ` · ${releasedOn}` : ""}
               </span>
             )}
             {hasDemo && (

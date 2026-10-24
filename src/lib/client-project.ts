@@ -13,5 +13,6 @@ export function toClientProject<T extends ProjectConfig>(project: T): T {
     repoOwner: undefined,
   };
   if ("githubUrl" in safe) safe.githubUrl = null;
+  if ("latestRelease" in safe) delete (safe as { latestRelease?: unknown }).latestRelease;
   return safe;
 }

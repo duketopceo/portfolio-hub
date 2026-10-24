@@ -159,6 +159,12 @@ export interface ProjectConfig {
   finishLine?: string;
 }
 
+export interface LatestRelease {
+  tag: string;
+  publishedAt: string;
+  url: string;
+}
+
 export interface EnrichedProject extends ProjectConfig {
   repo: GitHubRepo | null;
   lastUpdated: string;
@@ -171,6 +177,8 @@ export interface EnrichedProject extends ProjectConfig {
   topics?: string[];
   /** Open issues count from GitHub when token can read the repo */
   openIssuesCount: number;
+  /** Latest published GitHub release. Public repos only; never set for private entries. */
+  latestRelease?: LatestRelease;
   /** Combined CI status when checks API available */
   ciStatus: "success" | "failure" | "pending" | "unknown" | null;
   /**
