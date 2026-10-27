@@ -21,7 +21,6 @@ const viewports = [
   { name: "mobile", width: 390, height: 844 },
 ] as const;
 
-const utcStatusSelector = ".site-header__status-item[aria-label='UTC time']";
 const publicAlias = "hello@luke-the-duke.com";
 const machineReadableRoutes = [
   "/resume.json",
@@ -64,7 +63,6 @@ const masked = [
   "iframe",
   "video",
   "[data-visual-mask]",
-  utcStatusSelector,
 ];
 
 function collectConsoleErrors(page: Page) {
@@ -299,11 +297,12 @@ test.describe("Portfolio visual acceptance matrix", () => {
     }
   });
 
-  test("UTC status remains live while masked from screenshots", async ({ page }) => {
+  test("header and footer carry no status strip or repeated project list", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
-    await expect(
-      page.locator(utcStatusSelector),
-    ).toHaveText(/\d{2}:\d{2}:\d{2}Z/);
+    await expect(page.locator(".site-header__status")).toHaveCount(0);
+    await expect(page.getByText("FIELD OPERATION")).toHaveCount(0);
+    await expect(page.locator(".cosmic-footer__index")).toHaveCount(0);
+    await expect(page.locator(".site-header__link")).toHaveCount(4);
   });
 
   test("external embeds carry accessible fallback metadata", async ({ page }) => {
