@@ -7,17 +7,12 @@ const routes = [
   { path: "/projects/khan", name: "project-dossier" },
   { path: "/projects/kate", name: "project-dossier-kate" },
   { path: "/projects/kurultai", name: "project-dossier-kurultai" },
-  { path: "/contributions", name: "contributions" },
-  { path: "/openrouter", name: "openrouter" },
-  { path: "/demos", name: "demos" },
-  { path: "/demos/argus", name: "demo-argus" },
-  { path: "/demos/kurultai", name: "demo-kurultai" },
-  { path: "/demos/dayflow", name: "demo-dayflow" },
+  { path: "/projects/argus", name: "project-dossier-argus" },
+  { path: "/projects/dayflow-linux", name: "project-dossier-dayflow" },
+  { path: "/projects/openrouter", name: "project-dossier-openrouter" },
   { path: "/resume", name: "resume" },
-  { path: "/now", name: "now" },
   { path: "/about", name: "about" },
   { path: "/hire", name: "hire" },
-  { path: "/contact", name: "contact" },
   { path: "/missing-route", name: "not-found" },
 ] as const;
 
@@ -93,9 +88,6 @@ test.describe("Portfolio visual acceptance matrix", () => {
   test.beforeEach(async ({ page }) => {
     await stubThirdParty(page);
     await dropHttpsUpgradeFromDocuments(page);
-    await page.addInitScript(() => {
-      localStorage.setItem("lk_welcomed", "1");
-    });
   });
 
   for (const route of routes) {
@@ -135,11 +127,6 @@ test.describe("Portfolio visual acceptance matrix", () => {
     }
   }
 
-  test("dismissed introduction stays out of route baselines", async ({ page }) => {
-    await page.goto("/contact", { waitUntil: "networkidle" });
-    await expect(page.locator(".welcome-intro")).toHaveCount(0);
-  });
-
   test("public routes do not expose private personal contact details", async ({
     page,
   }) => {
@@ -166,7 +153,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
 
     expect(violations).toEqual([]);
 
-    await page.goto("/contact", { waitUntil: "networkidle" });
+    await page.goto("/hire", { waitUntil: "networkidle" });
     const html = await page.locator("html").evaluate((el) => el.outerHTML);
     const emails = new Set(
       [html, ...machineBodies].flatMap((body) =>
@@ -179,17 +166,16 @@ test.describe("Portfolio visual acceptance matrix", () => {
     expect(Array.from(emails)).toEqual([publicAlias]);
   });
 
-  test("first-visit introduction renders and dismisses", async ({
+  test("no intro overlay or card torch on first visit", async ({
     browser,
     baseURL,
   }) => {
     const context = await browser.newContext({ baseURL });
-    const introPage = await context.newPage();
+    const freshPage = await context.newPage();
     try {
-      await introPage.goto("/about", { waitUntil: "domcontentloaded" });
-      await expect(introPage.locator(".welcome-intro--visible")).toBeVisible();
-      await introPage.getByRole("button", { name: "Got it" }).click();
-      await expect(introPage.locator(".welcome-intro")).toHaveCount(0);
+      await freshPage.goto("/about", { waitUntil: "networkidle" });
+      await expect(freshPage.locator(".welcome-intro")).toHaveCount(0);
+      await expect(freshPage.getByRole("button", { name: "Got it" })).toHaveCount(0);
     } finally {
       await context.close();
     }
@@ -266,21 +252,51 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(1);
   });
 
-  test("catalog belt keeps secondary systems readable", async ({ page }) => {
+  test("home shows three blocks: intro, planet map, activity", async ({
+    page,
+  }) => {
     await page.goto("/", { waitUntil: "networkidle" });
-    const items = page.locator(".home-catalog__item");
-    expect(await items.count()).toBeGreaterThan(20);
-    await items.first().scrollIntoViewIfNeeded();
-    const metrics = await items.first().evaluate((element) => {
-      const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
-      return {
-        fontSize: parseFloat(style.fontSize),
-        height: rect.height,
-      };
-    });
-    expect(metrics.fontSize).toBeGreaterThanOrEqual(12);
-    expect(metrics.height).toBeGreaterThanOrEqual(32);
+    await expect(page.locator(".solar-system")).toHaveCount(1);
+    await expect(page.locator('.solar-system a[href^="/projects/"]').first()).toBeAttached();
+    await expect(page.locator(".home-lead__card")).toHaveCount(0);
+    await expect(page.locator(".home-transmissions")).toHaveCount(1);
+    await expect(page.locator(".home-catalog__item")).toHaveCount(0);
+    await expect(page.locator(".sheet__titleblock")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /See the work/ })).toHaveAttribute(
+      "href",
+      "/projects",
+    );
+  });
+
+  test("header carries four links plus a GitHub icon", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto("/", { waitUntil: "networkidle" });
+    const nav = page.getByRole("navigation", { name: "Primary" });
+    await expect(nav.locator("a.site-header__link")).toHaveText([
+      /Work/,
+      /Resume/,
+      /About/,
+      /Hire/,
+    ]);
+    await expect(nav.getByRole("link", { name: "GitHub profile" })).toHaveCount(1);
+    await expect(nav.getByText("The Show")).toHaveCount(0);
+  });
+
+  test("about carries #now and #contributions; hire carries #contact", async ({
+    page,
+  }) => {
+    await page.goto("/about", { waitUntil: "networkidle" });
+    await expect(page.locator("#now")).toHaveCount(1);
+    await expect(page.locator("#contributions")).toHaveCount(1);
+    await page.goto("/hire", { waitUntil: "networkidle" });
+    await expect(page.locator("#contact")).toHaveCount(1);
+  });
+
+  test("dossiers with a demo carry a #demo section", async ({ page }) => {
+    for (const slug of ["argus", "kurultai", "dayflow-linux", "openrouter"]) {
+      await page.goto(`/projects/${slug}#demo`, { waitUntil: "networkidle" });
+      await expect(page.locator("#demo")).toHaveCount(1);
+    }
   });
 
   test("UTC status remains live while masked from screenshots", async ({ page }) => {
@@ -291,7 +307,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
   });
 
   test("external embeds carry accessible fallback metadata", async ({ page }) => {
-    await page.goto("/now", { waitUntil: "domcontentloaded" });
+    await page.goto("/about", { waitUntil: "domcontentloaded" });
     const embeds = page.locator("iframe");
     const count = await embeds.count();
     expect(count).toBeGreaterThan(0);
@@ -338,7 +354,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
   });
 
   test("keyboard focus changes to a visible indicator", async ({ page }) => {
-    await page.goto("/contact", { waitUntil: "networkidle" });
+    await page.goto("/hire", { waitUntil: "networkidle" });
     await page.keyboard.press("Tab");
     const focus = await page.evaluate(() => {
       const active = document.activeElement;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ExternalIcon } from "@/components/Icons";
 import { listedProjects } from "@/lib/catalog";
+import { siteNavItems, SHOW_URL } from "@/data/site-nav";
 import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
 
 type FeaturedProject = {
@@ -28,15 +29,6 @@ const featuredProjects: FeaturedProject[] = HOMEPAGE_FEATURED_SLUGS.flatMap(
     ];
   }
 );
-
-const siteLinks = [
-  { href: "/projects", label: "Registry" },
-  { href: "/now", label: "Now" },
-  { href: "/about", label: "About" },
-  { href: "/contributions", label: "Contributions" },
-  { href: "/hire", label: "Hire" },
-  { href: "/resume", label: "Resume" },
-];
 
 export default function Footer() {
   return (
@@ -84,13 +76,13 @@ export default function Footer() {
           </div>
 
           <nav className="cosmic-footer__nav" aria-label="Site">
-            {siteLinks.map((item) => (
+            {siteNavItems.map((item) => (
               <Link key={item.href} href={item.href} className="cosmic-footer__nav-link">
                 {item.label}
               </Link>
             ))}
             <a
-              href="https://show.luke-the-duke.com"
+              href={SHOW_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="cosmic-footer__nav-link"

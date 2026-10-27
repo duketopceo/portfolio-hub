@@ -76,7 +76,14 @@ describe("U7 /hire", () => {
     const html = await hire();
     expect(html).toContain("unavailable");
     expect(html).not.toContain("0 merged");
-    expect(html).toContain('href="/contributions"');
+    expect(html).toContain('href="/about#contributions"');
+  });
+
+  it("carries the merged contact section at #contact", async () => {
+    upstream.data = null;
+    const html = await hire();
+    expect(html).toContain('id="contact"');
+    expect(html).toContain("linkedin.com/in/lukekimball2789");
   });
 
   it("shows counts when upstream data exists", async () => {

@@ -71,6 +71,14 @@ describe("U4 dossier media and showcase mode", () => {
     expect(html).not.toContain("Restricted survey");
   });
 
+  it("argus, kurultai, dayflow-linux and openrouter carry a #demo section; khan does not", async () => {
+    for (const slug of ["argus", "kurultai", "dayflow-linux", "openrouter"]) {
+      const html = await dossier(slug);
+      expect(html, slug).toContain('id="demo"');
+    }
+    expect(await dossier("khan")).not.toContain('id="demo"');
+  });
+
   it("khan has a showcase and no video slots", async () => {
     const html = await dossier("khan");
     expect(html).toContain('data-umami-section="Showcase card"');

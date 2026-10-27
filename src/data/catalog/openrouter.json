@@ -1,5 +1,5 @@
 {
-  "slug": "openrouter-demos",
+  "slug": "openrouter",
   "order": 5,
   "curated": {
     "displayName": "OpenRouter Demos",
@@ -35,9 +35,8 @@
       "pytest"
     ],
     "private": false,
-    "liveUrl": "https://luke-the-duke.com/openrouter",
-    "demoUrl": "https://luke-the-duke.com/openrouter",
-    "embeddable": true,
+    "liveUrl": "/projects/openrouter#demo",
+    "demoUrl": "/projects/openrouter#demo",
     "media": {
       "release": {
         "url": "https://media.luke-the-duke.com/demos/openrouter-demos-walkthrough.mp4",

@@ -3,7 +3,6 @@ import DOMPurify from "isomorphic-dompurify";
 import type { EnrichedProject } from "@/lib/types";
 import { isProjectLive } from "@/lib/deployments";
 import { formatDate } from "@/lib/utils";
-import { openRouterDemos, OPENROUTER_DEMOS_REPO_URL } from "@/data/openrouter-demos";
 import { CheckIcon } from "@/components/Icons";
 import { EvidencePanel, StatusMark, SurveyPlate } from "@/components/design";
 import { DossierSection } from "./DossierSection";
@@ -75,47 +74,6 @@ export function DossierBody({
         >
           <DossierServicesTable slug={slug} />
         </DossierSection>
-
-        {slug === "openrouter-demos" && (
-          <DossierSection
-            title="Application demos"
-            id={`dossier-demos-${slug}`}
-            surface="glass"
-          >
-            <div className="openrouter-grid openrouter-grid--dossier">
-              {openRouterDemos.map((demo) => (
-                <article key={demo.slug} className="openrouter-card">
-                  <h3 className="openrouter-card__title">{demo.name}</h3>
-                  <span className="openrouter-card__role">{demo.role}</span>
-                  <p className="openrouter-card__summary">{demo.summary}</p>
-                  <p className="openrouter-card__note">{demo.scoring}</p>
-                  <a
-                    href={demo.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="detail-nav-link"
-                  >
-                    Source: {demo.slug}/ ↗
-                  </a>
-                </article>
-              ))}
-            </div>
-            <p className="mt-4">
-              <a
-                href={OPENROUTER_DEMOS_REPO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="detail-nav-link"
-              >
-                Full repo on GitHub ↗
-              </a>
-              {" · "}
-              <Link href="/openrouter" className="detail-nav-link">
-                Demo showcase page →
-              </Link>
-            </p>
-          </DossierSection>
-        )}
 
         {project.finishLine && (
           <DossierSection

@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 import { fileURLToPath } from "node:url";
 import { withSentryConfig } from "@sentry/nextjs";
-import { retiredSlugRedirects } from "./src/data/redirects";
+import { retiredSlugRedirects, siteRedirects } from "./src/data/redirects";
 
 const nextConfig: NextConfig = {
   // Keep worktree builds rooted here when the parent checkout also has a lockfile.
@@ -84,7 +84,7 @@ const nextConfig: NextConfig = {
         destination: "https://show.luke-the-duke.com/podcast/:path*",
         permanent: true,
       },
-      { source: "/demos/pixel-tycoon", destination: "/demos", permanent: true },
+      ...siteRedirects,
       ...retiredSlugRedirects(),
     ];
   },
