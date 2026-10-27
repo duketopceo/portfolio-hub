@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 /*
  * Simplex noise: Ashima webgl-noise (3D), inlined from
  * https://github.com/ashima/webgl-noise
@@ -26,7 +24,7 @@ import * as THREE from "three";
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const ASHIMA_SNOISE = /* glsl */ `
+export const ASHIMA_SNOISE = /* glsl */ `
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -78,92 +76,3 @@ float snoise(vec3 v) {
   return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
 }
 `;
-
-const VERTEX = /* glsl */ `
-varying vec3 vObj;
-void main() {
-  vObj = normalize(position);
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`;
-
-// Iso-lines of 3-octave FBM on the object-space direction over a lit/unlit
-// split. The terminator is a hard step (no glow, no atmosphere): the lit side
-// carries a faint tint of the survey colour, the night side is near-black with
-// dimmed lines. The contour field rotates slowly about Y.
-const FRAGMENT = /* glsl */ `
-precision highp float;
-uniform vec3 uLine;
-uniform vec3 uFill;
-uniform vec3 uLit;
-uniform vec3 uLight;
-uniform float uSeed;
-uniform float uBands;
-uniform float uSpin;
-uniform float uTime;
-varying vec3 vObj;
-${ASHIMA_SNOISE}
-float fbm(vec3 p) {
-  float a = 0.5;
-  float s = 0.0;
-  for (int i = 0; i < 3; i++) {
-    s += a * snoise(p);
-    p *= 2.03;
-    a *= 0.5;
-  }
-  return s;
-}
-void main() {
-  float ang = uTime * uSpin;
-  float c = cos(ang);
-  float sn = sin(ang);
-  vec3 q = vec3(c * vObj.x + sn * vObj.z, vObj.y, -sn * vObj.x + c * vObj.z);
-  float h = fbm(q * 1.35 + vec3(uSeed, uSeed * 0.37, uSeed * 0.11)) * 0.5 + 0.5;
-  float bands = h * uBands;
-  float d = abs(fract(bands) - 0.5) / max(fwidth(bands), 0.0001);
-  float line = 1.0 - smoothstep(0.0, 1.1, d);
-  float lit = smoothstep(-0.04, 0.06, dot(normalize(vObj), uLight));
-  vec3 base = mix(uFill, uLit, lit);
-  vec3 col = mix(base, uLine, line * mix(0.22, 0.9, lit));
-  gl_FragColor = vec4(col, 1.0);
-}
-`;
-
-export interface ContourOptions {
-  line: THREE.Color;
-  seed: number;
-  bands?: number;
-  spin?: number;
-  /** Unit vector from the body toward the light, in world space. */
-  light?: THREE.Vector3;
-}
-
-export function createContourMaterial(
-  opts: ContourOptions
-): THREE.ShaderMaterial {
-  const fill = new THREE.Color("#070A0D");
-  const lit = fill.clone().lerp(opts.line, 0.3);
-  return new THREE.ShaderMaterial({
-    vertexShader: VERTEX,
-    fragmentShader: FRAGMENT,
-    uniforms: {
-      uLine: { value: opts.line },
-      uFill: { value: fill },
-      uLit: { value: lit },
-      uLight: { value: (opts.light ?? new THREE.Vector3(0, 0.3, 1)).clone().normalize() },
-      uSeed: { value: opts.seed },
-      uBands: { value: opts.bands ?? 9 },
-      uSpin: { value: opts.spin ?? 0.04 },
-      uTime: { value: 0 },
-    },
-  });
-}
-
-/** Update a numeric uniform in place (called from frame loops). */
-export function setUniform(
-  material: THREE.ShaderMaterial,
-  name: string,
-  value: number
-) {
-  material.uniforms[name].value = value;
-}

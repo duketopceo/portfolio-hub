@@ -9,11 +9,14 @@
 
 .plate :global(.planet-node__core) {
   /* Hard terminator, no glow: the half facing the map centre is lit. */
-  background: linear-gradient(
-    var(--light-angle, 180deg),
-    #070a0d 0 46%,
-    color-mix(in srgb, var(--planet-color) 16%, #070a0d) 46%
-  );
+  background:
+    linear-gradient(var(--light-angle, 180deg), #070a0d 0 47%, transparent 47%),
+    linear-gradient(
+      var(--light-angle, 180deg),
+      var(--planet-low, #070a0d) 47%,
+      var(--planet-mid, var(--planet-color)) 72%,
+      var(--planet-high, var(--planet-color)) 100%
+    );
   border: 1px solid color-mix(in srgb, var(--planet-color) 55%, var(--color-text));
   box-shadow: none;
   transition:

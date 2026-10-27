@@ -46,6 +46,7 @@ export interface FramePolicy {
  * frames with DPR 1, no antialiasing and a throttled invalidate loop.
  */
 export function framePolicy(opts: {
+  /** On screen AND the tab is visible. */
   inView: boolean;
   software: boolean;
   dpr: [number, number];
@@ -57,4 +58,37 @@ export function framePolicy(opts: {
     antialias: !software,
     throttle: software && inView,
   };
+}
+
+export type PlanetQualityTier = "lite" | "full";
+
+/**
+ * Detail tier for the lit planet bodies. Phones and low-memory devices get
+ * "lite": coarser sphere meshes, no ring shadow on the planet, a lower DPR
+ * cap. The 3D scene still runs there; only the cost per frame changes.
+ */
+export function planetQuality(opts: {
+  coarsePointer: boolean;
+  deviceMemory?: number;
+}): PlanetQualityTier {
+  const lowMemory = opts.deviceMemory !== undefined && opts.deviceMemory <= 4;
+  return opts.coarsePointer || lowMemory ? "lite" : "full";
+}
+
+/** Chromium-only `navigator.deviceMemory` (GB, coarse), else undefined. */
+export function readDeviceMemory(): number | undefined {
+  if (typeof navigator === "undefined") return undefined;
+  const v = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+  return typeof v === "number" ? v : undefined;
+}
+
+/**
+ * True when the visitor should get the static survey plate instead of the 3D
+ * scene at all: Save-Data, or a device reporting 2 GB or less.
+ */
+export function shouldSkipScene(opts: {
+  saveData: boolean;
+  deviceMemory?: number;
+}): boolean {
+  return opts.saveData || (opts.deviceMemory !== undefined && opts.deviceMemory <= 2);
 }

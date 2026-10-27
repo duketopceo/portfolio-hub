@@ -50,6 +50,10 @@ All projects live in **`src/data/projects.ts`** — the single source of truth. 
 
 ---
 
+The five lead planets on `/` are 3D bodies described by a declarative
+`planetVisual` spec in each catalog JSON file. To add, restyle or swap a
+planet, see [docs/planets.md](docs/planets.md).
+
 ## Local development
 
 ```bash

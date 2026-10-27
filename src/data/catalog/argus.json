@@ -10,12 +10,15 @@
     "featured": true,
     "planetVisual": {
       "size": "lg",
-      "shape": "diamond",
+      "shape": "sphere",
       "color": "#F472B6",
       "rings": [
         {
-          "opacity": 0.3,
-          "tilt": -16
+          "opacity": 0.24,
+          "tilt": -16,
+          "inner": 1.45,
+          "outer": 1.78,
+          "bands": 1
         }
       ],
       "moons": [
@@ -27,7 +30,14 @@
           "label": "OpenRouter",
           "kind": "stack"
         }
-      ]
+      ],
+      "surface": "ice",
+      "seed": 31,
+      "tilt": 22,
+      "rotationSpeed": -0.07,
+      "atmosphere": {
+        "strength": 0.24
+      }
     },
     "demoUrl": "/projects/argus#demo",
     "media": {

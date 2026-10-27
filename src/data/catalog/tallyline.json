@@ -4,22 +4,56 @@
   "curated": {
     "displayName": "Tallyline",
     "tagline": "Self-hostable, agent-native issue tracker where humans and agents share one board",
-    "description": "Self-hostable, agent-native issue tracker — MIT-licensed Linear-class UX where humans and AI agents work the same board.",
+    "description": "Self-hostable, agent-native issue tracker where humans and AI agents work the same board. Issues move through one state machine whether a person or an agent moves them, and every change is written to an append-only event log with the actor's identity. Agents reach the board through an MCP server, a CLI with JSON output, or a REST API. AGPL-3.0, with the MCP server and CLI under MIT.",
     "category": "apps",
     "type": "platform",
-    "featured": false,
+    "featured": true,
+    "planetVisual": {
+      "size": "lg",
+      "shape": "sphere",
+      "color": "#34D399",
+      "surface": "rocky",
+      "seed": 11,
+      "tilt": 16,
+      "rotationSpeed": 0.08,
+      "atmosphere": {
+        "strength": 0.14
+      },
+      "rings": [],
+      "moons": [
+        {
+          "label": "MCP",
+          "kind": "stack"
+        },
+        {
+          "label": "Postgres",
+          "kind": "stack"
+        },
+        {
+          "label": "tallyline",
+          "kind": "live",
+          "href": "https://tallyline.app"
+        }
+      ]
+    },
+    "liveUrl": "https://tallyline.app",
     "techStack": [
       "TypeScript",
-      "MIT",
-      "Self-Hosted"
+      "Next.js",
+      "Hono",
+      "Postgres",
+      "MCP",
+      "Docker"
     ],
     "private": false,
     "highlights": [
-      "Humans and agents operate the same board",
-      "Linear-class interface, MIT licensed",
-      "Self-hostable with no vendor dependency"
+      "Humans and agents move issues through one state machine, with an append-only event log attributed to the actor",
+      "Three ways in for agents: an MCP server (stdio and Streamable HTTP), a CLI with --json output, and a REST API with an OpenAPI document",
+      "Keyboard-first web app: issue list, board, triage inbox, review queue, cycles, insights and a roadmap timeline",
+      "Self-hostable with Docker Compose and Postgres; AGPL-3.0, MCP server and CLI under MIT",
+      "v1.0.0 shipped 2026-10-10"
     ],
-    "architecture": "Web board → issue store → agent API surface → human and agent actors on one model",
+    "architecture": "Web UI, agents (MCP, CLI, REST), GitHub App and Slack → Hono API (state machine, auth, scopes) → Postgres (issues + event log) → signed webhooks and agent harness dispatch",
     "media": {
       "release": "to-record",
       "demo": "to-record"

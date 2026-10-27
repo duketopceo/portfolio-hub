@@ -40,7 +40,7 @@ describe("homepage orbit split", () => {
     expect(resolveOrbitTier({ slug: "homelab", featured: false })).toBe(
       "secondary"
     );
-    expect(resolveOrbitTier({ slug: "khan", featured: true })).toBe(
+    expect(resolveOrbitTier({ slug: "tallyline", featured: true })).toBe(
       "featured"
     );
   });
