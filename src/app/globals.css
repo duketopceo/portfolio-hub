@@ -946,142 +946,6 @@
   max-width: 38rem;
 }
 
-.home-lead__grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 0.75rem;
-}
-
-.home-lead__card {
-  --system-accent: var(--color-accent);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  min-height: 15rem;
-  padding: clamp(1rem, 2vw, 1.4rem);
-  color: var(--color-text);
-  text-decoration: none;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition:
-    border-color var(--transition),
-    transform var(--transition),
-    background var(--transition);
-}
-
-.home-lead__card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  background: var(--system-accent);
-}
-
-.home-lead__card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(135deg, var(--system-accent) 0, transparent 34%) top left / 100% 100% no-repeat;
-  opacity: 0.08;
-}
-
-.home-lead__card:hover {
-  border-color: var(--system-accent);
-  background: var(--color-surface-2);
-  transform: translateY(-2px);
-}
-
-.home-lead__card:nth-child(-n + 2) {
-  grid-column: span 3;
-}
-
-.home-lead__card:nth-child(n + 3) {
-  grid-column: span 2;
-}
-
-.home-lead__meta,
-.home-lead__stack,
-.home-lead__cta {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.home-lead__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  color: var(--color-text-faint);
-}
-
-.home-lead__meta span:not(.home-lead__reg) + span:not(.home-lead__reg)::before {
-  content: "·";
-  margin-right: 0.45rem;
-  color: var(--system-accent);
-}
-
-.home-lead__reg {
-  margin-left: auto;
-  letter-spacing: 0.06em;
-}
-
-.home-lead__proof {
-  position: relative;
-  z-index: 1;
-  color: var(--color-text-faint);
-  font-size: var(--text-sm);
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.home-lead__name {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.4rem);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1;
-}
-
-.home-lead__tagline {
-  position: relative;
-  z-index: 1;
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
-
-.home-lead__stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: auto;
-  color: var(--color-text-faint);
-}
-
-.home-lead__stack span {
-  padding: 0.3rem 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-surface-2) 72%, transparent);
-}
-
-.home-lead__cta {
-  color: var(--system-accent);
-}
-
 .home-transmissions {
   padding: clamp(1rem, 2.5vw, 1.5rem);
   background: var(--color-surface);
@@ -1095,21 +959,9 @@
   overflow: visible;
 }
 
-@media (max-width: 900px) {
-  .home-lead__card:nth-child(-n + 2),
-  .home-lead__card:nth-child(n + 3) {
-    grid-column: span 3;
-  }
-}
-
 @media (max-width: 640px) {
   .home-flow {
     gap: 2.5rem;
-  }
-
-  .home-lead__card:nth-child(-n + 2),
-  .home-lead__card:nth-child(n + 3) {
-    grid-column: 1 / -1;
   }
 }
 
@@ -5948,4 +5800,908 @@ header[class*="sticky"],
 /* GitHub permalink anchors in embedded READMEs are noise on our origin. */
 .prose-readme .anchor {
   display: none;
+}
+
+/* ═══ Planet map (home) — restored from the solar-system module ═══ */
+
+
+.corner-ticks--accent { --ct-color: rgba(45, 212, 191, 0.55); }
+
+/* ═══════════════════════════════════════════════════════
+   SOLAR SYSTEM NAV (homepage orbit)
+   ═══════════════════════════════════════════════════════ */
+
+.solar-section {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.home-solar {
+  padding-top: clamp(0.35rem, 1.2vw, 0.75rem);
+  padding-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.solar-system__intro {
+  margin-bottom: clamp(0.35rem, 1vw, 0.65rem);
+}
+
+.solar-system {
+  outline: none;
+}
+
+.solar-system:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-lg);
+}
+
+.solar-system__heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.solar-system__hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  max-width: 48ch;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.solar-system__stage {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+/* Full-bleed “universe” — main focal area of the homepage */
+.solar-system__stage--universe {
+  width: 100%;
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: clamp(28rem, 76vh, 56rem);
+  border-radius: 0;
+  padding: clamp(0.75rem, 2vw, 1.25rem) 0;
+}
+
+/* ── Elliptical orbit lines (reference-style) ──────────── */
+.solar-orbit-decor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(98vw, 72rem);
+  height: min(52vw, 36rem);
+  max-height: min(70vh, 40rem);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.solar-orbit-decor__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.solar-orbit-line {
+  fill: none;
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.solar-orbit-line--a {
+  stroke: rgba(228, 234, 240, 0.14);
+  animation: solar-orbit-shimmer 16s ease-in-out infinite;
+}
+
+.solar-orbit-line--b {
+  stroke: rgba(45, 212, 191, 0.22);
+  stroke-dasharray: 2 6;
+  animation: solar-orbit-shimmer 20s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+.solar-orbit-line--c {
+  stroke: rgba(228, 234, 240, 0.08);
+  stroke-dasharray: 12 8;
+  animation: solar-orbit-shimmer 26s ease-in-out infinite;
+  animation-delay: -9s;
+}
+
+/* ── R3F orbital scene — canvas layer inside the stage ── */
+.solar-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  /* Fades in over the still-visible SSR plate — no empty-stage flash */
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.solar-scene--ready {
+  opacity: 1;
+}
+
+.solar-scene canvas {
+  pointer-events: none;
+}
+
+/* ── Survey reticle (replaces the sun) — crosshair origin marker ── */
+.solar-sun-stack {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(30vw, 15rem);
+  height: min(30vw, 15rem);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.solar-sun {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+/* Outer reticle ring — hairline, breathing scale */
+.solar-sun--halo {
+  inset: 12%;
+  border: 1px solid rgba(228, 234, 240, 0.14);
+  border-radius: 50%;
+  background: none;
+  animation: reticle-breathe 14s ease-in-out infinite;
+}
+
+/* Inner reticle: center dot + crosshair ticks */
+.solar-sun--core {
+  inset: 38%;
+  border: 1px solid rgba(228, 234, 240, 0.2);
+  border-radius: 50%;
+  background: rgba(45, 212, 191, 0.05);
+  animation: reticle-breathe 12s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+/* Crosshair hairs through the origin */
+.solar-sun--core::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 260%;
+  height: 260%;
+  transform: translate(-50%, -50%);
+  background:
+    linear-gradient(to bottom, transparent calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to right, transparent calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  pointer-events: none;
+}
+
+.solar-sun--core::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px rgba(45, 212, 191, 0.7);
+}
+
+.solar-planets {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  z-index: 3;
+  /* Planets stay clickable; center deck sits above and wins overlaps */
+  pointer-events: none;
+  /* Orbit radii in rem — switched by media query so the server-rendered
+     plate is viewport-correct before hydration */
+  --orbit-rx: 23rem;
+  --orbit-ry: 11.5rem;
+}
+
+.solar-system__stage--crowded .solar-planets {
+  --orbit-rx: 25rem;
+  --orbit-ry: 12.5rem;
+}
+
+.solar-planet-arm {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: center center;
+  pointer-events: none;
+  /* --orbit-x/--orbit-y are unitless direction cosines set inline per arm */
+  transform: translate(
+    calc(var(--orbit-x, 0) * var(--orbit-rx)),
+    calc(var(--orbit-y, 0) * var(--orbit-ry))
+  );
+}
+
+/* Server-rendered FIG.01 plate — sibling of the scene layer. Visible in
+   SSR HTML and before hydration; visibility:hidden pulls its links out of
+   tab order and the a11y tree once the live scene is ready. */
+.solar-plate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.solar-plate--hidden {
+  visibility: hidden;
+  /* Delay the flip so the scene finishes its fade-in over the plate */
+  transition: visibility 0s linear 0.3s;
+}
+
+.solar-center {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+  pointer-events: auto;
+  isolation: isolate;
+}
+
+/* 3D “deck” — dossier card snaps in from the direction you navigated */
+.solar-center--deck {
+  perspective: 1100px;
+  perspective-origin: 50% 42%;
+}
+
+.solar-focus-card-rotator {
+  transform-style: preserve-3d;
+  animation: solar-card-deck-snap 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  z-index: 2;
+}
+
+.solar-nav-btn {
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
+}
+
+.solar-nav-btn:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.solar-nav-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.solar-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.solar-focus-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.95rem 1.2rem;
+  min-width: 0;
+  max-width: 19.5rem;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--color-border-strong);
+  text-decoration: none;
+  color: var(--color-text);
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+  transition:
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.solar-focus-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.solar-focus-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.solar-focus-card__eyebrow {
+  font-size: var(--text-xs);
+  color: var(--focus-accent, var(--color-accent));
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.solar-focus-card__id {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.solar-focus-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.solar-focus-card__tagline {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.solar-focus-card__cta {
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  margin-top: 0.3rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.solar-empty {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-orbit-line {
+    animation: none;
+    stroke-opacity: 0.55;
+  }
+
+  .solar-sun--halo,
+.solar-sun--core {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .solar-sun--core::before {
+    animation: none;
+    opacity: 0.6;
+    transform: none;
+  }
+
+  .solar-sun--core::after {
+    animation: none;
+  }
+
+  .solar-focus-card-rotator {
+    animation: none;
+  }}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+
+  /* Solar orbit — keep universe tall on phones; touch targets */
+  .solar-system__stage--universe {
+    min-height: clamp(22rem, 68vh, 44rem);
+    padding: 0.5rem 0;
+  }
+
+  .solar-sun-stack {
+    width: min(48vw, 14rem);
+    height: min(48vw, 14rem);
+  }
+
+  .solar-orbit-decor {
+    width: 19rem;
+    height: 10.5rem;
+    max-height: none;
+  }
+
+  /* Plate orbit radii — matches useOrbitRadiiRem's mobile values */
+  .solar-planets {
+    --orbit-rx: 8.5rem;
+    --orbit-ry: 4.5rem;
+  }
+
+  .solar-system__stage--crowded .solar-planets {
+    --orbit-rx: 10rem;
+    --orbit-ry: 5.5rem;
+  }
+
+  .solar-system__hint {
+    margin-bottom: 0;
+  }
+
+  .solar-nav-btn {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1.35rem;
+  }
+
+  /* Mobile: card takes its own row, ‹ › pair up beneath it */
+  .solar-center--deck .solar-focus-card-rotator {
+    order: -1;
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .solar-focus-card {
+    max-width: min(100%, 15rem);
+    min-width: 0;
+  }
+
+  /* Markers shrink to core + registry id on phones — names would push
+     the link boxes off-stage. Name stays in the a11y name (clipped, not
+     display:none) and resurfaces as a chip on hover/focus. */
+  .planet-node {
+    position: relative;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.4rem;
+    justify-content: center;
+  }
+
+  .planet-node__name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .planet-node:hover .planet-node__name,
+.planet-node:focus-visible .planet-node__name,
+.planet-node--focused .planet-node__name {
+    width: auto;
+    height: auto;
+    clip-path: none;
+    overflow: visible;
+    left: 50%;
+    top: calc(100% - 0.35rem);
+    transform: translateX(-50%);
+    padding: 0.15rem 0.45rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    z-index: 6;
+    white-space: nowrap;
+  }
+
+  .planet-node__label {
+    gap: 0.2rem;
+  }
+
+  .planet-node__id {
+    font-size: var(--text-xs);
+  }}
+
+/* Solar system hint — already 11px but ensure it */
+.solar-system__hint {
+  font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CATALOG BELT — grouped secondary registry
+   ═══════════════════════════════════════════════════════ */
+
+.solar-system--primary {
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PLANET NODE — modular orbit worlds (primary + secondary)
+   ═══════════════════════════════════════════════════════ */
+
+.planet-node-wrap {
+  position: relative;
+  display: inline-block;
+  transform: translate(-50%, -50%);
+}
+
+.planet-node {
+  --planet-base: 12px;
+  position: relative;
+  --planet-size: calc(var(--planet-base) * var(--planet-scale, 1));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: max-content;
+  max-width: 7.5rem;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  padding: 0.35rem;
+  border-radius: var(--radius-md);
+  transition: color var(--transition);
+  pointer-events: auto;
+}
+
+.planet-node--secondary {
+  --planet-base: 9px;
+  max-width: 5.5rem;
+  gap: 0.28rem;
+  padding: 0.2rem;
+}
+
+.planet-node--label-above {
+  flex-direction: column-reverse;
+}
+
+.planet-node--label-below {
+  flex-direction: column;
+}
+
+.planet-node:hover,
+.planet-node:focus-visible {
+  color: var(--color-text);
+  outline: none;
+}
+
+.planet-node__body {
+  position: relative;
+  width: calc(var(--planet-size) * 2.8);
+  height: calc(var(--planet-size) * 2.8);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+/* Crosshair hairs behind the marker — survey target */
+.planet-node__body::before,
+.planet-node__body::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgba(228, 234, 240, 0.22);
+  transform: translate(-50%, -50%);
+  transition: background var(--transition);
+}
+
+.planet-node__body::before {
+  width: 100%;
+  height: 1px;
+}
+
+.planet-node__body::after {
+  width: 1px;
+  height: 100%;
+}
+
+.planet-node__core {
+  position: relative;
+  z-index: 2;
+  width: var(--planet-size);
+  height: var(--planet-size);
+  background: var(--color-surface-2);
+  border: 1.5px solid color-mix(in srgb, var(--planet-color) 70%, #e4eaf0);
+  box-shadow: none;
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.planet-node__core--sphere {
+  border-radius: 50%;
+}
+
+.planet-node__core--hex {
+  border-radius: 2px;
+  clip-path: polygon(
+    25% 0%,
+    75% 0%,
+    100% 50%,
+    75% 100%,
+    25% 100%,
+    0% 50%
+  );
+}
+
+.planet-node__core--diamond {
+  border-radius: 2px;
+  transform: rotate(45deg) scale(0.88);
+}
+
+.planet-node__core--cube {
+  border-radius: 3px;
+  transform: rotate(-6deg);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--planet-color) 90%, white),
+    var(--planet-color) 50%,
+    color-mix(in srgb, var(--planet-color) 65%, black)
+  );
+}
+
+.planet-node__ring {
+  position: absolute;
+  inset: 8%;
+  border: 1px solid var(--ring-color, var(--planet-color));
+  border-radius: 50%;
+  opacity: calc(var(--ring-opacity, 0.3) * 0.6);
+  transform: rotate(var(--ring-tilt, 0deg)) scaleX(1.35);
+  pointer-events: none;
+}
+
+.planet-node__ring:nth-child(2) {
+  inset: 2%;
+  transform: rotate(calc(var(--ring-tilt, 0deg) + 18deg)) scaleX(1.55);
+}
+
+.planet-node__moons {
+  position: absolute;
+  top: 0.35rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--planet-size) * 2.8);
+  height: calc(var(--planet-size) * 2.8);
+  pointer-events: none;
+}
+
+.planet-node--secondary .planet-node__moons,
+.planet-node-wrap:has(.planet-node--secondary) .planet-node__moons {
+  top: 0.2rem;
+}
+
+.planet-node__moon-link {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+  text-decoration: none;
+}
+
+.planet-node__moon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--moon-angle, 0deg)) translateX(calc(var(--planet-size) * 1.35))
+    rotate(calc(-1 * var(--moon-angle, 0deg)));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.planet-node__moon-dot {
+  width: max(4px, calc(var(--planet-size) * 0.32));
+  height: max(4px, calc(var(--planet-size) * 0.32));
+  border-radius: 50%;
+  background: var(--planet-color);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--planet-color) 50%, transparent);
+  opacity: 0.85;
+}
+
+.planet-node__moon--live .planet-node__moon-dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent-muted);
+}
+
+.planet-node__moon-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  white-space: nowrap;
+  max-width: 3.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.planet-node-wrap:hover .planet-node__moon-label,
+.planet-node:focus-visible ~ .planet-node__moons .planet-node__moon-label,
+.planet-node-wrap:has(.planet-node--focused) .planet-node__moon-label {
+  opacity: 0.9;
+}
+
+.planet-node__label {
+  /* Out of flow: the scene anchors the wrap's center to the orbit point —
+     the label must not offset the planet body from that anchor. */
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-align: center;
+  line-height: 1.25;
+  opacity: 0.9;
+}
+
+.planet-node--label-above .planet-node__label {
+  top: auto;
+  bottom: 100%;
+}
+
+/* Catalog index above the name — the registry voice */
+.planet-node__id {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--transition);
+  white-space: nowrap;
+}
+
+.planet-node__name {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.planet-node--secondary .planet-node__label {
+  font-size: var(--text-xs);
+}
+
+.planet-node--secondary .planet-node__id {
+  font-size: var(--text-xs);
+}
+
+.planet-node--focused .planet-node__id,
+.planet-node:hover .planet-node__id,
+.planet-node:focus-visible .planet-node__id {
+  color: var(--color-accent);
+}
+
+.planet-node--focused .planet-node__body::before,
+.planet-node--focused .planet-node__body::after,
+.planet-node:hover .planet-node__body::before,
+.planet-node:hover .planet-node__body::after {
+  background: rgba(45, 212, 191, 0.5);
+}
+
+.planet-node--focused .planet-node__core {
+  transform: scale(1.15);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.planet-node--focused .planet-node__core--diamond {
+  transform: rotate(45deg) scale(1.02);
+}
+
+.planet-node--focused .planet-node__core--cube {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+@media (hover: hover) {
+  .planet-node:hover .planet-node__core {
+    transform: scale(1.1);
+    border-color: var(--color-accent);
+  }
+
+  .planet-node:hover .planet-node__core--diamond {
+    transform: rotate(45deg) scale(0.96);
+  }}
+
+@media (max-width: 640px) {
+  .planet-node--primary {
+    --planet-base: 10px;
+    max-width: 4.5rem;
+  }
+
+  .planet-node--secondary {
+    --planet-base: 7px;
+    max-width: 3.75rem;
+  }
+
+  .planet-node--secondary .planet-node__label {
+    font-size: var(--text-xs);
+    opacity: 0.92;
+  }
+
+  .planet-node__body {
+    width: calc(var(--planet-size) * 2.4);
+    height: calc(var(--planet-size) * 2.4);
+  }
+
+  .planet-node__moon-label {
+    display: none;
+  }
+
+  .planet-node__ring {
+    opacity: calc(var(--ring-opacity, 0.3) * 0.85);
+  }}
+
+@media (prefers-reduced-motion: reduce) {
+  .planet-node__core {
+    animation: none;
+  }
+
+  .planet-node--focused .planet-node__core,
+.planet-node:hover .planet-node__core {
+    transform: none;
+  }}
+
+@keyframes solar-orbit-shimmer {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@keyframes reticle-breathe {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+@keyframes solar-card-deck-snap {
+  from {
+    opacity: 0.72;
+    transform: rotateY(calc(-15deg * var(--solar-flip-dir, 1))) translateZ(-14px)
+      scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0) translateZ(0) scale(1);
+  }
 }

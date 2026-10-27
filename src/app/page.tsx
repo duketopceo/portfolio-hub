@@ -4,7 +4,8 @@ import { getHomepageOrbitProjects } from "@/lib/project-completeness";
 import { getHomepageActivityShowcase } from "@/lib/github-activity";
 import { toClientActivityPayload } from "@/lib/activity-aggregate";
 import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
-import { HomeLeadSystems } from "@/components/HomeLeadSystems";
+import SolarSystemNav from "@/components/SolarSystemNav";
+import { toClientProject } from "@/lib/client-project";
 import { PageShell } from "@/components/design";
 
 export const revalidate = 3600;
@@ -51,9 +52,16 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* 2 — the five lead systems, as the planet map */}
+      <>
+        <SolarSystemNav
+          key={lead[0]?.slug ?? "orbit"}
+          projects={lead.map(toClientProject)}
+          registryIndexOf={leadIndex}
+        />
+      </>
+
       <PageShell className="home-flow" measure="wide">
-        {/* 2 — the five lead systems */}
-        <HomeLeadSystems projects={lead} registryIndexOf={leadIndex} />
 
         {/* 3 — compact activity strip */}
         <section

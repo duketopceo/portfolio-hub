@@ -53,6 +53,8 @@ export default function OpenRouterDashboard() {
 
     // Restore key from sessionStorage if present (auto-cleared on tab close)
     const saved = sessionStorage.getItem(SESSION_KEY);
+    // sessionStorage is client-only, so the key can only be restored after mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (saved) setKey(saved);
   }, []);
 

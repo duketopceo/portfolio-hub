@@ -181,14 +181,14 @@ test.describe("Portfolio visual acceptance matrix", () => {
     }
   });
 
-  test("default motion renders pixels in the home WebGL layer", async ({
+  test("default motion renders pixels in every home WebGL layer", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     const canvases = page.locator("canvas");
-    await expect(canvases).toHaveCount(1);
+    await expect(canvases).toHaveCount(2);
 
-    for (let index = 0; index < 1; index += 1) {
+    for (let index = 0; index < 2; index += 1) {
       const canvas = canvases.nth(index);
       await canvas.scrollIntoViewIfNeeded();
       await expect(canvas).toBeVisible();
@@ -252,11 +252,13 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(1);
   });
 
-  test("home shows three blocks: intro, five lead systems, activity", async ({
+  test("home shows three blocks: intro, planet map, activity", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
-    await expect(page.locator(".home-lead__card")).toHaveCount(5);
+    await expect(page.locator(".solar-system")).toHaveCount(1);
+    await expect(page.locator('.solar-system a[href^="/projects/"]').first()).toBeAttached();
+    await expect(page.locator(".home-lead__card")).toHaveCount(0);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
     await expect(page.locator(".home-catalog__item")).toHaveCount(0);
     await expect(page.locator(".sheet__titleblock")).toHaveCount(0);
