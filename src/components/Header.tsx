@@ -2,30 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MenuIcon, CloseIcon } from "./Icons";
 import { headerNavItems as navItems, GITHUB_URL } from "@/data/site-nav";
-
-/** Live UTC clock — survey status line. */
-function useUtcClock() {
-  const [now, setNow] = useState<string>("--:--:--");
-  useEffect(() => {
-    const tick = () => {
-      const d = new Date();
-      const p = (n: number) => String(n).padStart(2, "0");
-      setNow(`${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}Z`);
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-  return now;
-}
 
 export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const clock = useUtcClock();
 
   if (pathname?.startsWith("/podcast")) return null;
 
@@ -34,25 +17,6 @@ export default function Header() {
 
   return (
     <header className="site-header sticky top-0 z-50">
-      {/* Status strip — field operation line */}
-      <div className="site-header__status">
-        <div className="cosmic-page flex items-center justify-between gap-4">
-          <span className="site-header__status-item site-header__status-live">
-            <span className="site-header__livedot" aria-hidden="true" />
-            FIELD OPERATION: ACTIVE
-          </span>
-          <span className="site-header__status-item hidden sm:inline">
-            PROVO, UT / REMOTE
-          </span>
-          <span className="site-header__status-item hidden md:inline">
-            SECTOR: LDK-01
-          </span>
-          <span className="site-header__status-item" aria-label="UTC time">
-            {clock}
-          </span>
-        </div>
-      </div>
-
       {/* Nav row */}
       <div className="site-header__main">
         <div className="cosmic-page">

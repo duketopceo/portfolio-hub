@@ -151,7 +151,39 @@ export function isFocalSlug(slug: string): boolean {
 
 /** Body radius in scene units (~rem) for the canvas survey plates. */
 export function planetBodyRadius(size: PlanetSize): number {
-  return 0.42 * SIZE_SCALE[size];
+  return BODY_RADIUS_REM * SIZE_SCALE[size];
+}
+
+/** Base body radius (rem). The DOM plate's `--planet-base` is 2x this, so the
+ *  static plate and the live scene draw the same disc. */
+export const BODY_RADIUS_REM = 0.95;
+
+/** Per-body survey-surface parameters, deterministic from the slug. */
+export interface PlanetSurface {
+  /** Noise phase so no two bodies share a contour field. */
+  seed: number;
+  /** Contour bands across the body (4..6). */
+  bands: number;
+  /** Rotation speed of the contour field (rad/s, slow). */
+  spin: number;
+}
+
+function slugHash(slug: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < slug.length; i++) {
+    h ^= slug.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+export function planetSurfaceParams(slug: string): PlanetSurface {
+  const h = slugHash(slug);
+  return {
+    seed: ((h % 1000) / 1000) * 40 + 1,
+    bands: 4 + (h >>> 10) % 3,
+    spin: 0.025 + (((h >>> 16) % 100) / 100) * 0.03,
+  };
 }
 
 const LIMB_SIDES: Record<PlanetShape, { sides: number; offset: number }> = {

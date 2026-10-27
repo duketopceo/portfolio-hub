@@ -10,6 +10,7 @@ import {
   shortPlanetLabel,
   type OrbitVisualTier,
 } from "@/lib/planet-visual";
+import { isProjectLive } from "@/lib/deployments";
 import { LockIcon } from "@/components/Icons";
 import styles from "./survey-plate.module.css";
 
@@ -110,12 +111,14 @@ export function PlanetNode({
         : " planet-node--label-below";
 
   const focal = isFocalSlug(project.slug);
+  const live = isProjectLive(project);
 
   return (
     <span
       className={`planet-node-wrap ${styles.plate}`}
       style={planetVisualStyle(visual, index)}
       data-focal={focal ? "true" : undefined}
+      data-live={live ? "true" : undefined}
     >
       <Link
         href={href}
@@ -131,6 +134,8 @@ export function PlanetNode({
         data-umami-event-tier={tier}
       >
         <span className="planet-node__body">
+          <span className="planet-node__reticle" aria-hidden />
+          {live && <span className="planet-node__live-ring" aria-hidden />}
           {visual.rings.map((ring, i) => (
             <span
               key={`ring-${i}`}
@@ -160,8 +165,11 @@ export function PlanetNode({
             ))}
         </span>
         <span className="planet-node__label">
-          <span className="planet-node__id" aria-hidden="true">
-            CI-{String(index + 1).padStart(2, "0")}
+          <span className="planet-node__id">
+            <span aria-hidden="true">
+              CI-{String(index + 1).padStart(2, "0")}
+            </span>
+            {live && <span className="planet-node__live">Live</span>}
           </span>
           <span className="planet-node__name">
             {label}

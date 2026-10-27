@@ -5,9 +5,11 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useReducer,
   useRef,
   Component,
   type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
@@ -17,6 +19,13 @@ import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/category-meta";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { PlanetNode } from "@/components/planet/PlanetNode";
+import { orbitRadiiRem } from "@/components/scene/orbit-layout";
+import {
+  TOUR_INTERVAL_MS,
+  swipeDirection,
+  tourReducer,
+  tourShouldAdvance,
+} from "@/components/scene/orbit-tour";
 
 const SceneFrame = dynamic(() => import("@/components/scene/SceneFrame"), {
   ssr: false,
@@ -43,32 +52,65 @@ class SceneLoadBoundary extends Component<
   }
 }
 
-/** Ellipse radii (rem) for the live scene — widen slightly when orbit is
- *  crowded. The SSR plate mirrors these values via CSS --orbit-rx/--orbit-ry
- *  on .solar-planets in globals.css — keep the two in sync. */
-function useOrbitRadiiRem(count: number) {
-  const mobile = useMediaQuery("(max-width: 640px)");
-  const crowded = count > 18;
-  if (mobile) return crowded ? { rx: 10, ry: 5.5 } : { rx: 8.5, ry: 4.5 };
-  return crowded ? { rx: 25, ry: 12.5 } : { rx: 23, ry: 11.5 };
+function useStageRadiiRem(stageRef: { current: HTMLDivElement | null }) {
+  const [width, setWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const read = () => setWidth(el.clientWidth);
+    read();
+    const ro = new ResizeObserver(read);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [stageRef]);
+  return width === null ? orbitRadiiRem(1280) : orbitRadiiRem(width);
+}
+
+/** True while the element intersects the viewport (optimistic until measured). */
+function useInView(ref: { current: HTMLElement | null }) {
+  const [inView, setInView] = useState(true);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.2,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
+  return inView;
 }
 
 interface SolarSystemNavProps {
   projects: EnrichedProject[];
   /** Registry numbers aligned to `projects` — source-order catalog position. */
   registryIndexOf?: number[];
+  /** Server-rendered hero copy, placed beside the stage on wide screens. */
+  children?: ReactNode;
 }
 
-export default function SolarSystemNav({ projects, registryIndexOf }: SolarSystemNavProps) {
+export default function SolarSystemNav({ projects, registryIndexOf, children }: SolarSystemNavProps) {
   const [focus, setFocus] = useState({ index: 0, dir: 1 });
   const [sceneReady, setSceneReady] = useState(false);
   const plateRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const motionOk = !useMediaQuery("(prefers-reduced-motion: reduce)", true);
+  const inView = useInView(sectionRef);
+  const [tour, dispatchTour] = useReducer(tourReducer, "running");
+  const [pointerInside, setPointerInside] = useState(false);
+  const [focusInside, setFocusInside] = useState(false);
+  const swipe = useRef<{ x: number; y: number } | null>(null);
+  const suppressClick = useRef(false);
   // Teardown for a deferred swap: the focusout listener waiting for focus to
   // leave the plate. Cleared when the scene reports not-ready and on unmount,
   // so a scene that dies mid-handoff can never re-hide the plate over itself.
   const pendingSwapRef = useRef<(() => void) | null>(null);
+  // The rAF poll that waits for overlay markers; cancelled with the swap so a
+  // scene lost mid-poll can never hide the plate afterwards.
+  const pollRafRef = useRef<number | null>(null);
   const n = projects.length;
-  const { rx, ry } = useOrbitRadiiRem(n);
+  const { rx, ry } = useStageRadiiRem(stageRef);
 
   // Unitless direction cosines — SSR-stable (pure function of index/count);
   // the plate multiplies them by CSS --orbit-rx/--orbit-ry so its geometry
@@ -124,6 +166,10 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
   const clearPendingSwap = useCallback(() => {
     pendingSwapRef.current?.();
     pendingSwapRef.current = null;
+    if (pollRafRef.current !== null) {
+      cancelAnimationFrame(pollRafRef.current);
+      pollRafRef.current = null;
+    }
   }, []);
 
   useEffect(() => clearPendingSwap, [clearPendingSwap]);
@@ -156,8 +202,8 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
             setSceneReady(true);
             return;
           }
-          const onFocusOut = () => {
-            if (!plate.contains(document.activeElement)) {
+          const onFocusOut = (e: FocusEvent) => {
+            if (!plate.contains(e.relatedTarget as Node | null)) {
               clearPendingSwap();
               setSceneReady(true);
             }
@@ -175,42 +221,97 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
       }
       let tries = 0;
       const poll = () => {
+        pollRafRef.current = null;
         if (overlayHasMarkers()) {
           commit();
           return;
         }
         if (++tries > 120) return; // markers never mounted: keep the plate
-        requestAnimationFrame(poll);
+        pollRafRef.current = requestAnimationFrame(poll);
       };
-      requestAnimationFrame(poll);
+      pollRafRef.current = requestAnimationFrame(poll);
     },
     [clearPendingSwap, findLiveMarker]
   );
 
+  // Tour: advance focus on a timer while every gate is open. Changing focus
+  // here only updates state; it never moves DOM focus.
+  const engaged = pointerInside || focusInside;
+  useEffect(() => {
+    if (!tourShouldAdvance({ state: tour, inView, engaged, motionOk })) return;
+    const id = window.setInterval(() => go(1), TOUR_INTERVAL_MS);
+    return () => window.clearInterval(id);
+  }, [tour, inView, engaged, motionOk, go]);
+
+  // Marker link for project i: the live overlay once the scene owns the
+  // stage, otherwise the SSR plate.
+  const markerFor = useCallback(
+    (i: number) => {
+      const href = `/projects/${projects[i]?.slug}`;
+      const root = sectionRef.current;
+      if (!root) return null;
+      const live = root.querySelector<HTMLElement>(`.scene-overlay a[href="${href}"]`);
+      return live ?? root.querySelector<HTMLElement>(`.solar-plate a[href="${href}"]`);
+    },
+    [projects]
+  );
+
   const onKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        go(-1);
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        go(1);
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const delta = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
+      if (delta === 0 || n === 0) return;
+      e.preventDefault();
+      go(delta);
+      // Arrow keys on a marker move DOM focus with the selection, so the
+      // roving tab stop and the focused element never diverge.
+      if ((e.target as HTMLElement).closest(".planet-node")) {
+        const next = (safeFocusIndex + delta + n) % n;
+        requestAnimationFrame(() => markerFor(next)?.focus());
       }
     },
-    [go]
+    [go, n, safeFocusIndex, markerFor]
   );
+
+  // Any use of the map ends the tour; the tour's own button does not.
+  const onInteract = useCallback((e: { target: EventTarget }) => {
+    if ((e.target as HTMLElement).closest?.("[data-tour-control]")) return;
+    dispatchTour("interact");
+  }, []);
+
+  const onStagePointerDown = (e: ReactPointerEvent<HTMLElement>) => {
+    swipe.current =
+      e.pointerType === "mouse" ? null : { x: e.clientX, y: e.clientY };
+  };
+  const onStagePointerUp = (e: ReactPointerEvent<HTMLElement>) => {
+    const start = swipe.current;
+    swipe.current = null;
+    if (!start) return;
+    const dir = swipeDirection(e.clientX - start.x, e.clientY - start.y);
+    if (dir === 0) return;
+    go(dir);
+    // The gesture can end on a marker link; swallow the click that follows.
+    suppressClick.current = true;
+    window.setTimeout(() => {
+      suppressClick.current = false;
+    }, 350);
+  };
 
   if (n === 0) {
     return (
-      <p className="solar-empty" role="status">
-        No repositories in orbit yet.
-      </p>
+      <section className="poster">
+        <div className="poster__copy">{children}</div>
+        <p className="solar-empty" role="status">
+          No repositories in orbit yet.
+        </p>
+      </section>
     );
   }
 
   const focused = projects[safeFocusIndex];
   const meta = categoryMeta[focused.category];
   const accent = catColors[focused.category] || "#2DD4BF";
+  const focusedNumber = (registryIndexOf?.[safeFocusIndex] ?? safeFocusIndex) + 1;
 
   // Same node in the SSR plate and the live overlay — identical semantics
   // so the plate→scene swap is invisible to focus and tab order.
@@ -229,26 +330,49 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
 
   return (
     <section
-      className="solar-system solar-section home-solar solar-system--primary"
-      tabIndex={0}
+      ref={sectionRef}
+      className="poster solar-system solar-system--primary"
       onKeyDown={onKeyDown}
+      onKeyDownCapture={onInteract}
+      onPointerDownCapture={onInteract}
+      onTouchStartCapture={onInteract}
+      onFocusCapture={(e) =>
+        // Only the map itself counts as "engaged"; the tour's own button and
+        // the readout controls must not hold the tour back after Play.
+        setFocusInside(!!(e.target as HTMLElement).closest(".planet-node"))
+      }
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setFocusInside(false);
+        }
+      }}
       aria-labelledby="solar-system-heading"
     >
-      <div className="cosmic-page solar-system__intro">
-        <h2 id="solar-system-heading" className="solar-system__heading">
-          <span className="reg-label reg-label--accent">Fig. 01</span> — Primary orbit
-        </h2>
-        <p className="solar-system__hint">
-          {n} lead bodies under survey. Arrow keys or ‹ › to cycle —
-          select a marker for the survey file.
-        </p>
-      </div>
+      <h2 id="solar-system-heading" className="sr-only">
+        Lead systems orbit map
+      </h2>
+
+      <div className="poster__copy">{children}</div>
 
       <div
-        className={`solar-system__stage solar-system__stage--universe${
-          n > 18 ? " solar-system__stage--crowded" : ""
-        }`}
+        ref={stageRef}
+        role="group"
+        aria-label="Lead systems, one marker per project"
+        className="solar-system__stage solar-system__stage--universe"
+        onPointerEnter={() => setPointerInside(true)}
+        onPointerLeave={() => setPointerInside(false)}
+        onPointerDown={onStagePointerDown}
+        onPointerUp={onStagePointerUp}
+        onClickCapture={(e) => {
+          if (suppressClick.current) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
       >
+        <span className="solar-system__fig" aria-hidden="true">
+          Fig. 01 · Lead systems
+        </span>
         {/* Server-rendered static plate — present in SSR HTML before the
             scene chunk resolves; hidden once the live scene reports its
             first frame, re-shown if the scene is later lost. */}
@@ -267,33 +391,9 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
           }}
         >
           <div className="solar-orbit-decor" aria-hidden>
-            <svg
-              className="solar-orbit-decor__svg"
-              viewBox="0 0 400 260"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              <ellipse
-                className="solar-orbit-line solar-orbit-line--a"
-                cx="200"
-                cy="130"
-                rx="188"
-                ry="94"
-              />
-              <ellipse
-                className="solar-orbit-line solar-orbit-line--b"
-                cx="200"
-                cy="130"
-                rx="148"
-                ry="74"
-              />
-              <ellipse
-                className="solar-orbit-line solar-orbit-line--c"
-                cx="200"
-                cy="130"
-                rx="108"
-                ry="54"
-              />
-            </svg>
+            <span className="solar-orbit-ring solar-orbit-ring--a" />
+            <span className="solar-orbit-ring solar-orbit-ring--b" />
+            <span className="solar-orbit-ring solar-orbit-ring--c" />
           </div>
           <div className="solar-sun-stack" aria-hidden>
             <div className="solar-sun solar-sun--halo" />
@@ -310,7 +410,12 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
                     {
                       "--orbit-x": x.toFixed(4),
                       "--orbit-y": y.toFixed(4),
-                      "--planet-index": i,
+                      "--arm-i": i,
+                      // Light comes from the map centre: the lit half of the
+                      // plate disc faces it, matching the scene's shader.
+                      "--light-angle": `${Math.round(
+                        (Math.atan2(-x, y) * 180) / Math.PI
+                      )}deg`,
                     } as React.CSSProperties
                   }
                 >
@@ -324,29 +429,26 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
         <SceneLoadBoundary>
           <SceneFrame
             className={`solar-scene${sceneReady ? " solar-scene--ready" : ""}`}
-            camera={{ position: [0, 16, 30], fov: 32 }}
+            camera={{ position: [0, 18, 26], fov: 32 }}
             onReadyChange={handleReadyChange}
           >
             <OrbitalScene
               projects={projects}
               focusIndex={safeFocusIndex}
               rx={rx}
-              rz={ry}
+              rz={ry * 1.7}
               renderMarker={renderPlanet}
             />
           </SceneFrame>
         </SceneLoadBoundary>
+      </div>
 
-        <div className="solar-center solar-center--deck">
-          <button
-            type="button"
-            className="solar-nav-btn solar-nav-btn--prev"
-            onClick={() => go(-1)}
-            aria-label="Previous project in orbit order"
-          >
-            ‹
-          </button>
-
+      <div className="poster__readout">
+        {/* Announce card changes only when the visitor caused them. */}
+        <div
+          className="solar-card-live"
+          aria-live={tour === "running" ? "off" : "polite"}
+        >
           <div
             key={focused.slug}
             className="solar-focus-card-rotator"
@@ -365,7 +467,7 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
                   {meta?.label ?? focused.category}
                 </span>
                 <span className="solar-focus-card__id">
-                  CI-{String((registryIndexOf?.[safeFocusIndex] ?? safeFocusIndex) + 1).padStart(2, "0")}
+                  CI-{String(focusedNumber).padStart(2, "0")}
                 </span>
               </span>
               <span className="solar-focus-card__title">{focused.displayName}</span>
@@ -373,7 +475,20 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
               <span className="solar-focus-card__cta">Open survey file →</span>
             </Link>
           </div>
+        </div>
 
+        <div className="poster__readout-meta">
+          <button
+            type="button"
+            className="solar-nav-btn solar-nav-btn--prev"
+            onClick={() => go(-1)}
+            aria-label="Previous project in orbit order"
+          >
+            ‹
+          </button>
+          <span className="poster__count" aria-hidden="true">
+            {String(safeFocusIndex + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
+          </span>
           <button
             type="button"
             className="solar-nav-btn solar-nav-btn--next"
@@ -382,6 +497,16 @@ export default function SolarSystemNav({ projects, registryIndexOf }: SolarSyste
           >
             ›
           </button>
+          {/* Hidden by CSS under reduced motion, so SSR and hydration agree. */}
+          <button
+            type="button"
+            className="poster__tour"
+            data-tour-control
+            onClick={() => dispatchTour(tour === "running" ? "pause" : "play")}
+          >
+            {tour === "running" ? "Pause tour" : "Play tour"}
+          </button>
+          <span className="poster__hint">Arrow keys or swipe to move.</span>
         </div>
       </div>
     </section>
