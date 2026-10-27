@@ -3,6 +3,7 @@ import {
   LABEL_BOX,
   moonOffset,
   orbitLayout,
+  orbitRadiiRem,
   slotsOverlap,
 } from "./orbit-layout";
 
@@ -54,5 +55,20 @@ describe("moonOffset", () => {
       expect(d).toBeGreaterThan(1);
       expect(d).toBeLessThanOrEqual(2.0001);
     }
+  });
+});
+
+describe("orbitRadiiRem", () => {
+  it("follows the stage width and caps at 25rem", () => {
+    expect(orbitRadiiRem(900).rx).toBeCloseTo(900 / 32 - 4.5, 6);
+    expect(orbitRadiiRem(900).ry).toBeCloseTo(orbitRadiiRem(900).rx / 2, 6);
+    expect(orbitRadiiRem(2000).rx).toBe(25);
+  });
+
+  it("rounds the orbit and floors the radius on narrow stages", () => {
+    const narrow = orbitRadiiRem(358);
+    expect(narrow.rx).toBeGreaterThanOrEqual(7);
+    expect(narrow.ry / narrow.rx).toBeCloseTo(0.8, 6);
+    expect(orbitRadiiRem(100).rx).toBe(7);
   });
 });

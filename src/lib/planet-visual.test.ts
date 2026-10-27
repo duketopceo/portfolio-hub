@@ -49,6 +49,7 @@ import {
   limbPoints,
   meridianCount,
   planetBodyRadius,
+  planetSurfaceParams,
 } from "./planet-visual";
 
 describe("survey-plate body helpers", () => {
@@ -63,6 +64,18 @@ describe("survey-plate body helpers", () => {
   it("scales body radius with planet size", () => {
     expect(planetBodyRadius("xl")).toBeGreaterThan(planetBodyRadius("md"));
     expect(planetBodyRadius("md")).toBeGreaterThan(planetBodyRadius("xs"));
+  });
+
+  it("derives a deterministic, distinct survey surface per featured slug", () => {
+    const slugs = ["orchestral", "argus", "kurultai", "pace-server", "khan"];
+    const surfaces = slugs.map(planetSurfaceParams);
+    expect(planetSurfaceParams("argus")).toEqual(surfaces[1]);
+    for (const s of surfaces) {
+      expect(s.bands).toBeGreaterThanOrEqual(4);
+      expect(s.bands).toBeLessThanOrEqual(6);
+      expect(s.spin).toBeGreaterThan(0);
+    }
+    expect(new Set(surfaces.map((s) => s.seed)).size).toBe(slugs.length);
   });
 
   it("draws closed limb polygons per shape", () => {

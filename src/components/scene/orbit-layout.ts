@@ -14,7 +14,7 @@ export interface OrbitSlot {
 
 /** Label footprint in screen-ish units (z is foreshortened by RING_FORESHORTEN). */
 export const LABEL_BOX = { w: 4.4, h: 1.7 } as const;
-const BODY_BOX = { w: 2.2, h: 1.4 } as const;
+const BODY_BOX = { w: 2.8, h: 1.8 } as const;
 const FORESHORTEN = 0.5;
 const RING_STEP = 0.2;
 const MAX_RINGS = 4;
@@ -96,3 +96,14 @@ export function moonOffset(
     radius * 0.55 * Math.sin(a),
   ];
 }
+
+/** Orbit radii (rem) follow the stage width, mirroring the plate's CSS:
+ *  `--orbit-rx: clamp(7rem, 50cqw - 4.5rem, 25rem)` and ry = rx / 2, with a
+ *  rounder orbit (ry = 0.8 rx, 3.5rem margin) at 34rem and below. Keep the two
+ *  in sync (see `.solar-plate` in globals.css). */
+export function orbitRadiiRem(stageWidthPx: number): { rx: number; ry: number } {
+  const narrow = stageWidthPx / 16 <= 34;
+  const rx = Math.min(25, Math.max(7, stageWidthPx / 32 - (narrow ? 3.5 : 4.5)));
+  return { rx, ry: rx * (narrow ? 0.8 : 0.5) };
+}
+

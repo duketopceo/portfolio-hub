@@ -87,13 +87,19 @@ void main() {
 }
 `;
 
-// Iso-lines of 3-octave FBM on the object-space direction: thin lines on a
-// near-black fill. No glow, no lighting, one pass.
+// Iso-lines of 3-octave FBM on the object-space direction over a lit/unlit
+// split. The terminator is a hard step (no glow, no atmosphere): the lit side
+// carries a faint tint of the survey colour, the night side is near-black with
+// dimmed lines. The contour field rotates slowly about Y.
 const FRAGMENT = /* glsl */ `
 precision highp float;
 uniform vec3 uLine;
 uniform vec3 uFill;
+uniform vec3 uLit;
+uniform vec3 uLight;
 uniform float uSeed;
+uniform float uBands;
+uniform float uSpin;
 uniform float uTime;
 varying vec3 vObj;
 ${ASHIMA_SNOISE}
@@ -108,25 +114,46 @@ float fbm(vec3 p) {
   return s;
 }
 void main() {
-  float h = fbm(vObj * 2.2 + vec3(uSeed, uSeed * 0.37, uTime * 0.03)) * 0.5 + 0.5;
-  float bands = h * 9.0;
+  float ang = uTime * uSpin;
+  float c = cos(ang);
+  float sn = sin(ang);
+  vec3 q = vec3(c * vObj.x + sn * vObj.z, vObj.y, -sn * vObj.x + c * vObj.z);
+  float h = fbm(q * 1.35 + vec3(uSeed, uSeed * 0.37, uSeed * 0.11)) * 0.5 + 0.5;
+  float bands = h * uBands;
   float d = abs(fract(bands) - 0.5) / max(fwidth(bands), 0.0001);
   float line = 1.0 - smoothstep(0.0, 1.1, d);
-  gl_FragColor = vec4(mix(uFill, uLine, line * 0.9), 1.0);
+  float lit = smoothstep(-0.04, 0.06, dot(normalize(vObj), uLight));
+  vec3 base = mix(uFill, uLit, lit);
+  vec3 col = mix(base, uLine, line * mix(0.22, 0.9, lit));
+  gl_FragColor = vec4(col, 1.0);
 }
 `;
 
+export interface ContourOptions {
+  line: THREE.Color;
+  seed: number;
+  bands?: number;
+  spin?: number;
+  /** Unit vector from the body toward the light, in world space. */
+  light?: THREE.Vector3;
+}
+
 export function createContourMaterial(
-  line: THREE.Color,
-  seed: number
+  opts: ContourOptions
 ): THREE.ShaderMaterial {
+  const fill = new THREE.Color("#070A0D");
+  const lit = fill.clone().lerp(opts.line, 0.3);
   return new THREE.ShaderMaterial({
     vertexShader: VERTEX,
     fragmentShader: FRAGMENT,
     uniforms: {
-      uLine: { value: line },
-      uFill: { value: new THREE.Color("#0B0F13") },
-      uSeed: { value: seed },
+      uLine: { value: opts.line },
+      uFill: { value: fill },
+      uLit: { value: lit },
+      uLight: { value: (opts.light ?? new THREE.Vector3(0, 0.3, 1)).clone().normalize() },
+      uSeed: { value: opts.seed },
+      uBands: { value: opts.bands ?? 9 },
+      uSpin: { value: opts.spin ?? 0.04 },
       uTime: { value: 0 },
     },
   });

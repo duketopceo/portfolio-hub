@@ -8,7 +8,12 @@
  */
 
 .plate :global(.planet-node__core) {
-  background: transparent;
+  /* Hard terminator, no glow: the half facing the map centre is lit. */
+  background: linear-gradient(
+    var(--light-angle, 180deg),
+    #070a0d 0 46%,
+    color-mix(in srgb, var(--planet-color) 16%, #070a0d) 46%
+  );
   border: 1px solid color-mix(in srgb, var(--planet-color) 55%, var(--color-text));
   box-shadow: none;
   transition:
@@ -23,7 +28,6 @@
 }
 
 .plate :global(.planet-node__core--cube) {
-  background: transparent;
   border-radius: 2px;
   transform: rotate(0deg);
 }
@@ -66,7 +70,6 @@
 .plate :global(.planet-node:hover .planet-node__core),
 .plate :global(.planet-node:focus-visible .planet-node__core),
 .plate :global(.planet-node--focused .planet-node__core) {
-  background: transparent;
   border-width: 2px;
   border-color: var(--color-accent);
   transform: none;
@@ -96,6 +99,12 @@
   margin-left: 0.25rem;
   vertical-align: -0.05rem;
   color: var(--color-signal);
+}
+
+/* Live scene: drei <Html center> already centres the marker on its orbit
+   point; the plate's own centring transform would offset it a second time. */
+.live :global(.planet-node-wrap) {
+  transform: none;
 }
 
 /* Live scene: canvas draws the body; the DOM body stays as hit target. */

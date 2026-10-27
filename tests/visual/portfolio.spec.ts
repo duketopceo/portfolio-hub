@@ -250,20 +250,99 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(1);
   });
 
-  test("home shows three blocks: intro, planet map, activity", async ({
+  test("home is a poster: hero, planet map, activity, closing row", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator("h1")).toHaveText(/Luke\s*Kimball/i);
     await expect(page.locator(".solar-system")).toHaveCount(1);
     await expect(page.locator('.solar-system a[href^="/projects/"]').first()).toBeAttached();
     await expect(page.locator(".home-lead__card")).toHaveCount(0);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
+    await expect(page.locator(".home-close")).toHaveCount(1);
     await expect(page.locator(".home-catalog__item")).toHaveCount(0);
-    await expect(page.locator(".sheet__titleblock")).toHaveCount(0);
+    await expect(page.locator(".sheet__plate")).toHaveCount(0);
     await expect(page.getByRole("link", { name: /See the work/ })).toHaveAttribute(
       "href",
       "/projects",
     );
+  });
+
+  test("home hero, actions, and map sit above the fold at 1440x900", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/", { waitUntil: "networkidle" });
+    for (const locator of [
+      page.locator("h1"),
+      page.getByRole("link", { name: /See the work/ }),
+      page.getByRole("link", { name: "Resume", exact: true }).first(),
+      page.locator(".solar-system__stage"),
+    ]) {
+      const box = await locator.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.y).toBeGreaterThanOrEqual(0);
+      expect(box!.y + Math.min(box!.height, 200)).toBeLessThanOrEqual(900);
+    }
+  });
+
+  test("planet markers link to dossiers and arrow keys move the focus card", async ({
+    page,
+  }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+    const links = page.locator(
+      '.solar-system a.planet-node[href^="/projects/"]:visible',
+    );
+    await expect(links).toHaveCount(5);
+    const title = page.locator(".solar-focus-card__title");
+    const first = await title.textContent();
+    await page.locator('.solar-system a.planet-node[tabindex="0"]:visible').focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(title).not.toHaveText(first ?? "");
+    await expect(page.locator(".solar-focus-card")).toHaveAttribute(
+      "href",
+      /^\/projects\//,
+    );
+  });
+
+  test("using the map stops the orbit tour and only Play resumes it", async ({
+    page,
+  }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+    const tour = page.locator(".poster__tour");
+    await expect(tour).toHaveText("Pause tour");
+    await page.getByRole("button", { name: "Next project in orbit order" }).click();
+    await expect(tour).toHaveText("Play tour");
+    await tour.click();
+    await expect(tour).toHaveText("Pause tour");
+  });
+
+  test("reduced motion keeps the full plate, with no tour or running animation", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expect(page.locator("canvas")).toHaveCount(0);
+    await expect(
+      page.locator('.solar-plate a.planet-node[href^="/projects/"]'),
+    ).toHaveCount(5);
+    await expect(page.locator(".solar-plate--hidden")).toHaveCount(0);
+    await expect(page.locator(".poster__tour")).toHaveCount(0);
+    const running = await page.evaluate(() =>
+      document
+        .querySelector(".poster")!
+        .getAnimations({ subtree: true })
+        .filter((a) => (a as CSSAnimation).animationName)
+        .map((a) => (a as CSSAnimation).animationName),
+    );
+    expect(running).toEqual([]);
+  });
+
+  test("home has no horizontal overflow at tablet width", async ({ page }) => {
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expectNoHorizontalOverflow(page);
   });
 
   test("header carries four links plus a GitHub icon", async ({ page }) => {

@@ -19,6 +19,7 @@ import {
   limbPoints,
   meridianCount,
   planetBodyRadius,
+  planetSurfaceParams,
   resolvePlanetVisual,
   type ResolvedPlanetVisual,
 } from "@/lib/planet-visual";
@@ -317,17 +318,34 @@ function BodyLines({ bodies, focusIndex }: { bodies: BodyInfo[]; focusIndex: num
   );
 }
 
-/** Shader-lit contour fill for the focal body (real GPUs only). */
+/** Lit survey-contour surface for one body (real GPUs only). The light sits
+ *  at the map's centre, lifted toward the camera so far-side bodies are not
+ *  fully backlit. No glow: the terminator is a hard step in the shader. */
 function ContourBody({
   slot,
   radius,
-  seed,
+  slug,
+  color,
 }: {
   slot: OrbitSlot;
   radius: number;
-  seed: number;
+  slug: string;
+  color: THREE.Color;
 }) {
-  const contour = useMemo(() => createContourMaterial(TEAL.clone(), seed), [seed]);
+  const contour = useMemo(() => {
+    const surface = planetSurfaceParams(slug);
+    const light = new THREE.Vector3(-slot.x, 0, -slot.z)
+      .normalize()
+      .multiplyScalar(0.85)
+      .add(new THREE.Vector3(0, 0.45, 0.8));
+    return createContourMaterial({
+      line: color,
+      seed: surface.seed,
+      bands: surface.bands,
+      spin: surface.spin,
+      light,
+    });
+  }, [slug, slot.x, slot.z, color]);
   useEffect(() => () => contour.dispose(), [contour]);
   useFrame((state) => setUniform(contour, "uTime", state.clock.elapsedTime));
   return (
@@ -529,11 +547,11 @@ function FitScale({
   children: ReactNode;
 }) {
   const { viewport, size } = useThree();
-  const [marginPx, setMarginPx] = useState(48);
+  const [marginPx, setMarginPx] = useState(size.width > 560 ? 72 : 44);
   const tick = useRef(0);
   useFrame(() => {
     if (!overlay || tick.current++ % 30 !== 0) return;
-    let half = 48;
+    let half = size.width > 560 ? 72 : 44;
     overlay
       .querySelectorAll(".planet-node__label, .planet-node__body")
       .forEach((el) => {
@@ -542,7 +560,8 @@ function FitScale({
     if (Math.abs(half - marginPx) > 2) setMarginPx(half);
   });
   const marginWorld = marginPx * (viewport.width / Math.max(size.width, 1));
-  const s = Math.min(1, (viewport.width / 2 - marginWorld) / rx);
+  // Fit the outer orbit hairline (rx + 2.5), not just the body ring.
+  const s = Math.min(1, (viewport.width / 2 - marginWorld) / (rx + 2.5));
   return <group scale={THREE.MathUtils.clamp(s, 0.2, 1)}>{children}</group>;
 }
 
@@ -550,7 +569,7 @@ function FitScale({
 function CameraDrift() {
   const target = useRef(new THREE.Vector3()).current;
   useFrame((state, dt) => {
-    target.set(state.pointer.x * 2.2, 16 + state.pointer.y * 1.4, 30);
+    target.set(state.pointer.x * 2.2, 18 + state.pointer.y * 1.4, 26);
     easing.damp3(state.camera.position, target, 0.4, dt);
     state.camera.lookAt(0, -1.5, 0);
   });
@@ -658,16 +677,15 @@ export default function OrbitalScene({
             interactive layer at the same slots. */}
         <BodyLines bodies={bodies} focusIndex={focusIndex} />
         {shader &&
-          projects.map((p, i) =>
-            isFocalSlug(p.slug) ? (
-              <ContourBody
-                key={p.slug}
-                slot={slots[i]}
-                radius={bodies[i].radius}
-                seed={i * 3.7 + 1.3}
-              />
-            ) : null
-          )}
+          projects.map((p, i) => (
+            <ContourBody
+              key={p.slug}
+              slot={slots[i]}
+              radius={bodies[i].radius}
+              slug={p.slug}
+              color={bodies[i].tint}
+            />
+          ))}
         <Moons slots={slots} visuals={visuals} />
 
         {/* Orbit markers — DOM anchors portaled to the scene overlay */}

@@ -6,7 +6,7 @@ import { toClientActivityPayload } from "@/lib/activity-aggregate";
 import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
 import SolarSystemNav from "@/components/SolarSystemNav";
 import { toClientProject } from "@/lib/client-project";
-import { PageShell } from "@/components/design";
+import { ActionRow, PageShell } from "@/components/design";
 
 export const revalidate = 3600;
 
@@ -20,59 +20,78 @@ export default async function Home() {
   const leadIndex = lead.map((p) => Math.max(registryIndex.indexOf(p.slug), 0));
 
   return (
-    <div>
-      {/* 1 — intro, one primary action */}
-      <section className="sheet" aria-labelledby="home-title">
-        <div className="sheet__plate sheet__plate--intro corner-ticks">
-          <header className="sheet__head">
-            <p className="reg-label reg-label--accent sheet__eyebrow">
-              Engineering portfolio — Luke Kimball
-            </p>
-            <h1 id="home-title" className="sheet__title">
-              Cosmic
-              <br />
-              Intelligence
-            </h1>
-            <p className="sheet__tagline">Systems that compound.</p>
-          </header>
-          <p className="sheet__intro">
-            Agent harnesses, knowledge layers, and production platforms —
-            built on OpenRouter and real APIs, documented with evidence.
-          </p>
-          <div className="sheet__cta">
-            <Link
-              href="/projects"
-              className="detail-cta"
-              data-umami-event="home-cta"
-              data-umami-event-target="work"
-            >
-              See the work →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 2 — the five lead systems, as the planet map */}
-      <>
-        <SolarSystemNav
-          key={lead[0]?.slug ?? "orbit"}
-          projects={lead.map(toClientProject)}
-          registryIndexOf={leadIndex}
-        />
-      </>
+    <div className="home">
+      {/* 1 — poster: who, what, one action, and the map as the way in */}
+      <SolarSystemNav
+        key={lead[0]?.slug ?? "orbit"}
+        projects={lead.map(toClientProject)}
+        registryIndexOf={leadIndex}
+      >
+        <h1 id="home-title" className="poster__title">
+          Luke
+          <br />
+          Kimball
+        </h1>
+        <p className="poster__lede">
+          Applied AI engineer. I build agent runtimes and the platforms they
+          run on.
+        </p>
+        <p className="poster__tagline">Systems that compound.</p>
+        <ActionRow className="poster__actions">
+          <Link
+            href="/projects"
+            className="detail-cta"
+            data-umami-event="home-cta"
+            data-umami-event-target="work"
+          >
+            See the work →
+          </Link>
+          <Link
+            href="/resume"
+            className="detail-cta detail-cta--secondary"
+            data-umami-event="home-cta"
+            data-umami-event-target="resume"
+          >
+            Resume
+          </Link>
+        </ActionRow>
+      </SolarSystemNav>
 
       <PageShell className="home-flow" measure="wide">
-
-        {/* 3 — compact activity strip */}
+        {/* 2 — compact activity strip */}
         <section
           className="home-transmissions"
           aria-labelledby="home-transmissions-heading"
         >
           <div className="home-section__head">
-            <p className="reg-label reg-label--accent">Transmissions</p>
             <h2 id="home-transmissions-heading">Recent engineering signal</h2>
           </div>
           <HomeActivityShowcase data={toClientActivityPayload(activity)} />
+        </section>
+
+        {/* 3 — closing action */}
+        <section className="home-close" aria-label="Next steps">
+          <p className="home-close__line">
+            Hiring for applied AI or agent infrastructure?
+          </p>
+          <ActionRow>
+            <Link
+              href="/hire"
+              className="detail-cta"
+              data-umami-event="home-cta"
+              data-umami-event-target="hire"
+            >
+              Work with me →
+            </Link>
+            <Link
+              href="/about"
+              className="detail-cta detail-cta--secondary"
+              data-umami-event="home-cta"
+              data-umami-event-target="about"
+            >
+              About
+            </Link>
+          </ActionRow>
         </section>
       </PageShell>
     </div>
