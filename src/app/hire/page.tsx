@@ -2,6 +2,7 @@ import Link from "next/link";
 import { toClientProject } from "@/lib/client-project";
 import {
   ActionRow,
+  MetricRow,
   PageHeader,
   PageShell,
   SurveyPlate,
@@ -74,12 +75,71 @@ export default async function HirePage() {
         <div className="hire-page__secondary">
           <UpstreamSummary data={upstream} />
           <p>
-            <Link href="/contributions" className="detail-nav-link">
+            <Link href="/about#contributions" className="detail-nav-link">
               See all contributions →
             </Link>
           </p>
         </div>
       </SurveyPlate>
+
+      <section
+        id="contact"
+        className="hire-page__section"
+        aria-label="Contact"
+      >
+        <SurveyPlate metadata={["Contact registry", "Verified route"]}>
+          <dl>
+            <MetricRow
+              label="Email"
+              value={
+                <a
+                  href={`mailto:${basics.email}`}
+                  className="detail-cta"
+                  data-umami-event="contact-email"
+                  data-umami-event-source="contact"
+                >
+                  {basics.email}
+                </a>
+              }
+            />
+            <MetricRow label="Location" value="Provo, UT · Remote, US" />
+            <MetricRow
+              label="GitHub"
+              value={
+                <a
+                  href="https://github.com/duketopceo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="detail-nav-link"
+                >
+                  github.com/duketopceo ↗
+                </a>
+              }
+            />
+            <MetricRow
+              label="LinkedIn"
+              value={
+                <a
+                  href="https://linkedin.com/in/lukekimball2789"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="detail-nav-link"
+                >
+                  linkedin.com/in/lukekimball2789 ↗
+                </a>
+              }
+            />
+            <MetricRow
+              label="Résumé"
+              value={
+                <Link href="/resume" className="detail-nav-link">
+                  Web résumé →
+                </Link>
+              }
+            />
+          </dl>
+        </SurveyPlate>
+      </section>
 
       <TransmissionClose
         className="hire-page__section"

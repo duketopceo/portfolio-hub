@@ -91,15 +91,15 @@ describe("U3 catalog restructure", () => {
     }
   });
 
-  it("openrouter duplicate collapses into openrouter-demos with its film and live demo", () => {
-    expect(projectConfigs.some((p) => p.slug === "openrouter")).toBe(false);
-    const d = projectConfigs.filter((p) => p.slug === "openrouter-demos");
+  it("openrouter-demos folds into the openrouter dossier with its film and live demo", () => {
+    expect(projectConfigs.some((p) => p.slug === "openrouter-demos")).toBe(false);
+    const d = projectConfigs.filter((p) => p.slug === "openrouter");
     expect(d).toHaveLength(1);
     expect((d[0].media.release as { url: string }).url).toMatch(/openrouter-demos-walkthrough\.mp4$/);
     expect(d[0].liveUrl).toBeTruthy();
     expect(retiredSlugRedirects()).toContainEqual({
-      source: "/projects/openrouter",
-      destination: "/projects/openrouter-demos",
+      source: "/projects/openrouter-demos",
+      destination: "/projects/openrouter",
       permanent: true,
     });
     expect(projectConfigs.some((p) => p.slug === "open-military-hardware-db")).toBe(

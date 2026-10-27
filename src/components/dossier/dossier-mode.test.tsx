@@ -5,7 +5,6 @@ import type { EnrichedProject } from "@/lib/types";
 import { ProjectMediaSection, ProjectMediaView } from "./ProjectMedia";
 import type { MediaAsset } from "@/lib/types";
 import { ShowcaseCard } from "./ShowcaseCard";
-import { PlanetNode } from "@/components/planet/PlanetNode";
 
 const asset: MediaAsset = {
   url: "https://media.luke-the-duke.com/demos/x.mp4",
@@ -71,6 +70,14 @@ describe("U4 dossier media and showcase mode", () => {
     expect(html).not.toContain("Restricted survey");
   });
 
+  it("argus, kurultai, dayflow-linux and openrouter carry a #demo section; khan does not", async () => {
+    for (const slug of ["argus", "kurultai", "dayflow-linux", "openrouter"]) {
+      const html = await dossier(slug);
+      expect(html, slug).toContain('id="demo"');
+    }
+    expect(await dossier("khan")).not.toContain('id="demo"');
+  });
+
   it("khan has a showcase and no video slots", async () => {
     const html = await dossier("khan");
     expect(html).toContain('data-umami-section="Showcase card"');
@@ -112,31 +119,6 @@ describe("U4 dossier media and showcase mode", () => {
     expect(plugins).toContain(
       `href="https://github.com/duketopceo/${pub.repoName}"`
     );
-  });
-
-  it("a component moon on the homepage links to the parent's #components in the same tab", () => {
-    const kate = enrich(listedProjects().find((p) => p.slug === "kate")!);
-    const html = renderToStaticMarkup(
-      <PlanetNode
-        project={{
-          ...kate,
-          planetVisual: {
-            moons: [
-              {
-                label: "Kate iOS",
-                kind: "subproject",
-                href: "/projects/kate#components",
-              },
-            ],
-          },
-        }}
-        tier="primary"
-        href="/projects/kate"
-      />
-    );
-    const m = html.match(/<a[^>]*href="\/projects\/kate#components"[^>]*>/);
-    expect(m).not.toBeNull();
-    expect(m![0]).not.toContain("target=");
   });
 
   it("release element: preload none, poster, playsinline, no crossorigin, labelled with project name", () => {

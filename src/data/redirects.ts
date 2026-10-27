@@ -35,7 +35,7 @@ export const retiredSlugs: RetiredSlug[] = [
   { from: "a0-plugin-durable", to: "/projects/agent-zero-plugins", reason: "merged" },
   { from: "a0-plugin-glitchtip", to: "/projects/agent-zero-plugins", reason: "merged" },
   { from: "a0-plugin-notion", to: "/projects/agent-zero-plugins", reason: "merged" },
-  { from: "openrouter", to: "/projects/openrouter-demos", reason: "duplicate" },
+  { from: "openrouter-demos", to: "/projects/openrouter", reason: "merged" },
   { from: "open-military-hardware-db", to: "/projects/military-hardware-db", reason: "duplicate" },
   { from: "ai-debate-arena", to: "/projects#earlier-work", reason: "earlier" },
   { from: "trading-bot", to: "/projects#earlier-work", reason: "earlier" },
@@ -77,3 +77,23 @@ export function retiredSlugRedirects(
     permanent: true as const,
   }));
 }
+
+/**
+ * Pages folded into Work, About, and Hire (permanent). `/demos/pixel-tycoon`
+ * keeps landing on `/projects`: its repo went private and has no dossier.
+ */
+export const siteRedirects: Array<{
+  source: string;
+  destination: string;
+  permanent: true;
+}> = [
+  { source: "/demos", destination: "/projects", permanent: true },
+  { source: "/demos/pixel-tycoon", destination: "/projects", permanent: true },
+  { source: "/demos/argus", destination: "/projects/argus#demo", permanent: true },
+  { source: "/demos/kurultai", destination: "/projects/kurultai#demo", permanent: true },
+  { source: "/demos/dayflow", destination: "/projects/dayflow-linux#demo", permanent: true },
+  { source: "/openrouter", destination: "/projects/openrouter", permanent: true },
+  { source: "/now", destination: "/about#now", permanent: true },
+  { source: "/contributions", destination: "/about#contributions", permanent: true },
+  { source: "/contact", destination: "/hire#contact", permanent: true },
+];

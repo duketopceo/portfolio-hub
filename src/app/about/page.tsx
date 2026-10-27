@@ -1,17 +1,21 @@
 import Link from "next/link";
 import { PageHeader, PageShell, TransmissionClose } from "@/components/design";
+import { NowSection } from "@/components/about/NowSection";
+import { ContributionsSection } from "@/components/about/ContributionsSection";
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: "About",
   description:
-    "Luke Kimball — OpenRouter-native systems builder in Provo, UT. Cosmic Intelligence portfolio at luke-the-duke.com.",
+    "Luke Kimball — OpenRouter-native systems builder in Provo, UT. Bio, what I'm working on now, and open-source contributions.",
 };
 
 const navLinkClass = "detail-nav-link";
 
 export default function AboutPage() {
   return (
-    <PageShell measure="readable">
+    <PageShell>
       <PageHeader
         metadata={[
           { content: "CI / Operator file" },
@@ -53,21 +57,23 @@ export default function AboutPage() {
           <Link href="/" className={navLinkClass}>
             Cosmic Intelligence
           </Link>{" "}
-          at luke-the-duke.com is the public map: five featured worlds in the
-          main orbit, ~20 more in the catalog ring, dossiers for every repo, and
-          a live GitHub activity view — ingest the history, display it
-          structured, not as a fake “last week only” strip.
+          at luke-the-duke.com is the public map: five lead systems, a dossier
+          for every repo, and a live GitHub activity view — ingest the history,
+          display it structured, not as a fake “last week only” strip.
         </p>
+      </div>
 
+      <NowSection />
+
+      <ContributionsSection />
+
+      <div className="cosmic-readable ds-stack ds-stack--tight">
         <TransmissionClose
           title="Where to go next"
           actions={
             <>
               <Link href="/projects" className={navLinkClass}>
-                Projects →
-              </Link>
-              <Link href="/openrouter" className={navLinkClass}>
-                OpenRouter demos →
+                Work →
               </Link>
               <Link href="/resume" className={navLinkClass}>
                 Résumé →
@@ -75,7 +81,7 @@ export default function AboutPage() {
               <Link href="/hire" className={navLinkClass}>
                 Hire →
               </Link>
-              <Link href="/contact" className={navLinkClass}>
+              <Link href="/hire#contact" className={navLinkClass}>
                 Contact →
               </Link>
               <a

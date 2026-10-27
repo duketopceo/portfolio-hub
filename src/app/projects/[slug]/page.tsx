@@ -26,6 +26,7 @@ import {
   ProjectMediaSection,
   ComponentsList,
 } from "@/components/dossier";
+import { DossierDemoSection } from "@/components/dossier/demo/DossierDemoSection";
 import { getProjectActivityTimeline } from "@/lib/github-activity";
 import { MediaFrame, PageShell } from "@/components/design";
 
@@ -130,6 +131,8 @@ export default async function ProjectDetailPage({
         hasShowcase={hasShowcase}
         relatedProjects={relatedProjects}
       />
+
+      <DossierDemoSection slug={slug} />
 
       {useIframeEmbed && embedUrl && (
         <PageShell className="dossier-page__demo">

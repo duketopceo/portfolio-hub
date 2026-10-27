@@ -3,63 +3,15 @@ import {
   openRouterDemos,
   OPENROUTER_DEMOS_REPO_URL,
 } from "@/data/openrouter-demos";
-import OpenRouterDashboard from "./components/OpenRouterDashboard";
-import BdhDossier from "./components/BdhDossier";
-import {
-  EvidencePanel,
-  PageHeader,
-  PageShell,
-  SectionHeading,
-} from "@/components/design";
+import OpenRouterDashboard from "@/components/openrouter/OpenRouterDashboard";
+import BdhDossier from "@/components/openrouter/BdhDossier";
+import { EvidencePanel, SectionHeading } from "@/components/design";
 
 const KURULTAI_REPO_URL = "https://github.com/duketopceo/kurultai";
 
-export const metadata = {
-  title: "OpenRouter Applications",
-  description:
-    "Portfolio viewer for OpenRouter application demos — fixture summaries, baked coding comparison, and optional live smoke tests. Harness source in openrouter-demos.",
-};
-
-export default function OpenRouterPage() {
+export function OpenRouterEvidence() {
   return (
-    <PageShell>
-      <PageHeader
-        metadata={[
-          { content: "CI / Demo bay" },
-          { content: "OpenRouter harness", className: "hidden sm:inline" },
-          { content: "Sheet 03" },
-        ]}
-        title="Application demos"
-        lede={
-          <>
-            Portfolio viewer for four eval-driven demos mapped to OpenRouter
-            application roles — deflection, GTM motion, provider bake-offs, and
-            debate traces. This page is <em>not</em> the Python{" "}
-            <code>dev_server.py</code> dashboard. Harness source, offline pytest,
-            and the local run UI live in{" "}
-            <a
-              href={OPENROUTER_DEMOS_REPO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="detail-nav-link"
-            >
-              github.com/duketopceo/openrouter-demos
-            </a>{" "}
-            (<code>python3 dev_server.py</code> →{" "}
-            <a
-              href="http://localhost:8080"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="detail-nav-link"
-            >
-              localhost:8080
-            </a>
-            ). Offline pytest is green on fixtures; live evals need{" "}
-            <code>OPENROUTER_API_KEY</code>.
-          </>
-        }
-      />
-
+    <>
       {/* Portfolio viewer: baked JSON snapshot + optional session-key live smoke test */}
       <OpenRouterDashboard />
 
@@ -188,12 +140,7 @@ export default function OpenRouterPage() {
           </Link>{" "}
           also consumes OpenRouter for embeddings and search/rerank in production.
         </p>
-        <p>
-          <Link href="/projects" className="detail-nav-link">
-            Browse full project catalog →
-          </Link>
-        </p>
       </section>
-    </PageShell>
+    </>
   );
 }

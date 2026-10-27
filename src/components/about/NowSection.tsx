@@ -2,39 +2,28 @@ import { getRecentProjects } from "@/lib/github";
 import ProjectCard from "@/components/ProjectCard";
 import PullRequestsPanel from "@/components/PullRequestsPanel";
 import { formatDate } from "@/lib/utils";
-import {
-  MediaFrame,
-  PageHeader,
-  PageShell,
-  SectionHeading,
-} from "@/components/design";
+import { MediaFrame, SectionHeading } from "@/components/design";
 import { cx } from "@/components/design/cx";
 
-export const revalidate = 3600;
-
-export const metadata = {
-  title: "Activity",
-  description:
-    "Most recently active projects, updated automatically from commit history.",
-};
-
-export default async function NowPage() {
+/** "Now" block for /about#now — recent projects, a track, and open PRs. */
+export async function NowSection() {
   const recent = await getRecentProjects(5);
 
   return (
-    <PageShell>
-      <PageHeader
-        metadata={[
-          { content: "CI / Now" },
-          { content: "via GitHub feed", className: "hidden sm:inline" },
-          { content: "Sheet 06" },
-        ]}
-        title="Now"
-        lede="Last 5 active projects, from GitHub."
+    <section
+      id="now"
+      className="cosmic-page-section"
+      aria-labelledby="now-heading"
+    >
+      <SectionHeading
+        eyebrow="Now"
+        title={<span id="now-heading">What I&apos;m working on</span>}
+        description="Last 5 active projects, from GitHub."
       />
 
-      <section
+      <div
         className="now-spotify-section"
+        role="group"
         aria-label="Spotify — current track"
       >
         <div className="now-spotify-card">
@@ -57,27 +46,21 @@ export default async function NowPage() {
             </MediaFrame>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="cosmic-timeline" aria-labelledby="now-transmissions">
-        <h2 id="now-transmissions" className="sr-only">
-          Recently active projects
-        </h2>
+      <div className="cosmic-timeline">
         {recent.map((project, i) => (
           <div
             key={project.slug}
             className="relative flex gap-3 animate-fade-up"
             style={{ animationDelay: `${i * 80}ms` }}
           >
-            {/* Timeline dot */}
             <div
               className={cx(
                 "cosmic-timeline-dot",
                 i === 0 && "cosmic-timeline-dot--active",
               )}
             />
-
-            {/* Content */}
             <div className="flex-1 pb-[var(--space-component-2)]">
               <div className="cosmic-timeline__date">
                 {project.lastUpdated ? formatDate(project.lastUpdated) : "—"}
@@ -95,15 +78,15 @@ export default async function NowPage() {
             </div>
           </div>
         ))}
-      </section>
+      </div>
 
-      <section aria-labelledby="now-prs">
+      <div aria-labelledby="now-prs">
         <SectionHeading
           title={<span id="now-prs">Open pull requests</span>}
           description="Across catalog repositories."
         />
         <PullRequestsPanel />
-      </section>
-    </PageShell>
+      </div>
+    </section>
   );
 }

@@ -21,9 +21,8 @@
 
 - [Home](https://luke-the-duke.com): overview and current focus.
 - [Projects](https://luke-the-duke.com/projects): selected AI & infrastructure projects with case studies.
-- [Hire / Contact](https://luke-the-duke.com/hire): availability and contact.
-- [Now](https://luke-the-duke.com/now): what Luke is working on right now.
-- [About](https://luke-the-duke.com/about): background and approach.
+- [Hire / Contact](https://luke-the-duke.com/hire): availability and contact (#contact).
+- [About](https://luke-the-duke.com/about): background and approach, with what Luke is working on now (#now) and open-source contributions (#contributions).
 
 ## External
 

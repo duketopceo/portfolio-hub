@@ -1,43 +1,16 @@
-import Link from "next/link";
 import fixture from "@/data/argus-eval.fixture.json";
 import {
   MetricRow,
-  PageHeader,
-  PageShell,
   SectionHeading,
 } from "@/components/design";
 
-export const metadata = {
-  title: "Argus demo — cost-metered vision E2E",
-  description:
-    "Replay of a real Argus eval bake-off: per-model cold and warm runs with vision-call counts and dollar cost ledger.",
-};
-
 const usd = (n: number | null) => (n == null ? "—" : `$${n.toFixed(4)}`);
 
-export default function ArgusDemoPage() {
+export function ArgusDemo() {
   const results = fixture.results;
 
   return (
-    <PageShell>
-      <PageHeader
-        metadata={[
-          { content: "Demo / Replay" },
-          { content: "argus-reviewer-e2e", className: "hidden sm:inline" },
-          { content: `Captured ${fixture.generatedAt.slice(0, 10)}` },
-        ]}
-        title="Argus — cost-explicit vision E2E"
-        lede={
-          <>
-            A real eval run from the Argus harness: two models over the same
-            three-test suite, once cold (every step hits the vision model) and
-            once warm (fingerprint cache). The ledger is the product — every
-            vision call is priced, so a regression suite can carry a dollar
-            figure on the PR.
-          </>
-        }
-      />
-
+    <>
       <dl className="demo-metrics" aria-label="Run summary">
         <MetricRow label="Budget cap" value={usd(fixture.budgetUsd)} />
         <MetricRow label="Models under test" value={results.length} />
@@ -181,6 +154,7 @@ export default function ArgusDemoPage() {
         />
         <div className="demo-gallery__grid">
           <figure className="demo-gallery__item">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/demos/argus/pr31-conversation.png"
               alt="Argus PR review — conversation verdict"
@@ -189,6 +163,7 @@ export default function ArgusDemoPage() {
             <figcaption>PR review — verdict</figcaption>
           </figure>
           <figure className="demo-gallery__item">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/demos/argus/pr31-files.png"
               alt="Argus PR review — per-file suggestions"
@@ -201,14 +176,6 @@ export default function ArgusDemoPage() {
 
       <p className="demo-provenance">{fixture.provenance} Review-surface captures from Argus demo/pr31-review-surface (2026-09-29); shipped ledger from git history through v0.3.1.</p>
 
-      <p>
-        <Link href="/demos" className="detail-nav-link">
-          ← Demo bay
-        </Link>{" "}
-        <Link href="/projects/argus" className="detail-nav-link">
-          Open dossier →
-        </Link>
-      </p>
-    </PageShell>
+    </>
   );
 }

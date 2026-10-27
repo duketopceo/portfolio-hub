@@ -1,17 +1,8 @@
-import Link from "next/link";
 import {
   MetricRow,
-  PageHeader,
-  PageShell,
   SectionHeading,
 } from "@/components/design";
 import { MediaFrame } from "@/components/design";
-
-export const metadata = {
-  title: "Dayflow demo — desktop timeline widget",
-  description:
-    "Replay of the real Dayflow QML surface — a privacy-first activity timeline with 15-minute blocks, app tagging, and on-device summarization.",
-};
 
 const entries = [
   {
@@ -42,28 +33,9 @@ const entries = [
   },
 ];
 
-export default function DayflowDemoPage() {
+export function DayflowDemo() {
   return (
-    <PageShell>
-      <PageHeader
-        metadata={[
-          { content: "Demo / Replay" },
-          { content: "dayflow-linux · QML", className: "hidden sm:inline" },
-          { content: "Real capture" },
-        ]}
-        title="Dayflow — the day, reconstructed"
-        lede={
-          <>
-            A real capture from the Dayflow desktop widget — a Go daemon +
-            QML panel that samples a frame every 10 seconds, dedupes
-            unchanged shots, and every 15 minutes asks a vision model to
-            write a plain-language block. The screenshot below is the
-            shipping UI; the timeline is reconstructed in the registry&apos;s
-            grammar so the data reads on any screen.
-          </>
-        }
-      />
-
+    <>
       <section className="demo-ledger" aria-labelledby="dayflow-capture">
         <SectionHeading
           eyebrow="CAPTURE — preview.png"
@@ -118,14 +90,6 @@ export default function DayflowDemoPage() {
         mock.
       </p>
 
-      <p>
-        <Link href="/demos" className="detail-nav-link">
-          ← Demo bay
-        </Link>{" "}
-        <Link href="/projects/dayflow-linux" className="detail-nav-link">
-          Open dossier →
-        </Link>
-      </p>
-    </PageShell>
+    </>
   );
 }

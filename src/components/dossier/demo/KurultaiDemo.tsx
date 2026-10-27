@@ -1,17 +1,8 @@
-import Link from "next/link";
 import fixture from "@/data/kurultai-demo.fixture.json";
 import {
   MetricRow,
-  PageHeader,
-  PageShell,
   SectionHeading,
 } from "@/components/design";
-
-export const metadata = {
-  title: "Kurultai demo — knowledge brain API replay",
-  description:
-    "Replay of real Kurultai daemon API responses — FTS search hits, brain status, and atom registry from a public-docs demo corpus.",
-};
 
 interface SearchHit {
   atom: {
@@ -25,29 +16,12 @@ interface SearchHit {
   matched_by: string[];
 }
 
-export default function KurultaiDemoPage() {
+export function KurultaiDemo() {
   const { status, searches, atoms } = fixture;
   const hits = (q: string) => (searches as Record<string, SearchHit[]>)[q];
 
   return (
-    <PageShell>
-      <PageHeader
-        metadata={[
-          { content: "Demo / Replay" },
-          { content: "kurultai 0.6.0 · FTS-only", className: "hidden sm:inline" },
-          { content: "Public-docs corpus" },
-        ]}
-        title="Kurultai — the knowledge brain, replayed"
-        lede={
-          <>
-            These are real <code>/api/*</code> responses from a Kurultai daemon
-            — a Rust + SQLite store with FTS5 search that runs keyless. The
-            corpus is public demo notes only; the personal brain is never in
-            the demo path.
-          </>
-        }
-      />
-
+    <>
       <dl className="demo-metrics" aria-label="Brain status">
         <MetricRow label="Atoms indexed" value={status.atoms} />
         <MetricRow label="Trusted" value={status.brain.trusted_count} />
@@ -132,14 +106,6 @@ export default function KurultaiDemoPage() {
 
       <p className="demo-provenance">{fixture.provenance}</p>
 
-      <p>
-        <Link href="/demos" className="detail-nav-link">
-          ← Demo bay
-        </Link>{" "}
-        <Link href="/projects/kurultai" className="detail-nav-link">
-          Open dossier →
-        </Link>
-      </p>
-    </PageShell>
+    </>
   );
 }

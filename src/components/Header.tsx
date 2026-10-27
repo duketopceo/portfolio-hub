@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { MenuIcon, CloseIcon } from "./Icons";
-import { headerNavItems as navItems } from "@/data/site-nav";
+import { headerNavItems as navItems, GITHUB_URL } from "@/data/site-nav";
 
 /** Live UTC clock — survey status line. */
 function useUtcClock() {
@@ -92,17 +92,7 @@ export default function Header() {
               ))}
 
               <a
-                href="https://show.luke-the-duke.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="site-header__link"
-              >
-                <span className="site-header__link-idx">↗</span>
-                The Show
-              </a>
-
-              <a
-                href="https://github.com/duketopceo"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub profile"
@@ -142,17 +132,7 @@ export default function Header() {
                 </Link>
               ))}
               <a
-                href="https://show.luke-the-duke.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="site-header__mobilelink"
-                onClick={() => setMenuOpen(false)}
-              >
-                <span className="site-header__link-idx">↗</span>
-                The Show
-              </a>
-              <a
-                href="https://github.com/duketopceo"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="site-header__mobilelink"

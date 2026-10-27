@@ -35,7 +35,7 @@ export function ResumeDocument() {
         </ul>
 
         <div className="resume-doc__lead-cta">
-          <Link href="/openrouter" className="detail-nav-link">
+          <Link href="/projects/openrouter" className="detail-nav-link">
             OpenRouter demos →
           </Link>
           <Link href="/projects" className="detail-nav-link">
