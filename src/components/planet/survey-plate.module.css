@@ -85,12 +85,6 @@
   color: var(--color-text-muted);
 }
 
-/* Orbit highlighted on the SSR plate: the focused body's orbit hairline. */
-:global(.solar-plate):has(:global(.planet-node--focused)) :global(.solar-orbit-line--a) {
-  stroke: var(--color-accent);
-  opacity: 0.55;
-}
-
 /* Private: lock marker beside the label, classification orange. */
 .lock {
   display: inline-block;

@@ -106,6 +106,9 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
   // leave the plate. Cleared when the scene reports not-ready and on unmount,
   // so a scene that dies mid-handoff can never re-hide the plate over itself.
   const pendingSwapRef = useRef<(() => void) | null>(null);
+  // The rAF poll that waits for overlay markers; cancelled with the swap so a
+  // scene lost mid-poll can never hide the plate afterwards.
+  const pollRafRef = useRef<number | null>(null);
   const n = projects.length;
   const { rx, ry } = useStageRadiiRem(stageRef);
 
@@ -163,6 +166,10 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
   const clearPendingSwap = useCallback(() => {
     pendingSwapRef.current?.();
     pendingSwapRef.current = null;
+    if (pollRafRef.current !== null) {
+      cancelAnimationFrame(pollRafRef.current);
+      pollRafRef.current = null;
+    }
   }, []);
 
   useEffect(() => clearPendingSwap, [clearPendingSwap]);
@@ -195,8 +202,8 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
             setSceneReady(true);
             return;
           }
-          const onFocusOut = () => {
-            if (!plate.contains(document.activeElement)) {
+          const onFocusOut = (e: FocusEvent) => {
+            if (!plate.contains(e.relatedTarget as Node | null)) {
               clearPendingSwap();
               setSceneReady(true);
             }
@@ -214,14 +221,15 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
       }
       let tries = 0;
       const poll = () => {
+        pollRafRef.current = null;
         if (overlayHasMarkers()) {
           commit();
           return;
         }
         if (++tries > 120) return; // markers never mounted: keep the plate
-        requestAnimationFrame(poll);
+        pollRafRef.current = requestAnimationFrame(poll);
       };
-      requestAnimationFrame(poll);
+      pollRafRef.current = requestAnimationFrame(poll);
     },
     [clearPendingSwap, findLiveMarker]
   );
@@ -250,6 +258,7 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       const delta = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
       if (delta === 0 || n === 0) return;
       e.preventDefault();
@@ -290,9 +299,12 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
 
   if (n === 0) {
     return (
-      <p className="solar-empty" role="status">
-        No repositories in orbit yet.
-      </p>
+      <section className="poster">
+        <div className="poster__copy">{children}</div>
+        <p className="solar-empty" role="status">
+          No repositories in orbit yet.
+        </p>
+      </section>
     );
   }
 
@@ -324,9 +336,11 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
       onKeyDownCapture={onInteract}
       onPointerDownCapture={onInteract}
       onTouchStartCapture={onInteract}
-      onPointerEnter={() => setPointerInside(true)}
-      onPointerLeave={() => setPointerInside(false)}
-      onFocusCapture={() => setFocusInside(true)}
+      onFocusCapture={(e) =>
+        // Only the map itself counts as "engaged"; the tour's own button and
+        // the readout controls must not hold the tour back after Play.
+        setFocusInside(!!(e.target as HTMLElement).closest(".planet-node"))
+      }
       onBlurCapture={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
           setFocusInside(false);
@@ -345,6 +359,8 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
         role="group"
         aria-label="Lead systems, one marker per project"
         className="solar-system__stage solar-system__stage--universe"
+        onPointerEnter={() => setPointerInside(true)}
+        onPointerLeave={() => setPointerInside(false)}
         onPointerDown={onStagePointerDown}
         onPointerUp={onStagePointerUp}
         onClickCapture={(e) => {
@@ -481,16 +497,15 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
           >
             ›
           </button>
-          {motionOk && (
-            <button
-              type="button"
-              className="poster__tour"
-              data-tour-control
-              onClick={() => dispatchTour(tour === "running" ? "pause" : "play")}
-            >
-              {tour === "running" ? "Pause tour" : "Play tour"}
-            </button>
-          )}
+          {/* Hidden by CSS under reduced motion, so SSR and hydration agree. */}
+          <button
+            type="button"
+            className="poster__tour"
+            data-tour-control
+            onClick={() => dispatchTour(tour === "running" ? "pause" : "play")}
+          >
+            {tour === "running" ? "Pause tour" : "Play tour"}
+          </button>
           <span className="poster__hint">Arrow keys or swipe to move.</span>
         </div>
       </div>

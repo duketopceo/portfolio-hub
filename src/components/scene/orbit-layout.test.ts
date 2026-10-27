@@ -65,6 +65,11 @@ describe("orbitRadiiRem", () => {
     expect(orbitRadiiRem(2000).rx).toBe(25);
   });
 
+  it("switches to the rounder orbit at exactly 34rem", () => {
+    expect(orbitRadiiRem(544).ry / orbitRadiiRem(544).rx).toBeCloseTo(0.8, 6);
+    expect(orbitRadiiRem(545).ry / orbitRadiiRem(545).rx).toBeCloseTo(0.5, 6);
+  });
+
   it("rounds the orbit and floors the radius on narrow stages", () => {
     const narrow = orbitRadiiRem(358);
     expect(narrow.rx).toBeGreaterThanOrEqual(7);

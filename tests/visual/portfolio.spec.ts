@@ -108,6 +108,13 @@ test.describe("Portfolio visual acceptance matrix", () => {
         // The fixed full-viewport starfield would paint over the hero in a
         // full-page capture; hide that decorative layer for baselines only.
         await page.addStyleTag({ content: ".cosmic-bg { display: none !important; }" });
+        // The home orbit tour advances focus on a timer; pause it so the
+        // baseline always shows the same project.
+        const tourButton = page.locator(".poster__tour");
+        if (await tourButton.isVisible()) {
+          await tourButton.click();
+          await page.mouse.move(0, 0);
+        }
         await expect(page).toHaveScreenshot(
           `${route.name}-${viewport.name}.png`,
           { fullPage: true, mask: masked.map((selector) => page.locator(selector)) },
@@ -278,13 +285,18 @@ test.describe("Portfolio visual acceptance matrix", () => {
       page.locator("h1"),
       page.getByRole("link", { name: /See the work/ }),
       page.getByRole("link", { name: "Resume", exact: true }).first(),
-      page.locator(".solar-system__stage"),
     ]) {
       const box = await locator.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.y).toBeGreaterThanOrEqual(0);
-      expect(box!.y + Math.min(box!.height, 200)).toBeLessThanOrEqual(900);
+      expect(box!.y + box!.height).toBeLessThanOrEqual(900);
     }
+    // The map must be mostly on screen, not just its top edge.
+    const stage = await page.locator(".solar-system__stage").boundingBox();
+    expect(stage).not.toBeNull();
+    expect(Math.min(900, stage!.y + stage!.height) - stage!.y).toBeGreaterThan(
+      stage!.height * 0.6,
+    );
   });
 
   test("planet markers link to dossiers and arrow keys move the focus card", async ({
@@ -300,6 +312,11 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await page.locator('.solar-system a.planet-node[tabindex="0"]:visible').focus();
     await page.keyboard.press("ArrowRight");
     await expect(title).not.toHaveText(first ?? "");
+    // DOM focus follows the selection: the focused marker is the card's project.
+    await expect(page.locator("a.planet-node:focus")).toHaveAttribute(
+      "href",
+      (await page.locator(".solar-focus-card").getAttribute("href")) ?? "",
+    );
     await expect(page.locator(".solar-focus-card")).toHaveAttribute(
       "href",
       /^\/projects\//,
@@ -316,6 +333,11 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(tour).toHaveText("Play tour");
     await tour.click();
     await expect(tour).toHaveText("Pause tour");
+    // Play really resumes: the card advances on its own, with the pointer and
+    // focus still on the tour button.
+    const title = page.locator(".solar-focus-card__title");
+    const before = await title.textContent();
+    await expect(title).not.toHaveText(before ?? "", { timeout: 9_000 });
   });
 
   test("reduced motion keeps the full plate, with no tour or running animation", async ({
@@ -328,7 +350,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
       page.locator('.solar-plate a.planet-node[href^="/projects/"]'),
     ).toHaveCount(5);
     await expect(page.locator(".solar-plate--hidden")).toHaveCount(0);
-    await expect(page.locator(".poster__tour")).toHaveCount(0);
+    await expect(page.locator(".poster__tour")).toBeHidden();
     const running = await page.evaluate(() =>
       document
         .querySelector(".poster")!

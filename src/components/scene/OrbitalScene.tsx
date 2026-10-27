@@ -41,6 +41,7 @@ const HAIRLINE = new THREE.Color("#E9ECEF");
 const ORIGIN = new THREE.Vector3();
 const Z_INDEX_RANGE: [number, number] = [12, 4];
 const SIGNAL = new THREE.Color("#FF5C1A");
+const LIGHT_LIFT = new THREE.Vector3(0, 0.45, 0.8);
 
 type Vec3 = [number, number, number];
 
@@ -332,20 +333,27 @@ function ContourBody({
   slug: string;
   color: THREE.Color;
 }) {
+  // Material depends on the body's identity only; the light is a uniform
+  // updated in place so a stage resize never recompiles the shader.
+  const hex = color.getHex();
   const contour = useMemo(() => {
     const surface = planetSurfaceParams(slug);
-    const light = new THREE.Vector3(-slot.x, 0, -slot.z)
-      .normalize()
-      .multiplyScalar(0.85)
-      .add(new THREE.Vector3(0, 0.45, 0.8));
     return createContourMaterial({
-      line: color,
+      line: new THREE.Color(hex),
       seed: surface.seed,
       bands: surface.bands,
       spin: surface.spin,
-      light,
     });
-  }, [slug, slot.x, slot.z, color]);
+  }, [slug, hex]);
+  useEffect(() => {
+    const light = contour.uniforms.uLight.value as THREE.Vector3;
+    light
+      .set(-slot.x, 0, -slot.z)
+      .normalize()
+      .multiplyScalar(0.85)
+      .add(LIGHT_LIFT)
+      .normalize();
+  }, [contour, slot.x, slot.z]);
   useEffect(() => () => contour.dispose(), [contour]);
   useFrame((state) => setUniform(contour, "uTime", state.clock.elapsedTime));
   return (
