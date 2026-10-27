@@ -158,8 +158,12 @@ Squared engineering geometry:
 | `--radius-xl` | `4px` |
 
 Corner ticks (`corner-ticks` utility), hairline grids, crosshair/reticle
-markers in place of glowing planets, figure numbers (`FIG. 01`), margin
-strips, and drafting title blocks are the signature motifs.
+markers around planets, figure numbers (`FIG. 01`), margin strips, and
+drafting title blocks are the signature motifs.
+
+Planets on the home map are lit survey bodies: contour lines over a hard
+terminator, a 1px limb, and a reticle when focused. They never glow: no
+additive blending, no radial falloff outside the limb.
 
 ---
 
@@ -171,7 +175,7 @@ under `prefers-reduced-motion` and leaves meaning-bearing HTML intact:
 | Piece | Component | Implementation | Where |
 |---|---|---|---|
 | Living starfield | `StarfieldScene` | R3F via `SceneFrame` | Site background, under grid/noise/vignette |
-| Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Home FIG.01 |
+| Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Home FIG.01 (hero, beside the intro) |
 | Secondary belt | `BeltScene` | R3F via `SceneFrame` | Home FIG.02 |
 | Surveyed terrain | `SectorTerrain` | ThreeUI `constellation-field` / `topo-field` | `/projects` sector map |
 | Telemetry arcs | `DossierArcField` | ThreeUI `predictive-arc` | Dossier hero band |

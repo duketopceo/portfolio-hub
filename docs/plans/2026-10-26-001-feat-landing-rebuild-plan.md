@@ -98,7 +98,7 @@ All are user-directed (Luke) unless noted.
 - **KTD1. Upgrade in place.** Edit the restored files rather than writing a new map. Rationale: the swap, focus, and fallback logic is the hard part and is correct. Cited by Means.
 - **KTD2. Planet look is a lit survey surface, not a glowing orb.** Contour lines (existing shader) plus a hard-edged terminator from a fixed light direction toward the map center, a 1px limb, and a thin atmosphere-free rim. This honors "no glow" while reading as a planet. Rationale: satisfies Luke's "update the planets" and BRAND's anti-glow rule together.
 - **KTD3. Shader for every body, with the non-shader path kept.** `shouldUseShader` still gates the contour fill; bodies on software GL keep the wireframe limb plus meridians. `isFocalSlug` stops gating the fill and keeps only its extra-meridian and `data-focal` emphasis; body size stays with `resolvePlanetVisual`, so plate and scene cannot disagree. Update the `isFocalSlug` assertions in `src/lib/planet-visual.test.ts` accordingly. Rationale: one visual language (R6) with no cost to weak GPUs.
-- **KTD4. Entrance and tour are driven by one `intro` progress value** held in `OrbitalScene` (damped in `useFrame`) and mirrored as a CSS class (`solar-system--entered`) on the stage for DOM markers and the focus card. `SolarSystemNav` sets the class directly when motion is reduced or the scene fails or never mounts (timeout 2.5 s); hero copy and the h1 are never gated by it (default visible, CSS-only settle). Rationale: a single source keeps canvas and DOM in step and makes reduced motion a single guard.
+- **KTD4. The entrance is CSS-only and plays on the SSR plate.** Rings fade in, bodies scale up from the center in an 80 ms stagger, then the copy and readout settle, all inside `prefers-reduced-motion: no-preference`. The live overlay and canvas do not replay it: the canvas fades in under the plate at the existing swap, and hero copy is never gated by the canvas. Rationale: a canvas-driven `intro` would start after the plate is already visible and read as a glitch.
 - **KTD5. Tour state lives in `SolarSystemNav`.** A small `useOrbitTour` hook (pure timer logic in a testable module) advances `focus` on an interval, observes visibility with `IntersectionObserver`, and permanently stops on any pointer, key, or touch interaction on the section. Rationale: the component already owns `focus`.
 - **KTD6. Hero is a CSS grid, copy left, stage right on 1024 px and wider; stacked below.** The status text and boxed `sheet__plate` title go; the h1 is the visitor's name, set in Archivo heavy with tight tracking per BRAND. Rationale: poster family, one rail.
 - **KTD7. Page-level motion is CSS only** (`@keyframes` on transform/opacity, gated by `@media (prefers-reduced-motion: no-preference)` so the default is the static state). Rationale: no JS animation library, no layout thrash.
@@ -122,7 +122,7 @@ Desktop (>=1024px)                         Mobile
 +-------------------------------------+
 ```
 
-Entrance (once): t0 orbit lines fade in (opacity) -> t+150ms bodies scale 0.6->1 and fade, 70ms stagger along orbit order -> t+700ms focus card and hero copy settle (translateY 8px->0, opacity). The entrance is CSS-first: the SSR plate and DOM markers play it on first paint (class absent in SSR for motion-allowed, so hydration matches; present by media query under reduced motion), and the canvas simply fades in under the plate at the existing swap, so no empty-orbit flash occurs. `intro` is 0 at mount, damped to 1 by `useFrame`; DOM mirror class flips when `intro > 0.98` or immediately under reduced motion.
+Entrance (once): rings fade in (opacity, scale 0.9 to 1), bodies scale 0.55 to 1 with an 80 ms stagger from 350 ms, the copy settles at 100 ms and the readout at 800 ms (translateY 10px to 0, opacity). The SSR plate plays it on first paint; under reduced motion the media query removes it, and the canvas fades in under the plate at the existing swap.
 
 ### Sequencing
 
@@ -188,9 +188,9 @@ U0 verify base, then U1 chrome cuts, U2 hero and page composition, U3 planet sur
 
 - **Goal:** One orchestrated entrance and tasteful feedback.
 - **Requirements:** R13, R14, R15.
-- **Files:** `src/components/scene/OrbitalScene.tsx` (`intro` progress), `src/components/SolarSystemNav.tsx` (entered class), `src/app/globals.css` (`@keyframes` for hero copy settle, focus-card crossfade, hover and active feedback), `src/components/scene/SceneFrame.tsx` (read only).
+- **Files:** `src/app/globals.css` (`@keyframes` for hero copy settle, focus-card crossfade, hover and active feedback), `src/components/scene/SceneFrame.tsx` (read only).
 - **Approach:** Per KTD4 and KTD7. Hover and press feedback on actions and bodies: 120 ms transform and opacity. Replace the focus-card rotator's 3D flip with a short crossfade plus 6 px translate if the flip reads as jank in review. All new motion rules sit inside `@media (prefers-reduced-motion: no-preference)`.
-- **Test scenarios:** With `reducedMotion: "reduce"`, the page has no canvas, the plate is visible, the `solar-system--entered` class is present on first render, and no element has an active animation named in the new keyframes.
+- **Test scenarios:** With `reducedMotion: "reduce"`, the page has no canvas, the plate is visible, and no animation runs inside `.poster`.
 - **Verification:** Playwright emulating `reducedMotion: reduce`; manual frame-time check noted in the PR.
 
 ### U6. Responsive pass

@@ -800,6 +800,11 @@
   border-radius: var(--radius-lg);
 }
 
+.home-transmissions .home-section__head h2 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
 .home-transmissions .activity-strip {
   max-width: none;
   padding: 0;
@@ -6331,19 +6336,20 @@ header[class*="sticky"],
   );
 }
 
+/* Rings: sized to the scene's ringLoop (1.75 x body radius, flattened). */
 .planet-node__ring {
   position: absolute;
-  inset: 8%;
+  inset: 19%;
   border: 1px solid var(--ring-color, var(--planet-color));
   border-radius: 50%;
-  opacity: calc(var(--ring-opacity, 0.3) * 0.6);
-  transform: rotate(var(--ring-tilt, 0deg)) scaleX(1.35);
+  opacity: calc(var(--ring-opacity, 0.3) * 1.2);
+  transform: rotate(var(--ring-tilt, 0deg)) scaleY(0.42);
   pointer-events: none;
 }
 
-.planet-node__ring:nth-child(2) {
-  inset: 2%;
-  transform: rotate(calc(var(--ring-tilt, 0deg) + 18deg)) scaleX(1.55);
+.planet-node__ring + .planet-node__ring {
+  inset: 14%;
+  transform: rotate(calc(var(--ring-tilt, 0deg) + 18deg)) scaleY(0.42);
 }
 
 .planet-node__moons {
