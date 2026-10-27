@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { setUniform } from "@/components/scene/contour-shader";
+import { setUniform } from "@/components/scene/uniforms";
 import { buildStarfield } from "@/components/scene/starfield-data";
 
 const STARLIGHT = new THREE.Color("#E9ECEF");

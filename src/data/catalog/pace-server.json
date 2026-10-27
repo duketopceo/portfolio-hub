@@ -10,16 +10,15 @@
     "featured": true,
     "planetVisual": {
       "size": "lg",
-      "shape": "cube",
+      "shape": "sphere",
       "color": "#A78BFA",
       "rings": [
         {
-          "opacity": 0.35,
-          "tilt": -18
-        },
-        {
-          "opacity": 0.18,
-          "tilt": 24
+          "opacity": 0.28,
+          "tilt": 20,
+          "inner": 1.55,
+          "outer": 1.9,
+          "bands": 2
         }
       ],
       "moons": [
@@ -36,7 +35,19 @@
           "label": "Grafana",
           "kind": "stack"
         }
-      ]
+      ],
+      "surface": "terrain",
+      "seed": 19,
+      "tilt": -9,
+      "rotationSpeed": 0.07,
+      "palette": [
+        "#1B1740",
+        "#6D5BD0",
+        "#DDD6FF"
+      ],
+      "atmosphere": {
+        "strength": 0.32
+      }
     },
     "techStack": [
       "Rust",

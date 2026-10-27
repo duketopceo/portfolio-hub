@@ -137,7 +137,16 @@ export default function SceneFrame({
   // Optimistic: run the frame loop immediately. IO only ever downgrades to
   // paused when the surface scrolls out — hidden tabs throttle rAF anyway.
   const [inView, setInView] = useState(true);
+  const [tabVisible, setTabVisible] = useState(true);
   const [ctxLost, setCtxLost] = useState(false);
+
+  // Hidden tab: stop the loop outright rather than lean on rAF throttling.
+  useEffect(() => {
+    const sync = () => setTabVisible(document.visibilityState !== "hidden");
+    sync();
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
+  }, []);
 
   useEffect(() => {
     if (!hostEl || !motionOK) return;
@@ -181,7 +190,7 @@ export default function SceneFrame({
   const onFirstFrame = useCallback(() => onReadyChange?.(true), [onReadyChange]);
   const onSceneError = useCallback(() => onReadyChange?.(false), [onReadyChange]);
 
-  const policy = framePolicy({ inView, software, dpr });
+  const policy = framePolicy({ inView: inView && tabVisible, software, dpr });
 
   return (
     <div ref={setHostEl} className={className}>

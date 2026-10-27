@@ -1,3 +1,4 @@
+import type { PlanetAtmosphereSpec, PlanetSurface } from "@/lib/planet-spec";
 export interface GitHubRepo {
   name: string;
   /** Owner login. Required to key repos by owner+name — a name-only key lets a
@@ -54,17 +55,41 @@ export interface PlanetMoonConfig {
 
 export interface PlanetRingConfig {
   color?: string;
+  /** Overall visibility 0..1. */
   opacity?: number;
-  /** Ellipse tilt in degrees */
+  /** Inclination off the planet's equatorial plane, degrees. */
   tilt?: number;
+  /** Inner / outer edge as multiples of the planet radius. */
+  inner?: number;
+  outer?: number;
+  /** Dark gaps cut into the ring (0..8). */
+  bands?: number;
 }
 
-/** Per-world visual module config for homepage orbits. */
+/**
+ * PlanetSpec: per-world visual module config for the homepage orbit map,
+ * authored as `curated.planetVisual` in the catalog JSON. Every field is
+ * optional; `resolvePlanetVisual` fills deterministic defaults. See
+ * docs/planets.md.
+ */
 export interface PlanetVisualConfig {
   size?: PlanetSize;
+  /** Static-plate/line-art silhouette only; 3D bodies are always spheres. */
   shape?: PlanetShape;
-  /** Override category accent hex */
+  /** Override category accent hex (the base of the derived palette). */
   color?: string;
+  /** Procedural surface type. */
+  surface?: PlanetSurface;
+  /** Explicit [low, mid, high] colours, overriding the derived palette. */
+  palette?: [string, string, string];
+  /** Noise seed; same seed gives the same planet. Defaults from the slug. */
+  seed?: number;
+  /** Axial tilt in degrees. */
+  tilt?: number;
+  /** Spin in radians per second; negative spins the other way. */
+  rotationSpeed?: number;
+  /** Thin lit-limb rim, drawn inside the silhouette (never an outer glow). */
+  atmosphere?: PlanetAtmosphereSpec;
   rings?: PlanetRingConfig[];
   moons?: PlanetMoonConfig[];
 }

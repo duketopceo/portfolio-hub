@@ -5,6 +5,9 @@ import { catalogFileNames } from "../../../scripts/lib/catalog-files.mjs";
 import { projectConfigs } from "@/data/projects";
 import { listedProjects } from "@/lib/catalog";
 import { isListedProject } from "@/lib/catalog-filter";
+import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
+import { PLANET_SURFACES } from "@/lib/planet-spec";
+import { resolvePlanetVisual } from "@/lib/planet-visual";
 import { catalogEntries } from "./index";
 import { catalogEntrySchema } from "./schema";
 
@@ -65,3 +68,75 @@ describe("catalog JSON", () => {
     expect(catalogEntries).toHaveLength(jsonFiles.length);
   });
 });
+
+describe("planet specs (curated.planetVisual)", () => {
+  const base = () => load("kurultai.json");
+  const withPlanet = (planetVisual: unknown) => {
+    const b = base();
+    return { ...b, curated: { ...b.curated, planetVisual } };
+  };
+
+  it("accepts a full spec and an empty one (everything is optional)", () => {
+    expect(catalogEntrySchema.safeParse(withPlanet({})).success).toBe(true);
+    expect(
+      catalogEntrySchema.safeParse(
+        withPlanet({
+          surface: "terrain",
+          palette: ["#101010", "#808080", "#f0f0f0"],
+          seed: 4,
+          tilt: -12,
+          rotationSpeed: 0.1,
+          atmosphere: { strength: 0.2, color: "#aabbcc" },
+          rings: [{ opacity: 0.4, tilt: 10, inner: 1.5, outer: 2.2, bands: 3 }],
+        }),
+      ).success,
+    ).toBe(true);
+  });
+
+  it("rejects bad surfaces, colours, ranges and unknown keys", () => {
+    for (const bad of [
+      { surface: "lava" },
+      { palette: ["#fff", "#000", "#123456"] },
+      { color: "violet" },
+      { tilt: 120 },
+      { rotationSpeed: 5 },
+      { seed: -1 },
+      { atmosphere: { strength: 2 } },
+      { rings: [{ inner: 0.2 }] },
+      { rings: [{ bands: 12 }] },
+      { glow: true },
+    ]) {
+      expect(catalogEntrySchema.safeParse(withPlanet(bad)).success, JSON.stringify(bad)).toBe(false);
+    }
+  });
+
+  it("gives every lead planet a complete, distinct, valid spec", () => {
+    const surfaces: string[] = [];
+    for (const slug of HOMEPAGE_FEATURED_SLUGS) {
+      const entry = load(`${slug}.json`);
+      const authored = entry.curated.planetVisual;
+      expect(authored, slug).toBeDefined();
+      expect(authored.surface, slug).toBeDefined();
+      const config = projectConfigs.find((p) => p.slug === slug)!;
+      const visual = resolvePlanetVisual(
+        { ...config, repo: null, stars: 0, lastUpdated: "", language: null, languages: [], forks: 0, openIssuesCount: 0, ciStatus: null, githubUrl: null },
+        "primary",
+      );
+      expect(PLANET_SURFACES).toContain(visual.surface);
+      expect(visual.shape, `${slug}: 3D bodies are spheres`).toBe("sphere");
+      surfaces.push(visual.surface);
+    }
+    expect(new Set(surfaces).size).toBe(HOMEPAGE_FEATURED_SLUGS.length);
+  });
+
+  it("tallyline is complete enough to lead the orbit", () => {
+    const c = load("tallyline.json").curated;
+    expect(c.liveUrl).toBe("https://tallyline.app");
+    expect(c.featured).toBe(true);
+    expect(c.highlights.length).toBeGreaterThanOrEqual(3);
+    expect(c.techStack.length).toBeGreaterThanOrEqual(4);
+    expect(c.description.length).toBeGreaterThan(200);
+    expect(c.architecture).toBeTruthy();
+  });
+});
+

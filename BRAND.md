@@ -161,9 +161,15 @@ Corner ticks (`corner-ticks` utility), hairline grids, crosshair/reticle
 markers around planets, figure numbers (`FIG. 01`), margin strips, and
 drafting title blocks are the signature motifs.
 
-Planets on the home map are lit survey bodies: contour lines over a hard
-terminator, a 1px limb, and a reticle when focused. They never glow: no
-additive blending, no radial falloff outside the limb.
+Planets on the home map are real lit 3D bodies with procedural surfaces
+(rocky, gas, ice, cratered, terrain), lit by one key light with a hard
+terminator, a 1px survey limb just outside the disc, and a reticle when
+focused. They never glow: no additive blending, no radial falloff outside the
+limb, no bloom. A thin atmosphere is allowed only as a rim tint blended
+INSIDE the silhouette on the lit side (strength capped at 0.5). On software GL
+the bodies fall back to line-art limbs and meridians. This supersedes the
+contour-line surface of the earlier landing rebuild plan. See
+`docs/planets.md`.
 
 ---
 

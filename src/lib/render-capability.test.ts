@@ -49,3 +49,27 @@ describe("framePolicy", () => {
     expect(framePolicy({ inView, software, dpr })).toEqual(expected);
   });
 });
+
+import { planetQuality, shouldSkipScene } from "./render-capability";
+
+describe("planetQuality", () => {
+  it("is full on a fine pointer with ample or unknown memory", () => {
+    expect(planetQuality({ coarsePointer: false })).toBe("full");
+    expect(planetQuality({ coarsePointer: false, deviceMemory: 8 })).toBe("full");
+  });
+
+  it("is lite on touch devices and on 4 GB or less", () => {
+    expect(planetQuality({ coarsePointer: true })).toBe("lite");
+    expect(planetQuality({ coarsePointer: true, deviceMemory: 8 })).toBe("lite");
+    expect(planetQuality({ coarsePointer: false, deviceMemory: 4 })).toBe("lite");
+  });
+});
+
+describe("shouldSkipScene", () => {
+  it("skips the 3D scene for Save-Data and 2 GB devices only", () => {
+    expect(shouldSkipScene({ saveData: true })).toBe(true);
+    expect(shouldSkipScene({ saveData: false, deviceMemory: 2 })).toBe(true);
+    expect(shouldSkipScene({ saveData: false, deviceMemory: 4 })).toBe(false);
+    expect(shouldSkipScene({ saveData: false })).toBe(false);
+  });
+});

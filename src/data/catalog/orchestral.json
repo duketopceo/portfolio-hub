@@ -10,14 +10,8 @@
     "featured": true,
     "planetVisual": {
       "size": "lg",
-      "shape": "diamond",
+      "shape": "sphere",
       "color": "#38BDF8",
-      "rings": [
-        {
-          "opacity": 0.3,
-          "tilt": -20
-        }
-      ],
       "moons": [
         {
           "label": "OpenRouter",
@@ -27,7 +21,11 @@
           "label": "Eval",
           "kind": "stack"
         }
-      ]
+      ],
+      "surface": "cratered",
+      "seed": 43,
+      "tilt": -18,
+      "rotationSpeed": 0.06
     },
     "techStack": [
       "Python",

@@ -5832,6 +5832,13 @@ header[class*="sticky"],
   }
 }
 
+/* Narrow stages: smaller bodies (bodyScaleFor in orbit-layout.ts, 0.6x). */
+@container (max-width: 34rem) {
+  .solar-system__stage .planet-node--primary {
+    --planet-base: 33.6px;
+  }
+}
+
 .solar-plate--hidden {
   visibility: hidden;
   /* Delay the flip so the scene finishes its fade-in over the plate */
@@ -6218,7 +6225,7 @@ header[class*="sticky"],
 
 .planet-node {
   /* Twice BODY_RADIUS_REM (planet-visual.ts) so plate and scene match. */
-  --planet-base: 30.4px;
+  --planet-base: 56px;
   position: relative;
   --planet-size: calc(var(--planet-base) * var(--planet-scale, 1));
   display: flex;
@@ -6266,8 +6273,8 @@ header[class*="sticky"],
 
 .planet-node__body {
   position: relative;
-  width: calc(var(--planet-size) * 2.8);
-  height: calc(var(--planet-size) * 2.8);
+  width: calc(var(--planet-size) * 1.9);
+  height: calc(var(--planet-size) * 1.9);
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -6362,8 +6369,8 @@ header[class*="sticky"],
   top: 0.35rem;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(var(--planet-size) * 2.8);
-  height: calc(var(--planet-size) * 2.8);
+  width: calc(var(--planet-size) * 1.9);
+  height: calc(var(--planet-size) * 1.9);
   pointer-events: none;
 }
 
@@ -6529,8 +6536,8 @@ header[class*="sticky"],
   }
 
   .planet-node__body {
-    width: calc(var(--planet-size) * 2.4);
-    height: calc(var(--planet-size) * 2.4);
+    width: calc(var(--planet-size) * 2);
+    height: calc(var(--planet-size) * 2);
   }
 
   .planet-node__moon-label {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PLANET_SURFACES, SPEC_LIMITS } from "../../lib/planet-spec";
 
 /**
  * One catalog entry = one JSON file. Ownership is split (KTD1):
@@ -6,10 +7,15 @@ import { z } from "zod";
  *  - `github` is bot-owned facts; fields stay absent/null until the sync fills them.
  */
 
+const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, "expected a #RRGGBB colour");
+
 const planetRing = z.strictObject({
-  color: z.string().optional(),
-  opacity: z.number().optional(),
-  tilt: z.number().optional(),
+  color: hex.optional(),
+  opacity: z.number().min(0).max(1).optional(),
+  tilt: z.number().min(SPEC_LIMITS.tilt[0]).max(SPEC_LIMITS.tilt[1]).optional(),
+  inner: z.number().min(SPEC_LIMITS.ringInner[0]).max(SPEC_LIMITS.ringInner[1]).optional(),
+  outer: z.number().min(SPEC_LIMITS.ringOuter[0]).max(SPEC_LIMITS.ringOuter[1]).optional(),
+  bands: z.number().int().min(SPEC_LIMITS.ringBands[0]).max(SPEC_LIMITS.ringBands[1]).optional(),
 });
 
 const planetMoon = z.strictObject({
@@ -21,7 +27,22 @@ const planetMoon = z.strictObject({
 const planetVisual = z.strictObject({
   size: z.enum(["xs", "sm", "md", "lg", "xl"]).optional(),
   shape: z.enum(["sphere", "hex", "diamond", "cube"]).optional(),
-  color: z.string().optional(),
+  color: hex.optional(),
+  surface: z.enum(PLANET_SURFACES).optional(),
+  palette: z.tuple([hex, hex, hex]).optional(),
+  seed: z.number().int().min(0).max(100000).optional(),
+  tilt: z.number().min(SPEC_LIMITS.tilt[0]).max(SPEC_LIMITS.tilt[1]).optional(),
+  rotationSpeed: z
+    .number()
+    .min(SPEC_LIMITS.rotationSpeed[0])
+    .max(SPEC_LIMITS.rotationSpeed[1])
+    .optional(),
+  atmosphere: z
+    .strictObject({
+      strength: z.number().min(SPEC_LIMITS.atmosphere[0]).max(SPEC_LIMITS.atmosphere[1]).optional(),
+      color: hex.optional(),
+    })
+    .optional(),
   rings: z.array(planetRing).optional(),
   moons: z.array(planetMoon).optional(),
 });

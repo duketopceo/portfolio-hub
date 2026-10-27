@@ -58,6 +58,14 @@ export const deployments: DeploymentConfig[] = [
     online: true,
   },
   {
+    slug: "tallyline",
+    url: "https://tallyline.app",
+    host: "other",
+    role: "Hosted Tallyline",
+    healthCheck: "/",
+    online: true,
+  },
+  {
     slug: "pace-server",
     url: "https://pacehq.io",
     host: "cloudflare",

@@ -14,12 +14,12 @@ export interface OrbitSlot {
 
 /** Label footprint in screen-ish units (z is foreshortened by RING_FORESHORTEN). */
 export const LABEL_BOX = { w: 4.4, h: 1.7 } as const;
-const BODY_BOX = { w: 2.8, h: 1.8 } as const;
+const BODY_BOX = { w: 3.9, h: 2.5 } as const;
 const FORESHORTEN = 0.5;
 const RING_STEP = 0.2;
 const MAX_RINGS = 4;
 /** Label offset from the body centre along screen y. */
-const LABEL_DY = 1.15;
+const LABEL_DY = 1.55;
 
 export function ringScale(ring: number): number {
   return 1 - ring * RING_STEP;
@@ -107,3 +107,10 @@ export function orbitRadiiRem(stageWidthPx: number): { rx: number; ry: number } 
   return { rx, ry: rx * (narrow ? 0.8 : 0.5) };
 }
 
+
+/** Body size multiplier for narrow stages (same 34rem breakpoint as the orbit
+ *  radii). Mirrors `.planet-node` `--planet-base` in the stage container
+ *  query in globals.css; keep the two in sync. */
+export function bodyScaleFor(stageWidthPx: number): number {
+  return stageWidthPx / 16 <= 34 ? 0.6 : 1;
+}

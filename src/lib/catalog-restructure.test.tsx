@@ -17,10 +17,10 @@ vi.mock("@/lib/github", () => ({
 vi.mock("@/components/FilterBar", () => ({ default: () => null }));
 vi.mock("@/components/ConstellationNav", () => ({ default: () => null }));
 
-const FIVE = ["orchestral", "argus", "kurultai", "pace-server", "khan"];
+const FIVE = ["pace-server", "argus", "tallyline", "kurultai", "orchestral"];
 
 describe("U3 catalog restructure", () => {
-  it("featured five are orchestral, argus, kurultai, pace-server, khan", () => {
+  it("featured five are pace-server, argus, tallyline, kurultai, orchestral", () => {
     expect([...HOMEPAGE_FEATURED_SLUGS]).toEqual(FIVE);
     const flagged = projectConfigs.filter((p) => p.featured).map((p) => p.slug);
     expect(flagged.sort()).toEqual([...FIVE].sort());

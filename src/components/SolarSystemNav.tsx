@@ -18,8 +18,10 @@ import type { EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/category-meta";
 import { useMediaQuery } from "@/lib/use-media-query";
+import { useSaveData } from "@/lib/use-save-data";
+import { planetQuality, readDeviceMemory, shouldSkipScene } from "@/lib/render-capability";
 import { PlanetNode } from "@/components/planet/PlanetNode";
-import { orbitRadiiRem } from "@/components/scene/orbit-layout";
+import { bodyScaleFor, orbitRadiiRem } from "@/components/scene/orbit-layout";
 import {
   TOUR_INTERVAL_MS,
   swipeDirection,
@@ -63,7 +65,26 @@ function useStageRadiiRem(stageRef: { current: HTMLDivElement | null }) {
     ro.observe(el);
     return () => ro.disconnect();
   }, [stageRef]);
-  return width === null ? orbitRadiiRem(1280) : orbitRadiiRem(width);
+  const radii = width === null ? orbitRadiiRem(1280) : orbitRadiiRem(width);
+  return { ...radii, bodyScale: width === null ? 1 : bodyScaleFor(width) };
+}
+
+/** True once the browser is idle after hydration (or a short timeout). */
+function useIdle(timeoutMs = 600) {
+  const [idle, setIdle] = useState(false);
+  useEffect(() => {
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(() => setIdle(true), { timeout: timeoutMs });
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(() => setIdle(true), 120);
+    return () => window.clearTimeout(id);
+  }, [timeoutMs]);
+  return idle;
 }
 
 /** True while the element intersects the viewport (optimistic until measured). */
@@ -96,6 +117,17 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
   const sectionRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const motionOk = !useMediaQuery("(prefers-reduced-motion: reduce)", true);
+  const saveData = useSaveData(true);
+  const coarse = useMediaQuery("(pointer: coarse)", false);
+  // The 3D scene is a progressive enhancement: skipped entirely (no chunk
+  // download, no canvas) for reduced motion, Save-Data and tiny devices, and
+  // mounted only once the browser is idle so it never competes with LCP.
+  const idle = useIdle();
+  const sceneEnabled =
+    motionOk &&
+    idle &&
+    !shouldSkipScene({ saveData, deviceMemory: readDeviceMemory() });
+  const quality = planetQuality({ coarsePointer: coarse, deviceMemory: readDeviceMemory() });
   const inView = useInView(sectionRef);
   const [tour, dispatchTour] = useReducer(tourReducer, "running");
   const [pointerInside, setPointerInside] = useState(false);
@@ -110,7 +142,7 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
   // scene lost mid-poll can never hide the plate afterwards.
   const pollRafRef = useRef<number | null>(null);
   const n = projects.length;
-  const { rx, ry } = useStageRadiiRem(stageRef);
+  const { rx, ry, bodyScale } = useStageRadiiRem(stageRef);
 
   // Unitless direction cosines — SSR-stable (pure function of index/count);
   // the plate multiplies them by CSS --orbit-rx/--orbit-ry so its geometry
@@ -378,13 +410,13 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
             first frame, re-shown if the scene is later lost. */}
         <div
           ref={plateRef}
-          className={`solar-plate${sceneReady ? " solar-plate--hidden" : ""}`}
+          className={`solar-plate${sceneReady && sceneEnabled ? " solar-plate--hidden" : ""}`}
           onFocusCapture={(e) => {
             // The --hidden visibility transition keeps the plate focusable
             // for ~300ms after the swap; relocate any late-arriving focus
             // to the same project's live marker instead of letting it die
             // on a hidden element.
-            if (!sceneReady) return;
+            if (!sceneReady || !sceneEnabled) return;
             findLiveMarker(
               (e.target as HTMLElement).closest("a")?.getAttribute("href")
             )?.focus();
@@ -426,21 +458,26 @@ export default function SolarSystemNav({ projects, registryIndexOf, children }: 
           </div>
         </div>
 
-        <SceneLoadBoundary>
-          <SceneFrame
-            className={`solar-scene${sceneReady ? " solar-scene--ready" : ""}`}
-            camera={{ position: [0, 18, 26], fov: 32 }}
-            onReadyChange={handleReadyChange}
-          >
-            <OrbitalScene
-              projects={projects}
-              focusIndex={safeFocusIndex}
-              rx={rx}
-              rz={ry * 1.7}
-              renderMarker={renderPlanet}
-            />
-          </SceneFrame>
-        </SceneLoadBoundary>
+        {sceneEnabled && (
+          <SceneLoadBoundary>
+            <SceneFrame
+              className={`solar-scene${sceneReady ? " solar-scene--ready" : ""}`}
+              camera={{ position: [0, 18, 26], fov: 32 }}
+              dpr={quality === "lite" ? [1, 1.25] : [1, 1.5]}
+              onReadyChange={handleReadyChange}
+            >
+              <OrbitalScene
+                projects={projects}
+                focusIndex={safeFocusIndex}
+                rx={rx}
+                rz={ry * 1.7}
+                quality={quality}
+                bodyScale={bodyScale}
+                renderMarker={renderPlanet}
+              />
+            </SceneFrame>
+          </SceneLoadBoundary>
+        )}
       </div>
 
       <div className="poster__readout">

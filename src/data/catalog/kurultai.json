@@ -10,12 +10,15 @@
     "featured": true,
     "planetVisual": {
       "size": "xl",
-      "shape": "hex",
+      "shape": "sphere",
       "color": "#A78BFA",
       "rings": [
         {
           "opacity": 0.32,
-          "tilt": -15
+          "tilt": -12,
+          "inner": 1.5,
+          "outer": 2.35,
+          "bands": 4
         }
       ],
       "moons": [
@@ -31,7 +34,14 @@
           "label": "OpenRouter",
           "kind": "stack"
         }
-      ]
+      ],
+      "surface": "gas",
+      "seed": 7,
+      "tilt": 14,
+      "rotationSpeed": 0.09,
+      "atmosphere": {
+        "strength": 0.3
+      }
     },
     "techStack": [
       "Rust",

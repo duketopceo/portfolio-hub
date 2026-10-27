@@ -1,6 +1,12 @@
 import type { CSSProperties } from "react";
 import { isProjectLive } from "@/lib/deployments";
 import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
+import {
+  resolvePlanetLook,
+  resolveRing,
+  type ResolvedPlanetLook,
+  type ResolvedRing,
+} from "@/lib/planet-spec";
 import type {
   EnrichedProject,
   PlanetMoonConfig,
@@ -10,13 +16,21 @@ import type {
 } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 
+export type {
+  PlanetSurface,
+  PlanetPalette,
+  ResolvedRing,
+} from "@/lib/planet-spec";
+
 export type OrbitVisualTier = "primary" | "secondary";
 
-export interface ResolvedPlanetVisual {
+/** A fully-defaulted PlanetSpec: everything the scene and the plate draw. */
+export interface ResolvedPlanetVisual extends ResolvedPlanetLook {
   size: PlanetSize;
   shape: PlanetShape;
+  /** Base colour (category colour unless the spec overrides it). */
   color: string;
-  rings: PlanetRingConfig[];
+  rings: ResolvedRing[];
   moons: PlanetMoonConfig[];
 }
 
@@ -54,35 +68,39 @@ function defaultSize(
 ): PlanetSize {
   if (project.planetVisual?.size) return project.planetVisual.size;
 
-  if (tier === "primary") {
-    if (project.slug === "kurultai" || project.slug === "khan") return "xl";
-    return "lg";
-  }
+  if (tier === "primary") return "lg";
 
   if (isProjectLive(project)) return "md";
   if (project.type === "platform" || project.type === "app") return "sm";
   return "xs";
 }
 
-function defaultRings(
+function resolveRings(
   project: EnrichedProject,
   tier: OrbitVisualTier,
   color: string
-): PlanetRingConfig[] {
-  if (project.planetVisual?.rings?.length) return project.planetVisual.rings;
-
-  if (tier === "primary" && project.type === "platform") {
-    return [
-      { color, opacity: 0.35, tilt: -18 },
-      { color, opacity: 0.2, tilt: 24 },
-    ];
+): ResolvedRing[] {
+  const authored = project.planetVisual?.rings;
+  // An authored list (even an empty one) is final; defaults only fill in
+  // when the spec says nothing about rings.
+  let configs: PlanetRingConfig[] = authored ?? [];
+  if (authored === undefined) {
+    if (tier === "primary" && project.type === "platform") {
+      configs = [
+        { opacity: 0.35, tilt: -18 },
+        { opacity: 0.2, tilt: 24 },
+      ];
+    } else if (tier === "secondary" && isProjectLive(project)) {
+      configs = [{ opacity: 0.22, tilt: -12 }];
+    } else {
+      return [];
+    }
   }
-
-  if (tier === "secondary" && isProjectLive(project)) {
-    return [{ color, opacity: 0.22, tilt: -12 }];
+  const out: ResolvedRing[] = [];
+  for (const cfg of configs) {
+    out.push(resolveRing(cfg, color, out[out.length - 1]?.outer));
   }
-
-  return [];
+  return out;
 }
 
 function liveMoon(project: EnrichedProject): PlanetMoonConfig | null {
@@ -125,25 +143,29 @@ export function resolvePlanetVisual(
   project: EnrichedProject,
   tier: OrbitVisualTier
 ): ResolvedPlanetVisual {
-  const color =
-    project.planetVisual?.color ??
-    catColors[project.category] ??
-    "#2DD4BF";
+  const spec = project.planetVisual;
+  const color = spec?.color ?? catColors[project.category] ?? "#2DD4BF";
 
   return {
+    ...resolvePlanetLook({
+      slug: project.slug,
+      type: project.type,
+      baseColor: color,
+      authored: spec,
+    }),
     size: defaultSize(project, tier),
     shape: defaultShape(project),
     color,
-    rings: defaultRings(project, tier, color),
+    rings: resolveRings(project, tier, color),
     moons: defaultMoons(project, tier),
   };
 }
 
 /**
- * Focal planets get the contour-shader fill (when the renderer is a real GPU)
- * or extra meridians. At most two, both from HOMEPAGE_FEATURED_SLUGS.
+ * Focal planets get extra meridians on the static plate and the line-art
+ * (software GL) path. At most two, both from HOMEPAGE_FEATURED_SLUGS.
  */
-export const FOCAL_SLUGS = ["pace-server", "kurultai"] as const satisfies readonly (typeof HOMEPAGE_FEATURED_SLUGS)[number][];
+export const FOCAL_SLUGS = ["kurultai", "pace-server"] as const satisfies readonly (typeof HOMEPAGE_FEATURED_SLUGS)[number][];
 
 export function isFocalSlug(slug: string): boolean {
   return (FOCAL_SLUGS as readonly string[]).includes(slug);
@@ -156,35 +178,7 @@ export function planetBodyRadius(size: PlanetSize): number {
 
 /** Base body radius (rem). The DOM plate's `--planet-base` is 2x this, so the
  *  static plate and the live scene draw the same disc. */
-export const BODY_RADIUS_REM = 0.95;
-
-/** Per-body survey-surface parameters, deterministic from the slug. */
-export interface PlanetSurface {
-  /** Noise phase so no two bodies share a contour field. */
-  seed: number;
-  /** Contour bands across the body (4..6). */
-  bands: number;
-  /** Rotation speed of the contour field (rad/s, slow). */
-  spin: number;
-}
-
-function slugHash(slug: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < slug.length; i++) {
-    h ^= slug.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-export function planetSurfaceParams(slug: string): PlanetSurface {
-  const h = slugHash(slug);
-  return {
-    seed: ((h % 1000) / 1000) * 40 + 1,
-    bands: 4 + (h >>> 10) % 3,
-    spin: 0.025 + (((h >>> 16) % 100) / 100) * 0.03,
-  };
-}
+export const BODY_RADIUS_REM = 1.75;
 
 const LIMB_SIDES: Record<PlanetShape, { sides: number; offset: number }> = {
   sphere: { sides: 64, offset: 0 },
@@ -208,9 +202,11 @@ export function limbPoints(
   return pts;
 }
 
-/** Default body has two meridians; a focal body without the shader gets four. */
-export function meridianCount(focal: boolean, shaderActive: boolean): number {
-  return focal && !shaderActive ? 4 : 2;
+/** Line-art meridians: none when real 3D bodies are drawn; two on the
+ *  software-GL path, four for a focal body. */
+export function meridianCount(focal: boolean, bodiesActive: boolean): number {
+  if (bodiesActive) return 0;
+  return focal ? 4 : 2;
 }
 
 export function isFeaturedSlug(slug: string): boolean {
@@ -233,6 +229,9 @@ export function planetVisualStyle(
 ): CSSProperties {
   return {
     "--planet-color": visual.color,
+    "--planet-low": visual.palette[0],
+    "--planet-mid": visual.palette[1],
+    "--planet-high": visual.palette[2],
     "--planet-scale": planetSizeScale(visual.size),
     "--planet-index": index,
   } as CSSProperties;

@@ -6,6 +6,7 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 ### Changed
 
+- Home planet map: real lit 3D planets (procedural surfaces, tilt and spin, real rings, orbiting moons) driven by a per-project `planetVisual` spec in the catalog JSON; lead set is now Pace, Argus, Tallyline, Kurultai, Orchestral (`docs/planets.md`)
 - Recruiter hire path: `/about`, `/contact`, `/hire` with a public mailto
 - Catalog cards open the dossier; public GitHub is a separate CTA
 - GitHub summary API no longer 502s expected misses (unknown, private, unauthorized)

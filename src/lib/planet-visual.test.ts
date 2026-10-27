@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { projectConfigs } from "@/data/projects";
-import { HOMEPAGE_FEATURED_SLUGS } from "./project-completeness";
 import {
   isFeaturedSlug,
   resolvePlanetVisual,
@@ -17,7 +16,7 @@ describe("resolvePlanetVisual", () => {
       "primary"
     );
     expect(visual.size).toBe("xl");
-    expect(visual.shape).toBe("hex");
+    expect(visual.shape).toBe("sphere");
     expect(visual.moons.length).toBeGreaterThanOrEqual(2);
   });
 
@@ -35,7 +34,8 @@ describe("resolvePlanetVisual", () => {
   });
 
   it("isFeaturedSlug matches homepage featured list", () => {
-    expect(isFeaturedSlug("khan")).toBe(true);
+    expect(isFeaturedSlug("tallyline")).toBe(true);
+    expect(isFeaturedSlug("khan")).toBe(false);
     expect(isFeaturedSlug("homelab")).toBe(false);
   });
 
@@ -50,7 +50,6 @@ import {
   limbPoints,
   meridianCount,
   planetBodyRadius,
-  planetSurfaceParams,
 } from "./planet-visual";
 
 describe("survey-plate body helpers", () => {
@@ -67,19 +66,6 @@ describe("survey-plate body helpers", () => {
     expect(planetBodyRadius("md")).toBeGreaterThan(planetBodyRadius("xs"));
   });
 
-  it("derives a deterministic, distinct survey surface per featured slug", () => {
-    const slugs = [...HOMEPAGE_FEATURED_SLUGS];
-    const surfaces = slugs.map(planetSurfaceParams);
-    expect(planetSurfaceParams("argus")).toEqual(surfaces[1]);
-    for (const s of surfaces) {
-      expect(s.bands).toBeGreaterThanOrEqual(4);
-      expect(s.bands).toBeLessThanOrEqual(6);
-      expect(s.spin).toBeGreaterThanOrEqual(0.025);
-      expect(s.spin).toBeLessThanOrEqual(0.055);
-    }
-    expect(new Set(surfaces.map((s) => s.seed)).size).toBe(slugs.length);
-  });
-
   it("draws closed limb polygons per shape", () => {
     const hex = limbPoints("hex", 1);
     expect(hex).toHaveLength(7);
@@ -91,10 +77,10 @@ describe("survey-plate body helpers", () => {
     for (const [x, y] of sphere) expect(Math.hypot(x, y)).toBeCloseTo(2, 6);
   });
 
-  it("adds meridians only to focal planets without the shader", () => {
+  it("draws line-art meridians only when no 3D bodies are drawn", () => {
     expect(meridianCount(false, false)).toBe(2);
-    expect(meridianCount(false, true)).toBe(2);
-    expect(meridianCount(true, true)).toBe(2);
     expect(meridianCount(true, false)).toBe(4);
+    expect(meridianCount(false, true)).toBe(0);
+    expect(meridianCount(true, true)).toBe(0);
   });
 });
