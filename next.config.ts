@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
 
+  // Bound the in-memory ISR/fetch cache (default 50 MB) to keep RSS low.
+  cacheMaxMemorySize: 20 * 1024 * 1024,
+
   // Hash-based Subresource Integrity: strict CSP compatible with static
   // generation (no per-request nonce needed) — integrity attrs on chunks.
   experimental: {
