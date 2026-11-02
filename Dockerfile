@@ -24,6 +24,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+# Railway bills per GB of memory used; cap V8 so it GCs earlier instead of growing to ~1.3 GB.
+ENV NODE_OPTIONS="--max-old-space-size=384"
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
