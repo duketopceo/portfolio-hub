@@ -1,0 +1,22 @@
+{
+  "slug": "snapdex",
+  "order": 71,
+  "curated": {
+    "displayName": "snapdex",
+    "tagline": "Auto-rename and index Wayland screenshots with a vision model",
+    "description": "Captions each Omarchy screenshot with one low-detail OpenRouter vision request, files it into a dated Library with a descriptive snake_case name, and writes a markdown index.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": ["Python", "OpenRouter", "Pillow", "Wayland", "Omarchy"],
+    "private": false,
+    "highlights": [
+      "One vision request per image with retries and a safe fallback name",
+      "Dated YYYY/MM Library with collision-safe names",
+      "Markdown index of every capture"
+    ],
+    "architecture": "Screenshot inbox → OpenRouter vision caption → dated Library + index.md",
+    "media": { "release": "n/a", "demo": "n/a" }
+  },
+  "github": { "repoName": "snapdex", "owner": "duketopceo" }
+}

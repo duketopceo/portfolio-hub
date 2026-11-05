@@ -1,0 +1,22 @@
+{
+  "slug": "blip",
+  "order": 70,
+  "curated": {
+    "displayName": "Blip",
+    "tagline": "iMessage in the Omarchy bar, with your Mac as the gateway",
+    "description": "Omarchy bar widget that reads and sends iMessage from Linux, including group chats, read receipts and desktop toasts. A Mac signed into Apple ID acts as the gateway over SSH; the Linux side is a thin QuickShell and Bun client.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": ["TypeScript", "Bun", "QML", "QuickShell", "Omarchy"],
+    "private": false,
+    "highlights": [
+      "Read, send and group chats from a Linux bar popout",
+      "Mac-over-SSH gateway instead of reimplementing iMessage",
+      "Dims and waits gracefully when the Mac sleeps"
+    ],
+    "architecture": "Mac (Messages) → SSH gateway → Bun client → QuickShell bar widget",
+    "media": { "release": "n/a", "demo": "n/a" }
+  },
+  "github": { "repoName": "blip", "owner": "duketopceo" }
+}
