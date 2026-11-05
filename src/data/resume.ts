@@ -8,7 +8,7 @@
 export const SITE = "https://luke-the-duke.com";
 
 // ISO date printed on the PDF and shown beside its link.
-export const resumeRevisionDate = "2026-10-23";
+export const resumeRevisionDate = "2026-11-05";
 
 export const basics = {
   name: "Luke Kimball",
