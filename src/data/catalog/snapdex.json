@@ -1,0 +1,22 @@
+{
+  "slug": "snapdex",
+  "order": 70,
+  "curated": {
+    "displayName": "Snapdex",
+    "tagline": "Vision-model indexer that auto-renames Wayland screenshots by date and caption",
+    "description": "Auto-renames and indexes Wayland screenshots with a vision model, filing them by date and caption and writing a markdown catalog.",
+    "category": "ai",
+    "type": "app",
+    "featured": false,
+    "private": false,
+    "techStack": ["Python", "Wayland", "vision-model", "markdown"],
+    "highlights": [
+      "Auto-renames screenshots by date and caption",
+      "Filing-by-date plus a caption index",
+      "Writes a readable markdown catalog"
+    ],
+    "architecture": "Screenshot event → vision-model caption → dated file + markdown catalog",
+    "media": { "release": "to-record", "demo": "to-record" }
+  },
+  "github": { "repoName": "snapdex", "owner": "duketopceo" }
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "keytypist",
+  "order": 71,
+  "curated": {
+    "displayName": "KeyTypist",
+    "tagline": "Terminal next-key prediction with n-gram and local-LLM engines",
+    "description": "A terminal next-key prediction TUI with n-gram and local-LLM engines, plus a daemon that maps your typing speed to keyboard backlight.",
+    "category": "ai",
+    "type": "app",
+    "featured": false,
+    "private": false,
+    "techStack": ["Python", "TUI", "local-LLM", "n-gram"],
+    "highlights": [
+      "Next-key prediction running in the terminal",
+      "n-gram and local-LLM prediction engines",
+      "Daemon maps typing speed to keyboard backlight"
+    ],
+    "architecture": "Terminal event → n-gram / local-LLM prediction → next-key hint + backlight mapping",
+    "media": { "release": "to-record", "demo": "to-record" }
+  },
+  "github": { "repoName": "keytypist", "owner": "duketopceo" }
+}

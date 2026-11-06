@@ -22,51 +22,55 @@ import entry19 from "./dayflow-linux.json";
 import entry20 from "./dixi.json";
 import entry21 from "./etl-pipeline.json";
 import entry22 from "./finance-frenzy.json";
-import entry23 from "./harbor-openrouter-ios-client.json";
-import entry24 from "./helm-qmk-macropad.json";
-import entry25 from "./homelab.json";
-import entry26 from "./ikbr-dashboard.json";
-import entry27 from "./jev-compact.json";
-import entry28 from "./kate-ios.json";
-import entry29 from "./kate.json";
-import entry30 from "./khan.json";
-import entry31 from "./kurultai-people.json";
-import entry32 from "./kurultai.json";
-import entry33 from "./luke-agents.json";
-import entry34 from "./military-hardware-db.json";
-import entry35 from "./omarchy-agents.json";
-import entry36 from "./omarchy-bumblebee.json";
-import entry37 from "./omarchy-connections.json";
-import entry38 from "./omarchy-fan.json";
-import entry39 from "./omarchy-nexus.json";
-import entry40 from "./omarchy-numbat.json";
-import entry41 from "./omarchy-plugins.json";
-import entry42 from "./omarchy-power.json";
-import entry43 from "./omarchy-pplx.json";
-import entry44 from "./omarchy-standby.json";
-import entry45 from "./omarchy-ticker.json";
-import entry46 from "./omarchy-wisp.json";
-import entry47 from "./omaseal.json";
-import entry48 from "./open-computer.json";
-import entry49 from "./openrouter-usage.json";
-import entry50 from "./openrouter.json";
-import entry51 from "./optimezer.json";
-import entry52 from "./orchestral.json";
-import entry53 from "./pace-server.json";
-import entry54 from "./personal-blog.json";
-import entry55 from "./pinetree-solari-demo.json";
-import entry56 from "./portfolio-hub.json";
-import entry57 from "./project-atlas.json";
-import entry58 from "./quiz-the-best.json";
-import entry59 from "./rts-skyrim.json";
-import entry60 from "./scooter-ios.json";
-import entry61 from "./series65-study-app.json";
-import entry62 from "./skyguard-ai.json";
-import entry63 from "./tallyline.json";
-import entry64 from "./trading-bot.json";
-import entry65 from "./void-sleep.json";
-import entry66 from "./wisp.json";
-import entry67 from "./wordink.json";
+import entry23 from "./fivebyfive.json";
+import entry24 from "./harbor-openrouter-ios-client.json";
+import entry25 from "./helm-qmk-macropad.json";
+import entry26 from "./homelab.json";
+import entry27 from "./ikbr-dashboard.json";
+import entry28 from "./jev-compact.json";
+import entry29 from "./kate-ios.json";
+import entry30 from "./kate.json";
+import entry31 from "./keytypist.json";
+import entry32 from "./khan.json";
+import entry33 from "./kurultai-people.json";
+import entry34 from "./kurultai.json";
+import entry35 from "./luke-agents.json";
+import entry36 from "./military-hardware-db.json";
+import entry37 from "./omarchy-agents.json";
+import entry38 from "./omarchy-bumblebee.json";
+import entry39 from "./omarchy-connections.json";
+import entry40 from "./omarchy-fan.json";
+import entry41 from "./omarchy-nexus.json";
+import entry42 from "./omarchy-numbat.json";
+import entry43 from "./omarchy-plugins.json";
+import entry44 from "./omarchy-power.json";
+import entry45 from "./omarchy-pplx.json";
+import entry46 from "./omarchy-standby.json";
+import entry47 from "./omarchy-ticker.json";
+import entry48 from "./omarchy-wisp.json";
+import entry49 from "./omaseal.json";
+import entry50 from "./open-computer.json";
+import entry51 from "./openrouter-usage.json";
+import entry52 from "./openrouter.json";
+import entry53 from "./optimezer.json";
+import entry54 from "./orchestral.json";
+import entry55 from "./pace-gallery.json";
+import entry56 from "./pace-server.json";
+import entry57 from "./personal-blog.json";
+import entry58 from "./pinetree-solari-demo.json";
+import entry59 from "./portfolio-hub.json";
+import entry60 from "./project-atlas.json";
+import entry61 from "./quiz-the-best.json";
+import entry62 from "./rts-skyrim.json";
+import entry63 from "./scooter-ios.json";
+import entry64 from "./series65-study-app.json";
+import entry65 from "./skyguard-ai.json";
+import entry66 from "./snapdex.json";
+import entry67 from "./tallyline.json";
+import entry68 from "./trading-bot.json";
+import entry69 from "./void-sleep.json";
+import entry70 from "./wisp.json";
+import entry71 from "./wordink.json";
 
 /** Raw catalog entries; `src/data/projects.ts` validates them with the zod schema. */
 export const catalogEntries: readonly unknown[] = [
@@ -138,4 +142,8 @@ export const catalogEntries: readonly unknown[] = [
   entry65,
   entry66,
   entry67,
+  entry68,
+  entry69,
+  entry70,
+  entry71,
 ];
