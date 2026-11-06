@@ -1,0 +1,22 @@
+{
+  "slug": "pace-gallery",
+  "order": 73,
+  "curated": {
+    "displayName": "Pace Gallery",
+    "tagline": "A public static grid of authored WebGL and DOM component cards",
+    "description": "A public static grid of authored WebGL and DOM component cards, each showing a live render, a one-line description and its measured JavaScript byte cost.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "private": false,
+    "techStack": ["TypeScript", "WebGL", "DOM", "static"],
+    "highlights": [
+      "Live-rendering WebGL and DOM component cards",
+      "One-line description per component",
+      "Measured JavaScript byte cost per card"
+    ],
+    "architecture": "Authored component cards → live render + description + JavaScript byte cost grid",
+    "media": { "release": "to-record", "demo": "to-record" }
+  },
+  "github": { "repoName": "pace-gallery", "owner": "duketopceo" }
+}
