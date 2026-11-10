@@ -1,5 +1,5 @@
 import { listedProjects } from "@/lib/catalog";
-import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
+import { featuredSlugs } from "@/lib/featured";
 import { scrubActivityText, scrubBranchRef } from "@/lib/activity-scrubber";
 import {
   ACTIVITY_DEFAULT_RANGE,
@@ -83,7 +83,7 @@ interface GhIssue {
 function featuredRepoTargets(): RepoTarget[] {
   const targets: RepoTarget[] = [];
   const listed = listedProjects();
-  for (const slug of HOMEPAGE_FEATURED_SLUGS) {
+  for (const slug of featuredSlugs()) {
     const cfg = listed.find((p) => p.slug === slug);
     if (!cfg || !cfg.repoName) continue;
     targets.push({

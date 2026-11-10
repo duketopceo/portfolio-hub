@@ -81,6 +81,7 @@ export function ProjectMediaView({
                   src={media.captions}
                   srcLang="en"
                   label="English"
+                  default
                 />
               )}
             </video>
@@ -159,7 +160,7 @@ export function ProjectMediaSection({
     return null;
   }
   return (
-    <PageShell className="dossier-page__demo dossier-page__media">
+    <PageShell id="video" className="dossier-page__demo dossier-page__media">
       <ProjectMedia kind="release" slot={media.release} title={title} slug={slug} />
       <ProjectMedia kind="demo" slot={media.demo} title={title} slug={slug} />
     </PageShell>

@@ -1,0 +1,98 @@
+import { describe, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { projectConfigs } from "@/data/projects";
+import { RANKING_PINS } from "@/data/ranking-pins";
+import { isListedProject } from "@/lib/catalog-filter";
+import { rankProjects } from "@/lib/ranking";
+import type { EnrichedProject } from "@/lib/types";
+
+const enriched = vi.hoisted(() => ({ all: [] as unknown[] }));
+
+vi.mock("@/lib/github", () => ({
+  getEnrichedProjects: async () => enriched.all,
+}));
+vi.mock("@/lib/github-activity", () => ({
+  getSignalActivity: async () => ({
+    payloads: [],
+    contributions: [],
+    fetchedAt: "2026-11-10T12:00:00.000Z",
+    source: "fixture",
+    publicSlugs: [],
+    totalProjects: 35,
+  }),
+}));
+
+enriched.all = projectConfigs.map((p) => ({
+  ...p,
+  repo: null,
+  stars: 0,
+  language: null,
+  languages: [],
+  forks: 0,
+  openIssuesCount: 0,
+  ciStatus: null,
+  lastUpdated: "",
+  githubUrl: p.private ? null : `https://github.com/duketopceo/${p.repoName}`,
+})) as unknown as EnrichedProject[];
+
+async function home(): Promise<string> {
+  const { default: Page } = await import("@/app/page");
+  return renderToStaticMarkup(await Page());
+}
+
+describe("home layout", () => {
+  it("renders the three pinned projects before the signal section", async () => {
+    const html = await home();
+    const signal = html.indexOf("home-transmissions-heading");
+    expect(signal).toBeGreaterThan(-1);
+    const positions = RANKING_PINS.map((slug) =>
+      html.indexOf(`data-lead-rank="${RANKING_PINS.indexOf(slug) + 1}"`)
+    );
+    for (const pos of positions) {
+      expect(pos).toBeGreaterThan(-1);
+      expect(pos).toBeLessThan(signal);
+    }
+    RANKING_PINS.forEach((slug) => {
+      expect(html.indexOf(`href="/projects/${slug}`)).toBeLessThan(signal);
+    });
+  });
+
+  it("drops the orbit poster and its map", async () => {
+    const html = await home();
+    expect(html).not.toContain("poster__");
+    expect(html).not.toContain("solar-system");
+  });
+
+  it("lists every other project once, in category groups, never the pinned ones", async () => {
+    const html = await home();
+    const rest = html.slice(html.indexOf("home-rest-heading"));
+    const listed = projectConfigs.filter(isListedProject);
+    for (const p of listed) {
+      const cards = rest.split(`href="/projects/${p.slug}"`).length - 1;
+      if ((RANKING_PINS as readonly string[]).includes(p.slug)) expect(cards).toBe(0);
+      else expect(cards).toBe(1);
+    }
+  });
+
+  it("groups cards in rank order inside each category", async () => {
+    const html = await home();
+    const rest = html.slice(html.indexOf("home-rest-heading"));
+    const ranked = rankProjects(projectConfigs).filter(
+      (p) => p.category === "ai" && !(RANKING_PINS as readonly string[]).includes(p.slug)
+    );
+    const order = ranked.map((p) => rest.indexOf(`href="/projects/${p.slug}"`));
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+  });
+
+  it("gives top-3 cards with and without video the same structure", async () => {
+    const html = await home();
+    const cards = [...html.matchAll(/<article class="lead-card"[\s\S]*?<\/article>/g)].map((m) => m[0]);
+    expect(cards).toHaveLength(3);
+    const shape = (c: string) =>
+      [...c.matchAll(/class="(lead-card__[a-z-]+)/g)]
+        .map((m) => m[1])
+        .filter((c) => !["lead-card__play", "lead-card__poster", "lead-card__type", "lead-card__play-icon", "lead-card__live"].includes(c));
+    expect(shape(cards[1])).toEqual(shape(cards[0]));
+    expect(shape(cards[2])).toEqual(shape(cards[0]));
+  });
+});

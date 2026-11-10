@@ -51,4 +51,23 @@ describe("ProjectMediaSection (live)", () => {
     expect(play?.getAttribute("data-umami-event-kind")).toBe("demo");
     expect(play?.getAttribute("data-umami-event-slug")).toBe("argus");
   });
+
+  it("turns captions on by default when the asset has a captions track", async () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    await act(async () => {
+      root.render(
+        <ProjectMediaSection
+          media={{ release: { ...asset, captions: "/media/captions/argus-release.vtt" }, demo: "to-record" }}
+          title="Argus"
+          slug="argus"
+        />
+      );
+    });
+    const track = container.querySelector("video track");
+    expect(track?.getAttribute("kind")).toBe("captions");
+    expect(track?.hasAttribute("default")).toBe(true);
+    expect(container.querySelector("#video")).not.toBeNull();
+  });
 });

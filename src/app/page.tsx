@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
-import { getHomepageOrbitProjects } from "@/lib/project-completeness";
+import { leadProjects, rankProjects, restProjects } from "@/lib/ranking";
 import { getSignalActivity } from "@/lib/github-activity";
 import { buildSignalSummary } from "@/lib/signal-summary";
 import { SignalGlance } from "@/components/SignalGlance";
-import SolarSystemNav from "@/components/SolarSystemNav";
-import { toClientProject } from "@/lib/client-project";
-import { ActionRow, PageShell } from "@/components/design";
+import LeadProjectCard from "@/components/LeadProjectCard";
+import CategoryGroups from "@/components/CategoryGroups";
+import { ActionRow, PageShell, SectionHeading } from "@/components/design";
 
 export const revalidate = 3600;
 
@@ -25,50 +25,63 @@ export default async function Home() {
     },
     activity.contributions
   );
-  const lead = getHomepageOrbitProjects(all);
-  const registryIndex = all.map((p) => p.slug);
-  const leadIndex = lead.map((p) => Math.max(registryIndex.indexOf(p.slug), 0));
+  const ranked = rankProjects(all);
+  const leads = leadProjects(ranked);
+  const rest = restProjects(ranked);
 
   return (
     <div className="home">
-      {/* 1 — poster: who, what, one action, and the map as the way in */}
-      <SolarSystemNav
-        key={lead[0]?.slug ?? "orbit"}
-        projects={lead.map(toClientProject)}
-        registryIndexOf={leadIndex}
-      >
-        <h1 id="home-title" className="poster__title">
-          Luke
-          <br />
-          Kimball
-        </h1>
-        <p className="poster__lede">
-          Applied AI engineer. I build agent runtimes and the platforms they
-          run on.
-        </p>
-        <p className="poster__tagline">Systems that compound.</p>
-        <ActionRow className="poster__actions">
-          <Link
-            href="/projects"
-            className="detail-cta"
-            data-umami-event="home-cta"
-            data-umami-event-target="work"
-          >
-            See the work →
-          </Link>
-          <Link
-            href="/resume"
-            className="detail-cta detail-cta--secondary"
-            data-umami-event="home-cta"
-            data-umami-event-target="resume"
-          >
-            Resume
-          </Link>
-        </ActionRow>
-      </SolarSystemNav>
+      {/* 1 — hero: who, what, one primary and one secondary action */}
+      <header className="home-hero">
+        <div className="home-hero__inner">
+          <h1 id="home-title" className="home-hero__title">
+            Luke
+            <br />
+            Kimball
+          </h1>
+          <div className="home-hero__copy">
+            <p className="home-hero__lede">
+              Applied AI engineer. I build agent runtimes and the platforms
+              they run on.
+            </p>
+            <p className="home-hero__tagline">Systems that compound.</p>
+            <ActionRow className="home-hero__actions">
+              <Link
+                href="/projects"
+                className="detail-cta"
+                data-umami-event="home-cta"
+                data-umami-event-target="work"
+              >
+                See the work →
+              </Link>
+              <Link
+                href="/resume"
+                className="detail-cta detail-cta--secondary"
+                data-umami-event="home-cta"
+                data-umami-event-target="resume"
+              >
+                Resume
+              </Link>
+            </ActionRow>
+          </div>
+        </div>
+      </header>
 
       <PageShell className="home-flow" measure="wide">
-        {/* 2 — compact activity strip */}
+        {/* 2 — the three lead projects */}
+        <section className="home-leads" aria-labelledby="home-leads-heading">
+          <SectionHeading
+            eyebrow="Lead work"
+            title={<span id="home-leads-heading">Start here</span>}
+          />
+          <div className="lead-grid">
+            {leads.map((p, i) => (
+              <LeadProjectCard key={p.slug} project={p} rank={i + 1} />
+            ))}
+          </div>
+        </section>
+
+        {/* 3 — compact activity strip */}
         <section
           className="home-transmissions"
           aria-labelledby="home-transmissions-heading"
@@ -79,7 +92,17 @@ export default async function Home() {
           <SignalGlance summary={signal} />
         </section>
 
-        {/* 3 — closing action */}
+        {/* 4 — everything else, ranked, by category */}
+        <section className="home-rest" aria-labelledby="home-rest-heading">
+          <SectionHeading
+            eyebrow="The rest of the work"
+            title={<span id="home-rest-heading">More projects</span>}
+            description={`${rest.length} more, strongest first within each category.`}
+          />
+          <CategoryGroups ranked={ranked} registry={all} />
+        </section>
+
+        {/* 5 — closing action */}
         <section className="home-close" aria-label="Next steps">
           <p className="home-close__line">
             Hiring for applied AI or agent infrastructure?

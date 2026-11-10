@@ -113,3 +113,23 @@ describe("committed snapshot", () => {
     expect(raw).not.toMatch(/duketopceo\/|github\.com|https?:/);
   });
 });
+
+describe("pins and featured slugs", () => {
+  it("has exactly one pin per lead slot", async () => {
+    const { DEFAULT_PIN_COUNT } = await import("./ranking-core");
+    expect(RANKING_PINS).toHaveLength(DEFAULT_PIN_COUNT);
+  });
+
+  it("features ranking positions 1 to 5", async () => {
+    const { featuredSlugs } = await import("./featured");
+    expect(featuredSlugs()).toEqual(rankProjects(projectConfigs).slice(0, 5).map((p) => p.slug));
+  });
+
+  it("dossier next from rank N links to rank N+1", async () => {
+    const { getOrbitAdjacent } = await import("./project-completeness");
+    const ranked = rankProjects(projectConfigs);
+    const adj = getOrbitAdjacent(ranked as never, ranked[4].slug);
+    expect(adj?.next.slug).toBe(ranked[5].slug);
+    expect(adj?.prev.slug).toBe(ranked[3].slug);
+  });
+});

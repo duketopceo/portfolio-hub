@@ -5,5 +5,3 @@
  */
 export const RANKING_PINS = ["kurultai", "tallyline", "portfolio-hub"] as const;
 
-/** Number of lead slots. A pin that is not listed is replaced by the next-ranked project. */
-export const PIN_COUNT = 3;

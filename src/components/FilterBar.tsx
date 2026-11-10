@@ -5,9 +5,15 @@ import { EnrichedProject, ProjectCategory } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/category-meta";
 import ProjectCard from "./ProjectCard";
+import LeadProjectCard from "./LeadProjectCard";
+import CategoryGroups from "./CategoryGroups";
+import { leadProjects } from "@/lib/ranking-core";
 
 interface FilterBarProps {
+  /** Ranked order (src/lib/ranking.ts). */
   projects: EnrichedProject[];
+  /** Catalog order, for each card's stable CI number. */
+  registrySlugs: string[];
 }
 
 const categories: { key: ProjectCategory | "all"; label: string }[] = [
@@ -20,34 +26,17 @@ const categories: { key: ProjectCategory | "all"; label: string }[] = [
   { key: "apps", label: "Apps" },
 ];
 
-const sortLabels: Record<"recent" | "name" | "stars", string> = {
-  recent: "Recent",
-  name: "Name",
-  stars: "Stars",
-};
-
-export default function FilterBar({ projects }: FilterBarProps) {
+export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
   const [activeCategory, setActiveCategory] = useState<
     ProjectCategory | "all"
   >("all");
-  const [sortBy, setSortBy] = useState<"recent" | "name" | "stars">("recent");
 
-  const filtered = projects
-    .filter(
-      (p) => activeCategory === "all" || p.category === activeCategory
-    )
-    .sort((a, b) => {
-      if (sortBy === "recent") {
-        const ta = a.lastUpdated ? Date.parse(a.lastUpdated) : 0;
-        const tb = b.lastUpdated ? Date.parse(b.lastUpdated) : 0;
-        return (
-          (Number.isNaN(tb) ? 0 : tb) - (Number.isNaN(ta) ? 0 : ta) ||
-          a.slug.localeCompare(b.slug)
-        );
-      }
-      if (sortBy === "stars") return b.stars - a.stars || a.slug.localeCompare(b.slug);
-      return a.displayName.localeCompare(b.displayName);
-    });
+  // `projects` arrives in ranking order; filtering keeps that order.
+  const filtered = projects.filter(
+    (p) => activeCategory === "all" || p.category === activeCategory
+  );
+  const showBands = activeCategory === "all";
+  const registryOf = (slug: string) => registrySlugs.indexOf(slug);
 
   const scopeLabel =
     activeCategory !== "all"
@@ -60,7 +49,7 @@ export default function FilterBar({ projects }: FilterBarProps) {
         <div className="catalog-toolbar__row">
           <div
             className="catalog-pills filter-pills-row"
-            role="tablist"
+            role="group"
             aria-label="Filter by category"
           >
             {categories.map((cat) => {
@@ -75,9 +64,8 @@ export default function FilterBar({ projects }: FilterBarProps) {
                 <button
                   key={cat.key}
                   type="button"
-                  role="tab"
-                  aria-selected={active}
-                  id={`catalog-tab-${cat.key}`}
+                  aria-pressed={active}
+                  id={`catalog-filter-${cat.key}`}
                   onClick={() => setActiveCategory(cat.key)}
                   data-umami-event="catalog-filter"
                   data-umami-event-category={cat.key}
@@ -95,29 +83,10 @@ export default function FilterBar({ projects }: FilterBarProps) {
             })}
           </div>
 
-          <div
-            className="catalog-sort"
-            role="group"
-            aria-label="Sort projects"
-          >
-            {(["recent", "name", "stars"] as const).map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => setSortBy(opt)}
-                data-umami-event="catalog-sort"
-                data-umami-event-sort={opt}
-                className={`catalog-sort__btn${sortBy === opt ? " catalog-sort__btn--active" : ""}`}
-              >
-                {sortLabels[opt]}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
-      <>
-      <p className="catalog-results-meta">
+      <p className="catalog-results-meta" aria-live="polite">
         <span className="catalog-results-meta__n">{filtered.length}</span>
         <span>
           {" "}
@@ -129,31 +98,45 @@ export default function FilterBar({ projects }: FilterBarProps) {
             · {scopeLabel}
           </span>
         )}
+        {!scopeLabel && <span> · ranked, strongest first</span>}
       </p>
 
-      <div className="catalog-grid">
-        {filtered.map((project, i) => (
-          <div
-            key={project.slug}
-            className="animate-fade-up"
-            style={{ animationDelay: `${i * 40}ms` }}
-          >
-            <ProjectCard
-              project={project}
-              registryIndex={projects.findIndex(
-                (p) => p.slug === project.slug
-              )}
-            />
-          </div>
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
+      {filtered.length === 0 ? (
         <div className="catalog-empty">
-          No projects in this category.
+          <p>No projects match this filter.</p>
+          <button
+            type="button"
+            className="detail-cta detail-cta--secondary"
+            onClick={() => setActiveCategory("all")}
+          >
+            Clear filter
+          </button>
+        </div>
+      ) : showBands ? (
+        <>
+          <section className="projects-leads" aria-labelledby="projects-leads-heading">
+            <h2 id="projects-leads-heading" className="category-group__title">
+              Lead work
+            </h2>
+            <div className="lead-grid">
+              {leadProjects(filtered).map((p, i) => (
+                <LeadProjectCard key={p.slug} project={p} rank={i + 1} />
+              ))}
+            </div>
+          </section>
+          <CategoryGroups ranked={filtered} registry={projects} />
+        </>
+      ) : (
+        <div className="catalog-grid">
+          {filtered.map((project) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              registryIndex={registryOf(project.slug)}
+            />
+          ))}
         </div>
       )}
-      </>
     </div>
   );
 }

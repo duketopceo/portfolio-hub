@@ -2,6 +2,7 @@ import { getEnrichedProjects } from "@/lib/github";
 import FilterBar from "@/components/FilterBar";
 import { toClientProject } from "@/lib/client-project";
 import { PageHeader, PageShell, SectionHeading } from "@/components/design";
+import { rankProjects } from "@/lib/ranking";
 import { earlierWork } from "@/lib/catalog";
 import { publicGithubUrl } from "@/lib/github-public-url";
 
@@ -25,7 +26,9 @@ export const metadata = {
 
 export default async function ProjectsPage() {
   const projects = await getEnrichedProjects();
-  const clientProjects = projects.map(toClientProject);
+  // Ranked order: three pinned leads, then everything by score (src/lib/ranking.ts).
+  const clientProjects = rankProjects(projects).map(toClientProject);
+  const registrySlugs = projects.map((p) => p.slug);
   // Private earlier work is never rendered, not even by name.
   const earlier = earlierWork().filter((p) => !p.private);
 
@@ -38,10 +41,10 @@ export default async function ProjectsPage() {
           { content: "Sheet 02" },
         ]}
         title="Work"
-        lede="Everything I have built — finance, AI, OSINT, infrastructure, web. Filter by category."
+        lede="Three lead projects first, then everything else, strongest first. Filter by category."
       />
 
-      <FilterBar projects={clientProjects} />
+      <FilterBar projects={clientProjects} registrySlugs={registrySlugs} />
 
       <section
         id="earlier-work"

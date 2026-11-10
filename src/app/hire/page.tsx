@@ -13,7 +13,7 @@ import HireBackdrop from "@/components/hire/HireBackdrop";
 import { UpstreamSummary } from "@/components/UpstreamContributions";
 import { basics } from "@/data/resume";
 import { listedProjects } from "@/lib/catalog";
-import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
+import { featuredSlugs } from "@/lib/featured";
 import { getUpstreamContributions } from "@/lib/upstream";
 
 export const metadata = {
@@ -23,7 +23,7 @@ export const metadata = {
 
 export default async function HirePage() {
   const listed = listedProjects();
-  const featured = HOMEPAGE_FEATURED_SLUGS.map((slug) =>
+  const featured = featuredSlugs().map((slug) =>
     listed.find((x) => x.slug === slug)
   ).filter((p): p is NonNullable<typeof p> => p !== undefined);
   const upstream = await getUpstreamContributions();

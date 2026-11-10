@@ -95,3 +95,41 @@ export function orderByRank<T>(
     .sort((a, b) => a.best - b.best || a.authored - b.authored)
     .map((x) => x.item);
 }
+
+/** The lead block: the first `DEFAULT_PIN_COUNT` entries of a ranked list. */
+export function leadProjects<T>(ranked: readonly T[], count: number = DEFAULT_PIN_COUNT): T[] {
+  return ranked.slice(0, count);
+}
+
+/** Ranked entries after the lead block. */
+export function restProjects<T>(ranked: readonly T[], count: number = DEFAULT_PIN_COUNT): T[] {
+  return ranked.slice(count);
+}
+
+export interface CategoryGroup<T> {
+  category: string;
+  projects: T[];
+}
+
+/**
+ * Category views over the ranked list. The lead block is excluded, projects
+ * stay in rank order inside each group, and groups are ordered by their
+ * best-ranked member.
+ */
+export function categoryGroups<T extends { category: string }>(
+  ranked: readonly T[],
+  leadCount: number = DEFAULT_PIN_COUNT
+): CategoryGroup<T>[] {
+  const groups = new Map<string, T[]>();
+  for (const p of restProjects(ranked, leadCount)) {
+    const list = groups.get(p.category);
+    if (list) list.push(p);
+    else groups.set(p.category, [p]);
+  }
+  return [...groups].map(([category, projects]) => ({ category, projects }));
+}
+
+/** Zero-based rank of a slug in a ranked list, or -1. */
+export function rankOf(ranked: readonly { slug: string }[], slug: string): number {
+  return ranked.findIndex((p) => p.slug === slug);
+}
