@@ -1,11 +1,15 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { HOLE_COLORS } from "./cosmos-colors";
 
+const walk = (dir: string): string[] =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(`${dir}/${e.name}`) : /\.(tsx?|css)$/.test(e.name) && !/\.test\./.test(e.name) ? [`${dir}/${e.name}`] : []
+  );
 const SCENE_FILES = [
-  "src/components/scene/BlackHole.tsx",
-  "src/components/cosmos/BlackHoleSvg.tsx",
-  "src/components/cosmos/StaticStardust.tsx",
+  ...walk("src/components/scene"),
+  ...walk("src/components/cosmos"),
+  ...walk("src/components/planet"),
   "src/lib/stardust.ts",
 ];
 
@@ -30,7 +34,7 @@ describe("black-hole scene colours", () => {
   it("scene sources do not reach for the site's teal or pop accents", () => {
     for (const file of SCENE_FILES) {
       const src = readFileSync(file, "utf8");
-      expect(src, file).not.toMatch(/COSMOS_PALETTE|palette\.teal|#2DD4BF|#A78BFA|uTeal/i);
+      expect(src, file).not.toMatch(/COSMOS_PALETTE|teal|#2DD4BF|#A78BFA/i);
     }
   });
 });
