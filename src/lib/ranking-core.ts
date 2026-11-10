@@ -112,12 +112,34 @@ export interface CapabilityGroup<T> {
 }
 
 /**
- * Capability views over the ranked list (KD2). The lead block is excluded,
- * projects stay in rank order inside each group, and groups are ordered by
- * their best-ranked member. Entries without a capability are skipped (a test
- * guarantees every listed project has one).
+ * The fixed order of capability groups on every surface. This file stays
+ * import-free (the PDF script loads it directly), so the order is repeated
+ * here; a test keeps it equal to `CAPABILITY_IDS` in `capability-meta.ts`.
  */
-export function capabilityGroups<T extends { capability?: string }>(
+export const CAPABILITY_ORDER = [
+  "evals-routing",
+  "retrieval-memory",
+  "agents-computer-use",
+  "products",
+  "tooling-infra",
+] as const;
+
+/**
+ * Projects that sit last inside their capability group and never lead one.
+ * The flat ranking (and the frozen video queue derived from it) is untouched;
+ * this only reorders the grouped views.
+ */
+export const LAST_IN_GROUP: readonly string[] = ["portfolio-hub"];
+
+/**
+ * Capability views over the ranked list (KD2). The lead block is excluded and
+ * projects stay in rank order inside each group, except `LAST_IN_GROUP`
+ * slugs, which follow the rest of their group. Groups come in the fixed
+ * `CAPABILITY_ORDER` (unknown capabilities after, in first-seen order).
+ * Entries without a capability are skipped (a test guarantees every listed
+ * project has one).
+ */
+export function capabilityGroups<T extends { capability?: string; slug?: string }>(
   ranked: readonly T[],
   leadCount: number = DEFAULT_PIN_COUNT
 ): CapabilityGroup<T>[] {
@@ -128,5 +150,17 @@ export function capabilityGroups<T extends { capability?: string }>(
     if (list) list.push(p);
     else groups.set(p.capability, [p]);
   }
-  return [...groups].map(([capability, projects]) => ({ capability, projects }));
+  const rank = (capability: string) => {
+    const i = (CAPABILITY_ORDER as readonly string[]).indexOf(capability);
+    return i === -1 ? CAPABILITY_ORDER.length : i;
+  };
+  const isLast = (p: T) => !!p.slug && LAST_IN_GROUP.includes(p.slug);
+  return [...groups]
+    .map(([capability, projects], seen) => ({
+      capability,
+      seen,
+      projects: [...projects.filter((p) => !isLast(p)), ...projects.filter(isLast)],
+    }))
+    .sort((a, b) => rank(a.capability) - rank(b.capability) || a.seen - b.seen)
+    .map(({ capability, projects }) => ({ capability, projects }));
 }

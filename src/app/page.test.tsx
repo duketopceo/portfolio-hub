@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { projectConfigs } from "@/data/projects";
 import { RANKING_PINS } from "@/data/ranking-pins";
-import { rankProjects } from "@/lib/ranking";
+import { capabilityGroups, rankProjects } from "@/lib/ranking";
 import type { EnrichedProject } from "@/lib/types";
 
 const enriched = vi.hoisted(() => ({ all: [] as unknown[] }));
@@ -71,11 +71,10 @@ describe("home layout", () => {
     const rest = html.slice(html.indexOf("home-rest-heading"));
     const ranked = rankProjects(projectConfigs);
     const pinned = new Set<string>(RANKING_PINS);
-    const byCapability = new Map<string, string[]>();
-    for (const p of ranked) {
-      if (pinned.has(p.slug)) continue;
-      byCapability.set(p.capability as string, [...(byCapability.get(p.capability as string) ?? []), p.slug]);
-    }
+    // Group views use the fixed order and put portfolio-hub last in its group.
+    const byCapability = new Map<string, string[]>(
+      capabilityGroups(ranked).map((g) => [g.capability, g.projects.map((p) => p.slug)])
+    );
     for (const [capability, slugs] of byCapability) {
       slugs.slice(0, 4).forEach((slug) => expect(rest).toContain(`href="/projects/${slug}"`));
       slugs.slice(4).forEach((slug) => expect(rest).not.toContain(`href="/projects/${slug}"`));
@@ -90,9 +89,7 @@ describe("home layout", () => {
   it("groups cards in rank order inside each category", async () => {
     const html = await home();
     const rest = html.slice(html.indexOf("home-rest-heading"));
-    const ranked = rankProjects(projectConfigs).filter(
-      (p) => p.capability === "agents-computer-use" && !(RANKING_PINS as readonly string[]).includes(p.slug)
-    ).slice(0, 4);
+    const ranked = (capabilityGroups(rankProjects(projectConfigs)).find((g) => g.capability === "agents-computer-use")?.projects ?? []).slice(0, 4);
     const order = ranked.map((p) => rest.indexOf(`href="/projects/${p.slug}"`));
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });

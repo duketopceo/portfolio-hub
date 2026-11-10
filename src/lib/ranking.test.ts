@@ -3,10 +3,12 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { projectConfigs } from "@/data/projects";
 import { RANKING_PINS } from "@/data/ranking-pins";
+import { CAPABILITY_IDS } from "@/data/capability-meta";
 import { getPrimaryDeployment } from "@/data/deployments";
 import { isListedProject } from "@/lib/catalog-filter";
 import { extendedScore } from "./ranking-score";
 import { buildSnapshot, type ActivityInputs } from "./ranking-snapshot-build";
+import { CAPABILITY_ORDER } from "./ranking-core";
 import {
   buildRanking,
   capabilityGroups,
@@ -175,6 +177,35 @@ describe("pins and featured slugs", () => {
     const adj = getOrbitAdjacent(ranked as never, ranked[4].slug);
     expect(adj?.next.slug).toBe(ranked[5].slug);
     expect(adj?.prev.slug).toBe(ranked[3].slug);
+  });
+});
+
+describe("fixed capability order and portfolio-hub placement", () => {
+  it("CAPABILITY_ORDER matches CAPABILITY_IDS", () => {
+    expect([...CAPABILITY_ORDER]).toEqual([...CAPABILITY_IDS]);
+  });
+
+  it("groups follow the fixed order whatever the rank order is", () => {
+    const rows = [
+      { slug: "l1", capability: "products" },
+      { slug: "x", capability: "tooling-infra" },
+      { slug: "y", capability: "products" },
+      { slug: "z", capability: "evals-routing" },
+      { slug: "w", capability: "agents-computer-use" },
+      { slug: "v", capability: "retrieval-memory" },
+    ];
+    expect(capabilityGroups(rows, 1).map((g) => g.capability)).toEqual([...CAPABILITY_IDS]);
+  });
+
+  it("portfolio-hub follows the rest of Products on the committed catalog, and the flat rank is unchanged", () => {
+    const ranked = rankProjects(projectConfigs);
+    const products = capabilityGroups(ranked).find((g) => g.capability === "products")!;
+    expect(products.projects.length).toBeGreaterThan(1);
+    expect(products.projects.at(-1)!.slug).toBe("portfolio-hub");
+    expect(capabilityGroups(ranked).map((g) => g.capability)).toEqual(
+      CAPABILITY_IDS.filter((id) => capabilityGroups(ranked).some((g) => g.capability === id))
+    );
+    expect(ranked.slice(0, 6).map((p) => p.slug)).toContain("portfolio-hub");
   });
 });
 
