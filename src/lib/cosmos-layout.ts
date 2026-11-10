@@ -1,8 +1,9 @@
 /**
  * Where the background's one body (the black hole) sits, shared by the WebGL
  * scene and the static SVG plate so the two renditions line up. The hole is
- * small and off-centre so it recedes behind the content; no planets. Positions are fractions of the
- * viewport (0,0 top-left); sizes are fractions of the smaller viewport side.
+ * small and off-centre so it recedes behind the content; no planets.
+ * Positions are fractions of the viewport (0,0 top-left); sizes are
+ * fractions of the smaller viewport side.
  * Pure data and math: safe for server components and node tests.
  */
 
@@ -21,8 +22,8 @@ export interface BodyPlacement {
 
 export type LayoutVariant = "wide" | "tall";
 
-// About a third of the previous radius (was 1.18 / 0.95), pushed to the
-// upper right so text columns stay clear of the bright ring.
+// Small and pushed to the upper right so text columns stay clear of the
+// bright ring.
 const WIDE: BodyPlacement[] = [{ id: "blackhole", x: 0.8, y: 0.3, size: 0.4, parallax: 0.32 }];
 
 const TALL: BodyPlacement[] = [{ id: "blackhole", x: 0.72, y: 0.1, size: 0.55, parallax: 0.32 }];

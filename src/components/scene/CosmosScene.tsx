@@ -14,8 +14,8 @@ import {
 } from "@/lib/cosmos-layout";
 import { tierSettings, type CosmosTier } from "@/lib/cosmos-quality";
 
-/** Camera distance used by SiteBackground; the hole sits at a known depth. */
-const CAMERA_Z = 42;
+/** Camera distance (CosmosLive places the camera here); the hole sits at a known depth. */
+export const CAMERA_Z = 42;
 const HOLE_Z = -3;
 /** Dim on purpose: the hole is background, text is drawn over it. */
 const HOLE_MAX_OPACITY = 0.5;

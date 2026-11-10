@@ -47,18 +47,18 @@
   opacity: 0;
 }
 
-/* Slow rotation of the plate's disk streaks (R6): one turn every 60-90 s,
+/* Slow rotation of the plate's disk streaks: one turn every 60-90 s,
    inner rings fastest. Only while the plate is what the visitor sees (it is
    hidden under the live scene, so nothing repaints for no reason) and only
    when motion is allowed: reduced motion shows the plate still. */
 @media (prefers-reduced-motion: no-preference) {
   .cosmic-bg:not([data-scene="live"]) .cosmos-bh-streak {
-    animation: cosmos-bh-turn linear infinite;
+    animation: cosmos-bh-turn var(--turn, 75s) linear infinite;
   }
-  .cosmic-bg:not([data-scene="live"]) .cosmos-bh-streak--a { animation-duration: 60s; }
-  .cosmic-bg:not([data-scene="live"]) .cosmos-bh-streak--b { animation-duration: 70s; }
-  .cosmic-bg:not([data-scene="live"]) .cosmos-bh-streak--c { animation-duration: 80s; }
-  .cosmic-bg:not([data-scene="live"]) .cosmos-bh-streak--d { animation-duration: 90s; }
+  .cosmos-bh-streak--a { --turn: 60s; }
+  .cosmos-bh-streak--b { --turn: 70s; }
+  .cosmos-bh-streak--c { --turn: 80s; }
+  .cosmos-bh-streak--d { --turn: 90s; }
 }
 
 @keyframes cosmos-bh-turn {

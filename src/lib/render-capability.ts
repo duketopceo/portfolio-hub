@@ -17,6 +17,8 @@ export function shouldUseShader(renderer: string | null | undefined): boolean {
   return !SOFTWARE_RENDERER.test(renderer);
 }
 
+// Kept separate from SOFTWARE_RENDERER on purpose: this one never treats a
+// missing or unfamiliar string as software. Keep the shared names in sync.
 const NAMED_SOFTWARE_RENDERER = /llvmpipe|swiftshader|softpipe/i;
 
 /**

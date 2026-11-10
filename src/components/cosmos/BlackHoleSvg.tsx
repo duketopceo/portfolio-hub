@@ -1,13 +1,6 @@
 import { COSMOS_PALETTE as C } from "@/lib/palette";
 
 /**
- * Static black hole: shadow, lensed light over and under it, and a tilted
- * accretion disk with brighter approaching limb. Pure SVG in a 200x200 box
- * (disk radius 96), server-rendered, crisp at any DPR. Same composition as
- * the WebGL scene (components/scene/BlackHole.tsx); stands in for it under
- * reduced motion and when WebGL is unavailable or fails.
- */
-/**
  * Broken elliptical streaks that circle the disk. Each ring is one dashed
  * ellipse whose dash offset animates (cosmos.css, 60-90 s per turn, inner
  * rings faster), so the plate rotates without any script. pathLength is
@@ -39,6 +32,13 @@ function DiskStreaks({ tilt }: { tilt: number }) {
   );
 }
 
+/**
+ * Static black hole: shadow, lensed light over and under it, and a tilted
+ * accretion disk with brighter approaching limb. Pure SVG in a 200x200 box
+ * (disk radius 96), server-rendered, crisp at any DPR. Same composition as
+ * the WebGL scene (components/scene/BlackHole.tsx); stands in for it under
+ * reduced motion and when WebGL is unavailable or fails.
+ */
 export default function BlackHoleSvg() {
   const R = 80; // disk outer radius (thin, dim wings; the ring carries the light)
   const TILT = 0.2; // ellipse minor/major

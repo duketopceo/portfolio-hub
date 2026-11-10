@@ -60,7 +60,8 @@ float vnoise(vec3 x) {
 float streaks(float rr, float ang) {
   // Frequency high in radius, low in angle: azimuthal streaks that rotate.
   vec3 q = vec3(rr * 15.0, cos(ang) * 2.4, sin(ang) * 2.4);
-  // Two octaves (was three); the second is skipped entirely on the low tier.
+  // Two octaves; the second is skipped on the low tier, where its mean
+  // contribution (0.3 * ~0.5) stands in so brightness matches across tiers.
   float n = 0.7 * vnoise(q);
   if (uDetail > 0.5) n += 0.3 * vnoise(q * 2.1 + 7.0);
   else n += 0.15;

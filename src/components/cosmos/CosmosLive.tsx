@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { PerformanceMonitor } from "@react-three/drei";
 import { parseTierPin } from "@/lib/cosmos-mode";
 import SceneFrame from "@/components/scene/SceneFrame";
-import CosmosScene from "@/components/scene/CosmosScene";
+import CosmosScene, { CAMERA_Z } from "@/components/scene/CosmosScene";
 import {
   DECLINE_BELOW_FPS,
   stepDown,
@@ -52,7 +52,7 @@ export default function CosmosLive({
   return (
     <SceneFrame
       className="cosmic-bg__field"
-      camera={{ position: [0, 0, 42], fov: 50 }}
+      camera={{ position: [0, 0, CAMERA_Z], fov: 50 }}
       dpr={tierSettings(tier).dpr}
       preserveDrawingBuffer={false}
       onReadyChange={onReadyChange}
