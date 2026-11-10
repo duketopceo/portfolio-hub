@@ -30,7 +30,9 @@ const nextConfig: NextConfig = {
       "img-src 'self' data: blob: https://avatars.githubusercontent.com https://raw.githubusercontent.com https://camo.githubusercontent.com https://media.luke-the-duke.com",
       "media-src 'self' https://media.luke-the-duke.com",
       "font-src 'self' data:",
-      "connect-src 'self' https://analytics.pacehq.io",
+      // openrouter.ai: the /openrouter live smoke test posts the visitor's own,
+      // session-only key straight from the browser to OpenRouter. No server hop.
+      "connect-src 'self' https://analytics.pacehq.io https://openrouter.ai",
       "frame-src 'self' https://*.luke-the-duke.com https://open.spotify.com",
       "worker-src 'self' blob:",
       "manifest-src 'self'",

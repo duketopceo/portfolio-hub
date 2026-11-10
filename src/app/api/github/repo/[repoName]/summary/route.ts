@@ -13,6 +13,11 @@ import {
 
 export const revalidate = 180;
 
+/** Dynamic-param routes get no Cache-Control from `revalidate`, so say it here. */
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=180, stale-while-revalidate=600",
+};
+
 function githubOutcomeFromFetch(
   result: Awaited<ReturnType<typeof fetchRepoSummaryPayload>>
 ): GithubSummaryOutcome {
@@ -21,13 +26,22 @@ function githubOutcomeFromFetch(
   return { type: "http", status: result.status };
 }
 
+/** Malformed percent-encoding (e.g. "%E0%A4%A") must be a 404, not a 500. */
+function safeDecode(raw: string): string | null {
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(
   _request: Request,
   context: { params: Promise<{ repoName: string }> }
 ) {
   const { repoName: raw } = await context.params;
-  const repoName = decodeURIComponent(raw);
-  if (!isCuratedRepoName(repoName)) {
+  const repoName = safeDecode(raw);
+  if (repoName === null || !isCuratedRepoName(repoName)) {
     return NextResponse.json({ error: "Unknown repo" }, { status: 404 });
   }
 
@@ -65,9 +79,10 @@ export async function GET(
     );
   }
   if (mapped.bodyKind === "full" && fetched?.ok) {
-    return NextResponse.json(fetched.payload);
+    return NextResponse.json(fetched.payload, { headers: CACHE_HEADERS });
   }
   return NextResponse.json(curatedSummaryFallback(repoName), {
     status: mapped.httpStatus,
+    ...(mapped.httpStatus === 200 ? { headers: CACHE_HEADERS } : {}),
   });
 }

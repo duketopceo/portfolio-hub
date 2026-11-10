@@ -4,6 +4,11 @@ import { getProjectActivityTimeline } from "@/lib/github-activity";
 
 export const revalidate = 3600;
 
+/** Dynamic-param routes get no Cache-Control from `revalidate`, so say it here. */
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+};
+
 export async function GET(
   _req: Request,
   context: { params: Promise<{ slug: string }> }
@@ -14,7 +19,7 @@ export async function GET(
   }
   try {
     const data = await getProjectActivityTimeline(slug);
-    return NextResponse.json(data);
+    return NextResponse.json(data, { headers: CACHE_HEADERS });
   } catch (err) {
     console.error(`[api/activity/${slug}] failed:`, err);
     return NextResponse.json({

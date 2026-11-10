@@ -44,6 +44,11 @@ const forbidden = [
     pattern: /(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b/,
   },
   {
+    label: "loopback or local-network link (never ship localhost as a public href)",
+    pattern:
+      /\bhref\s*=\s*\{?\s*["'`]\s*https?:\/\/(?:localhost|127\.\d+\.\d+\.\d+|0\.0\.0\.0|\[::1\]|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+)/i,
+  },
+  {
     label: "precise coordinates",
     pattern:
       /(?:\b-?\d{1,3}\.\d{3,}\s*,\s*-?\d{1,3}\.\d{3,}\b|\b-?\d{1,3}\.\d{3,}\s*°\s*[NSEW]\b)/i,

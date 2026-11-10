@@ -125,14 +125,7 @@ export function OpenRouterEvidence() {
             github.com/duketopceo/openrouter-demos
           </a>{" "}
           (<code>dev_server.py</code> on{" "}
-          <a
-            href="http://localhost:8080"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="detail-nav-link"
-          >
-            localhost:8080
-          </a>
+          <code>localhost:8080</code>
           ). Live evals require <code>OPENROUTER_API_KEY</code> — this page does not publish
           live accuracy numbers. Beyond these demos,{" "}
           <Link href="/projects/kurultai" className="detail-nav-link">

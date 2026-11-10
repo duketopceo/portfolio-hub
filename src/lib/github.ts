@@ -432,17 +432,27 @@ export async function enrichProjectActivity(
 
   const owner = project.repoOwner ?? GITHUB_USER;
   const languages = await fetchRepoLanguages(project.repoName, owner);
-  const repoRes = await fetch(
-    `${GITHUB_API}/repos/${owner}/${encodeURIComponent(project.repoName)}`,
-    {
-      headers: await githubAuthHeaders(),
-      next: { revalidate: 3600 },
-      signal: AbortSignal.timeout(10_000),
-    }
-  );
+  // A GitHub timeout or network error must degrade to the configured data, not
+  // throw: this runs at prerender, where a throw fails the whole build/ISR pass.
+  let repoRes: Response | null = null;
+  try {
+    repoRes = await fetch(
+      `${GITHUB_API}/repos/${owner}/${encodeURIComponent(project.repoName)}`,
+      {
+        headers: await githubAuthHeaders(),
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(10_000),
+      }
+    );
+  } catch (err) {
+    logGithubFailure(
+      "enrichProjectActivity",
+      failureFromUnknown(`enrichProjectActivity ${project.repoName}`, err)
+    );
+  }
 
   let ciStatus: EnrichedProject["ciStatus"] = null;
-  if (repoRes.ok) {
+  if (repoRes?.ok) {
     const repo = (await repoRes.json()) as GitHubRepo;
     const { ci } = await fetchLatestCiState(
       owner,
