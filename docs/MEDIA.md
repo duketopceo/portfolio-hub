@@ -93,3 +93,95 @@ Prefer `Wait /regex/` over long `Sleep` where output timing varies. Wait for the
 | vhs 0.12.1 and ttyd | present, orchestral tape verified |
 | Playwright Chromium | present, record-web verified |
 | wf-recorder and slurp | present, record-desktop unverified |
+
+## 7. Narrated explainer pipeline (local voice, free)
+
+For a narrated explainer, one script drives the voice, the shot timing and the captions. Everything runs on this machine; nothing is uploaded. Pipeline: **script -> sanitize -> narrate (Kokoro) -> cut list + VTT + transcript -> record shots against fixtures -> mux**.
+
+### One-time Kokoro install (outside the repo)
+
+Kokoro-82M (Apache-2.0) runs on CPU through PyTorch. The venv and the model weights live outside the repo (`~/.local/share/kokoro`, weights in the Hugging Face cache); never vendor them.
+
+```bash
+uv venv --python 3.12 ~/.local/share/kokoro/venv
+uv pip install --python ~/.local/share/kokoro/venv/bin/python torch --index-url https://download.pytorch.org/whl/cpu
+uv pip install --python ~/.local/share/kokoro/venv/bin/python kokoro soundfile numpy \
+  en-core-web-sm@https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+```
+
+Install torch from the CPU index first: on aarch64 the default PyPI wheel pulls gigabytes of CUDA packages. The spaCy model is installed explicitly because kokoro's own downloader fails inside a `uv` venv. `espeak-ng` must be on the system. `KOKORO_PYTHON` overrides the interpreter path.
+
+### Commands
+
+```bash
+# 1. Script: a script.json (see "Script format") kept outside the repo; sanitize it first
+node scripts/media/sanitize.mjs ~/Downloads/claude/portfolio-r2/<slug>/<slug>-script.json
+
+# 2. Narrate: sanitizes the script again, one WAV per paragraph, cutlist.json, <slug>.vtt, transcript
+nice systemd-run --user --scope -p MemoryMax=24G \
+  node scripts/media/narrate.mjs --script <script.json> --dir <work-dir>
+
+# 3. Fixture build + server (docs section 3), then record and mux
+ACTIVITY_USE_FIXTURES=1 npm run build && ACTIVITY_USE_FIXTURES=1 PORT=3190 node scripts/start-standalone.mjs
+nice systemd-run --user --scope -p MemoryMax=24G \
+  node scripts/media/assemble.mjs --dir <work-dir> --base http://127.0.0.1:3190 --burn-captions
+
+# 4. Review gate: sanitize the final captions and transcript, then Luke reviews the contact sheet
+node scripts/media/sanitize.mjs <work-dir>/<slug>.vtt <work-dir>/<slug>-transcript.txt
+```
+
+`npm run media:sanitize | media:narrate | media:assemble -- <args>` wrap the same scripts. Run one job at a time: the machine's OOM daemon has killed large parallel fan-outs.
+
+### Script format
+
+```json
+{
+  "slug": "kurultai",
+  "voice": "af_heart",
+  "paragraphs": [
+    { "text": "Narration for shot one.", "shot": { "goto": "/projects/kurultai" } },
+    { "text": "Narration for shot two.", "shot": { "scroll": 600 } }
+  ]
+}
+```
+
+A paragraph is a shot. `shot` takes the same `goto` / `scroll` beats as `record-web.mjs`. Write public-facing facts only (catalog entry, public README), 150 to 300 words for 60 to 120 seconds. Keep paths, hostnames and keys out of narration; the sanitizer rejects them.
+
+### How timing works (R9)
+
+- `kokoro_tts.py` writes `p01.wav ...` and reads each file's length.
+- `buildCutList` starts paragraph 1 after a 0.6 s lead and each later paragraph at the previous end plus a 0.5 s gap. The video ends 1.0 s after the last paragraph.
+- `shotWindows` turns the cut list into shot windows with no gaps; `record-web.mjs --beats` holds each shot for exactly its window, and `assemble.mjs` trims the recorder's page-load lead-in.
+- `buildVtt` makes one cue per sentence, splitting each paragraph's window by sentence length, so cue text equals the script and cues start and end with the audio. The transcript is the paragraphs in order.
+- The builders are pure functions with tests in `scripts/media/lib/timing.test.mjs`.
+
+### Sanitization (KTD6)
+
+`scripts/media/lib/sanitize.mjs` runs on the script before any audio is made (`narrate.mjs`), on the generated VTT and transcript (`narrate.mjs`), and again on both when `assemble.mjs` starts. It fails (exit 1, finding and line shown, tokens redacted) on:
+
+| Class | Source |
+|---|---|
+| Private repo `owner/name` and bare names, work orgs, employer domains | `scripts/lib/private-names.mjs`, the same list `npm run check:privacy:built` uses (catalog `private: true` entries plus `src/data/private-denylist.ts`) |
+| Mailboxes, phone numbers, loopback links, precise coordinates | `scripts/lib/privacy-patterns.mjs`, the same patterns as `npm run check:privacy` |
+| Internal hostnames | `*.local`, `*.internal`, `*.lan`, `*.ts.net`, loopback and private addresses, named machines (`INTERNAL_HOST_NAMES`) |
+| Absolute filesystem paths | `/home/...`, `/Users/...`, `/etc/...`, `~/...`, `C:\...` |
+| Token-shaped strings | `sk-...`, GitHub tokens, AWS keys, Slack tokens, JWTs, `Bearer ...`, private-key blocks, long hex, long mixed-case strings |
+
+The check is text-only. It does not read frames: the contact sheet review in section 5 stays the gate for what is on screen.
+
+### Voice and cost
+
+Default voice is Kokoro `af_heart`: local, free, Apache-2.0. Paid voice needs Luke's approval for each run (KD4). Amazon Polly Neural is the priced fallback because Speech Marks give word timings; credentials come from omaseal at run time (`omaseal get`, entry named when Luke approves), never from a file, the repo or logs.
+
+Estimates for all 15 videos at about 1,200 characters each (18,000 characters; the Kurultai sample script is 1,174). Polly list prices are from memory of AWS's public rate card and are not re-verified here; confirm before any paid run. Speech Marks requests are billed per character, so word timings double the characters.
+
+| Option | Rate | Audio, 15 videos | With word timings | Approval |
+|---|---|---|---|---|
+| Kokoro-82M local CPU (default) | $0 | $0.00 | n/a (sentence cues from WAV length) | none |
+| Polly Standard | $4.00 / 1M chars | $0.07 | $0.14 | Luke |
+| Polly Neural | $16.00 / 1M chars | $0.29 | $0.58 | Luke |
+| Polly Generative | $30.00 / 1M chars | $0.54 | $1.08 | Luke |
+
+Local compute cost is machine time: see the measured real-time factor below.
+
+Measured on the Kurultai sample (Asahi M1 Max, 10 cores, CPU only, torch 2.15+cpu, 79.3 s of audio, voice `af_heart`): real-time factor (wall time / audio time, lower is faster) 0.97, 1.31 and 1.44 in three full runs while the machine was saturated by other jobs (load average 13 to 25 on 10 cores), and 0.56 on a single 11 s paragraph at lighter load. Expect an unloaded run near the low end, about 0.5 to 0.6, so a 90 s script narrates in roughly 45 to 55 s. An unloaded full-length run was not obtainable on the day of measurement; re-measure on a quiet machine before planning the batch. More torch threads did not help under load (`kokoro_tts.py --threads N`). The whole pipeline for the sample (narrate, record, mux) took about 4 minutes of wall time under that load.
