@@ -1,10 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { projectConfigs } from "@/data/projects";
 import { RANKING_PINS } from "@/data/ranking-pins";
+import { getPrimaryDeployment } from "@/data/deployments";
 import { isListedProject } from "@/lib/catalog-filter";
+import { extendedScore } from "./ranking-score";
+import { buildSnapshot, type ActivityInputs } from "./ranking-snapshot-build";
 import {
   buildRanking,
   categoryGroups,
@@ -13,6 +15,11 @@ import {
   rankingSnapshot,
   type RankingSnapshot,
 } from "./ranking";
+
+const catalogDir = join(__dirname, "../data/catalog");
+const catalogFiles = readdirSync(catalogDir)
+  .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
+  .sort();
 
 function proj(slug: string, category = "ai", name = slug) {
   return { slug, displayName: name, category };
@@ -99,13 +106,14 @@ describe("committed snapshot", () => {
   });
 
   it("is current against the catalog (refresh with scripts/rank-projects.mjs --refresh)", () => {
-    // Recompute offline from the stored inputs; throws on drift.
-    const out = execFileSync("node", ["scripts/rank-projects.mjs", "--check"], {
-      cwd: join(__dirname, "../.."),
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    });
-    expect(out).toContain("current");
+    const entries = catalogFiles.map((f) => JSON.parse(readFileSync(join(catalogDir, f), "utf8"))).filter((e) => isListedProject(e.curated));
+    const stored = JSON.parse(readFileSync(join(__dirname, "../data/ranking-snapshot.json"), "utf8")) as {
+      asOf: string;
+      entries: { slug: string; inputs: ActivityInputs }[];
+    };
+    const inputs = Object.fromEntries(stored.entries.map((e) => [e.slug, e.inputs]));
+    const rebuilt = buildSnapshot({ extendedScore, getPrimaryDeployment }, entries, inputs, stored.asOf);
+    expect(rebuilt).toEqual(stored);
   });
 
   it("ranks the pins first and every pin is listed", () => {
