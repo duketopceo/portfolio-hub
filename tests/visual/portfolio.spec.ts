@@ -167,17 +167,28 @@ test.describe("Portfolio visual acceptance matrix", () => {
     expect(Array.from(emails)).toEqual([publicAlias]);
   });
 
-  // Top-3 cards with and without a video share one footprint (KTD3).
+  // Five lead cards: cards in one row share one height; on a phone they stack and
+// each takes the height its proof needs.
   for (const viewport of viewports) {
     for (const path of ["/", "/projects"]) {
       test(`lead cards share one height: ${path} ${viewport.name}`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
         await page.goto(path, { waitUntil: "networkidle" });
-        const heights = await page
+        const boxes = await page
           .locator(".lead-card")
-          .evaluateAll((cards) => cards.map((c) => Math.round(c.getBoundingClientRect().height)));
-        expect(heights).toHaveLength(3);
-        expect(new Set(heights).size).toBe(1);
+          .evaluateAll((cards) =>
+            cards.map((c) => {
+              const r = c.getBoundingClientRect();
+              return { top: Math.round(r.top + window.scrollY), height: Math.round(r.height) };
+            }),
+          );
+        expect(boxes).toHaveLength(5);
+        if (viewport.width >= 900) {
+          const rows = new Map<number, number[]>();
+          for (const b of boxes) rows.set(b.top, [...(rows.get(b.top) ?? []), b.height]);
+          expect(rows.size).toBe(2);
+          for (const heights of rows.values()) expect(new Set(heights).size).toBe(1);
+        }
       });
     }
   }
@@ -355,20 +366,21 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 
-  test("home leads with the hero, three lead cards, the signal, ranked groups and a closing row", async ({
+  test("home leads with the hero, five lead cards, the sphere, the signal, ranked groups and a closing row", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(/Luke\s*Kimball/i);
     await expect(page.locator(".solar-system")).toHaveCount(0);
-    await expect(page.locator(".lead-card")).toHaveCount(3);
+    await expect(page.locator(".lead-card")).toHaveCount(5);
+    await expect(page.locator(".home-map svg.project-sphere__svg")).toHaveCount(1);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
     await expect(page.locator(".category-group").first()).toBeAttached();
     await expect(page.locator(".home-close")).toHaveCount(1);
     const order = await page.evaluate(() => {
       const top = (sel: string) => document.querySelector(sel)!.getBoundingClientRect().top;
-      return [top(".lead-card"), top(".home-transmissions"), top(".category-group"), top(".home-close")];
+      return [top(".lead-card"), top(".home-map"), top(".home-transmissions"), top(".category-group"), top(".home-close")];
     });
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     await expect(page.getByRole("link", { name: /See the work/ })).toHaveAttribute(
@@ -392,11 +404,12 @@ test.describe("Portfolio visual acceptance matrix", () => {
       expect(box!.y).toBeGreaterThanOrEqual(0);
       expect(box!.y + box!.height).toBeLessThanOrEqual(900);
     }
-    // The lead cards start on screen, so the top three read within seconds.
+    // The lead cards start on screen, so the leading projects read within seconds.
     const card = await page.locator(".lead-card").first().boundingBox();
     expect(card).not.toBeNull();
     const visible = Math.min(900, card!.y + card!.height) - card!.y;
-    expect(visible).toBeGreaterThan(card!.height * 0.4);
+    // The cards are taller now (outcome, proof, stack); the poster and title read on screen.
+    expect(visible).toBeGreaterThan(150);
   });
 
   test("home has no horizontal overflow at tablet width", async ({ page }) => {
