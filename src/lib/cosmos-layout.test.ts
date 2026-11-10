@@ -15,9 +15,9 @@ describe("cosmos layout", () => {
     expect(hole.y).toBeGreaterThan(0.2);
     expect(hole.y).toBeLessThan(0.55);
   });
-  it("is full-screen: the disk (about 5x the shadow) spans most of the short side", () => {
-    expect(bodyPlacement("wide", "blackhole").size * 5).toBeGreaterThan(1);
-    expect(bodyPlacement("tall", "blackhole").size * 5).toBeGreaterThan(1);
+  it("is full-screen: the disk (about 10x the shadow radius across) spans most of the short side", () => {
+    expect(bodyPlacement("wide", "blackhole").size * 10.8).toBeGreaterThan(1.5);
+    expect(bodyPlacement("tall", "blackhole").size * 10.8).toBeGreaterThan(1.5);
   });
   it("scrolls bodies up, clamped, and fades them out at the top", () => {
     expect(scrollOffset(0, 900, 0.5)).toBe(-0);

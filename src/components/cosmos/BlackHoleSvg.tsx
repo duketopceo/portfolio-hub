@@ -8,8 +8,8 @@ import { HOLE_COLORS as C } from "@/lib/cosmos-colors";
 const SH = 20;
 const R_IN = 1.18;
 const R_OUT = 5.4;
-const TILT = 0.11;
-const REACH = 0.9;
+const TILT = 0.075;
+const REACH = 1.1;
 /** viewBox: 5.5 shadow diameters wide, so the box is width = size * 5.5 * min(vw, vh). */
 export const BOX_PER_SHADOW = 5.5;
 const W = BOX_PER_SHADOW * SH * 2; // 220
@@ -81,8 +81,9 @@ export default function BlackHoleSvg() {
         {/* Lensed light: hot at the shadow edge, fading outward. */}
         <radialGradient id="bh-lens" gradientUnits="userSpaceOnUse" cx="0" cy="0" r={top}>
           <stop offset={(SH / top).toFixed(3)} stopColor={C.white} stopOpacity="1" />
-          <stop offset={((SH * 1.12) / top).toFixed(3)} stopColor={C.amber} stopOpacity="0.8" />
-          <stop offset={((SH * 1.35) / top).toFixed(3)} stopColor={C.ember} stopOpacity="0.3" />
+          <stop offset={((SH * 1.2) / top).toFixed(3)} stopColor={C.white} stopOpacity="1" />
+          <stop offset={((SH * 1.6) / top).toFixed(3)} stopColor={C.amber} stopOpacity="0.7" />
+          <stop offset={((SH * 2) / top).toFixed(3)} stopColor={C.ember} stopOpacity="0.25" />
           <stop offset="1" stopColor={C.ember} stopOpacity="0" />
         </radialGradient>
         {/* Doppler beaming: the left (approaching) limb is brighter. */}
@@ -116,6 +117,9 @@ export default function BlackHoleSvg() {
         <filter id="bh-soft" x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="1.4" />
         </filter>
+        <filter id="bh-bloom" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="3" />
+        </filter>
         <filter id="bh-haze-blur" x="-10%" y="-100%" width="120%" height="300%">
           <feGaussianBlur stdDeviation="5" />
         </filter>
@@ -131,14 +135,14 @@ export default function BlackHoleSvg() {
         {/* The far side of the disk bent over the top (strong) and under (faint). */}
         <g mask="url(#bh-taper-mask)">
           <path d={halfDisc(top, true)} fill="url(#bh-lens)" />
-          <path d={halfDisc(top * 0.6, false)} fill="url(#bh-lens)" opacity="0.35" />
+          <path d={halfDisc(top * 0.5, false)} fill="url(#bh-lens)" opacity="0.7" />
         </g>
       </g>
 
       {/* Event-horizon shadow, soft halo and thin photon ring. */}
       <circle r={SH} fill="#000" />
-      <circle r={SH * 1.05} fill="none" stroke={C.ember} strokeOpacity="0.5" strokeWidth="5" filter="url(#bh-soft)" />
-      <circle r={SH * 1.02} fill="none" stroke={C.white} strokeOpacity="0.8" strokeWidth="0.45" />
+      <circle r={SH * 1.08} fill="none" stroke={C.amber} strokeOpacity="0.6" strokeWidth="6" filter="url(#bh-bloom)" />
+      <circle r={SH * 1.02} fill="none" stroke={C.white} strokeOpacity="1" strokeWidth="0.9" />
 
       {/* Near half of the disk crosses in front of the shadow. */}
       <g clipPath="url(#bh-front)" mask="url(#bh-doppler-mask)">

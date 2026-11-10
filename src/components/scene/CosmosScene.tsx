@@ -17,7 +17,7 @@ import { tierSettings, type CosmosTier } from "@/lib/cosmos-quality";
 /** Camera distance (CosmosLive places the camera here); only the stars use the camera. */
 export const CAMERA_Z = 42;
 /** Scene light level: the hole is background, the page text is drawn over it. */
-const HOLE_LIGHT = 0.62;
+const HOLE_LIGHT = 1;
 /** How far the lowest light (faint lensed image under the hole) reaches below its centre, in shadow radii. */
 const BELOW = 1.5;
 

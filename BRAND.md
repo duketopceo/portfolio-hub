@@ -219,7 +219,7 @@ crisp at any DPR, same palette and same positions as the live version):
 
 | Piece | Component | Live (WebGL / canvas) | Static (reduced motion, no WebGL, software GL, Save-Data, failure) | Where |
 |---|---|---|---|---|
-| Black hole | `BlackHole` (glow and lensing ported from Rune, MIT: `THIRD_PARTY_NOTICES.md`) | R3F full-screen shader via `SceneFrame`: black event horizon, thin photon ring, near-edge-on disk (about 5x the shadow wide) whose far side is lensed over and under the hole, Doppler-bright on the approaching (left) side, ~75 s per revolution | `BlackHoleSvg`: the same composition as a full-screen still (shadow, photon ring, lensed arcs, tilted disk, brighter left limb); disk streaks turn in CSS, 60-90 s per turn, and stand still under reduced motion | Site background, every page |
+| Black hole | `BlackHole` (glow and lensing ported from Rune, MIT: `THIRD_PARTY_NOTICES.md`) | R3F full-screen shader via `SceneFrame`: black event horizon, a white-hot photon ring with an analytic bloom halo, a thin near-edge-on disk (hot white-amber inner edge fading to ember) and the disk's far side lensed into a bright continuous arc over the hole and a thinner one under it (shadow about 0.4 of the arc radius), Doppler-bright on the approaching (left) side, ~75 s per revolution | `BlackHoleSvg`: the same composition as a full-screen still (shadow, photon ring, lensed arcs, tilted disk, brighter left limb); disk streaks turn in CSS, 60-90 s per turn, and stand still under reduced motion | Site background, every page |
 | Stardust | `StardustCanvas` | 2D canvas, sparse falling motes, idle at top of page, paused in hidden tabs | `StaticStardust`: frozen SVG pattern (warm dots, amber sparkles) | Pages that scroll, further down |
 | Quiet starfield | `StarfieldScene` | R3F, same context as the black hole; dimmer than before, constellation links dropped on the low tier | CSS stars (`cosmic-bg::before/::after`) | Site background |
 | Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.01 (hero, beside the intro) |
@@ -235,8 +235,9 @@ starfield; planets never appear in it (they belong to the orbit figures, not
 the backdrop). The scene is warm white, amber and ember orange only: no teal,
 green or violet anywhere in it (`lib/cosmos-colors.ts`, enforced by
 `cosmos-colors.test.ts`). The page's pure-white text sits on top, so legibility
-comes first: the scene's light level is capped (`HOLE_LIGHT`), a flat dim plus
-a soft centre pool (`.cosmic-bg__scrim`) and a heavy edge vignette sit above
+comes first, but the hole is the hero and runs at full brightness: a soft
+pool behind the text column (`.cosmic-bg__scrim`), a barely-there flat dim and
+an edge vignette sit above
 both renditions, and the hole drifts up and fades as the page scrolls. ONE WebGL context for the whole background (hole and stars share
 it); the live scene lazy-loads after first paint and only after a WebGL probe
 passes. Only renderers named llvmpipe, SwiftShader or softpipe count as

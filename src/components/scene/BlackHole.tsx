@@ -57,8 +57,8 @@ uniform vec3 uEmber;
 
 const float R_IN = 1.18;   // disk inner edge, in shadow radii
 const float R_OUT = 5.4;   // disk outer edge
-const float TILT = 0.11;   // disk ellipse minor/major: near edge-on
-const float REACH = 0.75;   // how far the lensed image extends above the shadow edge
+const float TILT = 0.075;   // disk ellipse minor/major: near edge-on
+const float REACH = 0.95;   // how far the lensed image extends above the shadow edge
 
 // From Rune common.wgsl: gaussian falloff, and the two-lobe bloom profile
 // (tight core + wide halo) that fades out by reach.
@@ -120,8 +120,8 @@ void main() {
   if (inBand > 0.0) {
     float t = clamp((rd - R_IN) / (R_OUT - R_IN), 0.0, 1.0);
     float n = streaks(rd, atan(d.y, d.x) - omega * uTime);
-    float bright = pow(1.0 - t, 2.0) * (0.55 + 0.9 * n) * 2.7;
-    disk = heat(t) * bright * doppler(d.x / rd, 0.62) * inBand;
+    float bright = pow(1.0 - t, 2.0) * (0.55 + 0.9 * n) * 2.3;
+    disk = heat(t) * bright * doppler(d.x / rd, 0.7) * inBand;
   }
 
   // The shadow hides the far half (screen y > 0); the near half crosses in front.
@@ -134,25 +134,25 @@ void main() {
   vec3 lens = vec3(0.0);
   if (s > 1.0 && s < 1.0 + REACH * 1.5) {
     float up = p.y / s;
-    float top = smoothstep(-0.1, 0.95, up);
-    float bot = smoothstep(0.1, -0.95, up);
-    float thick = mix(0.18, 1.0, pow(max(top, 0.0), 1.3));
-    float thickB = mix(0.1, 0.38, pow(max(bot, 0.0), 1.3));
+    float top = smoothstep(-0.3, 0.8, up);
+    float bot = smoothstep(0.25, -0.8, up);
+    float thick = mix(0.16, 1.0, pow(max(top, 0.0), 1.1));
+    float thickB = mix(0.1, 0.5, pow(max(bot, 0.0), 1.1));
     float tl = (s - 1.0) / (REACH * thick);
     float tb = (s - 1.0) / (REACH * thickB);
     float la = atan(p.y, p.x) - uSpin * 1.3 * uTime;
     float ln = streaks(0.9 + tl * 2.0, la);
-    float wTop = top * pow(max(1.0 - tl, 0.0), 2.6) * (0.7 + 0.6 * ln);
-    float wBot = bot * 0.5 * pow(max(1.0 - tb, 0.0), 3.0) * (0.7 + 0.6 * ln);
-    lens = heat(0.02 + tl * 0.5) * wTop * 3.2 * doppler(p.x / s, 0.5)
-         + heat(0.1 + tb * 0.5) * wBot * 3.0 * doppler(p.x / s, 0.5);
+    float wTop = top * pow(max(1.0 - tl, 0.0), 2.4) * (0.85 + 0.3 * ln);
+    float wBot = bot * 0.7 * pow(max(1.0 - tb, 0.0), 2.6) * (0.85 + 0.3 * ln);
+    lens = heat(tl * 0.5) * wTop * 2.6 * doppler(p.x / s, 0.55)
+         + heat(0.04 + tb * 0.5) * wBot * 2.4 * doppler(p.x / s, 0.55);
   }
 
   // --- Photon ring: one thin hot line hugging the shadow, plus a faint
   // wider halo of the same light.
-  float ring = exp(-pow((s - 1.015) / 0.012, 2.0)) * 3.2;
-  float halo = exp(-pow((s - 1.04) / 0.06, 2.0)) * 0.5;
-  vec3 photon = (uWhite * ring + uAmber * halo) * doppler(p.x / max(s, 0.001), 0.3) * step(1.0 - aa, s);
+  float ring = exp(-pow((s - 1.02) / 0.02, 2.0)) * 5.0;
+  float halo = exp(-pow((s - 1.05) / 0.14, 2.0)) * 1.0;
+  vec3 photon = (uWhite * ring + uAmber * halo) * doppler(p.x / max(s, 0.001), 0.4) * step(1.0 - aa, s);
 
   // --- Glow: bloom hugging the shadow edge (Rune glow.wgsl, variant 0) and a
   // faint warm haze along the disk plane. Roll-off below plays the knee.

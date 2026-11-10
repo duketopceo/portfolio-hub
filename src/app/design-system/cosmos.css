@@ -14,19 +14,18 @@
 /* Dim on purpose: the hole is background, the page's white text is drawn
    over it (live scene light level: CosmosScene HOLE_LIGHT). */
 .cosmos-body--blackhole {
-  opacity: 0.85;
+  opacity: 1;
 }
 
-/* Legibility layer over both renditions: a flat dim plus a soft pool that
-   darkens the middle column where the content sits, so the brightest part of
-   the disk never lands behind a line of text. */
+/* Legibility layer over both renditions: a soft pool behind the text column
+   (left of the hero) and a barely-there flat dim; the hole itself stays bright. */
 .cosmic-bg__scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 100% at 50% 50%, rgba(0, 0, 0, 0.32), transparent 100%),
-    rgba(0, 0, 0, 0.18);
+    radial-gradient(ellipse 34% 60% at 22% 40%, rgba(0, 0, 0, 0.4), transparent 100%),
+    rgba(0, 0, 0, 0.04);
 }
 
 .cosmos-body {

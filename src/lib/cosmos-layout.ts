@@ -25,9 +25,9 @@ export type LayoutVariant = "wide" | "tall";
 // Wide: the hole sits a little right of centre and above the middle so the
 // disk's wings run across the whole viewport. Tall: centred high, the disk
 // is cropped by the screen edges.
-const WIDE: BodyPlacement[] = [{ id: "blackhole", x: 0.58, y: 0.42, size: 0.27, parallax: 0.32 }];
+const WIDE: BodyPlacement[] = [{ id: "blackhole", x: 0.58, y: 0.42, size: 0.22, parallax: 0.32 }];
 
-const TALL: BodyPlacement[] = [{ id: "blackhole", x: 0.5, y: 0.3, size: 0.5, parallax: 0.32 }];
+const TALL: BodyPlacement[] = [{ id: "blackhole", x: 0.5, y: 0.3, size: 0.4, parallax: 0.32 }];
 
 /** Portrait viewports get their own arrangement; everything else is "wide". */
 export function layoutVariant(width: number, height: number): LayoutVariant {
