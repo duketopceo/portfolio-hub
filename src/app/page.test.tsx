@@ -71,16 +71,16 @@ describe("home layout", () => {
     const rest = html.slice(html.indexOf("home-rest-heading"));
     const ranked = rankProjects(projectConfigs);
     const pinned = new Set<string>(RANKING_PINS);
-    const byCategory = new Map<string, string[]>();
+    const byCapability = new Map<string, string[]>();
     for (const p of ranked) {
       if (pinned.has(p.slug)) continue;
-      byCategory.set(p.capability as string, [...(byCategory.get(p.capability as string) ?? []), p.slug]);
+      byCapability.set(p.capability as string, [...(byCapability.get(p.capability as string) ?? []), p.slug]);
     }
-    for (const [category, slugs] of byCategory) {
+    for (const [capability, slugs] of byCapability) {
       slugs.slice(0, 4).forEach((slug) => expect(rest).toContain(`href="/projects/${slug}"`));
       slugs.slice(4).forEach((slug) => expect(rest).not.toContain(`href="/projects/${slug}"`));
-      const total = ranked.filter((p) => p.capability === category).length;
-      expect(rest).toContain(`href="/projects?group=${category}"`);
+      const total = ranked.filter((p) => p.capability === capability).length;
+      expect(rest).toContain(`href="/projects?group=${capability}"`);
       expect(rest).toMatch(new RegExp(`See all ${total} in `));
     }
     for (const slug of pinned) expect(rest).not.toContain(`href="/projects/${slug}"`);

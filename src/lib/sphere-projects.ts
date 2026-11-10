@@ -1,6 +1,9 @@
-import { isCapabilityId } from "@/data/capability-meta";
-import type { SphereProject } from "@/components/sphere/ProjectSphere";
+import { isCapabilityId, type CapabilityId } from "@/data/capability-meta";
 import { DEFAULT_PIN_COUNT } from "@/lib/ranking-core";
+import type { SphereInput } from "@/lib/sphere-layout";
+
+/** Serializable project facts the sphere needs; never repo identifiers. */
+export type SphereProject = SphereInput & { capability: CapabilityId };
 
 /**
  * The sphere's props from a ranked project list: slug, name, capability and

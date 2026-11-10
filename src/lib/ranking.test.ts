@@ -52,7 +52,7 @@ describe("buildRanking", () => {
     const out2 = buildRanking(projects, { snapshot: tie, pins: ["d", "e", "a"] });
     // rest: b and c tie at 50, "b" sorts before "c"
     expect(out2.slice(3).map((p) => p.slug)).toEqual(["b", "c"]);
-    // categories interleave: finance (b), apps (c)
+    // capability groups interleave: products (b), tooling-infra (c)
     expect(out2.slice(3).map((p) => p.capability)).toEqual(["products", "tooling-infra"]);
   });
 
@@ -86,7 +86,7 @@ describe("buildRanking", () => {
     }
   });
 
-  it("category group views list no pinned project and keep rank order", () => {
+  it("capability group views list no pinned project and keep rank order", () => {
     const ranked = buildRanking(projects, { snapshot: scores, pins: ["a", "e", "d"], pinCount: 3 });
     const groups = capabilityGroups(ranked, 3);
     const slugs = groups.flatMap((g) => g.projects.map((p) => p.slug));
@@ -185,7 +185,7 @@ describe("five-lead band", () => {
     expect(ranked.slice(0, 5).map((p) => p.slug)).toEqual([...RANKING_PINS]);
   });
 
-  it("leadProjects returns five and category groups exclude every lead", () => {
+  it("leadProjects returns five and capability groups exclude every lead", () => {
     const ranked = rankProjects(projectConfigs);
     expect(leadProjects(ranked)).toHaveLength(5);
     const grouped = capabilityGroups(ranked).flatMap((g) => g.projects.map((p) => p.slug));

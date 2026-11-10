@@ -68,8 +68,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
                   : projects.filter((p) => p.capability === cat.key).length;
               if (count === 0 && cat.key !== "all") return null;
               const active = activeGroup === cat.key;
-              const pillColor = cat.color;
-              return (
+                            return (
                 <button
                   key={cat.key}
                   type="button"
@@ -80,7 +79,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
                   data-umami-event-group={cat.key}
                   className={`catalog-pill${active ? " catalog-pill--active" : ""}`}
                   style={
-                    { "--pill-accent": pillColor } as React.CSSProperties
+                    { "--pill-accent": cat.color } as React.CSSProperties
                   }
                 >
                   <span className="catalog-pill__label">{cat.label}</span>

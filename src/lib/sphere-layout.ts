@@ -33,6 +33,11 @@ const WEDGE_MARGIN = (7 * Math.PI) / 180;
 /** Widest latitude a dot may reach. */
 const MAX_LAT = (58 * Math.PI) / 180;
 
+/** Unit vector for a latitude and longitude in radians. */
+function unitVector(lat: number, lon: number): { x: number; y: number; z: number } {
+  return { x: Math.cos(lat) * Math.sin(lon), y: Math.sin(lat), z: Math.cos(lat) * Math.cos(lon) };
+}
+
 export function layoutSphere(
   inputs: readonly SphereInput[],
   groups: readonly string[]
@@ -51,14 +56,7 @@ export function layoutSphere(
       const lat = MAX_LAT * r * Math.sin(theta);
       // Widen the longitude offset toward the poles so spacing stays even.
       const lon = centre + (half * r * Math.cos(theta)) / Math.max(Math.cos(lat), 0.5);
-      out.push({
-        ...p,
-        lat,
-        lon,
-        x: Math.cos(lat) * Math.sin(lon),
-        y: Math.sin(lat),
-        z: Math.cos(lat) * Math.cos(lon),
-      });
+      out.push({ ...p, lat, lon, ...unitVector(lat, lon) });
     });
   });
   return out;
@@ -91,16 +89,14 @@ export function projectPoint(
 /** Points along a latitude circle (radians), for the wireframe. */
 export function latitudeLine(lat: number, steps = 72): { x: number; y: number; z: number }[] {
   return Array.from({ length: steps + 1 }, (_, i) => {
-    const lon = (i / steps) * 2 * Math.PI;
-    return { x: Math.cos(lat) * Math.sin(lon), y: Math.sin(lat), z: Math.cos(lat) * Math.cos(lon) };
+    return unitVector(lat, (i / steps) * 2 * Math.PI);
   });
 }
 
 /** Points along a meridian (radians), pole to pole. */
 export function meridianLine(lon: number, steps = 48): { x: number; y: number; z: number }[] {
   return Array.from({ length: steps + 1 }, (_, i) => {
-    const lat = -Math.PI / 2 + (i / steps) * Math.PI;
-    return { x: Math.cos(lat) * Math.sin(lon), y: Math.sin(lat), z: Math.cos(lat) * Math.cos(lon) };
+    return unitVector(-Math.PI / 2 + (i / steps) * Math.PI, lon);
   });
 }
 
@@ -117,20 +113,17 @@ export function wirePaths(
 ): { front: string; back: string } {
   let front = "";
   let back = "";
-  let prev: Projected | null = null;
+  let prev: { z: number; sx: string; sy: string } | null = null;
   for (const pt of points) {
     const q = projectPoint(pt, phi);
     const sx = (cx + radius * q.x).toFixed(1);
     const sy = (cy + radius * q.y).toFixed(1);
     if (prev) {
-      const isFront = (prev.z + q.z) / 2 >= 0;
-      const px = (cx + radius * prev.x).toFixed(1);
-      const py = (cy + radius * prev.y).toFixed(1);
-      const seg = `M${px} ${py}L${sx} ${sy}`;
-      if (isFront) front += seg;
+      const seg = `M${prev.sx} ${prev.sy}L${sx} ${sy}`;
+      if ((prev.z + q.z) / 2 >= 0) front += seg;
       else back += seg;
     }
-    prev = q;
+    prev = { z: q.z, sx, sy };
   }
   return { front, back };
 }

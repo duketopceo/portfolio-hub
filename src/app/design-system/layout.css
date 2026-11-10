@@ -381,6 +381,7 @@
 }
 
 .dossier-evidence__note {
+  display: block;
   margin: 0;
   font-size: var(--text-sm);
   color: var(--color-text-muted);

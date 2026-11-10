@@ -1,19 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { CAPABILITY_IDS, capabilityMeta, type CapabilityId } from "@/data/capability-meta";
+import { useMediaQuery } from "@/lib/use-media-query";
+import type { SphereProject } from "@/lib/sphere-projects";
 import {
   latitudeLine,
   layoutSphere,
   meridianLine,
   projectPoint,
   wirePaths,
-  type SphereInput,
 } from "@/lib/sphere-layout";
-
-/** Serializable project facts the sphere needs; never repo identifiers. */
-export type SphereProject = SphereInput & { capability: CapabilityId };
 
 const SIZE = 400;
 const C = SIZE / 2;
@@ -45,39 +43,47 @@ export default function ProjectSphere({
   const [active, setActive] = useState<string | null>(null);
   const hovering = useRef(false);
   const activeRef = useRef<string | null>(null);
+  // Touch only: the dot a first tap has named; a second tap on it opens the dossier.
+  const armedSlug = useRef<string | null>(null);
+  const figureRef = useRef<HTMLElement | null>(null);
+  const inView = useRef(true);
+  // Server value true: the markup never assumes motion; the client reads the real setting.
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)", true);
+  const coarsePointer = useMediaQuery("(pointer: coarse)");
 
   useEffect(() => {
     activeRef.current = active;
   }, [active]);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduce.matches) return;
+    const figure = figureRef.current;
+    if (!figure || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => {
+      inView.current = entry.isIntersecting;
+    });
+    observer.observe(figure);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) return;
     let raf = 0;
     let last = performance.now();
     let lastPaint = last;
     const tick = (now: number) => {
       const dt = (now - last) / 1000;
       last = now;
-      if (!hovering.current && activeRef.current === null && !document.hidden) {
-        // Paint at about 30 frames per second; the sphere is slow and small.
-        if (now - lastPaint >= 33) {
-          lastPaint = now;
-          setPhi((p) => p + SPIN * Math.min(dt, 0.25));
-        }
+      const paused = hovering.current || activeRef.current !== null || document.hidden || !inView.current;
+      // Paint at about 30 frames per second; the sphere is slow and small.
+      if (!paused && now - lastPaint >= 33) {
+        lastPaint = now;
+        setPhi((p) => p + SPIN * Math.min(dt, 0.25));
       }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    const onChange = () => {
-      if (reduce.matches) cancelAnimationFrame(raf);
-    };
-    reduce.addEventListener("change", onChange);
-    return () => {
-      cancelAnimationFrame(raf);
-      reduce.removeEventListener("change", onChange);
-    };
-  }, []);
+    return () => cancelAnimationFrame(raf);
+  }, [reduceMotion]);
 
   const wires = useMemo(
     () => [
@@ -92,27 +98,38 @@ export default function ProjectSphere({
     .sort((a, b) => a.q.z - b.q.z);
   const activeDot = placed.find((p) => p.d.slug === active) ?? null;
 
-  const counts = CAPABILITY_IDS.map((id) => ({
-    id,
-    meta: capabilityMeta[id],
-    members: projects.filter((p) => p.capability === id).sort((a, b) => a.rank - b.rank),
-  }));
-
-  const isCoarse = () => window.matchMedia("(pointer: coarse)").matches;
+  const groups = useMemo(
+    () =>
+      CAPABILITY_IDS.map((id) => ({
+        id,
+        meta: capabilityMeta[id],
+        members: projects.filter((p) => p.capability === id).sort((a, b) => a.rank - b.rank),
+      })),
+    [projects]
+  );
 
   return (
-    <figure className={`project-sphere project-sphere--${variant}`}>
+    <figure ref={figureRef} className={`project-sphere project-sphere--${variant}`}>
       <svg
         className="project-sphere__svg"
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="group"
         aria-label="Map of projects by capability. Each dot opens a project."
-        onPointerEnter={() => {
-          hovering.current = true;
+        onPointerEnter={(e) => {
+          if (e.pointerType === "mouse") hovering.current = true;
         }}
-        onPointerLeave={() => {
+        onPointerLeave={(e) => {
+          // Touch lifts fire pointerleave before click; only a mouse leaving clears the label.
+          if (e.pointerType !== "mouse") return;
           hovering.current = false;
           setActive(null);
+        }}
+        onPointerDown={(e) => {
+          // A touch outside every dot disarms the two-tap flow.
+          if (e.pointerType !== "mouse" && !(e.target as Element).closest("a")) {
+            armedSlug.current = null;
+            setActive(null);
+          }
         }}
       >
         <circle className="project-sphere__limb" cx={C} cy={C} r={R} />
@@ -151,11 +168,14 @@ export default function ProjectSphere({
               data-umami-event-slug={d.slug}
               onFocus={() => setActive(d.slug)}
               onBlur={() => setActive((a) => (a === d.slug ? null : a))}
-              onPointerEnter={() => setActive(d.slug)}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse") setActive(d.slug);
+              }}
               onClick={(e) => {
                 // On touch the first tap names the dot; the second opens it.
-                if (isCoarse() && active !== d.slug) {
+                if (coarsePointer && armedSlug.current !== d.slug) {
                   e.preventDefault();
+                  armedSlug.current = d.slug;
                   setActive(d.slug);
                 }
               }}
@@ -176,20 +196,8 @@ export default function ProjectSphere({
       </svg>
 
       <figcaption className="project-sphere__caption">
-        <ul className="project-sphere__legend" aria-label="Capability groups">
-          {counts.map(({ id, meta, members }) => (
-            <li key={id} className="project-sphere__legend-item">
-              <span
-                className="project-sphere__swatch"
-                style={{ background: meta.color }}
-                aria-hidden="true"
-              />
-              <span className="project-sphere__legend-label">{meta.label}</span>
-              <span className="project-sphere__legend-count">{members.length}</span>
-            </li>
-          ))}
-        </ul>
-        <GroupedList counts={counts} variant={variant} />
+        <Legend groups={groups} />
+        <GroupedList groups={groups} variant={variant} />
       </figcaption>
     </figure>
   );
@@ -218,26 +226,52 @@ function SphereLabel({ x, y, text }: { x: number; y: number; text: string }) {
   );
 }
 
-function GroupedList({
-  counts,
+type Group = {
+  id: CapabilityId;
+  meta: { label: string; color: string };
+  members: readonly SphereProject[];
+};
+
+/** Static between frames, so it skips the rotation re-render. */
+const Legend = memo(function Legend({ groups }: { groups: readonly Group[] }) {
+  return (
+    <ul className="project-sphere__legend" aria-label="Capability groups">
+      {groups.map(({ id, meta, members }) => (
+        <li key={id} className="project-sphere__legend-item">
+          <span
+            className="project-sphere__swatch"
+            style={{ background: meta.color }}
+            aria-hidden="true"
+          />
+          <span className="project-sphere__legend-label">{meta.label}</span>
+          <span className="project-sphere__legend-count">{members.length}</span>
+        </li>
+      ))}
+    </ul>
+  );
+});
+
+const GroupedList = memo(function GroupedList({
+  groups,
   variant,
 }: {
-  counts: {
-    id: CapabilityId;
-    meta: { label: string };
-    members: readonly SphereProject[];
-  }[];
+  groups: readonly Group[];
   variant: "full" | "compact";
 }) {
   const body = (
     <div className="project-sphere__list">
-      {counts.map(({ id, meta, members }) => (
+      {groups.map(({ id, meta, members }) => (
         <section key={id} aria-labelledby={`sphere-list-${variant}-${id}`}>
           <h3 id={`sphere-list-${variant}-${id}`}>{meta.label}</h3>
           <ul>
             {members.map((p) => (
               <li key={p.slug}>
-                <Link href={`/projects/${p.slug}`} prefetch={false}>
+                <Link
+                  href={`/projects/${p.slug}`}
+                  prefetch={false}
+                  // The compact list is read by screen readers only; the dots are the keyboard path.
+                  tabIndex={variant === "compact" ? -1 : undefined}
+                >
                   {p.name}
                 </Link>
               </li>
@@ -256,4 +290,4 @@ function GroupedList({
       {body}
     </details>
   );
-}
+});

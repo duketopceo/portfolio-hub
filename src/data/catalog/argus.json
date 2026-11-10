@@ -11,7 +11,7 @@
         "value": "$0.0014, 3 of 3 pass",
         "source": "Argus eval report docs/evals/2026-09-30.md (evals/results/2026-09-30T06-28-49-359Z.json)",
         "measuredOn": "2026-09-30",
-        "method": "Argus's own eval suite: 3 tasks against a static fixture with an empty cache; vision spend metered per call from OpenRouter cost. One run per model."
+        "method": "Argus's own eval suite: 3 tasks against a static fixture with an empty cache; vision spend metered per call from OpenRouter cost. One run per model; this is the run matching the committed report, and two other recorded runs of the suite cost $0.0016 and $0.0379 for gemini-2.5-flash-lite."
       },
       {
         "label": "Cold run, kimi-k2.5",

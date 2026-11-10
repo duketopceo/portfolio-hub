@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { capabilityOf } from "@/data/capability-meta";
+import { capabilityAccent, capabilityLabel } from "@/data/capability-meta";
 import { categoryMeta } from "@/data/category-meta";
 import { isProjectLive, projectLiveHref } from "@/lib/deployments";
 import { mediaAsset, type EnrichedProject } from "@/lib/types";
@@ -19,15 +19,15 @@ export default function LeadProjectCard({
   /** One-based ranking position. */
   rank: number;
 }) {
-  const group = capabilityOf(project);
   const meta = categoryMeta[project.category];
   const video = mediaAsset(project.media.release) ?? mediaAsset(project.media.demo);
   const dossier = `/projects/${project.slug}`;
   const href = video ? `${dossier}#video` : dossier;
-  const accent = group?.color ?? (catColors[project.category] || "#2DD4BF");
+  const accent = capabilityAccent(project, catColors);
   const live = isProjectLive(project);
   const measured = project.measured ?? [];
   const liveHref = projectLiveHref(project);
+  const liveIsExternal = liveHref?.startsWith("http") ?? false;
 
   return (
     <article
@@ -76,7 +76,7 @@ export default function LeadProjectCard({
       <div className="lead-card__body">
         <p className="lead-card__kicker">
           <span className="lead-card__rank">{String(rank).padStart(2, "0")}</span>
-          <span>{group?.label ?? meta?.label ?? project.category}</span>
+          <span>{capabilityLabel(project, meta?.label)}</span>
           {live && <span className="lead-card__live">Live</span>}
         </p>
         <h3 className="lead-card__title">
@@ -106,11 +106,9 @@ export default function LeadProjectCard({
               <a
                 href={liveHref}
                 className="lead-card__link"
-                {...(liveHref.startsWith("http")
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
+                {...(liveIsExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               >
-                {liveHref.startsWith("/") ? "Demo" : "Live ↗"}
+                {liveIsExternal ? "Live ↗" : "Demo"}
               </a>
             )}
             {project.githubUrl && (

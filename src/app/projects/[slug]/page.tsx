@@ -15,7 +15,7 @@ import { isProjectLive } from "@/lib/deployments";
 import { componentsOf } from "@/lib/catalog";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
-import { capabilityOf } from "@/data/capability-meta";
+import { capabilityAccent, capabilityLabel } from "@/data/capability-meta";
 import DemoEmbed from "@/components/DemoEmbed";
 import {
   ProjectHero,
@@ -84,8 +84,10 @@ export default async function ProjectDetailPage({
   ]);
 
   const categoryEntry = categoryMeta[project.category];
-  const group = capabilityOf(project);
-  const meta = categoryEntry && { ...categoryEntry, label: group?.label ?? categoryEntry.label };
+  const meta = categoryEntry && {
+    ...categoryEntry,
+    label: capabilityLabel(project, categoryEntry.label),
+  };
   const hasDemo = isProjectLive(project);
   const embedUrl = project.liveUrl || project.demoUrl || "";
   const isExternalEmbed =
@@ -93,7 +95,7 @@ export default async function ProjectDetailPage({
   const useIframeEmbed =
     isExternalEmbed && !project.demoOffline && project.embeddable === true;
 
-  const accentColor = group?.color ?? (catColors[project.category] || "#2dd4bf");
+  const accentColor = capabilityAccent(project, catColors);
 
   const relatedProjects = allProjects
     .filter((p) => p.capability === project.capability && p.slug !== project.slug)

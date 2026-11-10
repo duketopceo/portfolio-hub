@@ -56,3 +56,21 @@ export function isCapabilityId(value: string | null | undefined): value is Capab
 export function capabilityOf(p: { capability?: string | null }): CapabilityMeta | undefined {
   return isCapabilityId(p.capability) ? capabilityMeta[p.capability] : undefined;
 }
+
+const FALLBACK_ACCENT = "#2DD4BF";
+
+/** Accent color for a project: its capability color, else the legacy category color. */
+export function capabilityAccent(
+  p: { capability?: string | null; category: string },
+  categoryColors: Record<string, string>
+): string {
+  return capabilityOf(p)?.color ?? (categoryColors[p.category] || FALLBACK_ACCENT);
+}
+
+/** Group label for a project: its capability label, else the legacy category label. */
+export function capabilityLabel(
+  p: { capability?: string | null; category: string },
+  categoryLabel: string | undefined
+): string {
+  return capabilityOf(p)?.label ?? categoryLabel ?? p.category;
+}

@@ -14,12 +14,18 @@ export function DossierEvidence({ measured }: { measured: readonly ProjectMeasur
       <DossierSection title="Measured proof" id="evidence">
         <dl className="dossier-evidence">
           {measured.map((m) => (
-            <div key={m.label} className="dossier-evidence__item">
-              <MetricRow label={m.label} value={m.value} />
-              <p className="dossier-evidence__note">
-                {m.method} Source: {m.source}. Measured {m.measuredOn}.
-              </p>
-            </div>
+            <MetricRow
+              key={m.label}
+              label={m.label}
+              value={
+                <>
+                  {m.value}
+                  <span className="dossier-evidence__note">
+                    {m.method} Source: {m.source}. Measured {m.measuredOn}.
+                  </span>
+                </>
+              }
+            />
           ))}
         </dl>
       </DossierSection>

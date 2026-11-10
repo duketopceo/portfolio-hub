@@ -65,15 +65,36 @@ describe("ProjectSphere motion", () => {
     expect(container.querySelector(".project-sphere__label")).toBeNull();
   });
 
-  it("on touch, a first tap names the dot and does not navigate", async () => {
+  it("on touch, the real pointer sequence names the dot on the first tap and opens it on the second", async () => {
     mockMedia((q) => q.includes("prefers-reduced-motion") || q.includes("pointer: coarse"));
     await mount();
+    const svg = container.querySelector("svg")!;
     const dot = container.querySelector<SVGAElement>("a.project-sphere__dot")!;
-    const first = new MouseEvent("click", { bubbles: true, cancelable: true });
-    await act(async () => {
-      dot.dispatchEvent(first);
-    });
-    expect(first.defaultPrevented).toBe(true);
+    const tap = async () => {
+      const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+      await act(async () => {
+        dot.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerType: "touch" }));
+        dot.dispatchEvent(new PointerEvent("pointerenter", { pointerType: "touch" }));
+        svg.dispatchEvent(new PointerEvent("pointerleave", { pointerType: "touch" }));
+        dot.dispatchEvent(click);
+      });
+      return click;
+    };
+    expect((await tap()).defaultPrevented).toBe(true);
     expect(container.querySelector(".project-sphere__label")).not.toBeNull();
+    expect((await tap()).defaultPrevented).toBe(false);
+  });
+
+  it("keeps the compact variant's hidden list out of the tab order", async () => {
+    mockMedia((q) => q.includes("prefers-reduced-motion"));
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    await act(async () => {
+      root.render(<ProjectSphere projects={projects} variant="compact" />);
+    });
+    const hidden = container.querySelectorAll(".sr-only a");
+    expect(hidden.length).toBe(projects.length);
+    hidden.forEach((a) => expect(a.getAttribute("tabindex")).toBe("-1"));
   });
 });
