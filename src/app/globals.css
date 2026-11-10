@@ -2,6 +2,7 @@
 @import "./design-system/tokens.css";
 @import "./design-system/base.css";
 @import "./design-system/primitives.css";
+@import "./design-system/cosmos.css";
 
 /* ── Design System: STAR CHART — Cosmic Intelligence v4 (dark only) ───
    Neo-industrial orbital survey. Near-monochrome, hairline grids,
@@ -519,7 +520,7 @@
 
 /* ── Selection ─────────────────────────────────────────── */
 ::selection {
-  background: var(--color-accent-muted);
+  background: var(--color-pop-muted);
   color: var(--color-text);
 }
 

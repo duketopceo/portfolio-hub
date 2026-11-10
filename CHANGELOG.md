@@ -6,6 +6,8 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 ### Changed
 
+- Cosmic background: slow black hole on every page, three planet types (rock, gas giant, ringed ice) on home, falling stardust further down scrollable pages; every piece has a server-rendered SVG/CSS static rendition for reduced motion and no-WebGL. Palette tightened to teal + ember + one ultraviolet pop (`BRAND.md`)
+- Background scene mounts as one lazy chunk (`CosmosLive`) so `next/dynamic` no longer runs inside the R3F canvas (React error #438 killed the old starfield canvas)
 - Home planet map: real lit 3D planets (procedural surfaces, tilt and spin, real rings, orbiting moons) driven by a per-project `planetVisual` spec in the catalog JSON; lead set is now Pace, Argus, Tallyline, Kurultai, Orchestral (`docs/planets.md`)
 - Recruiter hire path: `/about`, `/contact`, `/hire` with a public mailto
 - Catalog cards open the dossier; public GitHub is a separate CTA

@@ -105,8 +105,11 @@ test.describe("Portfolio visual acceptance matrix", () => {
 
         await expectNoHorizontalOverflow(page);
         await expect(page.locator("main")).toBeVisible();
-        // The fixed full-viewport starfield would paint over the hero in a
-        // full-page capture; hide that decorative layer for baselines only.
+        // The fixed full-viewport cosmic background (black hole, planets,
+        // stardust, stars; canvas and SVG layers) is animated and would paint
+        // over the hero; .cosmic-bg contains every such layer, so hide it for
+        // baselines only. Its static renditions have their own deterministic
+        // captures below (reduced motion / WebGL disabled).
         await page.addStyleTag({ content: ".cosmic-bg { display: none !important; }" });
         // The home orbit tour advances focus on a timer; pause it so the
         // baseline always shows the same project.
@@ -186,43 +189,130 @@ test.describe("Portfolio visual acceptance matrix", () => {
     }
   });
 
-  test("default motion renders pixels in every home WebGL layer", async ({
+  // The test browser renders WebGL in software (SwiftShader), so the cosmic
+  // background correctly stays on its static plate; ?cosmos=live is the QA
+  // override that forces the live scene.
+  test("default test browser (software GL) keeps the static background plate", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
-    const canvases = page.locator("canvas");
-    await expect(canvases).toHaveCount(2);
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "static");
+    await expect(page.locator(".cosmic-bg .cosmos-plate svg")).toHaveCount(4);
+    await expect(page.locator(".cosmic-bg canvas")).toHaveCount(0);
+  });
 
-    for (let index = 0; index < 2; index += 1) {
+  test("live background renders pixels in its one WebGL canvas", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    await page.goto("/?cosmos=live", { waitUntil: "networkidle" });
+    const canvases = page.locator(".cosmic-bg canvas[data-engine]");
+    await expect(canvases).toHaveCount(1, { timeout: 30_000 });
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "live", {
+      timeout: 60_000,
+    });
+
+    for (let index = 0; index < 1; index += 1) {
       const canvas = canvases.nth(index);
-      await canvas.scrollIntoViewIfNeeded();
-      await expect(canvas).toBeVisible();
       await expect
-        .poll(() =>
-          canvas.evaluate((element) => {
-            const source = element as HTMLCanvasElement;
-            const probe = document.createElement("canvas");
-            probe.width = Math.max(1, Math.min(320, source.width));
-            probe.height = Math.max(1, Math.min(180, source.height));
-            const context = probe.getContext("2d");
-            if (!context) return 0;
-            context.drawImage(source, 0, 0, probe.width, probe.height);
-            const pixels = context.getImageData(
-              0,
-              0,
-              probe.width,
-              probe.height,
-            ).data;
-            let painted = 0;
-            for (let i = 3; i < pixels.length; i += 4) {
-              if (pixels[i] > 0) painted += 1;
-            }
-            return painted;
-          }),
+        .poll(
+          () =>
+            canvas.evaluate((element) => {
+              const source = element as HTMLCanvasElement;
+              const probe = document.createElement("canvas");
+              probe.width = Math.max(1, Math.min(320, source.width));
+              probe.height = Math.max(1, Math.min(180, source.height));
+              const context = probe.getContext("2d");
+              if (!context) return 0;
+              context.drawImage(source, 0, 0, probe.width, probe.height);
+              const pixels = context.getImageData(0, 0, probe.width, probe.height).data;
+              let painted = 0;
+              for (let i = 3; i < pixels.length; i += 4) {
+                if (pixels[i] > 0) painted += 1;
+              }
+              return painted;
+            }),
+          { timeout: 30_000 },
         )
         .toBeGreaterThan(100);
     }
   });
+
+  test("live background is one WebGL context and a 2D stardust canvas on long pages", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    await page.goto("/about?cosmos=live", { waitUntil: "networkidle" });
+    await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(1, { timeout: 30_000 });
+    // Planets are home-only: no planet bodies in the static plate off home.
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-home", "false");
+    await expect(page.locator(".cosmos-body:not(.cosmos-body--blackhole)").first()).toBeHidden();
+  });
+
+  test("live scene hands back to the static plate when WebGL context is lost", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    await page.goto("/about?cosmos=live", { waitUntil: "networkidle" });
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "live", {
+      timeout: 60_000,
+    });
+    await page.evaluate(() => {
+      const c = document.querySelector<HTMLCanvasElement>(".cosmic-bg canvas[data-engine]");
+      const gl = (c?.getContext("webgl2") ?? c?.getContext("webgl")) as WebGLRenderingContext | null;
+      gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    });
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "plate", {
+      timeout: 15_000,
+    });
+  });
+
+  // Deterministic captures of the static renditions (SVG + CSS): reduced
+  // motion, and WebGL unavailable. No pixel tolerance games: nothing here
+  // animates (animations are disabled for CSS, and no canvas mounts).
+  const staticCaptures = [
+    { name: "home-desktop", path: "/", width: 1440, height: 900, scroll: 0 },
+    { name: "home-mobile", path: "/", width: 390, height: 844, scroll: 0 },
+    { name: "home-desktop-scrolled", path: "/", width: 1440, height: 900, scroll: 900 },
+    { name: "about-desktop", path: "/about", width: 1440, height: 900, scroll: 0 },
+  ] as const;
+
+  for (const capture of staticCaptures) {
+    test(`static cosmic background, reduced motion: ${capture.name}`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.setViewportSize({ width: capture.width, height: capture.height });
+      await page.goto(capture.path, { waitUntil: "networkidle" });
+      await expect(page.locator("canvas")).toHaveCount(0);
+      await page.evaluate((y) => window.scrollTo(0, y), capture.scroll);
+      await page.addStyleTag({
+        content: "main, header, footer { visibility: hidden !important; }",
+      });
+      await expect(page.locator(".cosmic-bg")).toHaveScreenshot(
+        `cosmos-reduced-${capture.name}.png`,
+      );
+    });
+  }
+
+  for (const capture of staticCaptures.filter((c) => c.scroll === 0 && c.name !== "about-desktop")) {
+    test(`static cosmic background, WebGL unavailable: ${capture.name}`, async ({ page }) => {
+      await page.addInitScript(() => {
+        const original = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
+          if (/webgl/i.test(type)) return null;
+          return (original as (...a: unknown[]) => unknown).call(this, type, ...rest);
+        } as typeof original;
+      });
+      await page.setViewportSize({ width: capture.width, height: capture.height });
+      await page.goto(capture.path, { waitUntil: "networkidle" });
+      await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "static");
+      await page.addStyleTag({
+        content: "main, header, footer { visibility: hidden !important; }",
+      });
+      await expect(page.locator(".cosmic-bg")).toHaveScreenshot(
+        `cosmos-nowebgl-${capture.name}.png`,
+      );
+    });
+  }
 
   test("reduced motion creates no WebGL canvases", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -230,12 +320,12 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 
-  // The site-wide starfield (SiteBackground) is one canvas on every route and
-  // is not a new effect; the /hire backdrop (R18) is the second.
+  // The cosmic background only mounts a canvas when live (not in this
+  // software-GL browser); the /hire backdrop (R18) is the only canvas here.
   test("hire backdrop renders one canvas with motion", async ({ page }) => {
     await page.goto("/hire", { waitUntil: "networkidle" });
     await expect(page.locator(".hire-backdrop canvas")).toHaveCount(1);
-    await expect(page.locator("canvas")).toHaveCount(2);
+    await expect(page.locator("canvas")).toHaveCount(1);
   });
 
   test("hire backdrop creates no canvas under reduced motion", async ({
@@ -254,7 +344,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
     });
     await page.goto("/hire", { waitUntil: "networkidle" });
     await expect(page.locator(".hire-backdrop")).toHaveCount(0);
-    await expect(page.locator("canvas")).toHaveCount(1);
+    await expect(page.locator("canvas")).toHaveCount(0);
   });
 
   test("home is a poster: hero, planet map, activity, closing row", async ({
