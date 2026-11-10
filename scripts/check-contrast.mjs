@@ -18,6 +18,7 @@ const TEXT = [
   "color-text-faint",
   "color-accent",
   "color-signal",
+  "color-heat",
   "color-pop",
 ];
 

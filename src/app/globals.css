@@ -8,7 +8,7 @@
 /* ── Design System: STAR CHART — Cosmic Intelligence v4 (dark only) ───
    Neo-industrial orbital survey. Near-monochrome, hairline grids,
    mono microcopy, catalog numbers, redacted blocks, squared corners.
-   Teal is a signal color — live/interactive elements only. */
+   White is the accent — live/interactive elements only. */
 
 /* ── Star chart background — survey plate, grid, sharp stars, grain ── */
 .cosmic-bg {
@@ -35,7 +35,7 @@
   -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 38%, black 30%, transparent 88%);
 }
 
-/* Mapped stars — sharp points, no glow blobs. A few carry the signal teal. */
+/* Mapped stars — sharp points, no glow blobs. A few are brighter. */
 .cosmic-bg::before {
   content: '';
   position: absolute;
@@ -68,7 +68,7 @@
     radial-gradient(1px 1px at 72% 18%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
     radial-gradient(1px 1px at 42% 78%, rgba(255, 255, 255, 0.36) 0%, transparent 100%),
     radial-gradient(1px 1px at 95% 65%, rgba(255, 255, 255, 0.32) 0%, transparent 100%),
-    radial-gradient(1px 1px at 8% 55%, rgba(45, 212, 191, 0.45) 0%, transparent 100%);
+    radial-gradient(1px 1px at 8% 55%, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
   animation: twinkle-slow 15s ease-in-out infinite alternate;
   animation-delay: -3s;
   opacity: 0.8;
@@ -1910,7 +1910,7 @@
   background: linear-gradient(
     to bottom,
     var(--color-accent) 0%,
-    rgba(45, 212, 191, 0.3) 30%,
+    rgba(255, 255, 255, 0.3) 30%,
     transparent 100%
   );
 }
@@ -1929,7 +1929,7 @@
 .cosmic-timeline-dot--active {
   border-color: var(--color-accent);
   background: var(--color-accent);
-  box-shadow: 0 0 10px rgba(45, 212, 191, 0.4), 0 0 20px rgba(45, 212, 191, 0.15);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.15);
   animation: star-twinkle 2s ease-in-out infinite;
 }
 
@@ -2237,7 +2237,7 @@
   display: block;
   margin-top: 0.6rem;
   padding-top: 0.5rem;
-  border-top: 1px solid rgba(45, 212, 191, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 600;
@@ -2378,7 +2378,7 @@
   width: 140px;
   height: 24px;
   border-radius: var(--radius-sm);
-  background: rgba(45, 212, 191, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   animation: activity-pulse 1.5s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -3206,9 +3206,9 @@
   font-size: var(--text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  background: rgba(45, 212, 191, 0.12);
+  background: rgba(255, 255, 255, 0.12);
   color: var(--color-accent);
-  border: 1px solid rgba(45, 212, 191, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .openrouter-card__badge--live {
@@ -3505,8 +3505,8 @@
   margin-top: 1.25rem;
   padding: 0.65rem 0.85rem;
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(45, 212, 191, 0.2);
-  background: rgba(45, 212, 191, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
   font-size: 0.875rem;
   color: var(--color-text-muted);
   line-height: 1.55;
@@ -3789,7 +3789,7 @@
 
 .detail-cta--secondary:hover {
   color: var(--color-accent);
-  border-color: rgba(45, 212, 191, 0.35);
+  border-color: rgba(255, 255, 255, 0.35);
   box-shadow: none;
 }
 
@@ -3855,7 +3855,7 @@
 }
 
 .activity-strip__highlight:hover {
-  border-color: rgba(45, 212, 191, 0.35);
+  border-color: rgba(255, 255, 255, 0.35);
   transform: translateY(-1px);
 }
 
@@ -4661,7 +4661,7 @@ header[class*="sticky"],
 }
 
 .activity-chart__seg--review {
-  background: #a78bfa;
+  background: #F5D76E;
   opacity: 0.65;
 }
 
@@ -4712,7 +4712,7 @@ header[class*="sticky"],
 }
 
 .activity-chart__dot--review {
-  background: #a78bfa;
+  background: #F5D76E;
 }
 
 .activity-chart__dot--release {
@@ -4884,7 +4884,7 @@ header[class*="sticky"],
 }
 
 .activity-home-card:hover {
-  border-color: rgba(45, 212, 191, 0.25);
+  border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
 }
 
@@ -5618,7 +5618,7 @@ header[class*="sticky"],
 /* ═══ Planet map (home) — restored from the solar-system module ═══ */
 
 
-.corner-ticks--accent { --ct-color: rgba(45, 212, 191, 0.55); }
+.corner-ticks--accent { --ct-color: rgba(255, 255, 255, 0.55); }
 
 /* ═══════════════════════════════════════════════════════
    SOLAR SYSTEM NAV (homepage orbit)
@@ -5877,7 +5877,7 @@ header[class*="sticky"],
 
 .solar-orbit-ring--b {
   --k: 0.72;
-  border-color: rgba(45, 212, 191, 0.16);
+  border-color: rgba(255, 255, 255, 0.16);
   border-style: dotted;
 }
 
@@ -5887,7 +5887,7 @@ header[class*="sticky"],
 }
 
 .solar-plate:has(.planet-node--focused) .solar-orbit-ring--a {
-  border-color: rgba(45, 212, 191, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* ── R3F orbital scene — canvas layer inside the stage ── */
@@ -5934,7 +5934,7 @@ header[class*="sticky"],
 .solar-sun--core {
   inset: 38%;
   border: 1px solid rgba(228, 234, 240, 0.2);
-  background: rgba(45, 212, 191, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .solar-sun--core::before {
@@ -6495,7 +6495,7 @@ header[class*="sticky"],
 .planet-node--focused .planet-node__body::after,
 .planet-node:hover .planet-node__body::before,
 .planet-node:hover .planet-node__body::after {
-  background: rgba(45, 212, 191, 0.5);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .planet-node--focused .planet-node__core {
@@ -6757,10 +6757,10 @@ header[class*="sticky"],
   border-radius: var(--radius-sm);
 }
 
-.signal__bar[data-level="1"] { height: 25%; background: var(--color-accent); }
-.signal__bar[data-level="2"] { height: 50%; background: var(--color-accent); }
-.signal__bar[data-level="3"] { height: 75%; background: var(--color-accent); }
-.signal__bar[data-level="4"] { height: 100%; background: var(--color-accent); }
+.signal__bar[data-level="1"] { height: 25%; background: var(--color-heat); }
+.signal__bar[data-level="2"] { height: 50%; background: var(--color-heat); }
+.signal__bar[data-level="3"] { height: 75%; background: var(--color-heat); }
+.signal__bar[data-level="4"] { height: 100%; background: var(--color-heat); }
 
 .signal__row[data-state="quiet"] .signal__heat {
   opacity: 0.6;

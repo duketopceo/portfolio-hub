@@ -24,27 +24,27 @@ export const capabilityMeta: Record<CapabilityId, CapabilityMeta> = {
   "evals-routing": {
     label: "Evals & routing",
     description: "Measuring models on cost and quality, and routing work to the right one",
-    color: "#2DD4BF",
+    color: "#FFFFFF",
   },
   "retrieval-memory": {
     label: "Retrieval & memory",
     description: "Search, ranking and context for agents that remember",
-    color: "#A78BFA",
+    color: "#B3B3B3",
   },
   "agents-computer-use": {
     label: "Agents & computer use",
     description: "Agent runtimes, harnesses and tools that act on a computer",
-    color: "#FF5C1A",
+    color: "#FF9F1C",
   },
   products: {
     label: "Products",
     description: "Shipped applications and platforms",
-    color: "#E9ECEF",
+    color: "#F5D76E",
   },
   "tooling-infra": {
     label: "Tooling & infra",
     description: "Developer tools, desktop plugins, hardware and infrastructure",
-    color: "#9AA3AC",
+    color: "#FF5C1A",
   },
 };
 
@@ -57,7 +57,7 @@ export function capabilityOf(p: { capability?: string | null }): CapabilityMeta 
   return isCapabilityId(p.capability) ? capabilityMeta[p.capability] : undefined;
 }
 
-const FALLBACK_ACCENT = "#2DD4BF";
+const FALLBACK_ACCENT = "#FFFFFF";
 
 /** Accent color for a project: its capability color, else the legacy category color. */
 export function capabilityAccent(

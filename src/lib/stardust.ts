@@ -21,10 +21,10 @@ export interface Mote {
   color: number;
 }
 
-/** Weighted: mostly starlight, some teal, a little pop, rare ember. */
+/** Weighted: mostly starlight, some grey, a little pop, rare ember. */
 export const STARDUST_COLORS: readonly string[] = [
   COSMOS_PALETTE.starlight,
-  COSMOS_PALETTE.teal,
+  COSMOS_PALETTE.slate,
   COSMOS_PALETTE.pop,
   COSMOS_PALETTE.ember,
 ];

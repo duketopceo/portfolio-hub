@@ -13,7 +13,7 @@ import {
 } from "./planet-spec";
 
 const look = (slug: string, authored = {}) =>
-  resolvePlanetLook({ slug, type: "platform", baseColor: "#A78BFA", authored });
+  resolvePlanetLook({ slug, type: "platform", baseColor: "#F5D76E", authored });
 
 describe("planet spec defaults", () => {
   it("is deterministic per slug and varies across slugs", () => {
@@ -78,7 +78,7 @@ describe("palette", () => {
       return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     };
     for (const surface of PLANET_SURFACES) {
-      const [lo, mid, hi] = derivePalette("#A78BFA", surface);
+      const [lo, mid, hi] = derivePalette("#F5D76E", surface);
       expect(lum(lo), surface).toBeLessThan(lum(mid));
       expect(lum(mid), surface).toBeLessThan(lum(hi));
     }

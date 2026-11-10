@@ -21,7 +21,7 @@ interface FilterBarProps {
 }
 
 const groups: { key: CapabilityId | "all"; label: string; color: string }[] = [
-  { key: "all", label: "All", color: "#2DD4BF" },
+  { key: "all", label: "All", color: "#FFFFFF" },
   ...CAPABILITY_IDS.map((id) => ({
     key: id,
     label: capabilityMeta[id].label,

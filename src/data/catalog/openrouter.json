@@ -12,7 +12,7 @@
     "planetVisual": {
       "size": "md",
       "shape": "diamond",
-      "color": "#A78BFA",
+      "color": "#F5D76E",
       "moons": [
         {
           "label": "Deflect",

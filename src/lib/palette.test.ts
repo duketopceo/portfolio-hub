@@ -43,24 +43,43 @@ describe("palette tokens", () => {
     expect(tokenHex("--color-bg")).toBe(COSMOS_PALETTE.night);
   });
 
-  it("uses exactly three chromatic colours in the token layer", () => {
+  it("uses exactly three chromatic colours in the token layer, all warm", () => {
     const hexes = [...tokens.matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0].toUpperCase());
     const chroma = new Set(hexes.filter(chromatic));
     expect([...chroma].sort()).toEqual(
-      [COSMOS_PALETTE.teal, COSMOS_PALETTE.ember, COSMOS_PALETTE.pop].map((h) => h.toUpperCase()).sort()
+      [COSMOS_PALETTE.ember, COSMOS_PALETTE.heat, COSMOS_PALETTE.pop].map((h) => h.toUpperCase()).sort()
     );
+    for (const hex of chroma) expect(hue(hex), hex).toBeLessThanOrEqual(60);
   });
 
-  it("keeps teal and ember complementary and the pop distinct from both", () => {
-    expect(hueGap(COSMOS_PALETTE.teal, COSMOS_PALETTE.ember)).toBeGreaterThan(140);
-    expect(hueGap(COSMOS_PALETTE.pop, COSMOS_PALETTE.teal)).toBeGreaterThan(60);
-    expect(hueGap(COSMOS_PALETTE.pop, COSMOS_PALETTE.ember)).toBeGreaterThan(60);
+  it("has no teal or green anywhere in the token layer, the palette or the shared theme", () => {
+    const theme = readFileSync("public/cosmic-theme.css", "utf8");
+    for (const css of [tokens, theme]) {
+      const hexes = [...css.matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0]);
+      for (const hex of hexes.filter(chromatic)) expect(hue(hex) <= 70 || hue(hex) >= 330, hex).toBe(true);
+      expect(css).not.toMatch(/45,\s*212,\s*191/);
+    }
+    for (const hex of Object.values(COSMOS_PALETTE)) {
+      if (chromatic(hex)) expect(hue(hex), hex).toBeLessThanOrEqual(60);
+    }
+  });
+
+  it("keeps the accent white and white text pure on black", () => {
+    expect(COSMOS_PALETTE.accent).toBe("#FFFFFF");
+    expect(tokenHex("--color-text")).toBe("#FFFFFF");
+    expect(tokenHex("--color-bg")).toBe("#000000");
+  });
+
+  it("keeps ember and amber and gold distinguishable by hue or lightness", () => {
+    expect(hueGap(COSMOS_PALETTE.ember, COSMOS_PALETTE.heat)).toBeGreaterThan(15);
+    expect(hueGap(COSMOS_PALETTE.heat, COSMOS_PALETTE.pop)).toBeGreaterThan(8);
+    expect(luminance(COSMOS_PALETTE.pop)).toBeGreaterThan(luminance(COSMOS_PALETTE.heat));
   });
 
   it("keeps every palette colour readable as text on every surface", () => {
     for (const surface of ["--color-bg", "--color-surface", "--color-surface-2", "--color-surface-3"]) {
       const bg = tokenHex(surface)!;
-      for (const c of [COSMOS_PALETTE.teal, COSMOS_PALETTE.ember, COSMOS_PALETTE.pop]) {
+      for (const c of [COSMOS_PALETTE.accent, COSMOS_PALETTE.ember, COSMOS_PALETTE.heat, COSMOS_PALETTE.pop]) {
         expect(contrast(c, bg), `${c} on ${surface}`).toBeGreaterThanOrEqual(4.5);
       }
     }
@@ -71,8 +90,8 @@ describe("palette tokens", () => {
     expect(tokens.toUpperCase()).not.toContain("#34D399");
   });
 
-  it("folds category colours into the palette plus one neutral", () => {
-    const allowed = new Set([COSMOS_PALETTE.teal, COSMOS_PALETTE.ember, COSMOS_PALETTE.pop, COSMOS_PALETTE.slate]);
+  it("folds category colours into white, ember, gold and one grey", () => {
+    const allowed = new Set([COSMOS_PALETTE.accent, COSMOS_PALETTE.ember, COSMOS_PALETTE.pop, COSMOS_PALETTE.slate]);
     for (const [cat, hex] of Object.entries(catColors)) expect(allowed.has(hex as never), cat).toBe(true);
   });
 });

@@ -32,7 +32,7 @@ Create a branded "lost in space" 404 page using the Cosmic Intelligence design s
 
 Create a root-level loading skeleton for route transitions.
 
-- Subtle cosmic spinner or pulsing ring using `--color-accent` (teal)
+- Subtle cosmic spinner or pulsing ring using `--color-accent` (white)
 - Centered vertically and horizontally
 - Respect `prefers-reduced-motion` (static fallback)
 - Keep it lightweight — no heavy SVG animations

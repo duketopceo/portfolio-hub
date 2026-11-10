@@ -5,50 +5,51 @@
 
 :root {
   /* ── Deep Space Background ─────────────── */
-  --color-bg: #080C14;
-  --color-surface: #0C121E;
-  --color-surface-2: #111827;
-  --color-surface-3: #1A2236;
-  --color-border: rgba(45, 212, 191, 0.08);
-  --color-border-glass: rgba(45, 212, 191, 0.12);
+  --color-bg: #000000;
+  --color-surface: #070707;
+  --color-surface-2: #0E0E0E;
+  --color-surface-3: #161616;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-glass: rgba(255, 255, 255, 0.12);
   --color-divider: rgba(255, 255, 255, 0.04);
 
   /* ── Text — cool silver scale ──────────── */
-  --color-text: #E4E4E7;
-  --color-text-muted: #94A3B8;
-  --color-text-faint: #8794A3;
+  --color-text: #FFFFFF;
+  --color-text-muted: #B8B8B8;
+  --color-text-faint: #9A9A9A;
 
-  /* ── Cosmic Teal Accent ────────────────── */
-  --color-accent: #2DD4BF;
-  --color-accent-muted: rgba(45, 212, 191, 0.12);
-  --color-accent-subtle: rgba(45, 212, 191, 0.06);
-  --color-accent-glow: rgba(45, 212, 191, 0.15);
+  /* ── White Accent ────────────────── */
+  --color-accent: #FFFFFF;
+  --color-accent-muted: rgba(255, 255, 255, 0.12);
+  --color-accent-subtle: rgba(255, 255, 255, 0.06);
+  --color-accent-glow: rgba(255, 255, 255, 0.15);
 
   /* ── Nebula Colors ─────────────────────── */
-  --color-nebula-blue: rgba(30, 60, 120, 0.4);
-  --color-nebula-purple: rgba(60, 30, 90, 0.3);
-  --color-nebula-teal: rgba(20, 90, 85, 0.25);
+  --color-nebula-blue: rgba(255, 255, 255, 0.04);
+  --color-nebula-purple: rgba(255, 255, 255, 0.03);
+  --color-nebula-teal: rgba(255, 255, 255, 0.03);
 
   /* ── Category Colors (folded into the 3-color palette) ── */
   --color-signal: #FF5C1A;
-  --color-pop: #A78BFA;
-  --color-cat-finance: #2DD4BF;
-  --color-cat-ai: #A78BFA;
+  --color-heat: #FF9F1C;
+  --color-pop: #F5D76E;
+  --color-cat-finance: #FFFFFF;
+  --color-cat-ai: #F5D76E;
   --color-cat-osint: #FF5C1A;
-  --color-cat-data: #2DD4BF;
-  --color-cat-infra: #9AA3AC;
-  --color-cat-apps: #2DD4BF;
+  --color-cat-data: #FFFFFF;
+  --color-cat-infra: #B3B3B3;
+  --color-cat-apps: #FFFFFF;
 
   /* ── Status ────────────────────────────── */
-  --color-live: #2DD4BF;
+  --color-live: #FFFFFF;
 
   /* ── Glass ─────────────────────────────── */
-  --glass-bg: rgba(12, 18, 30, 0.7);
-  --glass-bg-hover: rgba(12, 18, 30, 0.85);
-  --glass-border: rgba(45, 212, 191, 0.08);
-  --glass-border-hover: rgba(45, 212, 191, 0.18);
+  --glass-bg: rgba(7, 7, 7, 0.7);
+  --glass-bg-hover: rgba(7, 7, 7, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 255, 255, 0.18);
   --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --glass-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(45, 212, 191, 0.05);
+  --glass-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.05);
   --glass-blur: 16px;
 
   /* ── Radius ────────────────────────────── */

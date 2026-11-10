@@ -144,7 +144,7 @@ export function resolvePlanetVisual(
   tier: OrbitVisualTier
 ): ResolvedPlanetVisual {
   const spec = project.planetVisual;
-  const color = spec?.color ?? catColors[project.category] ?? "#2DD4BF";
+  const color = spec?.color ?? catColors[project.category] ?? "#FFFFFF";
 
   return {
     ...resolvePlanetLook({

@@ -33,7 +33,7 @@ describe("stardust", () => {
     expect(dustProgress(100, 0)).toBe(0);
   });
   it("draws colours from the palette with starlight dominant", () => {
-    expect(STARDUST_COLORS).toEqual([COSMOS_PALETTE.starlight, COSMOS_PALETTE.teal, COSMOS_PALETTE.pop, COSMOS_PALETTE.ember]);
+    expect(STARDUST_COLORS).toEqual([COSMOS_PALETTE.starlight, COSMOS_PALETTE.slate, COSMOS_PALETTE.pop, COSMOS_PALETTE.ember]);
     expect(pickColor(0.1)).toBe(0);
     expect(pickColor(0.6)).toBe(1);
     expect(pickColor(0.85)).toBe(2);
