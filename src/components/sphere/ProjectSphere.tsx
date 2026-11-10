@@ -132,6 +132,7 @@ export default function ProjectSphere({
           }
         }}
       >
+        <circle className="project-sphere__backing" cx={C} cy={C} r={R} aria-hidden="true" />
         <circle className="project-sphere__limb" cx={C} cy={C} r={R} />
         <g aria-hidden="true">
           {wires.map((w, i) => {

@@ -28,4 +28,21 @@ describe("capability groups", () => {
     expect(isCapabilityId("finance")).toBe(false);
     expect(isCapabilityId(undefined)).toBe(false);
   });
+
+  it("every sector colour is visible on the black background (>= 3:1) and the five are distinct", () => {
+    const lum = (hex: string) => {
+      const [r, g, b] = [1, 3, 5]
+        .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+        .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const bg = "#000000";
+    const colors = CAPABILITY_IDS.map((id) => capabilityMeta[id].color.toUpperCase());
+    for (const id of CAPABILITY_IDS) {
+      const c = capabilityMeta[id].color;
+      expect((lum(c) + 0.05) / (lum(bg) + 0.05), `${id} ${c} on black`).toBeGreaterThanOrEqual(3);
+    }
+    expect(new Set(colors).size).toBe(5);
+    expect(capabilityMeta["evals-routing"].color.toUpperCase()).toBe("#FFFFFF");
+  });
 });

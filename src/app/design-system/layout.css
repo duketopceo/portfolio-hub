@@ -408,6 +408,12 @@
   width: min(100%, 21rem);
 }
 
+/* Dark backing disc: keeps the wireframe and dots legible over a bright background glow. */
+.project-sphere__backing {
+  fill: rgba(0, 0, 0, 0.78);
+  stroke: none;
+}
+
 .project-sphere__limb {
   fill: none;
   stroke: var(--color-border-strong);
@@ -494,6 +500,7 @@
   width: 0.6rem;
   height: 0.6rem;
   border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.85), 0 0 0 2px rgba(255, 255, 255, 0.22);
 }
 
 .project-sphere__legend-count {
