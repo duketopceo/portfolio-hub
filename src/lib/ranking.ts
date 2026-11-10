@@ -1,6 +1,13 @@
 import { PIN_COUNT, RANKING_PINS } from "@/data/ranking-pins";
 import snapshotJson from "@/data/ranking-snapshot.json";
-import { isListedProject } from "@/lib/catalog-filter";
+import {
+  buildRanking as buildRankingCore,
+  type Rankable,
+  type RankingSnapshot,
+} from "@/lib/ranking-core";
+
+export { orderByRank } from "@/lib/ranking-core";
+export type { Rankable, RankingSnapshot, RankingSnapshotEntry } from "@/lib/ranking-core";
 
 /**
  * One ranking for every page (KTD1): a flat ordered list of listed projects,
@@ -8,35 +15,9 @@ import { isListedProject } from "@/lib/catalog-filter";
  * score, ties by name. Category groups are views over that list.
  */
 
-export interface RankingSnapshotEntry {
-  slug: string;
-  score: number;
-}
-
-export interface RankingSnapshot {
-  asOf: string;
-  entries: RankingSnapshotEntry[];
-}
-
 export const rankingSnapshot: RankingSnapshot = snapshotJson;
 
-export interface Rankable {
-  slug: string;
-  displayName: string;
-  parentSlug?: string;
-  era?: "earlier";
-}
-
-/** Slug to score lookup for a snapshot. */
-function scoreMap(snapshot: RankingSnapshot): Map<string, number> {
-  return new Map(snapshot.entries.map((e) => [e.slug, e.score]));
-}
-
-/**
- * Flat ranking of the listed projects in `projects`.
- * A pinned slug that is not listed is skipped and the next-ranked project
- * fills its slot; `onSubstitute` receives each skipped pin.
- */
+/** Ranking with explicit pins and snapshot (tests); defaults are the committed ones. */
 export function buildRanking<T extends Rankable>(
   projects: readonly T[],
   options: {
@@ -46,39 +27,12 @@ export function buildRanking<T extends Rankable>(
     onSubstitute?: (skippedPin: string, filledBy: string) => void;
   } = {}
 ): T[] {
-  const {
-    snapshot = rankingSnapshot,
-    pins = RANKING_PINS,
-    pinCount = PIN_COUNT,
-    onSubstitute,
-  } = options;
-  const scores = scoreMap(snapshot);
-  const listed = projects.filter(isListedProject);
-  const bySlug = new Map(listed.map((p) => [p.slug, p]));
-
-  const byScore = [...listed].sort(
-    (a, b) =>
-      (scores.get(b.slug) ?? 0) - (scores.get(a.slug) ?? 0) ||
-      a.displayName.localeCompare(b.displayName)
-  );
-
-  const leads: T[] = [];
-  const skipped: string[] = [];
-  for (const slug of pins.slice(0, pinCount)) {
-    const p = bySlug.get(slug);
-    if (p) leads.push(p);
-    else skipped.push(slug);
-  }
-  const taken = new Set(leads.map((p) => p.slug));
-  for (const slug of skipped) {
-    const fill = byScore.find((p) => !taken.has(p.slug));
-    if (!fill) break;
-    leads.push(fill);
-    taken.add(fill.slug);
-    onSubstitute?.(slug, fill.slug);
-  }
-
-  return [...leads, ...byScore.filter((p) => !taken.has(p.slug))];
+  return buildRankingCore(projects, {
+    snapshot: options.snapshot ?? rankingSnapshot,
+    pins: options.pins ?? RANKING_PINS,
+    pinCount: options.pinCount ?? PIN_COUNT,
+    onSubstitute: options.onSubstitute,
+  });
 }
 
 /** Ranking from the committed pins and snapshot; logs a pin substitution once per build. */

@@ -6,6 +6,14 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
+import { catalogFileNames } from "./lib/catalog-files.mjs";
+
+// Import-free TypeScript, loaded under Node's native type stripping, so the
+// PDF uses the same ranking code as the web page, JSON and Markdown.
+const { buildRanking, orderByRank } = await import("../src/lib/ranking-core.ts");
+const { RANKING_PINS, PIN_COUNT } = await import("../src/data/ranking-pins.ts");
+
+const MAX_PAGES = 2;
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const resumeTsPath = join(root, "src/data/resume.ts");
@@ -19,6 +27,23 @@ function loadResumeData() {
     `${js}\nreturn { SITE, resumeRevisionDate, basics, skills, projects, work, education, awards };`,
   );
   return fn();
+}
+
+/** Résumé projects in ranking order: the same rule as src/lib/resume-order.ts. */
+function rankProjectsForResume(projects) {
+  const catalogDir = join(root, "src/data/catalog");
+  const listed = catalogFileNames(catalogDir).map((f) => {
+    const e = JSON.parse(readFileSync(join(catalogDir, f), "utf8"));
+    return {
+      slug: e.slug,
+      displayName: e.curated.displayName,
+      parentSlug: e.curated.parentSlug,
+      era: e.curated.era,
+    };
+  });
+  const snapshot = JSON.parse(readFileSync(join(root, "src/data/ranking-snapshot.json"), "utf8"));
+  const ranked = buildRanking(listed, { snapshot, pins: RANKING_PINS, pinCount: PIN_COUNT });
+  return orderByRank(projects, (p) => p.slugs, ranked);
 }
 
 function escapeHtml(str) {
@@ -302,6 +327,7 @@ async function main() {
       : join(root, "public/resume.pdf");
 
   const data = loadResumeData();
+  data.projects = rankProjectsForResume(data.projects);
   const email = process.env.RESUME_EMAIL || data.basics.email;
   const phone = process.env.RESUME_PHONE || "";
 
@@ -315,6 +341,10 @@ async function main() {
       printBackground: true,
       preferCSSPageSize: true,
     });
+    const pages = (pdfBuffer.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length;
+    if (pages > MAX_PAGES) {
+      throw new Error(`resume PDF is ${pages} pages; the limit is ${MAX_PAGES}`);
+    }
     writeFileSync(outPath, pdfBuffer);
     console.log(`Wrote ${outPath} (${pdfBuffer.length} bytes)`);
   } finally {

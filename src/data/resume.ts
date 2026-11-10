@@ -51,8 +51,11 @@ export const skills = [
   },
 ];
 
+// Authored entries. `slugs` names the catalog projects each covers; consumers
+// order entries by ranking (src/lib/resume-order.ts), not by this array order.
 export const projects = [
   {
+    slugs: ["khan", "openrouter-usage"],
     name: "Khan & OpenRouter Usage Plugin — Agent Harness & Spend Telemetry",
     url: "https://github.com/duketopceo/openrouter_usage",
     caseStudy: "https://github.com/duketopceo/a0-openrouter-spend",
@@ -64,6 +67,7 @@ export const projects = [
     stack: ["Python", "OpenRouter", "Temporal", "LiteLLM", "SQLite", "MCP"],
   },
   {
+    slugs: ["agentflow", "open-computer"],
     name: "agentflow & open-computer — Cross-Harness CLI & Sandboxed Cloud Runtime",
     url: "https://github.com/duketopceo/agentflow",
     caseStudy: "https://github.com/duketopceo/open-computer",
@@ -75,6 +79,7 @@ export const projects = [
     stack: ["TypeScript", "Node.js", "Python", "OpenRouter", "Temporal", "CubeSandbox"],
   },
   {
+    slugs: ["omaseal"],
     name: "OmaSeal & a0-plugin-omaseal — OS Keyring & Masked Credential Brokering",
     url: "https://github.com/duketopceo/OmaSeal",
     caseStudy: "https://github.com/duketopceo/a0-plugin-omaseal",
@@ -86,17 +91,19 @@ export const projects = [
     stack: ["Go", "Python", "gnome-keyring", "Vaultwarden", "Freedesktop Secret Service", "MCP"],
   },
   {
-    name: "jev-compact & Kurultai — Context Compaction & Hybrid Retrieval Daemon",
+    slugs: ["kurultai", "jev-compact"],
+    name: "Kurultai & jev-compact — Hybrid Retrieval Daemon & Context Compaction",
     url: "https://github.com/duketopceo/kurultai",
     caseStudy: "https://github.com/duketopceo/jev-compact",
     description:
-      "Created jev-compact (and a0-plugin-jev-compact), an agent session-compaction engine that uses a decision model to score transcript spans, keep load-bearing context verbatim, tombstone stale segments, and restore spans on demand over MCP.",
-    highlights: [
       "Developed kurultai (v0.7.0, 342 commits) in async Rust to index notes, chat transcripts, and repositories into SQLite with two-hop tag FTS5 expansion, Reciprocal Rank Fusion (RRF) hybrid scoring, and deterministic graph_chain citation provenance over MCP.",
+    highlights: [
+      "Created jev-compact (and a0-plugin-jev-compact), an agent session-compaction engine that uses a decision model to score transcript spans, keep load-bearing context verbatim, tombstone stale segments, and restore spans on demand over MCP.",
     ],
     stack: ["Rust", "Tokio", "Axum", "Python", "SQLite FTS5", "sqlite-vec", "MCP"],
   },
   {
+    slugs: ["orchestral", "argus"],
     name: "orchestral & Argus — Multi-Model Evaluation & Vision E2E Harness",
     url: "https://github.com/duketopceo/orchestral",
     caseStudy: "https://github.com/duketopceo/Argus",
@@ -108,24 +115,26 @@ export const projects = [
     stack: ["Python", "TypeScript", "Playwright", "OpenRouter", "E2B", "Docker", "CI"],
   },
   {
-    name: "Pace Server & tallyline — Multi-Tenant Cloud & Agent Dispatch Monorepo",
+    slugs: ["tallyline", "pace-server"],
+    name: "tallyline & Pace Server — Agent Dispatch Monorepo & Multi-Tenant Cloud",
     url: "https://github.com/duketopceo/tallyline",
     caseStudy: "https://pacehq.io",
     description:
-      "Designed Pace's multi-tenant cloud backend (Rust/Axum gateway, Go/Chi services, Postgres 17 RLS, Stripe Connect metering, Stytch B2B SSO) with an 8-step agentrun pipeline behind TierGate autonomy controls and SSRF egress allowlists.",
-    highlights: [
       "Built tallyline (v1.0.0), an agent-native issue tracker monorepo with an MCP server, CLI, and single-dependency PostgreSQL skip-locked agent dispatch worker; isolated and reported an upstream wake-queue attribution race in paperclipai/paperclip (#14121).",
+    highlights: [
+      "Designed Pace's multi-tenant cloud backend (Rust/Axum gateway, Go/Chi services, Postgres 17 RLS, Stripe Connect metering, Stytch B2B SSO) with an 8-step agentrun pipeline behind TierGate autonomy controls and SSRF egress allowlists.",
     ],
     stack: ["Rust (Axum)", "Go (Chi)", "TypeScript (Hono)", "PostgreSQL 17", "RLS", "MCP"],
   },
   {
-    name: "dayflow-linux & portfolio-hub (luke-the-duke.com) — Linux Desktop Journal & Telemetry",
+    slugs: ["portfolio-hub", "dayflow-linux"],
+    name: "portfolio-hub (luke-the-duke.com) & dayflow-linux — Project Registry & Linux Desktop Journal",
     url: "https://luke-the-duke.com",
     caseStudy: "https://github.com/duketopceo/dayflow-linux",
     description:
-      "Ported Dayflow natively to Linux in Go (v1.6.0, 212 commits) with local-first screen capture, OpenRouter vision summarization, standup generation, agent-session recaps, FTS5 search, and MCP tool exposure (including 6 merged external community PRs).",
-    highlights: [
       "Built portfolio-hub (luke-the-duke.com · github.com/duketopceo/portfolio-hub) powering the Cosmic Intelligence Registry with live OpenRouter model bakeoffs (luke-the-duke.com/openrouter), project launch films, cached 90-day GitHub App telemetry, machine-readable /resume.json and /llms.txt endpoints, and automated privacy and visual regression CI gates across 50+ repositories.",
+    highlights: [
+      "Ported Dayflow natively to Linux in Go (v1.6.0, 212 commits) with local-first screen capture, OpenRouter vision summarization, standup generation, agent-session recaps, FTS5 search, and MCP tool exposure (including 6 merged external community PRs).",
     ],
     stack: ["Go", "TypeScript", "Next.js", "SQLite FTS5", "OpenRouter", "MCP"],
   },
