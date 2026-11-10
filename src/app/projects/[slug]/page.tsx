@@ -9,10 +9,8 @@ import {
   fetchShowcaseMd,
   enrichProjectActivity,
 } from "@/lib/github";
-import {
-  sortPortfolioOrbit,
-  getOrbitAdjacent,
-} from "@/lib/project-completeness";
+import { getOrbitAdjacent } from "@/lib/project-completeness";
+import { rankProjects } from "@/lib/ranking";
 import { isProjectLive } from "@/lib/deployments";
 import { componentsOf } from "@/lib/catalog";
 import { catColors } from "@/lib/utils";
@@ -59,7 +57,7 @@ export default async function ProjectDetailPage({
   const { slug } = await params;
   const sourceProjects = await getEnrichedProjects();
   const registryIndex = sourceProjects.findIndex((p) => p.slug === slug);
-  const allProjects = sortPortfolioOrbit(sourceProjects);
+  const allProjects = rankProjects(sourceProjects);
   const adjacent = getOrbitAdjacent(allProjects, slug);
   if (!adjacent) notFound();
 
