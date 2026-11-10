@@ -1,4 +1,4 @@
-import { COSMOS_PALETTE } from "@/lib/palette";
+import { HOLE_COLORS } from "@/lib/cosmos-colors";
 
 /**
  * Falling starlight: pure helpers for the stardust canvas. No DOM, no
@@ -21,14 +21,9 @@ export interface Mote {
   color: number;
 }
 
-/** Weighted: mostly starlight, some teal, a little pop, rare ember. */
-export const STARDUST_COLORS: readonly string[] = [
-  COSMOS_PALETTE.starlight,
-  COSMOS_PALETTE.teal,
-  COSMOS_PALETTE.pop,
-  COSMOS_PALETTE.ember,
-];
-const COLOR_WEIGHTS = [0.55, 0.22, 0.18, 0.05] as const;
+/** Weighted: mostly warm white, some amber, a little ember (never cool). */
+export const STARDUST_COLORS: readonly string[] = [HOLE_COLORS.white, HOLE_COLORS.amber, HOLE_COLORS.ember];
+const COLOR_WEIGHTS = [0.6, 0.3, 0.1] as const;
 
 /** How many motes: sparse by design, fewer on narrow screens. */
 export function moteCount(width: number): number {

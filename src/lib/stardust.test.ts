@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COSMOS_PALETTE } from "./palette";
+import { HOLE_COLORS } from "./cosmos-colors";
 import {
   STARDUST_COLORS,
   dustProgress,
@@ -32,17 +32,16 @@ describe("stardust", () => {
     expect(dustProgress(9999, 900)).toBe(1);
     expect(dustProgress(100, 0)).toBe(0);
   });
-  it("draws colours from the palette with starlight dominant", () => {
-    expect(STARDUST_COLORS).toEqual([COSMOS_PALETTE.starlight, COSMOS_PALETTE.teal, COSMOS_PALETTE.pop, COSMOS_PALETTE.ember]);
+  it("draws only warm colours, warm white dominant", () => {
+    expect(STARDUST_COLORS).toEqual([HOLE_COLORS.white, HOLE_COLORS.amber, HOLE_COLORS.ember]);
     expect(pickColor(0.1)).toBe(0);
-    expect(pickColor(0.6)).toBe(1);
-    expect(pickColor(0.85)).toBe(2);
-    expect(pickColor(0.99)).toBe(3);
+    expect(pickColor(0.7)).toBe(1);
+    expect(pickColor(0.95)).toBe(2);
     const r = rng();
-    const counts = [0, 0, 0, 0];
+    const counts = [0, 0, 0];
     for (let i = 0; i < 4000; i++) counts[pickColor(r())]++;
     expect(counts[0]).toBeGreaterThan(counts[1]);
-    expect(counts[3]).toBeLessThan(counts[2]);
+    expect(counts[2]).toBeLessThan(counts[1]);
   });
   it("falls down, respawns past the bottom, and drifts against scroll", () => {
     const m = spawnMote(rng(), 800, 600, false);

@@ -78,6 +78,7 @@ export function SiteBackground({
       <div className="cosmic-bg__grid" />
       <div className="cosmic-bg__stars cosmic-bg__stars--far" />
       <div className="cosmic-bg__noise" />
+      <div className="cosmic-bg__scrim" />
       <div className="cosmic-bg__vignette" />
     </div>
   );

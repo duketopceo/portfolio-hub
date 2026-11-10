@@ -6,6 +6,7 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 ### Changed
 
+- Cosmic background redesign: the black hole is now full-screen (event horizon, thin photon ring, near-edge-on disk with the far side lensed over and under the hole, Doppler-brighter approaching side, slow rotation), in warm white, amber and ember only. Dimming scrim and vignette keep the white page text legible; the static rendition is a full-screen SVG still of the same composition
 - Cosmic background: slow black hole on every page, three planet types (rock, gas giant, ringed ice) on home, falling stardust further down scrollable pages; every piece has a server-rendered SVG/CSS static rendition for reduced motion and no-WebGL. Palette tightened to teal + ember + one ultraviolet pop (`BRAND.md`)
 - Background scene mounts as one lazy chunk (`CosmosLive`) so `next/dynamic` no longer runs inside the R3F canvas (React error #438 killed the old starfield canvas)
 - Home planet map: real lit 3D planets (procedural surfaces, tilt and spin, real rings, orbiting moons) driven by a per-project `planetVisual` spec in the catalog JSON; lead set is now Pace, Argus, Tallyline, Kurultai, Orchestral (`docs/planets.md`)

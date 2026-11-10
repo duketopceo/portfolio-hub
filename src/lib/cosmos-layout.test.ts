@@ -7,17 +7,17 @@ describe("cosmos layout", () => {
     expect(layoutVariant(1440, 900)).toBe("wide");
     expect(layoutVariant(1000, 1000)).toBe("wide");
   });
-  it.each(["wide", "tall"] as const)("%s places only the black hole, in view and off-centre", (v) => {
+  it.each(["wide", "tall"] as const)("%s places only the black hole, in view and near the middle", (v) => {
     expect(cosmosLayout(v).map((b) => b.id)).toEqual(["blackhole"]);
     const hole = bodyPlacement(v, "blackhole");
-    expect(hole.x).toBeGreaterThan(0.6);
-    expect(hole.x).toBeLessThan(1);
-    expect(hole.y).toBeGreaterThan(0);
-    expect(hole.y).toBeLessThan(0.5);
+    expect(hole.x).toBeGreaterThan(0.4);
+    expect(hole.x).toBeLessThan(0.7);
+    expect(hole.y).toBeGreaterThan(0.2);
+    expect(hole.y).toBeLessThan(0.55);
   });
-  it("keeps the black hole small: about a third of the old radius", () => {
-    expect(bodyPlacement("wide", "blackhole").size).toBeLessThanOrEqual(0.4);
-    expect(bodyPlacement("tall", "blackhole").size).toBeLessThanOrEqual(0.55);
+  it("is full-screen: the disk (about 5x the shadow) spans most of the short side", () => {
+    expect(bodyPlacement("wide", "blackhole").size * 5).toBeGreaterThan(1);
+    expect(bodyPlacement("tall", "blackhole").size * 5).toBeGreaterThan(1);
   });
   it("scrolls bodies up, clamped, and fades them out at the top", () => {
     expect(scrollOffset(0, 900, 0.5)).toBe(-0);

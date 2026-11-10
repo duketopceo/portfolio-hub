@@ -1,8 +1,5 @@
 import { bodyPlacement } from "@/lib/cosmos-layout";
-import BlackHoleSvg from "./BlackHoleSvg";
-
-/** SVG box width as a multiple of the hole's own diameter (room for the reticle). */
-const BOX = 1.04;
+import BlackHoleSvg, { BOX_PER_SHADOW } from "./BlackHoleSvg";
 
 /**
  * Server-rendered static background: the black hole as SVG, positioned from
@@ -17,10 +14,10 @@ export default function CosmosPlate() {
   const style = {
     "--xw": w.x,
     "--yw": w.y,
-    "--sw": w.size * BOX,
+    "--sw": w.size * BOX_PER_SHADOW,
     "--xt": t.x,
     "--yt": t.y,
-    "--st": t.size * BOX,
+    "--st": t.size * BOX_PER_SHADOW,
   } as React.CSSProperties;
   return (
     <div className="cosmos-plate" aria-hidden="true">

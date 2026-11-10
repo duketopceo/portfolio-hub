@@ -1,7 +1,7 @@
 /**
  * Where the background's one body (the black hole) sits, shared by the WebGL
  * scene and the static SVG plate so the two renditions line up. The hole is
- * small and off-centre so it recedes behind the content; no planets.
+ * full-screen: its disk spans most of the viewport width; no planets.
  * Positions are fractions of the viewport (0,0 top-left); sizes are
  * fractions of the smaller viewport side.
  * Pure data and math: safe for server components and node tests.
@@ -14,7 +14,7 @@ export interface BodyPlacement {
   /** Centre, fraction of viewport width / height. */
   x: number;
   y: number;
-  /** Diameter of the body (black hole: of the full disk), fraction of min(vw, vh). */
+  /** Diameter of the hole's black shadow, fraction of min(vw, vh). The disk spans ~5x this. */
   size: number;
   /** Scroll parallax: how much of a viewport the body travels per viewport scrolled. */
   parallax: number;
@@ -22,11 +22,12 @@ export interface BodyPlacement {
 
 export type LayoutVariant = "wide" | "tall";
 
-// Small and pushed to the upper right so text columns stay clear of the
-// bright ring.
-const WIDE: BodyPlacement[] = [{ id: "blackhole", x: 0.8, y: 0.3, size: 0.4, parallax: 0.32 }];
+// Wide: the hole sits a little right of centre and above the middle so the
+// disk's wings run across the whole viewport. Tall: centred high, the disk
+// is cropped by the screen edges.
+const WIDE: BodyPlacement[] = [{ id: "blackhole", x: 0.58, y: 0.42, size: 0.27, parallax: 0.32 }];
 
-const TALL: BodyPlacement[] = [{ id: "blackhole", x: 0.72, y: 0.1, size: 0.55, parallax: 0.32 }];
+const TALL: BodyPlacement[] = [{ id: "blackhole", x: 0.5, y: 0.3, size: 0.5, parallax: 0.32 }];
 
 /** Portrait viewports get their own arrangement; everything else is "wide". */
 export function layoutVariant(width: number, height: number): LayoutVariant {
