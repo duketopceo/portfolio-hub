@@ -615,6 +615,47 @@ export async function getProjectActivityTimeline(
   };
 }
 
+/**
+ * Server-only feed for the home signal glance: every featured project's full
+ * activity history, quiet ones included. Never serialised to the client.
+ */
+export async function getSignalActivity(): Promise<{
+  payloads: ProjectActivityPayload[];
+  fetchedAt: string;
+  source: HomepageActivityPayload["source"];
+}> {
+  if (process.env.ACTIVITY_USE_FIXTURES === "1") {
+    const f = fixtureHomepageActivity();
+    return {
+      payloads: f.repos.map((r) => r.activity),
+      fetchedAt: f.fetchedAt,
+      source: f.source,
+    };
+  }
+
+  const sinceMs = Date.now() - HISTORY_MS;
+  const payloads: ProjectActivityPayload[] = [];
+  for (const target of featuredRepoTargets()) {
+    const activity = await buildRepoActivity(target, sinceMs);
+    if (activity) payloads.push(activity);
+  }
+
+  if (payloads.length === 0 && process.env.NODE_ENV === "test") {
+    const f = fixtureHomepageActivity();
+    return {
+      payloads: f.repos.map((r) => r.activity),
+      fetchedAt: f.fetchedAt,
+      source: f.source,
+    };
+  }
+
+  return {
+    payloads,
+    fetchedAt: new Date().toISOString(),
+    source: payloads.length > 0 ? "github" : "empty",
+  };
+}
+
 export async function getHomepageActivityShowcase(options?: {
   useFixtures?: boolean;
 }): Promise<HomepageActivityPayload> {

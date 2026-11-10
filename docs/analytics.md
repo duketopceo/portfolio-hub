@@ -36,6 +36,7 @@ only extend `UmamiOutbound` for scroll/visibility/lifecycle signals.
 | `demo-embed-load` / `demo-launch` / `demo-open-external` | `demo`/`url` | Demo embeds and launch CTAs |
 | `intro-choice` / `intro-dismiss` | `destination` | First-visit overlay |
 | `catalog-view` | `view` | Registry ↔ Open PRs toggle |
+| `signal-project` | `slug`, `state` (moving/quiet) | Project link in the home engineering-signal glance |
 | `catalog-filter` | `category` | Category pills on `/projects` |
 | `catalog-sort` | `sort` | recent/name/stars |
 | `scroll-depth` | `depth` (25/50/75/100), `page` | `/projects/*`, `/demos/*` — once per threshold |

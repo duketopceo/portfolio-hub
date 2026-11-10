@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
 import { getHomepageOrbitProjects } from "@/lib/project-completeness";
-import { getHomepageActivityShowcase } from "@/lib/github-activity";
-import { toClientActivityPayload } from "@/lib/activity-aggregate";
-import { HomeActivityShowcase } from "@/components/HomeActivityShowcase";
+import { getSignalActivity } from "@/lib/github-activity";
+import { buildSignalSummary } from "@/lib/signal-summary";
+import { SignalGlance } from "@/components/SignalGlance";
 import SolarSystemNav from "@/components/SolarSystemNav";
 import { toClientProject } from "@/lib/client-project";
 import { ActionRow, PageShell } from "@/components/design";
@@ -13,8 +13,9 @@ export const revalidate = 3600;
 export default async function Home() {
   const [all, activity] = await Promise.all([
     getEnrichedProjects(),
-    getHomepageActivityShowcase(),
+    getSignalActivity(),
   ]);
+  const signal = buildSignalSummary(activity.payloads, activity);
   const lead = getHomepageOrbitProjects(all);
   const registryIndex = all.map((p) => p.slug);
   const leadIndex = lead.map((p) => Math.max(registryIndex.indexOf(p.slug), 0));
@@ -66,7 +67,7 @@ export default async function Home() {
           <div className="home-section__head">
             <h2 id="home-transmissions-heading">Recent engineering signal</h2>
           </div>
-          <HomeActivityShowcase data={toClientActivityPayload(activity)} />
+          <SignalGlance summary={signal} />
         </section>
 
         {/* 3 — closing action */}

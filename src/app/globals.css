@@ -6650,3 +6650,178 @@ header[class*="sticky"],
     transform: none;
   }}
 
+
+/* ═══════════════════════════════════════════════════════
+   SIGNAL GLANCE — home "recent engineering signal"
+   One row per project: heat bars (height + count, not color
+   alone), counts, latest event. Moving above quiet.
+   ═══════════════════════════════════════════════════════ */
+.signal {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.signal__headline {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.signal__headline strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.signal__group {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.signal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--color-divider);
+}
+
+.signal__row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 13rem) auto minmax(8rem, 15rem) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 1.25rem;
+  row-gap: 0.25rem;
+  padding: 0.7rem 0.25rem;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.signal__who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.signal__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.signal__name:hover,
+.signal__name:focus-visible {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.signal__state {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.signal__row[data-state="moving"] .signal__state {
+  color: var(--color-live);
+}
+
+.signal__row[data-state="moving"] .signal__state::before {
+  content: "\25B2\00a0";
+}
+
+.signal__row[data-state="quiet"] .signal__state::before {
+  content: "\2013\00a0";
+}
+
+.signal__heat {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 1.75rem;
+}
+
+.signal__bar {
+  width: 0.55rem;
+  height: 2px;
+  background: var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.signal__bar[data-level="1"] { height: 25%; background: var(--color-accent); }
+.signal__bar[data-level="2"] { height: 50%; background: var(--color-accent); }
+.signal__bar[data-level="3"] { height: 75%; background: var(--color-accent); }
+.signal__bar[data-level="4"] { height: 100%; background: var(--color-accent); }
+
+.signal__row[data-state="quiet"] .signal__heat {
+  opacity: 0.6;
+}
+
+.signal__counts {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.signal__counts strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.signal__last {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.signal__kind {
+  flex: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.signal__line {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signal__age {
+  flex: none;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+.signal__meta,
+.signal__empty {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+@media (max-width: 900px) {
+  .signal__row {
+    grid-template-columns: 1fr auto;
+  }
+  .signal__counts,
+  .signal__last {
+    grid-column: 1 / -1;
+  }
+}
