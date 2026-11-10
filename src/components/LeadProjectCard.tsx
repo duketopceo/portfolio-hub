@@ -98,14 +98,14 @@ export default function LeadProjectCard({
           )}
           <p className="lead-card__proof-links">
             {measured.length > 0 && (
-              <Link href={`${dossier}#evidence`} prefetch={false} className="detail-nav-link">
+              <Link href={`${dossier}#evidence`} prefetch={false} className="lead-card__link">
                 Sources and method
               </Link>
             )}
             {liveHref && (
               <a
                 href={liveHref}
-                className="detail-nav-link"
+                className="lead-card__link"
                 {...(liveHref.startsWith("http")
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
@@ -116,7 +116,7 @@ export default function LeadProjectCard({
             {project.githubUrl && (
               <a
                 href={project.githubUrl}
-                className="detail-nav-link"
+                className="lead-card__link"
                 target="_blank"
                 rel="noopener noreferrer"
               >

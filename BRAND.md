@@ -62,6 +62,10 @@ checks body, muted, faint and accent text against every surface at 4.5:1.
 | `--color-text-muted` | `#9AA3AC` | Secondary / body |
 | `--color-text-faint` | `#7E8A96` | Marginalia, registry IDs (≥4.84:1 on every surface; verify with `node scripts/check-contrast.mjs`) |
 
+### Capability groups and the sector sphere (2026-11-10)
+
+Projects group by capability, not by the old category list: Evals & routing, Retrieval & memory, Agents & computer use, Products, Tooling & infra (`src/data/capability-meta.ts`). Five groups reuse the three chromatic tokens plus two neutrals: teal, ultraviolet, ember, starlight, slate. The legend and the grouped list always name the group, so color is never the only cue. The sphere (`src/components/sphere`) is plain SVG, thin grey wireframe, small dots, no glow, and stays still under reduced motion.
+
 ### Palette: two complements plus one pop (2026-11-10)
 
 The whole site uses three chromatic colors; everything else is neutral.

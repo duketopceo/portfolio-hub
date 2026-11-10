@@ -5,6 +5,22 @@
     "displayName": "Orchestral",
     "tagline": "OpenRouter eval harness for cheap orchestrator + worker stacks",
     "outcome": "Measures whether cheap orchestrator and worker models pass real tasks, and prices every pass.",
+    "measured": [
+      {
+        "label": "Pass rate",
+        "value": "92% (11 of 12 finished runs)",
+        "source": "Orchestral run group positioning-2026-11-10, python harness.py report --leaderboard",
+        "measuredOn": "2026-11-10",
+        "method": "Cheapest pairing in the model catalog (deepseek-v4-flash-0731 orchestrating glm-5.3-flash), 4 tasks x 4 replicates, mechanical verdict with no LLM judge. 4 of the 16 runs ended in malformed planner output before finishing and are excluded by the harness; counting them, 11 of 16 passed (69%)."
+      },
+      {
+        "label": "Cost per pass",
+        "value": "$0.0017",
+        "source": "Orchestral run group positioning-2026-11-10, python harness.py report --leaderboard",
+        "measuredOn": "2026-11-10",
+        "method": "Total OpenRouter-reported cost of the group ($0.0182 over 16 runs) divided by the 11 passes, billed to the dedicated Orchestral eval key."
+      }
+    ],
     "description": "Eval harness that tests whether a cheap orchestrator plus cheap workers can produce frontier-quality output through OpenRouter routing.",
     "category": "ai",
     "capability": "evals-routing",

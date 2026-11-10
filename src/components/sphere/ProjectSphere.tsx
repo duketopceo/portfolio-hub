@@ -136,8 +136,9 @@ export default function ProjectSphere({
         {placed.map(({ d, q }) => {
           const meta = capabilityMeta[d.capability as CapabilityId];
           const front = q.z >= 0;
-          const px = C + R * q.x;
-          const py = C + R * q.y;
+          // Rounded so server and browser Math.sin/cos agree on the markup.
+          const px = Number((C + R * q.x).toFixed(1));
+          const py = Number((C + R * q.y).toFixed(1));
           const radius = d.lead ? 5.2 : 3.4;
           return (
             <Link
