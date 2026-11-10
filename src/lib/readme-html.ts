@@ -6,6 +6,8 @@
  * verbatim ("docs/assets/hero.png"), which 404 once embedded on our origin.
  */
 
+import { isUnpublishableLink } from "@/lib/outbound-links";
+
 export interface ReadmeContext {
   owner: string;
   repo: string;
@@ -69,6 +71,7 @@ export function rewriteUrl(
   if (!ref) return null;
   if (ABSOLUTE_RE.test(ref)) {
     if (/^(?:file|javascript|vbscript):/i.test(ref)) return null;
+    if (kind === "link" && isUnpublishableLink(ref)) return null;
     return ref;
   }
   if (/^(?:~|[a-z]:[\\/])/i.test(ref) || ref.startsWith("/home/") || ref.startsWith("/Users/")) {

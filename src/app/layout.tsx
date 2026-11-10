@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import UmamiOutbound from "@/components/UmamiOutbound";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 import Footer from "@/components/Footer";
+import CosmosPlate from "@/components/cosmos/CosmosPlate";
+import StaticStardust from "@/components/cosmos/StaticStardust";
 
 /** Star Chart system: Archivo industrial grotesk (display + body), JetBrains Mono for all meta/labels */
 const archivo = Archivo({
@@ -60,7 +62,7 @@ export default function RootLayout({
       <body
         className={`${archivo.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <SiteBackground />
+        <SiteBackground plate={<CosmosPlate />} dust={<StaticStardust />} />
 
         <Header />
         <main className="flex-1 relative animate-page-in">{children}</main>

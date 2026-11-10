@@ -186,3 +186,35 @@ describe("preferDarkPictures", () => {
     expect(preferDarkPictures(html)).toBe(html);
   });
 });
+
+describe("unpublishable outbound links", () => {
+  const link = (href: string) => `<p><a href="${href}">x</a></p>`;
+  it("drops loopback and local-network hrefs but keeps the text", () => {
+    for (const href of [
+      "http://127.0.0.1:8421/ui/",
+      "http://localhost:8080",
+      "http://192.168.1.5/x",
+      "http://10.0.0.2",
+      "http://[::1]:3000/",
+    ]) {
+      const out = rewriteRelativeUrls(link(href), ctx);
+      expect(out).not.toContain("href=");
+      expect(out).toContain(">x</a>");
+    }
+  });
+  it("drops known-dead urls, with or without a trailing slash", () => {
+    expect(
+      rewriteRelativeUrls(link("https://github.com/duketopceo/omarchy-lidguard"), ctx)
+    ).not.toContain("href=");
+    expect(rewriteRelativeUrls(link("https://omhdb.luke-the-duke.com"), ctx)).not.toContain("href=");
+    expect(rewriteRelativeUrls(link("https://omhdb.luke-the-duke.com/"), ctx)).not.toContain("href=");
+  });
+  it("keeps ordinary public links", () => {
+    const out = rewriteRelativeUrls(link("https://github.com/duketopceo/Argus"), ctx);
+    expect(out).toContain('href="https://github.com/duketopceo/Argus"');
+  });
+  it("does not touch code samples", () => {
+    const html = "<pre><code>http://127.0.0.1:8421/ui/</code></pre>";
+    expect(rewriteRelativeUrls(html, ctx)).toBe(html);
+  });
+});

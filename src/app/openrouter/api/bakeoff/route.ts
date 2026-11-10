@@ -1,23 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { NextResponse } from "next/server";
+import bakeoff from "@/data/bakeoff.json";
 
 /**
  * GET /openrouter/api/bakeoff
  * Serves the committed 3-model coding comparison snapshot (Qwen / Muse / Gemma).
  * Source: src/data/bakeoff.json in portfolio-hub — not openrouter-demos harness output.
- * Public — no API key required.
+ * Public — no API key required, no upstream call. The JSON is bundled at build
+ * time, so the route is static and has no filesystem or error-detail surface.
  */
-export async function GET(_req: NextRequest) {
-  const p = path.join(process.cwd(), "src", "data", "bakeoff.json");
-  try {
-    const raw = fs.readFileSync(p, "utf-8");
-    const data = JSON.parse(raw);
-    return NextResponse.json(data);
-  } catch (e) {
-    return NextResponse.json(
-      { error: "Bakeoff data not available", detail: (e as Error).message },
-      { status: 404 }
-    );
-  }
+export const dynamic = "force-static";
+
+export function GET() {
+  return NextResponse.json(bakeoff);
 }
