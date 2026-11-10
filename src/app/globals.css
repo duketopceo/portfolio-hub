@@ -6786,14 +6786,6 @@ header[class*="sticky"],
   color: var(--color-text-muted);
 }
 
-.signal__kind {
-  flex: none;
-  font-family: var(--font-mono);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text);
-}
-
 .signal__line {
   min-width: 0;
   overflow: hidden;

@@ -15,6 +15,12 @@ import {
 } from "./signal-summary";
 
 const NOW = new Date("2026-11-10T12:00:00.000Z");
+// GitHub positively reported these featured slugs public this revalidate.
+const PUBLIC_META = {
+  fetchedAt: NOW.toISOString(),
+  source: "github" as const,
+  publicSlugs: ["quiet-old", "busy", "quiet-new", "light", "big", "x", "q", "feat", "featured-quiet"],
+};
 
 function day(date: string, over: Partial<ActivityDayBucket> = {}): ActivityDayBucket {
   return {
@@ -190,7 +196,7 @@ describe("buildSignalSummary", () => {
           items: [item("pr_opened", "2026-11-10T08:00:00.000Z")],
         }),
       ],
-      { fetchedAt: NOW.toISOString(), source: "github" }
+      PUBLIC_META
     );
     expect(s.rows.map((r) => r.slug)).toEqual([
       "busy",
@@ -204,7 +210,7 @@ describe("buildSignalSummary", () => {
   });
 
   it("reports empty state when no projects", () => {
-    const s = buildSignalSummary([], { fetchedAt: NOW.toISOString(), source: "github" });
+    const s = buildSignalSummary([], PUBLIC_META);
     expect(s.rows).toEqual([]);
     expect(s.source).toBe("empty");
     expect(s.movingCount).toBe(0);
@@ -221,7 +227,7 @@ describe("buildSignalSummary", () => {
     );
     const s = buildSignalSummary(
       [payload("big", { items, days: [day("2026-11-10", { prsMerged: 1 })] })],
-      { fetchedAt: NOW.toISOString(), source: "github" }
+      PUBLIC_META
     );
     expect(JSON.stringify(s).length).toBeLessThan(1500);
   });
@@ -243,7 +249,7 @@ function contrib(
   };
 }
 
-const META = { fetchedAt: NOW.toISOString(), source: "github" as const };
+const META = PUBLIC_META;
 
 describe("signal with contributions", () => {
   it("counts commits in heat on the correct UTC day", () => {
@@ -382,5 +388,68 @@ describe("signal with contributions", () => {
     expect(s.movingCount).toBe(0);
     expect(s.rows).toHaveLength(1);
     expect(s.hiddenMovingCount).toBe(0);
+  });
+});
+
+describe("privacy fails closed for featured projects", () => {
+  const featured = (slug: string) =>
+    payload(slug, {
+      displayName: "Visible Name",
+      days: [day("2026-11-10", { prsMerged: 1 })],
+      items: [item("pr_merged", "2026-11-10T09:00:00.000Z", "PR #1 merged — roadmap title")],
+    });
+  const base = { fetchedAt: NOW.toISOString(), source: "github" as const };
+
+  it("conceals a catalog-public featured repo with no contributions entry and no visibility info", () => {
+    const s = buildSignalSummary([featured("mystery")], base, []);
+    const json = JSON.stringify(s);
+    expect(s.rows[0]).toMatchObject({ private: true, displayName: "Private project", lastLine: "PR merged" });
+    expect(json).not.toMatch(/mystery|Visible Name|roadmap/i);
+  });
+
+  it("conceals a GitHub-private, catalog-public featured repo when contributions failed", () => {
+    // Contributions failed (empty) and repo metadata did not say public.
+    const s = buildSignalSummary([featured("leaky")], { ...base, publicSlugs: [] }, []);
+    expect(JSON.stringify(s)).not.toMatch(/leaky|Visible Name|roadmap/i);
+  });
+
+  it("conceals when contributions say private even if metadata says public", () => {
+    const s = buildSignalSummary(
+      [featured("leaky")],
+      { ...base, publicSlugs: ["leaky"] },
+      [contrib("leaky", 1, { githubPrivate: true })]
+    );
+    expect(JSON.stringify(s)).not.toMatch(/leaky|Visible Name/i);
+  });
+
+  it("still shows the name of a featured repo GitHub reports public", () => {
+    const s = buildSignalSummary([featured("open")], { ...base, publicSlugs: ["open"] }, []);
+    expect(s.rows[0]).toMatchObject({ slug: "open", displayName: "Visible Name", private: false });
+    expect(s.rows[0].lastLine).toContain("roadmap title");
+  });
+
+  it("shows a public name when a contributions entry reports isPrivate false", () => {
+    const s = buildSignalSummary([featured("open")], base, [contrib("open", 1)]);
+    expect(s.rows[0].displayName).toBe("Visible Name");
+  });
+});
+
+describe("signal denominator and labels", () => {
+  it("uses all considered catalog projects as the total", () => {
+    const s = buildSignalSummary([], { ...META, totalProjects: 30 }, [contrib("a", 2), contrib("b", 1)]);
+    expect(s.movingCount).toBe(2);
+    expect(s.totalCount).toBe(30);
+  });
+
+  it("never reports a total below the rows built", () => {
+    const s = buildSignalSummary([], { ...META, totalProjects: 1 }, [contrib("a", 2), contrib("b", 1)]);
+    expect(s.totalCount).toBe(2);
+  });
+
+  it("commit rows carry the shared commit noun", () => {
+    const row = summarizeProject(payload("a"), NOW, [
+      { date: "2026-11-10", commits: 1, prsOpened: 0, issuesOpened: 0 },
+    ]);
+    expect(row.lastLine).toBe("Commits pushed");
   });
 });

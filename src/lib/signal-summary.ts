@@ -4,7 +4,6 @@ import type {
   ActivityTimelineItem,
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
-import { showcaseKindLabel } from "@/lib/activity-aggregate";
 
 /**
  * Server-side summary behind the home "engineering signal" glance.
@@ -26,7 +25,11 @@ export type SignalLevel = 0 | 1 | 2 | 3 | 4;
 /** Event kinds the signal knows: the timeline kinds plus commits. */
 export type SignalKind = ActivityEventKind | "commit";
 
-/** Per repository and UTC day, from the one account-wide contributions call. */
+/**
+ * Per repository and calendar day, from the one account-wide contributions
+ * call. Commit days are GitHub's local contribution dates; PR and issue days
+ * are UTC dates (see commitContributionDay).
+ */
 export interface ContributionDay {
   date: string;
   commits: number;
@@ -78,13 +81,15 @@ export interface SignalSummary {
   /** Moving projects beyond SIGNAL_MAX_MOVING, collapsed into one link. */
   hiddenMovingCount: number;
   moreHref: string;
+  /** Listed catalog projects the signal considers: the "of M" denominator. */
   totalCount: number;
   events7: number;
   fetchedAt: string;
   source: "github" | "fixture" | "empty";
 }
 
-const KIND_NOUN: Record<ActivityEventKind, string> = {
+const KIND_NOUN: Record<SignalKind, string> = {
+  commit: "Commits pushed",
   pr_opened: "PR opened",
   pr_merged: "PR merged",
   pr_closed: "PR closed",
@@ -93,10 +98,6 @@ const KIND_NOUN: Record<ActivityEventKind, string> = {
   issue_opened: "Issue started",
   issue_closed: "Issue finished",
 };
-
-export function signalKindLabel(kind: SignalKind): string {
-  return kind === "commit" ? "Commits" : showcaseKindLabel(kind);
-}
 
 export function dateKey(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -220,7 +221,7 @@ export function summarizeProject(
     ? "commit"
     : (lastItem?.kind ?? null);
   const lastLine = commitIsLatest
-    ? "Commits pushed"
+    ? KIND_NOUN.commit
     : lastItem
       ? lineFor(lastItem, payload.private)
       : null;
@@ -313,27 +314,39 @@ function conceal(row: SignalRow, n: number): SignalRow {
     displayName: PRIVATE_NAME,
     private: true,
     href: SIGNAL_MORE_HREF,
-    lastLine: row.lastKind ? signalKindLine(row.lastKind) : null,
+    lastLine: row.lastKind ? KIND_NOUN[row.lastKind] : null,
   };
-}
-
-function signalKindLine(kind: SignalKind): string {
-  return kind === "commit" ? "Commits pushed" : KIND_NOUN[kind];
 }
 
 export function buildSignalSummary(
   payloads: ProjectActivityPayload[],
-  meta: { fetchedAt: string; source: SignalSummary["source"] },
+  meta: {
+    fetchedAt: string;
+    source: SignalSummary["source"];
+    /**
+     * Slugs GitHub positively reported public in data fetched this revalidate
+     * (repo metadata `private: false`). A contributions entry with isPrivate
+     * false counts too. Absent means unknown, which is concealed.
+     */
+    publicSlugs?: readonly string[];
+    /** Listed catalog projects considered; defaults to the rows built. */
+    totalProjects?: number;
+  },
   contributions: SignalContribution[] = []
 ): SignalSummary {
   const parsed = new Date(meta.fetchedAt);
   const now = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
   const bySlug = new Map(contributions.map((c) => [c.slug, c] as const));
+  const publicSlugs = new Set(meta.publicSlugs ?? []);
   let concealed = 0;
 
   const rows: SignalRow[] = payloads.map((p) => {
     const c = bySlug.get(p.slug);
-    const hide = Boolean(c?.githubPrivate && !p.private);
+    // Fail closed: a catalog-public project shows its name only when GitHub
+    // positively said public this revalidate and nothing said private.
+    const positivelyPublic =
+      !c?.githubPrivate && (publicSlugs.has(p.slug) || c?.githubPrivate === false);
+    const hide = !p.private && !positivelyPublic;
     const effective = hide ? { ...p, private: true } : p;
     const row = summarizeProject(effective, now, c?.days);
     return hide ? conceal(row, ++concealed) : row;
@@ -359,7 +372,7 @@ export function buildSignalSummary(
     movingCount: moving.length,
     hiddenMovingCount: moving.length - shownMoving.length,
     moreHref: SIGNAL_MORE_HREF,
-    totalCount: rows.length,
+    totalCount: Math.max(rows.length, meta.totalProjects ?? 0),
     events7: rows.reduce((s, r) => s + r.events7, 0),
     fetchedAt: meta.fetchedAt,
     source: rows.length === 0 ? "empty" : meta.source,

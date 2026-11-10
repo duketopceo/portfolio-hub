@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   activityKindVerb,
   getHomepageActivityShowcase,
@@ -69,31 +69,105 @@ describe("github-activity fixtures", () => {
 describe("getSignalActivity GitHub calls", () => {
   const featuredCount = 5;
 
-  async function run(graphql: () => Response | Promise<Response>) {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+    vi.doUnmock("@/lib/github-app");
+    vi.resetModules();
+  });
+
+  const recent = (hoursAgo: number) =>
+    new Date(Date.now() - hoursAgo * 3_600_000).toISOString();
+
+  /** REST stub: one merged PR and one release per repo; repo metadata public. */
+  function rest(url: string): Response {
+    const json = (v: unknown) => new Response(JSON.stringify(v), { status: 200 });
+    if (/\/pulls\?state=open/.test(url)) return json([]);
+    if (/\/pulls\?state=closed/.test(url) && /page=1\b/.test(url)) {
+      return json([
+        {
+          number: 7,
+          title: "Ship the thing",
+          html_url: "https://github.com/x/y/pull/7",
+          state: "closed",
+          merged_at: recent(2),
+          created_at: recent(5),
+          closed_at: recent(2),
+          updated_at: recent(2),
+          base: { ref: "main" },
+        },
+      ]);
+    }
+    if (/\/pulls\/\d+\/reviews/.test(url)) return json([]);
+    if (/\/releases/.test(url)) return json([]);
+    if (/\/issues\?/.test(url)) return json([]);
+    if (/\/repos\/[^/]+\/[^/?]+$/.test(url)) return json({ private: false });
+    return json([]);
+  }
+
+  function stub(graphql: () => Response | Promise<Response>) {
     const calls: Array<{ url: string; method: string }> = [];
     vi.stubEnv("GITHUB_TOKEN", "test-token-not-real");
     vi.stubEnv("ACTIVITY_USE_FIXTURES", "");
     vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => {
       calls.push({ url: String(url), method: init?.method ?? "GET" });
       if (String(url).endsWith("/graphql")) return graphql();
-      return new Response("[]", { status: 200 });
+      return rest(String(url));
     });
+    return calls;
+  }
+
+  async function run(graphql: () => Response | Promise<Response>) {
+    const calls = stub(graphql);
     const { getSignalActivity } = await import("./github-activity");
     const out = await getSignalActivity();
-    vi.unstubAllGlobals();
-    vi.unstubAllEnvs();
     return { out, calls };
   }
 
   it("adds exactly one GraphQL call and survives its failure", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const failing = await run(() => new Response("nope", { status: 502 }));
+    warn.mockRestore();
     const graphqlCalls = failing.calls.filter((c) => c.url.endsWith("/graphql"));
     expect(graphqlCalls).toHaveLength(1);
     expect(graphqlCalls[0].method).toBe("POST");
     expect(failing.out.contributions).toEqual([]);
-    expect(failing.out.payloads.length).toBe(featuredCount);
-    // Everything else is the existing per-repo REST traffic.
-    expect(failing.calls.length - 1).toBeGreaterThan(0);
+    expect(failing.out.source).toBe("github");
+    expect(failing.out.payloads).toHaveLength(featuredCount);
+    // Real featured data came from the REST stubs, not the test fixture fallback.
+    for (const p of failing.out.payloads) {
+      expect(p.items.some((i) => i.kind === "pr_merged" && i.ref === "7")).toBe(true);
+    }
+    // Every other call is per-repo REST traffic (pulls, releases, issues, repo meta).
+    const rest = failing.calls.filter((c) => !c.url.endsWith("/graphql"));
+    expect(rest.some((c) => c.url.includes("/pulls?state=closed"))).toBe(true);
+    expect(rest.some((c) => c.url.includes("/releases"))).toBe(true);
+    expect(failing.out.publicSlugs).toHaveLength(featuredCount);
+  });
+
+  it("resolves with featured data when the contributions token lookup throws", async () => {
+    stub(() => new Response("{}", { status: 200 }));
+    const real = await vi.importActual<typeof import("@/lib/github-app")>("@/lib/github-app");
+    let first = true;
+    vi.doMock("@/lib/github-app", () => ({
+      ...real,
+      // The contributions call starts first, so it takes the throwing lookup.
+      getGithubAccessToken: async () => {
+        if (first) {
+          first = false;
+          throw new Error("token service down");
+        }
+        return "test-token-not-real";
+      },
+    }));
+    vi.resetModules();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { getSignalActivity } = await import("./github-activity");
+    const out = await getSignalActivity();
+    warn.mockRestore();
+    expect(out.contributions).toEqual([]);
+    expect(out.payloads).toHaveLength(featuredCount);
+    expect(out.payloads[0].items.length).toBeGreaterThan(0);
   });
 
   it("maps contributions to catalog projects only", async () => {

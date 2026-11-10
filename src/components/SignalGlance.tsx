@@ -3,7 +3,6 @@ import { LockIcon } from "@/components/Icons";
 import {
   formatAge,
   formatCounts,
-  signalKindLabel,
   SIGNAL_HEAT_DAYS,
   type SignalRow,
   type SignalSummary,
@@ -71,7 +70,6 @@ function SignalRowItem({ row }: { row: SignalRow }) {
       <p className="signal__last">
         {row.lastKind && row.lastLine && row.lastAt ? (
           <>
-            <span className="signal__kind">{signalKindLabel(row.lastKind)}</span>
             <span className="signal__line">{row.lastLine}</span>
             <time className="signal__age" dateTime={row.lastAt}>
               {formatAge(row.lastAgeDays)}

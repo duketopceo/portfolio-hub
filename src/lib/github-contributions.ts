@@ -5,7 +5,11 @@ import type {
   SignalContribution,
 } from "@/lib/signal-summary";
 import { getGithubAccessToken } from "@/lib/github-app";
-import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
+import {
+  GITHUB_ACCOUNT_LOGIN,
+  GITHUB_API_BASE,
+  resolveRepoOwner,
+} from "@/lib/github-constants";
 
 /**
  * The single account-wide GitHub GraphQL call behind the home signal. It
@@ -50,6 +54,7 @@ type RawRepo = {
 };
 
 type RawResponse = {
+  errors?: Array<{ type?: string }>;
   data?: {
     user?: {
       contributionsCollection?: {
@@ -65,7 +70,22 @@ function repoKey(owner: string, name: string): string {
   return `${owner}/${name}`.toLowerCase();
 }
 
-/** Pure: fold the three GraphQL lists into per-repo, per-UTC-day counts. */
+const MS_HOUR = 3_600_000;
+
+/**
+ * Commit contribution `occurredAt` is the start of the contributor's LOCAL
+ * calendar day (a real instant, e.g. 22:00Z for UTC+2), not a UTC timestamp.
+ * Slicing it as UTC would shift those commits a day early for zones east of
+ * UTC. Adding 12h before slicing yields the nearest UTC midnight, i.e. the
+ * local calendar date for any offset within +-12h. The signal keys every day
+ * by calendar date, so commit days are calendar dates and PR/issue days (true
+ * instants) are plain UTC dates.
+ */
+export function commitContributionDay(occurredAt: string): string {
+  return new Date(Date.parse(occurredAt) + 12 * MS_HOUR).toISOString().slice(0, 10);
+}
+
+/** Pure: fold the three GraphQL lists into per-repo, per-day counts. */
 export function parseContributionResponse(raw: RawResponse): ContributionRepo[] | null {
   const c = raw.data?.user?.contributionsCollection;
   if (!c) return null;
@@ -96,7 +116,11 @@ export function parseContributionResponse(raw: RawResponse): ContributionRepo[] 
       if (entry.repository?.isPrivate !== false) repo.isPrivate = true;
       for (const node of entry.contributions?.nodes ?? []) {
         if (!node.occurredAt || Number.isNaN(Date.parse(node.occurredAt))) continue;
-        const day = dayOf(repo, node.occurredAt.slice(0, 10));
+        const date =
+          field === "commits"
+            ? commitContributionDay(node.occurredAt)
+            : node.occurredAt.slice(0, 10);
+        const day = dayOf(repo, date);
         day[field] += field === "commits" ? Math.max(0, node.commitCount ?? 0) : 1;
       }
     }
@@ -116,14 +140,13 @@ export function mapContributionsToCatalog(
   repos: ContributionRepo[],
   catalog: ProjectConfig[] = listedProjects()
 ): SignalContribution[] {
+  const byRepo = new Map<string, ProjectConfig>();
+  for (const p of catalog) {
+    if (p.repoName) byRepo.set(repoKey(resolveRepoOwner(p), p.repoName), p);
+  }
   const bySlug = new Map<string, SignalContribution>();
   for (const repo of repos) {
-    const key = repoKey(repo.owner, repo.name);
-    const cfg = catalog.find(
-      (p) =>
-        p.repoName &&
-        repoKey(p.repoOwner ?? GITHUB_ACCOUNT_LOGIN, p.repoName) === key
-    );
+    const cfg = byRepo.get(repoKey(repo.owner, repo.name));
     if (!cfg) continue;
     const existing = bySlug.get(cfg.slug);
     const target: SignalContribution = existing ?? {
@@ -149,14 +172,23 @@ export function mapContributionsToCatalog(
   return [...bySlug.values()];
 }
 
-/** One GraphQL call. Returns [] on any failure; callers render without it. */
+/** Window bounds snap to the start of the UTC hour so the fetch cache key is stable. */
+function hourFloor(ms: number): string {
+  return new Date(Math.floor(ms / MS_HOUR) * MS_HOUR).toISOString();
+}
+
+/**
+ * One GraphQL call. Never rejects: returns [] on any failure and callers
+ * render without it. Failures log status or error type only, never tokens,
+ * response bodies or repository names.
+ */
 export async function getSignalContributions(
   sinceMs: number,
   revalidateSeconds: number
 ): Promise<SignalContribution[]> {
-  const token = await getGithubAccessToken();
-  if (!token) return [];
   try {
+    const token = await getGithubAccessToken();
+    if (!token) return [];
     const res = await fetch(`${GITHUB_API_BASE}/graphql`, {
       method: "POST",
       headers: {
@@ -169,17 +201,35 @@ export async function getSignalContributions(
         query: QUERY,
         variables: {
           login: GITHUB_ACCOUNT_LOGIN,
-          from: new Date(sinceMs).toISOString(),
-          to: new Date().toISOString(),
+          from: hourFloor(sinceMs),
+          to: hourFloor(Date.now()),
         },
       }),
       next: { revalidate: revalidateSeconds },
       signal: AbortSignal.timeout(18_000),
     });
-    if (!res.ok) return [];
-    const repos = parseContributionResponse((await res.json()) as RawResponse);
-    return repos ? mapContributionsToCatalog(repos) : [];
-  } catch {
+    if (!res.ok) {
+      console.warn(`[signal-contributions] GitHub GraphQL returned HTTP ${res.status}`);
+      return [];
+    }
+    const json = (await res.json()) as RawResponse;
+    if (json.errors?.length) {
+      console.warn(
+        `[signal-contributions] GitHub GraphQL returned ${json.errors.length} error(s): ${json.errors
+          .map((e) => (typeof e?.type === "string" ? e.type : "UNKNOWN"))
+          .join(",")}`
+      );
+      return [];
+    }
+    const repos = parseContributionResponse(json);
+    if (!repos) {
+      console.warn("[signal-contributions] GitHub GraphQL returned no readable user");
+      return [];
+    }
+    return mapContributionsToCatalog(repos);
+  } catch (err) {
+    const kind = err instanceof Error ? err.name : "UnknownError";
+    console.warn(`[signal-contributions] request failed: ${kind}`);
     return [];
   }
 }

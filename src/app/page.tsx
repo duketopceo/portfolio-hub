@@ -17,7 +17,12 @@ export default async function Home() {
   ]);
   const signal = buildSignalSummary(
     activity.payloads,
-    activity,
+    {
+      fetchedAt: activity.fetchedAt,
+      source: activity.source,
+      publicSlugs: activity.publicSlugs,
+      totalProjects: activity.totalProjects,
+    },
     activity.contributions
   );
   const lead = getHomepageOrbitProjects(all);
