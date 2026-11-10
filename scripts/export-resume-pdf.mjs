@@ -10,8 +10,8 @@ import { catalogFileNames } from "./lib/catalog-files.mjs";
 
 // Import-free TypeScript, loaded under Node's native type stripping, so the
 // PDF uses the same ranking code as the web page, JSON and Markdown.
-const { buildRanking, orderByRank } = await import("../src/lib/ranking-core.ts");
-const { RANKING_PINS, PIN_COUNT } = await import("../src/data/ranking-pins.ts");
+const { buildRanking, orderByRank, DEFAULT_PIN_COUNT } = await import("../src/lib/ranking-core.ts");
+const { RANKING_PINS } = await import("../src/data/ranking-pins.ts");
 
 const MAX_PAGES = 2;
 
@@ -42,7 +42,7 @@ function rankProjectsForResume(projects) {
     };
   });
   const snapshot = JSON.parse(readFileSync(join(root, "src/data/ranking-snapshot.json"), "utf8"));
-  const ranked = buildRanking(listed, { snapshot, pins: RANKING_PINS, pinCount: PIN_COUNT });
+  const ranked = buildRanking(listed, { snapshot, pins: RANKING_PINS, pinCount: DEFAULT_PIN_COUNT });
   return orderByRank(projects, (p) => p.slugs, ranked);
 }
 
