@@ -87,8 +87,8 @@ describe("buildRanking", () => {
   });
 
   it("category group views list no pinned project and keep rank order", () => {
-    const ranked = buildRanking(projects, { snapshot: scores, pins: ["a", "e", "d"] });
-    const groups = categoryGroups(ranked);
+    const ranked = buildRanking(projects, { snapshot: scores, pins: ["a", "e", "d"], pinCount: 3 });
+    const groups = categoryGroups(ranked, 3);
     const slugs = groups.flatMap((g) => g.projects.map((p) => p.slug));
     expect(slugs).not.toContain("a");
     expect(slugs).not.toContain("e");
@@ -175,5 +175,21 @@ describe("pins and featured slugs", () => {
     const adj = getOrbitAdjacent(ranked as never, ranked[4].slug);
     expect(adj?.next.slug).toBe(ranked[5].slug);
     expect(adj?.prev.slug).toBe(ranked[3].slug);
+  });
+});
+
+describe("five-lead band", () => {
+  it("pins orchestral, argus, kurultai, open-computer, tallyline in that order", () => {
+    expect([...RANKING_PINS]).toEqual(["orchestral", "argus", "kurultai", "open-computer", "tallyline"]);
+    const ranked = rankProjects(projectConfigs);
+    expect(ranked.slice(0, 5).map((p) => p.slug)).toEqual([...RANKING_PINS]);
+  });
+
+  it("leadProjects returns five and category groups exclude every lead", () => {
+    const ranked = rankProjects(projectConfigs);
+    expect(leadProjects(ranked)).toHaveLength(5);
+    const grouped = categoryGroups(ranked).flatMap((g) => g.projects.map((p) => p.slug));
+    for (const pin of RANKING_PINS) expect(grouped).not.toContain(pin);
+    expect(grouped).toHaveLength(ranked.length - 5);
   });
 });

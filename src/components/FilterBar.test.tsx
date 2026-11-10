@@ -47,10 +47,10 @@ describe("FilterBar", () => {
   const pill = (key: string) =>
     container.querySelector<HTMLButtonElement>(`#catalog-filter-${key}`)!;
 
-  it("shows the top 3 above category groups in rank order by default", async () => {
+  it("shows the five leads above category groups in rank order by default", async () => {
     await mount();
     const leads = [...container.querySelectorAll("[data-lead-rank]")];
-    expect(leads).toHaveLength(3);
+    expect(leads).toHaveLength(5);
     const slugs = leads.map((l) =>
       l.querySelector("a.lead-card__title, .lead-card__title a")?.getAttribute("href")
     );

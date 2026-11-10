@@ -14,7 +14,7 @@ export interface RankingSnapshot {
   entries: RankingSnapshotEntry[];
 }
 
-export const DEFAULT_PIN_COUNT = 3;
+export const DEFAULT_PIN_COUNT = 5;
 
 /** A listed entry is neither a component of another entry nor earlier work. */
 function isListed(p: { parentSlug?: string; era?: "earlier" }): boolean {

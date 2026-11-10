@@ -40,12 +40,12 @@ async function home(): Promise<string> {
 }
 
 describe("home layout", () => {
-  it("renders the three pinned projects before the signal section", async () => {
+  it("renders the five pinned projects before the signal section", async () => {
     const html = await home();
     const signal = html.indexOf("home-transmissions-heading");
     expect(signal).toBeGreaterThan(-1);
     const cards = [...html.matchAll(/<article class="lead-card"[^>]*data-lead-rank="(\d)"[\s\S]*?<\/article>/g)];
-    expect(cards.map((m) => m[1])).toEqual(["1", "2", "3"]);
+    expect(cards.map((m) => m[1])).toEqual(["1", "2", "3", "4", "5"]);
     cards.forEach((m, i) => {
       expect(m[0]).toContain(`href="/projects/${RANKING_PINS[i]}`);
       expect(m.index!).toBeLessThan(signal);
@@ -97,15 +97,15 @@ describe("home layout", () => {
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });
 
-  it("gives top-3 cards with and without video the same structure", async () => {
+  it("gives lead cards with and without video the same structure", async () => {
     const html = await home();
     const cards = [...html.matchAll(/<article class="lead-card"[\s\S]*?<\/article>/g)].map((m) => m[0]);
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(5);
     const shape = (c: string) =>
       [...c.matchAll(/class="(lead-card__[a-z-]+)/g)]
         .map((m) => m[1])
         .filter((c) => !["lead-card__play", "lead-card__poster", "lead-card__type", "lead-card__play-icon", "lead-card__live"].includes(c));
     expect(shape(cards[1])).toEqual(shape(cards[0]));
-    expect(shape(cards[2])).toEqual(shape(cards[0]));
+    cards.slice(2).forEach((c) => expect(shape(c)).toEqual(shape(cards[0])));
   });
 });

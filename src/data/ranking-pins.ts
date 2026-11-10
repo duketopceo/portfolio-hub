@@ -1,7 +1,11 @@
 /**
- * The three lead projects, in display order (KD1). Luke pins these; the
- * score ranks everything else. Default: the top three of the extended score
- * in `ranking-snapshot.json`.
+ * The five lead projects, in display order (KD1). Luke pins these for
+ * AI-native roles; the score in `ranking-snapshot.json` ranks everything else.
  */
-export const RANKING_PINS = ["kurultai", "tallyline", "portfolio-hub"] as const;
-
+export const RANKING_PINS = [
+  "orchestral",
+  "argus",
+  "kurultai",
+  "open-computer",
+  "tallyline",
+] as const;
