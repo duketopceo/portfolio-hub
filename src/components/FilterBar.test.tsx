@@ -73,6 +73,17 @@ describe("FilterBar", () => {
     expect(pill("apps").getAttribute("aria-pressed")).toBe("true");
   });
 
+  it("opens on the category named in ?category= (the home See all links)", async () => {
+    window.history.replaceState({}, "", "/projects?category=apps");
+    try {
+      await mount();
+      expect(pill("apps").getAttribute("aria-pressed")).toBe("true");
+      expect(container.querySelector("[data-lead-rank]")).toBeNull();
+    } finally {
+      window.history.replaceState({}, "", "/");
+    }
+  });
+
   it("hides empty categories from the filter", async () => {
     await mount();
     const present = new Set(ranked.map((p) => p.category));

@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { projectConfigs } from "@/data/projects";
 import { RANKING_PINS } from "@/data/ranking-pins";
-import { isListedProject } from "@/lib/catalog-filter";
 import { rankProjects } from "@/lib/ranking";
 import type { EnrichedProject } from "@/lib/types";
 
@@ -67,15 +66,25 @@ describe("home layout", () => {
     expect(html).not.toContain("solar-system");
   });
 
-  it("lists every other project once, in category groups, never the pinned ones", async () => {
+  it("caps each category group at its top 4, never repeats a pinned project, and links to the full category", async () => {
     const html = await home();
     const rest = html.slice(html.indexOf("home-rest-heading"));
-    const listed = projectConfigs.filter(isListedProject);
-    for (const p of listed) {
-      const cards = rest.split(`href="/projects/${p.slug}"`).length - 1;
-      if ((RANKING_PINS as readonly string[]).includes(p.slug)) expect(cards).toBe(0);
-      else expect(cards).toBe(1);
+    const ranked = rankProjects(projectConfigs);
+    const pinned = new Set<string>(RANKING_PINS);
+    const byCategory = new Map<string, string[]>();
+    for (const p of ranked) {
+      if (pinned.has(p.slug)) continue;
+      byCategory.set(p.category, [...(byCategory.get(p.category) ?? []), p.slug]);
     }
+    for (const [category, slugs] of byCategory) {
+      slugs.slice(0, 4).forEach((slug) => expect(rest).toContain(`href="/projects/${slug}"`));
+      slugs.slice(4).forEach((slug) => expect(rest).not.toContain(`href="/projects/${slug}"`));
+      const total = ranked.filter((p) => p.category === category).length;
+      expect(rest).toContain(`href="/projects?category=${category}"`);
+      expect(rest).toMatch(new RegExp(`See all ${total} in `));
+    }
+    for (const slug of pinned) expect(rest).not.toContain(`href="/projects/${slug}"`);
+    expect(rest).toContain('href="/projects"');
   });
 
   it("groups cards in rank order inside each category", async () => {
@@ -83,7 +92,7 @@ describe("home layout", () => {
     const rest = html.slice(html.indexOf("home-rest-heading"));
     const ranked = rankProjects(projectConfigs).filter(
       (p) => p.category === "ai" && !(RANKING_PINS as readonly string[]).includes(p.slug)
-    );
+    ).slice(0, 4);
     const order = ranked.map((p) => rest.indexOf(`href="/projects/${p.slug}"`));
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });

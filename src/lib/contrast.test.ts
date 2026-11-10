@@ -7,10 +7,10 @@ import { describe, expect, it } from "vitest";
 const script = "scripts/check-contrast.mjs";
 
 describe("check-contrast.mjs", () => {
-  it("reports ink and paper separately and both pass for body, muted and accent text", () => {
+  it("the shipped token set passes for body, muted, faint and accent text", () => {
     const out = execFileSync("node", [script], { encoding: "utf8" });
     expect(out).not.toContain("FAIL");
-    for (const theme of ["ink", "paper"]) {
+    for (const theme of ["default"]) {
       for (const token of ["color-text ", "color-text-muted", "color-text-faint", "color-accent", "color-signal", "color-pop"]) {
         expect(out).toContain(`[${theme}] ${token}`);
       }

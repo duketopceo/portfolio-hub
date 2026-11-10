@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EnrichedProject, ProjectCategory } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/category-meta";
@@ -30,6 +30,14 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
   const [activeCategory, setActiveCategory] = useState<
     ProjectCategory | "all"
   >("all");
+
+  // /projects?category=<key> (the home "See all" links) opens on that category.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("category");
+    const match = categories.find((c) => c.key === wanted && c.key !== "all");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the query string only exists in the browser; reading it during render would mismatch the static HTML.
+    if (match) setActiveCategory(match.key);
+  }, []);
 
   // `projects` arrives in ranking order; filtering keeps that order.
   const filtered = projects.filter(

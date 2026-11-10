@@ -260,6 +260,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+.category-group__more {
+  justify-self: start;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.home-rest__all {
+  justify-self: start;
+}
+
 /* ── Filter controls ───────────────────────────────────── */
 .catalog-pill:focus-visible {
   outline: 2px solid var(--color-accent);

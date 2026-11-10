@@ -38,6 +38,10 @@ maps, survey files, and telemetry — not a generic space theme.
 All colors are CSS custom properties in `src/app/globals.css`. Near-monochrome
 dark survey plate; teal and ember are the complementary pair, one pop color accents.
 
+**Contrast decision (2026-11-10):** white text on deep black ("ink") ships; the
+black-on-white variant was built, screenshotted and dropped. `scripts/check-contrast.mjs`
+checks body, muted, faint and accent text against every surface at 4.5:1.
+
 ### Surfaces & Lines
 
 | Token | Hex | Role |

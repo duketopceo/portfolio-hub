@@ -3,13 +3,7 @@ import { describe, expect, it } from "vitest";
 import { COSMOS_PALETTE, PALETTE_TOKENS } from "./palette";
 import { catColors } from "./utils";
 
-const allTokens = readFileSync("src/app/design-system/tokens.css", "utf8");
-// The ink set is the palette of record; the paper variant is checked separately below.
-const paperAt = allTokens.indexOf(':root[data-theme="paper"] {');
-const tokens = paperAt > -1 ? allTokens.slice(0, paperAt) : allTokens;
-const paperTokens = paperAt > -1 ? allTokens.slice(paperAt) : "";
-const paperHex = (name: string) =>
-  paperTokens.match(new RegExp(`${name}:\\s*(#[0-9a-fA-F]{6})`))?.[1]?.toUpperCase();
+const tokens = readFileSync("src/app/design-system/tokens.css", "utf8");
 
 function tokenHex(name: string): string | undefined {
   return tokens.match(new RegExp(`${name}:\\s*(#[0-9a-fA-F]{6})`))?.[1]?.toUpperCase();
@@ -55,15 +49,6 @@ describe("palette tokens", () => {
     expect([...chroma].sort()).toEqual(
       [COSMOS_PALETTE.teal, COSMOS_PALETTE.ember, COSMOS_PALETTE.pop].map((h) => h.toUpperCase()).sort()
     );
-  });
-
-  it("keeps each paper accent in the hue family of its ink colour", () => {
-    for (const [role, token] of Object.entries(PALETTE_TOKENS)) {
-      const ink = COSMOS_PALETTE[role as keyof typeof PALETTE_TOKENS];
-      const paper = paperHex(token)!;
-      expect(paper, token).toBeDefined();
-      expect(hueGap(ink, paper), `${token} hue`).toBeLessThan(20);
-    }
   });
 
   it("keeps teal and ember complementary and the pop distinct from both", () => {

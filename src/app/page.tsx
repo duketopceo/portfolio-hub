@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getEnrichedProjects } from "@/lib/github";
-import { leadProjects, rankProjects, restProjects } from "@/lib/ranking";
+import { leadProjects, rankProjects } from "@/lib/ranking";
 import { getSignalActivity } from "@/lib/github-activity";
 import { buildSignalSummary } from "@/lib/signal-summary";
 import { SignalGlance } from "@/components/SignalGlance";
@@ -9,6 +9,9 @@ import CategoryGroups from "@/components/CategoryGroups";
 import { ActionRow, PageShell, SectionHeading } from "@/components/design";
 
 export const revalidate = 3600;
+
+/** Projects shown per category group on home; /projects lists them all. */
+const HOME_GROUP_LIMIT = 4;
 
 export default async function Home() {
   const [all, activity] = await Promise.all([
@@ -27,7 +30,6 @@ export default async function Home() {
   );
   const ranked = rankProjects(all);
   const leads = leadProjects(ranked);
-  const rest = restProjects(ranked);
 
   return (
     <div className="home">
@@ -97,9 +99,21 @@ export default async function Home() {
           <SectionHeading
             eyebrow="The rest of the work"
             title={<span id="home-rest-heading">More projects</span>}
-            description={`${rest.length} more, strongest first within each category.`}
+            description="The top of each category, strongest first."
           />
-          <CategoryGroups ranked={ranked} registrySlugs={all.map((p) => p.slug)} />
+          <CategoryGroups
+            ranked={ranked}
+            registrySlugs={all.map((p) => p.slug)}
+            limit={HOME_GROUP_LIMIT}
+          />
+          <Link
+            href="/projects"
+            className="detail-cta detail-cta--secondary home-rest__all"
+            data-umami-event="home-cta"
+            data-umami-event-target="all-projects"
+          >
+            All projects →
+          </Link>
         </section>
 
         {/* 5 — closing action */}
