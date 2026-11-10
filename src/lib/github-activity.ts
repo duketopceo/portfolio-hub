@@ -10,6 +10,7 @@ import {
 import {
   fixtureHomepageActivity,
   fixtureProjectActivity,
+  fixtureSignalContributions,
 } from "@/lib/github-activity-fixtures";
 import type {
   ActivityDayBucket,
@@ -21,6 +22,8 @@ import type {
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
 import { getGithubAccessToken } from "@/lib/github-app";
+import { getSignalContributions } from "@/lib/github-contributions";
+import type { SignalContribution } from "@/lib/signal-summary";
 import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
 
 export const ACTIVITY_REVALIDATE_SECONDS = 3600;
@@ -621,6 +624,8 @@ export async function getProjectActivityTimeline(
  */
 export async function getSignalActivity(): Promise<{
   payloads: ProjectActivityPayload[];
+  /** Account-wide commit/PR/issue counts per catalog project (signal only). */
+  contributions: SignalContribution[];
   fetchedAt: string;
   source: HomepageActivityPayload["source"];
 }> {
@@ -628,6 +633,7 @@ export async function getSignalActivity(): Promise<{
     const f = fixtureHomepageActivity();
     return {
       payloads: f.repos.map((r) => r.activity),
+      contributions: fixtureSignalContributions(),
       fetchedAt: f.fetchedAt,
       source: f.source,
     };
@@ -635,15 +641,28 @@ export async function getSignalActivity(): Promise<{
 
   const sinceMs = Date.now() - HISTORY_MS;
   const payloads: ProjectActivityPayload[] = [];
+  // One extra GitHub call per revalidate; started first so it overlaps the
+  // per-repo fetches. Failure resolves to [] and the signal renders without it.
+  const contributionsPromise = getSignalContributions(
+    sinceMs,
+    ACTIVITY_REVALIDATE_SECONDS
+  );
   for (const target of featuredRepoTargets()) {
     const activity = await buildRepoActivity(target, sinceMs);
     if (activity) payloads.push(activity);
   }
 
-  if (payloads.length === 0 && process.env.NODE_ENV === "test") {
+  const contributions = await contributionsPromise;
+
+  if (
+    payloads.length === 0 &&
+    contributions.length === 0 &&
+    process.env.NODE_ENV === "test"
+  ) {
     const f = fixtureHomepageActivity();
     return {
       payloads: f.repos.map((r) => r.activity),
+      contributions: [],
       fetchedAt: f.fetchedAt,
       source: f.source,
     };
@@ -651,8 +670,9 @@ export async function getSignalActivity(): Promise<{
 
   return {
     payloads,
+    contributions,
     fetchedAt: new Date().toISOString(),
-    source: payloads.length > 0 ? "github" : "empty",
+    source: payloads.length > 0 || contributions.length > 0 ? "github" : "empty",
   };
 }
 

@@ -1,8 +1,10 @@
 import type {
+  ActivityDayBucket,
   ActivityEventKind,
   ActivityTimelineItem,
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
+import { showcaseKindLabel } from "@/lib/activity-aggregate";
 
 /**
  * Server-side summary behind the home "engineering signal" glance.
@@ -12,12 +14,37 @@ import type {
 
 export const SIGNAL_HEAT_DAYS = 7;
 export const SIGNAL_LONG_DAYS = 30;
+/** Moving rows shown on the home page; the rest collapse into a link. */
+export const SIGNAL_MAX_MOVING = 8;
+export const SIGNAL_MORE_HREF = "/projects";
+const PRIVATE_NAME = "Private project";
 const MS_DAY = 86_400_000;
 
 /** 0 = quiet, 4 = busiest. Never conveyed by color alone (bar height + count). */
 export type SignalLevel = 0 | 1 | 2 | 3 | 4;
 
+/** Event kinds the signal knows: the timeline kinds plus commits. */
+export type SignalKind = ActivityEventKind | "commit";
+
+/** Per repository and UTC day, from the one account-wide contributions call. */
+export interface ContributionDay {
+  date: string;
+  commits: number;
+  prsOpened: number;
+  issuesOpened: number;
+}
+
+/** One catalog project's contributions. No titles, messages or repo names. */
+export interface SignalContribution {
+  slug: string;
+  displayName: string;
+  catalogPrivate: boolean;
+  githubPrivate: boolean;
+  days: ContributionDay[];
+}
+
 export interface SignalCounts {
+  commits: number;
   merged: number;
   opened: number;
   releases: number;
@@ -37,7 +64,7 @@ export interface SignalRow {
   events7: number;
   events30: number;
   /** Latest event kind, or null when there is no event in the history. */
-  lastKind: ActivityEventKind | null;
+  lastKind: SignalKind | null;
   lastAt: string | null;
   /** One line. Private repos get a generic kind line, never a title. */
   lastLine: string | null;
@@ -48,6 +75,9 @@ export interface SignalRow {
 export interface SignalSummary {
   rows: SignalRow[];
   movingCount: number;
+  /** Moving projects beyond SIGNAL_MAX_MOVING, collapsed into one link. */
+  hiddenMovingCount: number;
+  moreHref: string;
   totalCount: number;
   events7: number;
   fetchedAt: string;
@@ -63,6 +93,10 @@ const KIND_NOUN: Record<ActivityEventKind, string> = {
   issue_opened: "Issue started",
   issue_closed: "Issue finished",
 };
+
+export function signalKindLabel(kind: SignalKind): string {
+  return kind === "commit" ? "Commits" : showcaseKindLabel(kind);
+}
 
 export function dateKey(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -119,7 +153,8 @@ function lineFor(item: ActivityTimelineItem, isPrivate: boolean): string {
 
 export function summarizeProject(
   payload: ProjectActivityPayload,
-  now: Date
+  now: Date,
+  commitDays: ContributionDay[] = []
 ): SignalRow {
   const dates: string[] = [];
   for (let i = SIGNAL_HEAT_DAYS - 1; i >= 0; i--) {
@@ -131,7 +166,13 @@ export function summarizeProject(
   const today = dateKey(now);
   const heatSet = new Set(dates);
 
-  const counts7: SignalCounts = { merged: 0, opened: 0, releases: 0, issues: 0 };
+  const counts7: SignalCounts = {
+    commits: 0,
+    merged: 0,
+    opened: 0,
+    releases: 0,
+    issues: 0,
+  };
   const perDay = new Map<string, number>();
   let events30 = 0;
 
@@ -150,6 +191,17 @@ export function summarizeProject(
     }
   }
 
+  let lastCommitDate: string | null = null;
+  for (const day of commitDays) {
+    if (day.date > today || day.commits <= 0) continue;
+    if (day.date >= since30) events30 += day.commits;
+    if (heatSet.has(day.date)) {
+      perDay.set(day.date, (perDay.get(day.date) ?? 0) + day.commits);
+      counts7.commits += day.commits;
+    }
+    if (!lastCommitDate || day.date > lastCommitDate) lastCommitDate = day.date;
+  }
+
   const max = Math.max(0, ...dates.map((d) => perDay.get(d) ?? 0));
   const heat = dates.map((date) => {
     const count = perDay.get(date) ?? 0;
@@ -157,8 +209,22 @@ export function summarizeProject(
   });
   const events7 = heat.reduce((s, h) => s + h.count, 0);
 
-  const last = latestItem(payload.items, now);
-  const lastAgeDays = last ? Math.max(0, dayDiff(now, new Date(last.at))) : null;
+  const lastItem = latestItem(payload.items, now);
+  // Contribution days carry no time of day; an item on the same day wins.
+  const commitAt = lastCommitDate ? `${lastCommitDate}T00:00:00.000Z` : null;
+  const commitIsLatest =
+    commitAt !== null &&
+    (!lastItem || new Date(commitAt).getTime() > new Date(lastItem.at).getTime());
+  const lastAt = commitIsLatest ? commitAt : (lastItem?.at ?? null);
+  const lastKind: SignalKind | null = commitIsLatest
+    ? "commit"
+    : (lastItem?.kind ?? null);
+  const lastLine = commitIsLatest
+    ? "Commits pushed"
+    : lastItem
+      ? lineFor(lastItem, payload.private)
+      : null;
+  const lastAgeDays = lastAt ? Math.max(0, dayDiff(now, new Date(lastAt))) : null;
 
   return {
     slug: payload.slug,
@@ -170,9 +236,9 @@ export function summarizeProject(
     counts7,
     events7,
     events30,
-    lastKind: last?.kind ?? null,
-    lastAt: last?.at ?? null,
-    lastLine: last ? lineFor(last, payload.private) : null,
+    lastKind,
+    lastAt,
+    lastLine,
     lastAgeDays,
   };
 }
@@ -192,16 +258,107 @@ export function compareSignalRows(a: SignalRow, b: SignalRow): number {
   return byRecency(a, b);
 }
 
+/**
+ * A catalog project found only through the contributions call: opened PRs,
+ * opened issues and commits, as day counts. Lines are generic kind nouns.
+ */
+function contributionOnlyPayload(
+  c: SignalContribution,
+  isPrivate: boolean,
+  fetchedAt: string
+): ProjectActivityPayload {
+  const days: ActivityDayBucket[] = [];
+  const items: ActivityTimelineItem[] = [];
+  for (const d of c.days) {
+    if (d.prsOpened <= 0 && d.issuesOpened <= 0) continue;
+    const at = `${d.date}T00:00:00.000Z`;
+    days.push({
+      date: d.date,
+      prsOpened: d.prsOpened,
+      prsMerged: 0,
+      reviews: 0,
+      releases: 0,
+      issuesOpened: d.issuesOpened,
+      issuesClosed: 0,
+      items: [],
+    });
+    if (d.prsOpened > 0) {
+      items.push({ id: `${c.slug}-pr-${d.date}`, kind: "pr_opened", at, label: KIND_NOUN.pr_opened });
+    }
+    if (d.issuesOpened > 0) {
+      items.push({ id: `${c.slug}-issue-${d.date}`, kind: "issue_opened", at, label: KIND_NOUN.issue_opened });
+    }
+  }
+  return {
+    slug: c.slug,
+    displayName: c.displayName,
+    private: isPrivate,
+    headline: "",
+    days,
+    items,
+    fetchedAt,
+    source: "github",
+  };
+}
+
+/**
+ * Fail closed: GitHub reporting a repository private while the catalog says
+ * public means the name itself must not render. Catalog-private projects keep
+ * the #96 behaviour (curated name plus lock, kind-only lines).
+ */
+function conceal(row: SignalRow, n: number): SignalRow {
+  return {
+    ...row,
+    slug: `private-${n}`,
+    displayName: PRIVATE_NAME,
+    private: true,
+    href: SIGNAL_MORE_HREF,
+    lastLine: row.lastKind ? signalKindLine(row.lastKind) : null,
+  };
+}
+
+function signalKindLine(kind: SignalKind): string {
+  return kind === "commit" ? "Commits pushed" : KIND_NOUN[kind];
+}
+
 export function buildSignalSummary(
   payloads: ProjectActivityPayload[],
-  meta: { fetchedAt: string; source: SignalSummary["source"] }
+  meta: { fetchedAt: string; source: SignalSummary["source"] },
+  contributions: SignalContribution[] = []
 ): SignalSummary {
   const parsed = new Date(meta.fetchedAt);
   const now = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
-  const rows = payloads.map((p) => summarizeProject(p, now)).sort(compareSignalRows);
+  const bySlug = new Map(contributions.map((c) => [c.slug, c] as const));
+  let concealed = 0;
+
+  const rows: SignalRow[] = payloads.map((p) => {
+    const c = bySlug.get(p.slug);
+    const hide = Boolean(c?.githubPrivate && !p.private);
+    const effective = hide ? { ...p, private: true } : p;
+    const row = summarizeProject(effective, now, c?.days);
+    return hide ? conceal(row, ++concealed) : row;
+  });
+
+  const featured = new Set(payloads.map((p) => p.slug));
+  for (const c of contributions) {
+    if (featured.has(c.slug)) continue;
+    const hide = c.githubPrivate && !c.catalogPrivate;
+    const payload = contributionOnlyPayload(c, c.catalogPrivate || c.githubPrivate, meta.fetchedAt);
+    const row = summarizeProject(payload, now, c.days);
+    // Only moving projects are added; the quiet list stays the featured set.
+    if (row.state !== "moving") continue;
+    rows.push(hide ? conceal(row, ++concealed) : row);
+  }
+
+  rows.sort(compareSignalRows);
+  const moving = rows.filter((r) => r.state === "moving");
+  const shownMoving = moving.slice(0, SIGNAL_MAX_MOVING);
+  const shown = [...shownMoving, ...rows.filter((r) => r.state === "quiet")];
   return {
-    rows,
-    movingCount: rows.filter((r) => r.state === "moving").length,
+    rows: shown,
+    movingCount: moving.length,
+    hiddenMovingCount: moving.length - shownMoving.length,
+    moreHref: SIGNAL_MORE_HREF,
     totalCount: rows.length,
     events7: rows.reduce((s, r) => s + r.events7, 0),
     fetchedAt: meta.fetchedAt,
@@ -211,6 +368,7 @@ export function buildSignalSummary(
 
 export function formatCounts(c: SignalCounts): string {
   const parts: string[] = [];
+  if (c.commits) parts.push(c.commits === 1 ? "1 commit" : `${c.commits} commits`);
   if (c.merged) parts.push(`${c.merged} merged`);
   if (c.opened) parts.push(`${c.opened} opened`);
   if (c.releases) parts.push(c.releases === 1 ? "1 release" : `${c.releases} releases`);

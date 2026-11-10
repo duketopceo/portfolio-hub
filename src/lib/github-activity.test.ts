@@ -65,3 +65,71 @@ describe("github-activity fixtures", () => {
     expect(activityKindVerb("issue_closed")).toBe("Finished");
   });
 });
+
+describe("getSignalActivity GitHub calls", () => {
+  const featuredCount = 5;
+
+  async function run(graphql: () => Response | Promise<Response>) {
+    const { vi } = await import("vitest");
+    const calls: Array<{ url: string; method: string }> = [];
+    vi.stubEnv("GITHUB_TOKEN", "test-token-not-real");
+    vi.stubEnv("ACTIVITY_USE_FIXTURES", "");
+    vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => {
+      calls.push({ url: String(url), method: init?.method ?? "GET" });
+      if (String(url).endsWith("/graphql")) return graphql();
+      return new Response("[]", { status: 200 });
+    });
+    const { getSignalActivity } = await import("./github-activity");
+    const out = await getSignalActivity();
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+    return { out, calls };
+  }
+
+  it("adds exactly one GraphQL call and survives its failure", async () => {
+    const failing = await run(() => new Response("nope", { status: 502 }));
+    const graphqlCalls = failing.calls.filter((c) => c.url.endsWith("/graphql"));
+    expect(graphqlCalls).toHaveLength(1);
+    expect(graphqlCalls[0].method).toBe("POST");
+    expect(failing.out.contributions).toEqual([]);
+    expect(failing.out.payloads.length).toBe(featuredCount);
+    // Everything else is the existing per-repo REST traffic.
+    expect(failing.calls.length - 1).toBeGreaterThan(0);
+  });
+
+  it("maps contributions to catalog projects only", async () => {
+    const { listedProjects } = await import("@/lib/catalog");
+    const cfg = listedProjects().find((p) => !p.private && p.repoName)!;
+    const node = {
+      repository: {
+        name: cfg.repoName,
+        isPrivate: false,
+        owner: { login: cfg.repoOwner ?? process.env.GITHUB_USER ?? "duketopceo" },
+      },
+      contributions: { nodes: [{ occurredAt: "2026-11-09T00:00:00Z", commitCount: 2 }] },
+    };
+    const stranger = {
+      repository: { name: "no-such-catalog-repo", isPrivate: false, owner: { login: "duketopceo" } },
+      contributions: { nodes: [{ occurredAt: "2026-11-09T00:00:00Z", commitCount: 9 }] },
+    };
+    const { out } = await run(
+      () =>
+        new Response(
+          JSON.stringify({
+            data: {
+              user: {
+                contributionsCollection: {
+                  commitContributionsByRepository: [node, stranger],
+                  pullRequestContributionsByRepository: [],
+                  issueContributionsByRepository: [],
+                },
+              },
+            },
+          }),
+          { status: 200 }
+        )
+    );
+    expect(out.contributions.map((c) => c.slug)).toEqual([cfg.slug]);
+    expect(JSON.stringify(out.contributions)).not.toContain("no-such-catalog-repo");
+  });
+});

@@ -3,15 +3,14 @@ import { LockIcon } from "@/components/Icons";
 import {
   formatAge,
   formatCounts,
+  signalKindLabel,
   SIGNAL_HEAT_DAYS,
   type SignalRow,
   type SignalSummary,
 } from "@/lib/signal-summary";
-import { showcaseKindLabel } from "@/lib/activity-aggregate";
 
 /**
- * Server-rendered at-a-glance view of what is moving across the featured
- * projects. No client JS: one row per project, moving above quiet.
+ * Server-rendered at-a-glance view of what is moving across the projects. No client JS: one row per project, moving above quiet.
  */
 
 function heatLabel(row: SignalRow): string {
@@ -72,7 +71,7 @@ function SignalRowItem({ row }: { row: SignalRow }) {
       <p className="signal__last">
         {row.lastKind && row.lastLine && row.lastAt ? (
           <>
-            <span className="signal__kind">{showcaseKindLabel(row.lastKind)}</span>
+            <span className="signal__kind">{signalKindLabel(row.lastKind)}</span>
             <span className="signal__line">{row.lastLine}</span>
             <time className="signal__age" dateTime={row.lastAt}>
               {formatAge(row.lastAgeDays)}
@@ -125,6 +124,16 @@ export function SignalGlance({ summary }: { summary: SignalSummary }) {
               <SignalRowItem key={row.slug} row={row} />
             ))}
           </ol>
+          {summary.hiddenMovingCount > 0 && (
+            <p className="signal__meta">
+              <Link
+                href={summary.moreHref}
+                data-umami-event="signal-more-moving"
+              >
+                +{summary.hiddenMovingCount} more moving
+              </Link>
+            </p>
+          )}
         </section>
       )}
 
@@ -142,7 +151,7 @@ export function SignalGlance({ summary }: { summary: SignalSummary }) {
       )}
 
       <p className="signal__meta">
-        PRs, releases and issues ·{" "}
+        Commits, PRs, releases and issues ·{" "}
         {summary.source === "github" ? "via GitHub" : summary.source} · as of{" "}
         <time dateTime={summary.fetchedAt}>
           {summary.fetchedAt.slice(0, 10)}
