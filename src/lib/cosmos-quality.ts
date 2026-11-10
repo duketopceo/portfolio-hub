@@ -1,11 +1,13 @@
 /**
- * Quality ladder for the live background. The scene starts at "high"; when
+ * Quality ladder for the live background. The scene starts at "full"; when
  * the frame rate stays under budget it steps down one rung at a time and,
  * from "low", hands the stage to the static plate. It never steps back up:
- * a visitor whose machine failed twice keeps the calm plate rather than
- * flapping between renditions.
+ * a visitor whose machine failed repeatedly keeps the calm plate rather than
+ * flapping between renditions. The lensing of the starfield goes first
+ * ("full" -> "high"); "low" then drops the ring glow, the second noise octave
+ * and the star links, and renders fewer pixels.
  */
-export type CosmosTier = "high" | "low" | "plate";
+export type CosmosTier = "full" | "high" | "low" | "plate";
 
 /** Sustained frame rates below this count as a missed budget (success target: 55+). */
 export const DECLINE_BELOW_FPS = 45;
@@ -13,6 +15,10 @@ export const DECLINE_BELOW_FPS = 45;
 export interface TierSettings {
   /** Device-pixel-ratio range handed to the canvas. */
   dpr: [number, number];
+  /** Stars bend around the hole (ported Rune distortion profile). */
+  lensing: boolean;
+  /** Soft bloom around the shadow edge (ported Rune glow). */
+  glow: boolean;
   /** Constellation link lines between stars. */
   links: boolean;
   /** Extra noise octave in the disk shader: 1 = on, 0 = off. */
@@ -20,9 +26,10 @@ export interface TierSettings {
 }
 
 const SETTINGS: Record<Exclude<CosmosTier, "plate">, TierSettings> = {
-  // DPR capped at 1 even on high: the disk is soft light, not fine detail.
-  high: { dpr: [1, 1], links: true, detail: 1 },
-  low: { dpr: [0.75, 0.75], links: false, detail: 0 },
+  // DPR capped at 1 even on full: the disk is soft light, not fine detail.
+  full: { dpr: [1, 1], lensing: true, glow: true, links: true, detail: 1 },
+  high: { dpr: [1, 1], lensing: false, glow: true, links: true, detail: 1 },
+  low: { dpr: [0.75, 0.75], lensing: false, glow: false, links: false, detail: 0 },
 };
 
 /** Settings for a rung; the plate renders no scene so it reuses "low". */
@@ -30,6 +37,13 @@ export function tierSettings(tier: CosmosTier): TierSettings {
   return SETTINGS[tier === "plate" ? "low" : tier];
 }
 
+const NEXT: Record<CosmosTier, CosmosTier> = {
+  full: "high",
+  high: "low",
+  low: "plate",
+  plate: "plate",
+};
+
 export function stepDown(tier: CosmosTier): CosmosTier {
-  return tier === "high" ? "low" : "plate";
+  return NEXT[tier];
 }

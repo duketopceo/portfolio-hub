@@ -43,7 +43,7 @@ export function SiteBackground({
   const mode = useCosmosMode();
   const [sceneReady, setSceneReady] = useState(false);
   const [gaveUp, setGaveUp] = useState(false);
-  const [tier, setTier] = useState<CosmosTier>("high");
+  const [tier, setTier] = useState<CosmosTier>("full");
   // CosmosLive reports the tier before giving up, so the attribute ends on "plate".
   const onGiveUp = useCallback(() => setGaveUp(true), []);
   const live = mode === "live" && !gaveUp;

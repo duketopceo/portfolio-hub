@@ -219,7 +219,7 @@ crisp at any DPR, same palette and same positions as the live version):
 
 | Piece | Component | Live (WebGL / canvas) | Static (reduced motion, no WebGL, software GL, Save-Data, failure) | Where |
 |---|---|---|---|---|
-| Black hole | `BlackHole` | R3F shader via `SceneFrame`, ~75 s per revolution, small, dim and off-centre (about a third of the former radius, 0.5 max opacity) | `BlackHoleSvg`: shadow, photon ring, lensed arcs, tilted disk with brighter approaching limb; disk streaks turn in CSS, 60-90 s per turn (still under reduced motion) | Site background, every page |
+| Black hole | `BlackHole` (glow and lensing ported from Rune, MIT: `THIRD_PARTY_NOTICES.md`) | R3F shader via `SceneFrame`, ~75 s per revolution, small, dim and off-centre (about a third of the former radius, 0.5 max opacity) | `BlackHoleSvg`: shadow, photon ring, lensed arcs, tilted disk with brighter approaching limb; disk streaks turn in CSS, 60-90 s per turn (still under reduced motion) | Site background, every page |
 | Stardust | `StardustCanvas` | 2D canvas, sparse falling motes, idle at top of page, paused in hidden tabs | `StaticStardust`: frozen SVG pattern (dots, pop sparkles) | Pages that scroll, further down |
 | Quiet starfield | `StarfieldScene` | R3F, same context as the black hole; dimmer than before, constellation links dropped on the low tier | CSS stars (`cosmic-bg::before/::after`) | Site background |
 | Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.01 (hero, beside the intro) |
@@ -238,9 +238,10 @@ software GL and start on the static plate; Apple and unknown renderer strings
 start live and measurement decides. DPR is capped at 1 (0.75 on the low tier),
 `preserveDrawingBuffer` is off, and the frame loop pauses when the tab is
 hidden or the canvas is off screen. drei's `PerformanceMonitor` steps quality
-down when frames stay under 45 fps (budget: 55+ on integrated graphics): high
-(DPR 1, two shader octaves, star links) to low (DPR 0.75, one octave, no links)
-to the static plate, never back up, logging each step as `[cosmos] tier a -> b`
+down when frames stay under 45 fps (budget: 55+ on integrated graphics): full
+(DPR 1, starfield lensing, ring glow, two shader octaves, star links) to high
+(lensing dropped first) to low (DPR 0.75, no glow, one octave, no links) to
+the static plate, never back up, logging each step as `[cosmos] tier a -> b`
 and recording the rung in `data-cosmos-tier` on `.cosmic-bg`. The static plate
 hides only after the live scene's first rendered frame and returns if the
 scene is lost or given up on; its CSS rotation stops while the live scene

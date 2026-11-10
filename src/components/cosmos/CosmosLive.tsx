@@ -30,10 +30,10 @@ export default function CosmosLive({
   onTierChange: (tier: CosmosTier) => void;
   onGiveUp: () => void;
 }) {
-  const [tier, setTier] = useState<CosmosTier>("high");
+  const [tier, setTier] = useState<CosmosTier>("full");
   // QA only: ?cosmos-tier=pin holds full quality and skips the monitor.
   const [pinned] = useState(() => parseTierPin(window.location.search));
-  const tierRef = useRef<CosmosTier>("high");
+  const tierRef = useRef<CosmosTier>("full");
 
   const decline = useCallback(
     (fps: number) => {

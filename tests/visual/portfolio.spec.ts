@@ -240,7 +240,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
                       best = Math.max(best, painted);
                     }
                     frames += 1;
-                    if (frames < 40) requestAnimationFrame(sample);
+                    if (best <= 100 && frames < 300) requestAnimationFrame(sample);
                     else resolve(best);
                   };
                   requestAnimationFrame(sample);
@@ -275,11 +275,14 @@ test.describe("Portfolio visual acceptance matrix", () => {
     });
     await page.goto("/about?cosmos=live", { waitUntil: "networkidle" });
     const bg = page.locator(".cosmic-bg");
+    // The first rung down drops the starfield lensing, then glow and octave.
+    await expect(bg).toHaveAttribute("data-cosmos-tier", "high", { timeout: 60_000 });
     await expect(bg).toHaveAttribute("data-cosmos-tier", "low", { timeout: 60_000 });
     await expect(bg).toHaveAttribute("data-cosmos-tier", "plate", { timeout: 60_000 });
     await expect(bg).toHaveAttribute("data-scene", "plate");
     await expect(bg).toHaveAttribute("data-cosmos", "static");
     await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(0);
+    expect(tierLogs.some((l) => l.includes("full -> high"))).toBe(true);
     expect(tierLogs.some((l) => l.includes("high -> low"))).toBe(true);
     expect(tierLogs.some((l) => l.includes("low -> plate"))).toBe(true);
   });

@@ -10,6 +10,8 @@ import { COSMOS_PALETTE as C } from "@/lib/palette";
  * rotation and Doppler beaming, and light bent over and under the shadow.
  * Style: dark core, thin bright accretion ring, slow rotation. Original design, same composition as the static plate (BlackHoleSvg).
  * Cost: two noise octaves (one on the low quality tier), see cosmos-quality.ts.
+ * The ring glow (bloom, gauss) is ported from Rune's glow shader: see the
+ * attribution at the top of FRAGMENT and THIRD_PARTY_NOTICES.md.
  *
  * Compositing is "emission + occlusion": the output is premultiplied, with
  * rgb = emitted light and alpha = how much of the background the shadow
@@ -28,11 +30,18 @@ void main() {
 `;
 
 const FRAGMENT = /* glsl */ `
+// Ring glow: gauss(), bloom() and the soft-knee idea are ported from WGSL to
+// GLSL from Rune, https://github.com/anomalyco/rune, MIT License,
+// Copyright (c) 2026 Anomaly. Source files:
+//   crates/rune-fx/src/shaders/common.wgsl (gauss, bloom, knee)
+//   crates/rune-fx/src/shaders/glow.wgsl   (variant 0, "soft": outside bloom)
+// Full notice in THIRD_PARTY_NOTICES.md.
 precision highp float;
 varying vec2 vP;
 uniform float uTime;
 uniform float uSpin;      // rad/s at mid-radius
 uniform float uOpacity;
+uniform float uGlow;      // 1 = soft bloom around the shadow edge, 0 = off (low tier)
 uniform float uDetail;    // 1 = two noise octaves, 0 = one (low quality tier)
 uniform vec3 uWhite;
 uniform vec3 uEmber;
@@ -42,6 +51,15 @@ const float R_IN = 0.27;
 const float R_OUT = 0.8;
 const float SH = 0.21;
 const float TILT = 0.2;   // disk ellipse minor/major as seen from the camera
+
+// From Rune common.wgsl: gaussian falloff, and the two-lobe bloom profile
+// (tight core + wide halo) that fades out by reach.
+float gauss(float x, float w) { return exp(-(x * x) / max(w * w, 1e-6)); }
+float bloom(float d, float r, float reach) {
+  float o = max(d, 0.0);
+  float w = 1.0 - smoothstep(reach * 0.5, reach, o);
+  return (0.65 * gauss(o, r * 0.35) + 0.35 * gauss(o, r * 1.2)) * w;
+}
 
 float hash(vec3 p) {
   p = fract(p * 0.3183099 + 0.1);
@@ -115,7 +133,11 @@ void main() {
   float ring = exp(-pow((s - SH * 1.07) / 0.011, 2.0)) * 1.9;
   vec3 photon = uWhite * ring * doppler(p.x, s) * 0.8;
 
-  vec3 E = disk + lens + photon;
+  // Soft bloom hugging the shadow edge (Rune glow.wgsl, variant 0). Outside
+  // the shadow only; the roll-off below plays the role of Rune's knee().
+  vec3 glow = heat(0.3) * bloom(s - SH, 0.14, 0.4) * step(SH, s) * doppler(p.x, s) * 0.16 * uGlow;
+
+  vec3 E = disk + lens + photon + glow;
   E = 1.0 - exp(-E * 1.15);              // gentle highlight roll-off
   vec3 srgb = pow(E, vec3(1.0 / 2.2));
   float occ = shadow;
@@ -135,6 +157,7 @@ export function createBlackHoleMaterial(): THREE.ShaderMaterial {
       uSpin: { value: (Math.PI * 2) / DISK_PERIOD_SECONDS },
       uOpacity: { value: 1 },
       uDetail: { value: 1 },
+      uGlow: { value: 1 },
       uWhite: { value: new THREE.Color("#FFD2AE") },
       uEmber: { value: new THREE.Color(C.ember) },
       uTeal: { value: new THREE.Color(C.teal) },

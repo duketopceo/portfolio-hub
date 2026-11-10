@@ -2,11 +2,13 @@
 //
 //   node scripts/measure-background.mjs [--url http://127.0.0.1:3100] \
 //     [--path "/?cosmos=live"] [--chromium /usr/bin/chromium] [--gpu] \
-//     [--seconds 6] [--cpu-throttle 1] [--out dir]
+//     [--seconds 6] [--cpu-throttle 1] [--uncapped]
 //
 // Reports: WebGL renderer string, JS bytes transferred before the page is
 // idle, fps (rAF frame deltas) idle and while scrolling at 1440x900, and the
 // quality tier (`data-cosmos-tier`) and scene state (`data-scene`) reached.
+// `--uncapped` removes the vsync/frame-rate limit so fps shows the scene's real
+// cost instead of the display refresh (use it to compare two builds).
 // `--gpu` asks Chromium for a real GPU via ANGLE; without it you get whatever
 // the bundled browser picks (software GL in CI and in Playwright's build).
 import { chromium } from "@playwright/test";
@@ -27,9 +29,10 @@ const gpuArgs = flag("gpu")
   ? ["--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-zero-copy", "--use-gl=angle"]
   : [];
 
+const uncappedArgs = flag("uncapped") ? ["--disable-frame-rate-limit", "--disable-gpu-vsync"] : [];
 const browser = await chromium.launch({
   executablePath,
-  args: ["--enable-unsafe-swiftshader", ...gpuArgs],
+  args: ["--enable-unsafe-swiftshader", ...gpuArgs, ...uncappedArgs],
 });
 const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: "dark" });
 const page = await context.newPage();
@@ -118,7 +121,7 @@ const after = await state();
 
 console.log(
   JSON.stringify(
-    { url: `${url}${path}`, browser: executablePath ?? "playwright-bundled", gpuFlags: gpuArgs, renderer, cpuThrottle, jsBytesTransferred: jsBytes, before, idle, scrolling, after, logs },
+    { url: `${url}${path}`, browser: executablePath ?? "playwright-bundled", gpuFlags: [...gpuArgs, ...uncappedArgs], renderer, cpuThrottle, jsBytesTransferred: jsBytes, before, idle, scrolling, after, logs },
     null,
     2
   )

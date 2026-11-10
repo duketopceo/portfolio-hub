@@ -119,6 +119,8 @@ export default function BlackHoleSvg() {
 
       {/* Event-horizon shadow with a thin photon ring. */}
       <circle r={SHADOW} fill="#000" />
+      {/* Cheap stand-in for the live scene's soft ring glow: one blurred ring. */}
+      <circle r={SHADOW + 4} fill="none" stroke={C.ember} strokeOpacity="0.3" strokeWidth="6" filter="url(#bh-soft)" />
       <circle r={SHADOW + 1.1} fill="none" stroke="#FFC79E" strokeOpacity="0.85" strokeWidth="1.3" />
 
       {/* Near half of the disk crosses in front of the shadow. */}
