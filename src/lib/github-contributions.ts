@@ -26,15 +26,15 @@ const QUERY = `query SignalContributions($login: String!, $from: DateTime!, $to:
     contributionsCollection(from: $from, to: $to) {
       commitContributionsByRepository(maxRepositories: 100) {
         repository { name isPrivate owner { login } }
-        contributions(first: 100) { nodes { occurredAt commitCount } }
+        contributions(first: 100, orderBy: { field: OCCURRED_AT, direction: DESC }) { nodes { occurredAt commitCount } }
       }
       pullRequestContributionsByRepository(maxRepositories: 100) {
         repository { name isPrivate owner { login } }
-        contributions(first: 100) { nodes { occurredAt } }
+        contributions(first: 100, orderBy: { direction: DESC }) { nodes { occurredAt } }
       }
       issueContributionsByRepository(maxRepositories: 100) {
         repository { name isPrivate owner { login } }
-        contributions(first: 100) { nodes { occurredAt } }
+        contributions(first: 100, orderBy: { direction: DESC }) { nodes { occurredAt } }
       }
     }
   }

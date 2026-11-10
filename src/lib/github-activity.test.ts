@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   activityKindVerb,
   getHomepageActivityShowcase,
@@ -70,7 +70,6 @@ describe("getSignalActivity GitHub calls", () => {
   const featuredCount = 5;
 
   async function run(graphql: () => Response | Promise<Response>) {
-    const { vi } = await import("vitest");
     const calls: Array<{ url: string; method: string }> = [];
     vi.stubEnv("GITHUB_TOKEN", "test-token-not-real");
     vi.stubEnv("ACTIVITY_USE_FIXTURES", "");
