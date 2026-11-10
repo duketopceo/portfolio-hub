@@ -15,7 +15,16 @@ export default async function Home() {
     getEnrichedProjects(),
     getSignalActivity(),
   ]);
-  const signal = buildSignalSummary(activity.payloads, activity);
+  const signal = buildSignalSummary(
+    activity.payloads,
+    {
+      fetchedAt: activity.fetchedAt,
+      source: activity.source,
+      publicSlugs: activity.publicSlugs,
+      totalProjects: activity.totalProjects,
+    },
+    activity.contributions
+  );
   const lead = getHomepageOrbitProjects(all);
   const registryIndex = all.map((p) => p.slug);
   const leadIndex = lead.map((p) => Math.max(registryIndex.indexOf(p.slug), 0));

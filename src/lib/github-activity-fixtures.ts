@@ -3,6 +3,9 @@ import type {
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
 import { condenseProjectActivity } from "@/lib/activity-aggregate";
+import { listedProjects } from "@/lib/catalog";
+import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
+import type { SignalContribution } from "@/lib/signal-summary";
 
 const now = new Date("2026-08-19T12:00:00.000Z");
 
@@ -309,4 +312,32 @@ export function fixtureProjectActivity(slug: string): ProjectActivityPayload {
       },
     ],
   };
+}
+
+/**
+ * Fixture contributions for the signal: commits in a featured project plus
+ * several other catalog projects, so fixture builds show more than the five
+ * featured. Fixture-only; built from the live catalog so slugs stay valid.
+ */
+export function fixtureSignalContributions(): SignalContribution[] {
+  const featured = new Set<string>(HOMEPAGE_FEATURED_SLUGS);
+  const others = listedProjects()
+    .filter((p) => !p.private && p.repoName && !featured.has(p.slug))
+    .slice(0, 6);
+  const dayAgo = (n: number) =>
+    new Date(now.getTime() - n * 86_400_000).toISOString().slice(0, 10);
+  const mk = (slug: string, displayName: string, i: number): SignalContribution => ({
+    slug,
+    displayName,
+    catalogPrivate: false,
+    githubPrivate: false,
+    days: [
+      { date: dayAgo(i % 5), commits: 3 + i, prsOpened: i % 2, issuesOpened: 0 },
+      { date: dayAgo((i % 5) + 1), commits: 2, prsOpened: 0, issuesOpened: i % 3 === 0 ? 1 : 0 },
+    ],
+  });
+  return [
+    mk("kurultai", "Kurultai", 1),
+    ...others.map((p, i) => mk(p.slug, p.displayName, i + 2)),
+  ];
 }

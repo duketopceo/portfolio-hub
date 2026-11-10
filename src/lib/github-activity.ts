@@ -10,6 +10,7 @@ import {
 import {
   fixtureHomepageActivity,
   fixtureProjectActivity,
+  fixtureSignalContributions,
 } from "@/lib/github-activity-fixtures";
 import type {
   ActivityDayBucket,
@@ -21,7 +22,12 @@ import type {
   ProjectActivityPayload,
 } from "@/lib/github-activity-types";
 import { getGithubAccessToken } from "@/lib/github-app";
-import { GITHUB_ACCOUNT_LOGIN, GITHUB_API_BASE } from "@/lib/github-constants";
+import { getSignalContributions } from "@/lib/github-contributions";
+import type { SignalContribution } from "@/lib/signal-summary";
+import {
+  GITHUB_API_BASE,
+  resolveRepoOwner,
+} from "@/lib/github-constants";
 
 export const ACTIVITY_REVALIDATE_SECONDS = 3600;
 const MS_DAY = 86_400_000;
@@ -84,7 +90,7 @@ function featuredRepoTargets(): RepoTarget[] {
       slug,
       displayName: cfg.displayName,
       repoName: cfg.repoName,
-      repoOwner: cfg.repoOwner ?? GITHUB_ACCOUNT_LOGIN,
+      repoOwner: resolveRepoOwner(cfg),
       private: cfg.private,
     });
   }
@@ -98,15 +104,15 @@ function repoTargetForSlug(slug: string): RepoTarget | null {
     slug,
     displayName: cfg.displayName,
     repoName: cfg.repoName,
-    repoOwner: cfg.repoOwner ?? GITHUB_ACCOUNT_LOGIN,
+    repoOwner: resolveRepoOwner(cfg),
     private: cfg.private,
   };
 }
 
 async function ghGet<T>(path: string): Promise<T | null> {
-  const token = await getGithubAccessToken();
-  if (!token) return null;
   try {
+    const token = await getGithubAccessToken();
+    if (!token) return null;
     const res = await fetch(`${GITHUB_API_BASE}${path}`, {
       headers: {
         Accept: "application/vnd.github+json",
@@ -272,7 +278,7 @@ async function buildRepoActivity(
     !pulls.length &&
     !releases.length &&
     !issues.length &&
-    !(await getGithubAccessToken())
+    !(await getGithubAccessToken().catch(() => null))
   ) {
     return null;
   }
@@ -615,19 +621,46 @@ export async function getProjectActivityTimeline(
   };
 }
 
+/** Listed catalog projects the signal can show (those with a repository). */
+function signalCatalogCount(): number {
+  return listedProjects().filter((p) => p.repoName).length;
+}
+
+/**
+ * Positive visibility from this revalidate: true only when GitHub's repo
+ * metadata says `private: false`. Any failure or missing field is false, so
+ * the signal conceals the project (fail closed).
+ */
+async function repoReportedPublic(target: RepoTarget): Promise<boolean> {
+  const meta = await ghGet<{ private?: boolean }>(
+    `/repos/${encodeURIComponent(target.repoOwner)}/${encodeURIComponent(target.repoName)}`
+  );
+  return meta?.private === false;
+}
+
 /**
  * Server-only feed for the home signal glance: every featured project's full
  * activity history, quiet ones included. Never serialised to the client.
  */
 export async function getSignalActivity(): Promise<{
   payloads: ProjectActivityPayload[];
+  /** Account-wide commit/PR/issue counts per catalog project (signal only). */
+  contributions: SignalContribution[];
+  /** Slugs GitHub positively reported public in data fetched this call. */
+  publicSlugs: string[];
+  /** Listed catalog projects the signal considers (the "of M" denominator). */
+  totalProjects: number;
   fetchedAt: string;
   source: HomepageActivityPayload["source"];
 }> {
+  const totalProjects = signalCatalogCount();
   if (process.env.ACTIVITY_USE_FIXTURES === "1") {
     const f = fixtureHomepageActivity();
     return {
       payloads: f.repos.map((r) => r.activity),
+      contributions: fixtureSignalContributions(),
+      publicSlugs: f.repos.filter((r) => !r.private).map((r) => r.slug),
+      totalProjects,
       fetchedAt: f.fetchedAt,
       source: f.source,
     };
@@ -635,15 +668,41 @@ export async function getSignalActivity(): Promise<{
 
   const sinceMs = Date.now() - HISTORY_MS;
   const payloads: ProjectActivityPayload[] = [];
-  for (const target of featuredRepoTargets()) {
+  const targets = featuredRepoTargets();
+  // One extra GitHub call per revalidate; started first so it overlaps the
+  // per-repo fetches. It must never reject: failure resolves to [] and the
+  // signal renders without it.
+  const contributionsPromise = getSignalContributions(
+    sinceMs,
+    ACTIVITY_REVALIDATE_SECONDS
+  ).catch(() => [] as SignalContribution[]);
+  const visibilityPromise = Promise.all(
+    targets.map((t) =>
+      repoReportedPublic(t).catch(() => false)
+    )
+  );
+  for (const target of targets) {
     const activity = await buildRepoActivity(target, sinceMs);
     if (activity) payloads.push(activity);
   }
 
-  if (payloads.length === 0 && process.env.NODE_ENV === "test") {
+  const contributions = await contributionsPromise;
+  const visible = await visibilityPromise;
+  const publicSlugs = targets
+    .filter((_, i) => visible[i])
+    .map((t) => t.slug);
+
+  if (
+    payloads.length === 0 &&
+    contributions.length === 0 &&
+    process.env.NODE_ENV === "test"
+  ) {
     const f = fixtureHomepageActivity();
     return {
       payloads: f.repos.map((r) => r.activity),
+      contributions: [],
+      publicSlugs: f.repos.filter((r) => !r.private).map((r) => r.slug),
+      totalProjects,
       fetchedAt: f.fetchedAt,
       source: f.source,
     };
@@ -651,8 +710,11 @@ export async function getSignalActivity(): Promise<{
 
   return {
     payloads,
+    contributions,
+    publicSlugs,
+    totalProjects,
     fetchedAt: new Date().toISOString(),
-    source: payloads.length > 0 ? "github" : "empty",
+    source: payloads.length > 0 || contributions.length > 0 ? "github" : "empty",
   };
 }
 
