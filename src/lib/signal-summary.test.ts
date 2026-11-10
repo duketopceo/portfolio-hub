@@ -277,6 +277,14 @@ describe("signal with contributions", () => {
     expect(s.hiddenMovingCount).toBe(0);
   });
 
+  it("never shows one project's numbers on another", () => {
+    const s = buildSignalSummary([], META, [contrib("big", 34), contrib("small", 7)]);
+    const row = (slug: string) => s.rows.find((r) => r.slug === slug)!;
+    expect(formatCounts(row("big").counts7)).toBe("34 commits");
+    expect(formatCounts(row("small").counts7)).toBe("7 commits");
+    expect(row("big").events7).not.toBe(row("small").events7);
+  });
+
   it("caps at 8 moving rows and reports the overflow", () => {
     const cs = Array.from({ length: 11 }, (_, i) => contrib(`p${i}`, 20 - i));
     const s = buildSignalSummary([], META, cs);

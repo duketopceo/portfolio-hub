@@ -96,6 +96,33 @@ describe("parseContributionResponse", () => {
   });
 });
 
+describe("distinct projects keep distinct counts", () => {
+  const entry = (name: string, commitCount: number) => ({
+    repository: { name, isPrivate: false, owner: { login: "duketopceo" } },
+    contributions: { nodes: [{ occurredAt: "2026-11-10T00:00:00Z", commitCount }] },
+  });
+
+  it("maps two repos with different commit counts to two catalog rows with their own counts", () => {
+    const parsed = parseContributionResponse({
+      data: {
+        user: {
+          contributionsCollection: {
+            commitContributionsByRepository: [entry("alpha-repo", 34), entry("beta-repo", 7)],
+            pullRequestContributionsByRepository: [],
+            issueContributionsByRepository: [],
+          },
+        },
+      },
+    });
+    const mapped = mapContributionsToCatalog(parsed ?? [], [
+      { slug: "alpha", displayName: "Alpha", repoName: "alpha-repo", private: false },
+      { slug: "beta", displayName: "Beta", repoName: "beta-repo", private: false },
+    ] as unknown as ProjectConfig[]);
+    const commits = Object.fromEntries(mapped.map((c) => [c.slug, c.days[0].commits]));
+    expect(commits).toEqual({ alpha: 34, beta: 7 });
+  });
+});
+
 describe("day bucketing", () => {
   const entry = (nodes: object[]) => ({
     repository: { name: "a", isPrivate: false, owner: { login: "duketopceo" } },
