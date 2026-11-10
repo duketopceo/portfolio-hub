@@ -7,21 +7,17 @@ describe("cosmos layout", () => {
     expect(layoutVariant(1440, 900)).toBe("wide");
     expect(layoutVariant(1000, 1000)).toBe("wide");
   });
-  it.each(["wide", "tall"] as const)("%s places the black hole and three distinct planets in view", (v) => {
-    const ids = cosmosLayout(v).map((b) => b.id).sort();
-    expect(ids).toEqual(["blackhole", "gas", "ice", "rocky"]);
-    for (const b of cosmosLayout(v)) {
-      expect(b.x).toBeGreaterThan(0);
-      expect(b.x).toBeLessThan(1);
-      expect(b.y).toBeGreaterThan(0);
-      expect(b.y).toBeLessThan(1);
-    }
+  it.each(["wide", "tall"] as const)("%s places only the black hole, in view and off-centre", (v) => {
+    expect(cosmosLayout(v).map((b) => b.id)).toEqual(["blackhole"]);
+    const hole = bodyPlacement(v, "blackhole");
+    expect(hole.x).toBeGreaterThan(0.6);
+    expect(hole.x).toBeLessThan(1);
+    expect(hole.y).toBeGreaterThan(0);
+    expect(hole.y).toBeLessThan(0.5);
   });
-  it("keeps planets small next to the black hole (restraint)", () => {
-    for (const v of ["wide", "tall"] as const) {
-      const hole = bodyPlacement(v, "blackhole").size;
-      for (const id of ["rocky", "gas", "ice"] as const) expect(bodyPlacement(v, id).size).toBeLessThan(hole / 3);
-    }
+  it("keeps the black hole small: about a third of the old radius", () => {
+    expect(bodyPlacement("wide", "blackhole").size).toBeLessThanOrEqual(0.4);
+    expect(bodyPlacement("tall", "blackhole").size).toBeLessThanOrEqual(0.55);
   });
   it("scrolls bodies up, clamped, and fades them out at the top", () => {
     expect(scrollOffset(0, 900, 0.5)).toBe(-0);

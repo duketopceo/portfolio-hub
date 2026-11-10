@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseCosmosOverride, pickCosmosMode } from "./cosmos-mode";
+import { parseCosmosOverride, parseTierPin, pickCosmosMode } from "./cosmos-mode";
 
 const base = { reducedMotion: false, webgl: "gpu", saveData: false } as const;
 
@@ -32,5 +32,13 @@ describe("parseCosmosOverride", () => {
     expect(parseCosmosOverride("?a=1&cosmos=static")).toBe("static");
     expect(parseCosmosOverride("?cosmos=bogus")).toBeNull();
     expect(parseCosmosOverride("")).toBeNull();
+  });
+});
+
+describe("parseTierPin", () => {
+  it("is true only for cosmos-tier=pin", () => {
+    expect(parseTierPin("?cosmos=live&cosmos-tier=pin")).toBe(true);
+    expect(parseTierPin("?cosmos-tier=auto")).toBe(false);
+    expect(parseTierPin("")).toBe(false);
   });
 });

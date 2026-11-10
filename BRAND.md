@@ -193,10 +193,11 @@ redesign: change it only by an explicit owner decision recorded here.
 hole, crosshair/reticle markers in place of glowing planets" is superseded for
 the BACKGROUND ONLY. The site background now carries a slow black hole (dark
 core, thin bright accretion ring, one disk revolution per ~75 s; original
-design, no third-party mark) on every page, and, on the home page only, three
-planet types (cratered rock, banded gas giant, ringed ice world). The home
-project map (FIG.01/02) is unchanged: reticle-marked lit bodies as below. The
-black hole and background planets are scenery, never navigation or meaning.
+design, no third-party mark) on every page. **Round 2 (2026-11-09 plan, KD3):
+the three background planets are removed** and the hole shrinks to a small,
+dim, off-centre body so it recedes behind content. Planets live only in the
+home project map (FIG.01/02): reticle-marked lit bodies as below. The black
+hole is scenery, never navigation or meaning.
 
 Planets on the home map are real lit 3D bodies with procedural surfaces
 (rocky, gas, ice, cratered, terrain), lit by one key light with a hard
@@ -204,8 +205,7 @@ terminator, a 1px survey limb just outside the disc, and a reticle when
 focused. They never glow: no additive blending, no radial falloff outside the
 limb, no bloom. A thin atmosphere is allowed only as a rim tint blended
 INSIDE the silhouette on the lit side (strength capped at 0.5). On software GL
-the bodies fall back to line-art limbs and meridians. The background planets
-use the same shaders and rules; the black hole is the one deliberate
+the bodies fall back to line-art limbs and meridians. The black hole is the one deliberate
 exception (its accretion light is additive emission). See `docs/planets.md`.
 
 ---
@@ -219,10 +219,9 @@ crisp at any DPR, same palette and same positions as the live version):
 
 | Piece | Component | Live (WebGL / canvas) | Static (reduced motion, no WebGL, software GL, Save-Data, failure) | Where |
 |---|---|---|---|---|
-| Black hole | `BlackHole` | R3F shader via `SceneFrame`, ~75 s per revolution | `BlackHoleSvg`: shadow, photon ring, lensed arcs, tilted disk with brighter approaching limb | Site background, every page |
-| Planets (rocky, gas, ice + ring) | `CosmosPlanets` | Lit procedural spheres, same context | `PlanetSvg`: three lit SVG worlds, hard terminator, survey limb | Site background, home only |
+| Black hole | `BlackHole` | R3F shader via `SceneFrame`, ~75 s per revolution, small, dim and off-centre (about a third of the former radius, 0.5 max opacity) | `BlackHoleSvg`: shadow, photon ring, lensed arcs, tilted disk with brighter approaching limb; disk streaks turn in CSS, 60-90 s per turn (still under reduced motion) | Site background, every page |
 | Stardust | `StardustCanvas` | 2D canvas, sparse falling motes, idle at top of page, paused in hidden tabs | `StaticStardust`: frozen SVG pattern (dots, pop sparkles) | Pages that scroll, further down |
-| Living starfield | `StarfieldScene` | R3F, same context as the black hole | CSS stars (`cosmic-bg::before/::after`) | Site background |
+| Quiet starfield | `StarfieldScene` | R3F, same context as the black hole; dimmer than before, constellation links dropped on the low tier | CSS stars (`cosmic-bg::before/::after`) | Site background |
 | Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.01 (hero, beside the intro) |
 | Secondary belt | `BeltScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.02 |
 | Surveyed terrain | `SectorTerrain` | ThreeUI `constellation-field` / `topo-field` | Skips mounting | `/projects` sector map |
@@ -230,14 +229,25 @@ crisp at any DPR, same palette and same positions as the live version):
 | Hyperspace streaks | `WarpFieldLayer` | ThreeUI `warp-field/hyperspace` | Skips mounting | 404 plate |
 | Uplink loader | `UplinkLoader` | ThreeUI | Skips mounting | Route transitions (`loading.tsx`) |
 
-Background contract: ONE WebGL context for the whole background (the
-black hole, planets and stars share it); the live scene lazy-loads after first
-paint and only after a WebGL probe passes; DPR capped at 1.25; the frame loop
-pauses when the tab is hidden or the canvas is off screen; the static plate
+Background contract: the background is a black hole over a quiet starfield;
+planets never appear in it (they belong to the orbit figures, not the
+backdrop). ONE WebGL context for the whole background (hole and stars share
+it); the live scene lazy-loads after first paint and only after a WebGL probe
+passes. Only renderers named llvmpipe, SwiftShader or softpipe count as
+software GL and start on the static plate; Apple and unknown renderer strings
+start live and measurement decides. DPR is capped at 1 (0.75 on the low tier),
+`preserveDrawingBuffer` is off, and the frame loop pauses when the tab is
+hidden or the canvas is off screen. drei's `PerformanceMonitor` steps quality
+down when frames stay under 45 fps (budget: 55+ on integrated graphics): high
+(DPR 1, two shader octaves, star links) to low (DPR 0.75, one octave, no links)
+to the static plate, never back up, logging each step as `[cosmos] tier a -> b`
+and recording the rung in `data-cosmos-tier` on `.cosmic-bg`. The static plate
 hides only after the live scene's first rendered frame and returns if the
-scene is lost. Stardust is a separate 2D canvas (never a second WebGL
-context). `?cosmos=static` and `?cosmos=live` are QA overrides (live cannot
-beat reduced motion or a missing WebGL context).
+scene is lost or given up on; its CSS rotation stops while the live scene
+covers it. Stardust is a separate 2D canvas (never a second WebGL context).
+`?cosmos=static` and `?cosmos=live` are QA overrides (live cannot beat
+reduced motion or a missing WebGL context); `?cosmos-tier=pin` additionally
+holds full quality and skips the monitor, for tests on software GL.
 
 Canvas layers never carry meaning: semantic HTML, labels, and keyboard
 paths work with every layer disabled.

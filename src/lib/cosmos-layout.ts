@@ -1,11 +1,12 @@
 /**
- * Where each background body sits, shared by the WebGL scene and the static
- * SVG plate so the two renditions line up. Positions are fractions of the
+ * Where the background's one body (the black hole) sits, shared by the WebGL
+ * scene and the static SVG plate so the two renditions line up. The hole is
+ * small and off-centre so it recedes behind the content; no planets. Positions are fractions of the
  * viewport (0,0 top-left); sizes are fractions of the smaller viewport side.
  * Pure data and math: safe for server components and node tests.
  */
 
-export type BodyId = "blackhole" | "rocky" | "gas" | "ice";
+export type BodyId = "blackhole";
 
 export interface BodyPlacement {
   id: BodyId;
@@ -20,19 +21,11 @@ export interface BodyPlacement {
 
 export type LayoutVariant = "wide" | "tall";
 
-const WIDE: BodyPlacement[] = [
-  { id: "blackhole", x: 0.7, y: 0.36, size: 1.18, parallax: 0.32 },
-  { id: "ice", x: 0.965, y: 0.13, size: 0.085, parallax: 0.55 },
-  { id: "rocky", x: 0.025, y: 0.86, size: 0.075, parallax: 0.8 },
-  { id: "gas", x: 0.93, y: 0.88, size: 0.2, parallax: 0.65 },
-];
+// About a third of the previous radius (was 1.18 / 0.95), pushed to the
+// upper right so text columns stay clear of the bright ring.
+const WIDE: BodyPlacement[] = [{ id: "blackhole", x: 0.8, y: 0.3, size: 0.4, parallax: 0.32 }];
 
-const TALL: BodyPlacement[] = [
-  { id: "blackhole", x: 0.64, y: 0.11, size: 0.95, parallax: 0.32 },
-  { id: "ice", x: 0.15, y: 0.56, size: 0.15, parallax: 0.55 },
-  { id: "rocky", x: 0.88, y: 0.7, size: 0.11, parallax: 0.8 },
-  { id: "gas", x: 0.84, y: 0.94, size: 0.28, parallax: 0.65 },
-];
+const TALL: BodyPlacement[] = [{ id: "blackhole", x: 0.72, y: 0.1, size: 0.55, parallax: 0.32 }];
 
 /** Portrait viewports get their own arrangement; everything else is "wide". */
 export function layoutVariant(width: number, height: number): LayoutVariant {

@@ -61,7 +61,7 @@ function makeMaterial(opacity: number, size: number, shared: SharedUniforms) {
   });
 }
 
-export default function StarfieldScene() {
+export default function StarfieldScene({ links = true }: { links?: boolean }) {
   const group = useRef<THREE.Group>(null);
   const pointerTarget = useRef(new THREE.Vector2());
   const pixelRatio = useThree((s) => s.gl.getPixelRatio());
@@ -89,14 +89,14 @@ export default function StarfieldScene() {
       return {
         pointsGeometry: pg,
         linesGeometry: lg,
-        pointsMaterial: makeMaterial(0.8, 2.4, shared),
-        linesMaterial: makeMaterial(0.1, 1, shared),
+        pointsMaterial: makeMaterial(0.62, 2.2, shared),
+        linesMaterial: makeMaterial(0.06, 1, shared),
         shared,
       };
     }, []);
 
   useEffect(() => {
-    setUniform(pointsMaterial, "uSize", 2.4 * pixelRatio);
+    setUniform(pointsMaterial, "uSize", 2.2 * pixelRatio);
   }, [pointsMaterial, pixelRatio]);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ export default function StarfieldScene() {
   return (
     <group ref={group}>
       <points geometry={pointsGeometry} material={pointsMaterial} />
-      <lineSegments geometry={linesGeometry} material={linesMaterial} />
+      {links && <lineSegments geometry={linesGeometry} material={linesMaterial} />}
     </group>
   );
 }

@@ -105,7 +105,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
 
         await expectNoHorizontalOverflow(page);
         await expect(page.locator("main")).toBeVisible();
-        // The fixed full-viewport cosmic background (black hole, planets,
+        // The fixed full-viewport cosmic background (black hole,
         // stardust, stars; canvas and SVG layers) is animated and would paint
         // over the hero; .cosmic-bg contains every such layer, so hide it for
         // baselines only. Its static renditions have their own deterministic
@@ -197,7 +197,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "static");
-    await expect(page.locator(".cosmic-bg .cosmos-plate svg")).toHaveCount(4);
+    await expect(page.locator(".cosmic-bg .cosmos-plate svg")).toHaveCount(1);
     await expect(page.locator(".cosmic-bg canvas")).toHaveCount(0);
   });
 
@@ -205,7 +205,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
     page,
   }) => {
     test.setTimeout(120_000);
-    await page.goto("/?cosmos=live", { waitUntil: "networkidle" });
+    await page.goto("/?cosmos=live&cosmos-tier=pin", { waitUntil: "networkidle" });
     const canvases = page.locator(".cosmic-bg canvas[data-engine]");
     await expect(canvases).toHaveCount(1, { timeout: 30_000 });
     await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "live", {
@@ -217,21 +217,35 @@ test.describe("Portfolio visual acceptance matrix", () => {
       await expect
         .poll(
           () =>
-            canvas.evaluate((element) => {
-              const source = element as HTMLCanvasElement;
-              const probe = document.createElement("canvas");
-              probe.width = Math.max(1, Math.min(320, source.width));
-              probe.height = Math.max(1, Math.min(180, source.height));
-              const context = probe.getContext("2d");
-              if (!context) return 0;
-              context.drawImage(source, 0, 0, probe.width, probe.height);
-              const pixels = context.getImageData(0, 0, probe.width, probe.height).data;
-              let painted = 0;
-              for (let i = 3; i < pixels.length; i += 4) {
-                if (pixels[i] > 0) painted += 1;
-              }
-              return painted;
-            }),
+            // The background canvas does not preserve its drawing buffer, so
+            // read it inside animation frames and keep the best of a few.
+            canvas.evaluate(
+              (element) =>
+                new Promise<number>((resolve) => {
+                  const source = element as HTMLCanvasElement;
+                  let best = 0;
+                  let frames = 0;
+                  const sample = () => {
+                    const probe = document.createElement("canvas");
+                    probe.width = Math.max(1, Math.min(320, source.width));
+                    probe.height = Math.max(1, Math.min(180, source.height));
+                    const context = probe.getContext("2d");
+                    if (context) {
+                      context.drawImage(source, 0, 0, probe.width, probe.height);
+                      const pixels = context.getImageData(0, 0, probe.width, probe.height).data;
+                      let painted = 0;
+                      for (let i = 3; i < pixels.length; i += 4) {
+                        if (pixels[i] > 0) painted += 1;
+                      }
+                      best = Math.max(best, painted);
+                    }
+                    frames += 1;
+                    if (frames < 40) requestAnimationFrame(sample);
+                    else resolve(best);
+                  };
+                  requestAnimationFrame(sample);
+                }),
+            ),
           { timeout: 30_000 },
         )
         .toBeGreaterThan(100);
@@ -242,18 +256,39 @@ test.describe("Portfolio visual acceptance matrix", () => {
     page,
   }) => {
     test.setTimeout(120_000);
-    await page.goto("/about?cosmos=live", { waitUntil: "networkidle" });
+    await page.goto("/about?cosmos=live&cosmos-tier=pin", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(1, { timeout: 30_000 });
-    // Planets are home-only: no planet bodies in the static plate off home.
-    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-home", "false");
-    await expect(page.locator(".cosmos-body:not(.cosmos-body--blackhole)").first()).toBeHidden();
+    // The background is a black hole only: no planet bodies on any page.
+    await expect(page.locator(".cosmos-body")).toHaveCount(1);
+    await expect(page.locator(".cosmos-body--blackhole")).toHaveCount(1);
+  });
+
+  // Software GL here runs the live scene at about 10 fps, well under budget:
+  // the monitor must step quality down, then hand the stage to the plate.
+  test("live scene steps quality down and then switches to the static plate when frames stay slow", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    const tierLogs: string[] = [];
+    page.on("console", (m) => {
+      if (m.text().startsWith("[cosmos]")) tierLogs.push(m.text());
+    });
+    await page.goto("/about?cosmos=live", { waitUntil: "networkidle" });
+    const bg = page.locator(".cosmic-bg");
+    await expect(bg).toHaveAttribute("data-cosmos-tier", "low", { timeout: 60_000 });
+    await expect(bg).toHaveAttribute("data-cosmos-tier", "plate", { timeout: 60_000 });
+    await expect(bg).toHaveAttribute("data-scene", "plate");
+    await expect(bg).toHaveAttribute("data-cosmos", "static");
+    await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(0);
+    expect(tierLogs.some((l) => l.includes("high -> low"))).toBe(true);
+    expect(tierLogs.some((l) => l.includes("low -> plate"))).toBe(true);
   });
 
   test("live scene hands back to the static plate when WebGL context is lost", async ({
     page,
   }) => {
     test.setTimeout(120_000);
-    await page.goto("/about?cosmos=live", { waitUntil: "networkidle" });
+    await page.goto("/about?cosmos=live&cosmos-tier=pin", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "live", {
       timeout: 60_000,
     });
@@ -313,6 +348,39 @@ test.describe("Portfolio visual acceptance matrix", () => {
       );
     });
   }
+
+  // R6: the plate's disk streaks turn slowly in CSS when motion is allowed
+  // and WebGL is missing; reduced motion shows them still.
+  const streakAnimation = (page: import("@playwright/test").Page) =>
+    page.locator(".cosmos-bh-streak--a").first().evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { name: cs.animationName, duration: cs.animationDuration };
+    });
+
+  test("without WebGL the black hole rotates in CSS over 60-90 s", async ({ page }) => {
+    await page.addInitScript(() => {
+      const original = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
+        if (/webgl/i.test(type)) return null;
+        return (original as (...a: unknown[]) => unknown).call(this, type, ...rest);
+      } as typeof original;
+    });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "static");
+    const a = await streakAnimation(page);
+    expect(a.name).toBe("cosmos-bh-turn");
+    const seconds = Number.parseFloat(a.duration);
+    expect(seconds).toBeGreaterThanOrEqual(60);
+    expect(seconds).toBeLessThanOrEqual(90);
+    const d = await page.locator(".cosmos-bh-streak--d").first().evaluate((el) => getComputedStyle(el).animationDuration);
+    expect(Number.parseFloat(d)).toBeLessThanOrEqual(90);
+  });
+
+  test("reduced motion shows the black hole still, with no animation", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/", { waitUntil: "networkidle" });
+    expect((await streakAnimation(page)).name).toBe("none");
+  });
 
   test("reduced motion creates no WebGL canvases", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });

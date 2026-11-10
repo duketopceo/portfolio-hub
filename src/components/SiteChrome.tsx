@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useCosmosMode } from "@/components/cosmos/use-cosmos-mode";
+import type { CosmosTier } from "@/lib/cosmos-quality";
 
 const CosmosLive = dynamic(() => import("@/components/cosmos/CosmosLive"), {
   ssr: false,
@@ -21,12 +22,15 @@ export function SiteFooter({ children }: { children: ReactNode }) {
 }
 
 /**
- * Site background. The static plate (SVG black hole, three planets, CSS
- * stardust) is server-rendered and is what first paint, reduced motion, and
- * every WebGL failure show. After first paint, when the visitor allows motion
- * and a real GPU context exists, the live scene mounts on top (one WebGL
+ * Site background. The static plate (SVG black hole over CSS stars and
+ * stardust; the hole turns slowly in CSS unless reduced motion) is
+ * server-rendered and is what first paint, reduced motion, and every WebGL
+ * failure show. After first paint, when the visitor allows motion and WebGL
+ * is not a named software rasteriser, the live scene mounts on top (one WebGL
  * context, via SceneFrame) and the plate steps aside only once its first
- * frame has rendered; if the scene is lost, the plate comes back.
+ * frame has rendered. If the scene is lost the plate comes back; if the frame
+ * rate stays under budget the scene steps its quality down and then gives up
+ * for the rest of the visit (`data-cosmos-tier` records the rung).
  */
 export function SiteBackground({
   plate,
@@ -38,8 +42,10 @@ export function SiteBackground({
   const pathname = usePathname();
   const mode = useCosmosMode();
   const [sceneReady, setSceneReady] = useState(false);
-  const live = mode === "live";
-  const home = pathname === "/";
+  const [gaveUp, setGaveUp] = useState(false);
+  const [tier, setTier] = useState<CosmosTier>("high");
+  const onGiveUp = useCallback(() => setGaveUp(true), []);
+  const live = mode === "live" && !gaveUp;
   const [scrollable, setScrollable] = useState(false);
   // Stardust only on pages long enough to scroll.
   useEffect(() => {
@@ -57,7 +63,7 @@ export function SiteBackground({
       aria-hidden="true"
       data-cosmos={live ? "live" : "static"}
       data-scene={live && sceneReady ? "live" : "plate"}
-      data-home={home ? "true" : "false"}
+      data-cosmos-tier={mode === "live" ? tier : undefined}
       data-scrollable={scrollable ? "true" : "false"}
     >
       {plate}
@@ -66,7 +72,7 @@ export function SiteBackground({
         {live && scrollable ? <StardustCanvas /> : null}
       </div>
       {live ? (
-        <CosmosLive planets={home} onReadyChange={setSceneReady} />
+        <CosmosLive onReadyChange={setSceneReady} onTierChange={setTier} onGiveUp={onGiveUp} />
       ) : null}
       <div className="cosmic-bg__grid" />
       <div className="cosmic-bg__stars cosmic-bg__stars--far" />

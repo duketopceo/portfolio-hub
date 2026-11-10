@@ -7,6 +7,38 @@ import { COSMOS_PALETTE as C } from "@/lib/palette";
  * the WebGL scene (components/scene/BlackHole.tsx); stands in for it under
  * reduced motion and when WebGL is unavailable or fails.
  */
+/**
+ * Broken elliptical streaks that circle the disk. Each ring is one dashed
+ * ellipse whose dash offset animates (cosmos.css, 60-90 s per turn, inner
+ * rings faster), so the plate rotates without any script. pathLength is
+ * normalised to 100 and every dash pattern sums to a divisor of 100, so the
+ * loop is seamless. The far half sits under the shadow, like the disk.
+ */
+const STREAKS = [
+  { r: 30, dash: "5 3 2 10", cls: "a", opacity: 0.55 },
+  { r: 44, dash: "8 4 3 5", cls: "b", opacity: 0.4 },
+  { r: 58, dash: "4 11 6 4", cls: "c", opacity: 0.3 },
+  { r: 70, dash: "9 6 2 8", cls: "d", opacity: 0.22 },
+] as const;
+
+function DiskStreaks({ tilt }: { tilt: number }) {
+  return (
+    <g fill="none" stroke="#FFD2AE" strokeWidth="0.9" strokeLinecap="round">
+      {STREAKS.map((s) => (
+        <ellipse
+          key={s.cls}
+          className={`cosmos-bh-streak cosmos-bh-streak--${s.cls}`}
+          rx={s.r}
+          ry={s.r * tilt}
+          pathLength={100}
+          strokeDasharray={s.dash}
+          strokeOpacity={s.opacity}
+        />
+      ))}
+    </g>
+  );
+}
+
 export default function BlackHoleSvg() {
   const R = 80; // disk outer radius (thin, dim wings; the ring carries the light)
   const TILT = 0.2; // ellipse minor/major
@@ -60,6 +92,7 @@ export default function BlackHoleSvg() {
       <g mask="url(#bh-doppler-mask)">
         {/* Whole disk first: its far half is hidden by the shadow below. */}
         <ellipse rx={R} ry={R * TILT} fill="url(#bh-disk)" opacity="0.75" />
+        <DiskStreaks tilt={TILT} />
 
         {/* Light bent over the top and under the bottom of the hole. */}
         <g fill="none" strokeLinecap="round">
@@ -91,6 +124,7 @@ export default function BlackHoleSvg() {
       {/* Near half of the disk crosses in front of the shadow. */}
       <g clipPath="url(#bh-front)" mask="url(#bh-doppler-mask)">
         <ellipse rx={R} ry={R * TILT} fill="url(#bh-disk)" />
+        <DiskStreaks tilt={TILT} />
       </g>
     </svg>
   );

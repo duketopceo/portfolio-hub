@@ -3,7 +3,7 @@ import { shouldSkipScene } from "@/lib/render-capability";
 
 /**
  * "static": the server-rendered SVG plate and CSS stardust only.
- * "live": the WebGL black hole + planets and the canvas stardust.
+ * "live": the WebGL black hole over the starfield and the canvas stardust.
  */
 export type CosmosMode = "static" | "live";
 
@@ -13,6 +13,14 @@ export type CosmosOverride = "live" | "static" | null;
 export function parseCosmosOverride(search: string): CosmosOverride {
   const v = new URLSearchParams(search).get("cosmos");
   return v === "live" || v === "static" ? v : null;
+}
+
+/**
+ * `?cosmos-tier=pin` QA override: hold the live scene at full quality and
+ * skip the frame-rate monitor, so tests on software GL are not stepped down.
+ */
+export function parseTierPin(search: string): boolean {
+  return new URLSearchParams(search).get("cosmos-tier") === "pin";
 }
 
 export interface CosmosModeInput {

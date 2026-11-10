@@ -9,6 +9,7 @@ import { COSMOS_PALETTE as C } from "@/lib/palette";
  * marching): an event-horizon shadow, a tilted disk with differential
  * rotation and Doppler beaming, and light bent over and under the shadow.
  * Style: dark core, thin bright accretion ring, slow rotation. Original design, same composition as the static plate (BlackHoleSvg).
+ * Cost: two noise octaves (one on the low quality tier), see cosmos-quality.ts.
  *
  * Compositing is "emission + occlusion": the output is premultiplied, with
  * rgb = emitted light and alpha = how much of the background the shadow
@@ -32,6 +33,7 @@ varying vec2 vP;
 uniform float uTime;
 uniform float uSpin;      // rad/s at mid-radius
 uniform float uOpacity;
+uniform float uDetail;    // 1 = two noise octaves, 0 = one (low quality tier)
 uniform vec3 uWhite;
 uniform vec3 uEmber;
 uniform vec3 uTeal;
@@ -58,7 +60,11 @@ float vnoise(vec3 x) {
 float streaks(float rr, float ang) {
   // Frequency high in radius, low in angle: azimuthal streaks that rotate.
   vec3 q = vec3(rr * 15.0, cos(ang) * 2.4, sin(ang) * 2.4);
-  return 0.55 * vnoise(q) + 0.3 * vnoise(q * 2.1 + 7.0) + 0.15 * vnoise(q * 4.3 + 13.0);
+  // Two octaves (was three); the second is skipped entirely on the low tier.
+  float n = 0.7 * vnoise(q);
+  if (uDetail > 0.5) n += 0.3 * vnoise(q * 2.1 + 7.0);
+  else n += 0.15;
+  return n;
 }
 vec3 heat(float t) {
   // white-hot rim -> ember body -> dark ember -> teal dust at the edge
@@ -127,6 +133,7 @@ export function createBlackHoleMaterial(): THREE.ShaderMaterial {
       uTime: { value: 0 },
       uSpin: { value: (Math.PI * 2) / DISK_PERIOD_SECONDS },
       uOpacity: { value: 1 },
+      uDetail: { value: 1 },
       uWhite: { value: new THREE.Color("#FFD2AE") },
       uEmber: { value: new THREE.Color(C.ember) },
       uTeal: { value: new THREE.Color(C.teal) },
