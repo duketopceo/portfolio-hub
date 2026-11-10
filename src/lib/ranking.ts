@@ -1,7 +1,6 @@
 import { RANKING_PINS } from "@/data/ranking-pins";
 import snapshotJson from "@/data/ranking-snapshot.json";
 import {
-  DEFAULT_PIN_COUNT,
   buildRanking as buildRankingCore,
   type Rankable,
   type RankingSnapshot,
@@ -11,7 +10,6 @@ export {
   categoryGroups,
   leadProjects,
   orderByRank,
-  rankOf,
   restProjects,
 } from "@/lib/ranking-core";
 export type { CategoryGroup } from "@/lib/ranking-core";
@@ -38,7 +36,7 @@ export function buildRanking<T extends Rankable>(
   return buildRankingCore(projects, {
     snapshot: options.snapshot ?? rankingSnapshot,
     pins: options.pins ?? RANKING_PINS,
-    pinCount: options.pinCount ?? DEFAULT_PIN_COUNT,
+    pinCount: options.pinCount,
     onSubstitute: options.onSubstitute,
   });
 }

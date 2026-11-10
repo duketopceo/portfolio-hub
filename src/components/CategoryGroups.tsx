@@ -6,16 +6,17 @@ import ProjectCard from "./ProjectCard";
 /**
  * The ranked projects after the lead block, grouped by category. Groups
  * appear in order of their best-ranked project; cards keep rank order.
- * `registry` supplies each project's stable CI number.
+ * `registrySlugs` (catalog order) supplies each project's stable CI number.
  */
 export default function CategoryGroups({
   ranked,
-  registry,
+  registrySlugs,
 }: {
   ranked: readonly EnrichedProject[];
-  registry: readonly EnrichedProject[];
+  registrySlugs: readonly string[];
 }) {
   const groups = categoryGroups(ranked);
+  const registryIndex = new Map(registrySlugs.map((slug, i) => [slug, i] as const));
   return (
     <div className="category-groups">
       {groups.map((g) => {
@@ -34,7 +35,7 @@ export default function CategoryGroups({
                 <ProjectCard
                   key={project.slug}
                   project={project}
-                  registryIndex={registry.findIndex((p) => p.slug === project.slug)}
+                  registryIndex={registryIndex.get(project.slug) ?? -1}
                 />
               ))}
             </div>

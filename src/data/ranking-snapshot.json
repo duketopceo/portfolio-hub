@@ -44,16 +44,6 @@
       }
     },
     {
-      "slug": "pace-server",
-      "score": 162,
-      "inputs": {
-        "stars": 1,
-        "commits": 1597,
-        "lastPush": "2026-11-09T23:40:10Z",
-        "hasRelease": true
-      }
-    },
-    {
       "slug": "dayflow-linux",
       "score": 161,
       "inputs": {
@@ -64,13 +54,13 @@
       }
     },
     {
-      "slug": "khan",
-      "score": 148,
+      "slug": "pace-server",
+      "score": 161,
       "inputs": {
-        "stars": 1,
-        "commits": 2824,
-        "lastPush": "2026-10-27T16:41:39Z",
-        "hasRelease": false
+        "stars": 0,
+        "commits": 1500,
+        "lastPush": "2026-11-01T00:00:00Z",
+        "hasRelease": true
       }
     },
     {
@@ -80,6 +70,16 @@
         "stars": 0,
         "commits": 36,
         "lastPush": "2026-10-27T08:40:27Z",
+        "hasRelease": false
+      }
+    },
+    {
+      "slug": "khan",
+      "score": 143,
+      "inputs": {
+        "stars": 0,
+        "commits": 2800,
+        "lastPush": "2026-10-01T00:00:00Z",
         "hasRelease": false
       }
     },
@@ -95,11 +95,11 @@
     },
     {
       "slug": "kate",
-      "score": 125,
+      "score": 124,
       "inputs": {
         "stars": 0,
-        "commits": 212,
-        "lastPush": "2026-11-09T15:01:59Z",
+        "commits": 200,
+        "lastPush": "2026-11-01T00:00:00Z",
         "hasRelease": false
       }
     },
@@ -254,26 +254,6 @@
       }
     },
     {
-      "slug": "luke-agents",
-      "score": 91,
-      "inputs": {
-        "stars": 1,
-        "commits": 188,
-        "lastPush": "2026-11-09T15:02:17Z",
-        "hasRelease": true
-      }
-    },
-    {
-      "slug": "cairn",
-      "score": 88,
-      "inputs": {
-        "stars": 0,
-        "commits": 45,
-        "lastPush": "2026-11-09T09:24:00Z",
-        "hasRelease": true
-      }
-    },
-    {
       "slug": "helm-qmk-macropad",
       "score": 88,
       "inputs": {
@@ -284,23 +264,23 @@
       }
     },
     {
-      "slug": "homelab",
-      "score": 86,
-      "inputs": {
-        "stars": 1,
-        "commits": 68,
-        "lastPush": "2026-11-05T17:35:54Z",
-        "hasRelease": true
-      }
-    },
-    {
       "slug": "rts-skyrim",
       "score": 86,
       "inputs": {
         "stars": 0,
-        "commits": 202,
-        "lastPush": "2026-11-09T15:04:21Z",
+        "commits": 200,
+        "lastPush": "2026-11-01T00:00:00Z",
         "hasRelease": false
+      }
+    },
+    {
+      "slug": "cairn",
+      "score": 85,
+      "inputs": {
+        "stars": 0,
+        "commits": 0,
+        "lastPush": "2026-11-01T00:00:00Z",
+        "hasRelease": true
       }
     },
     {
@@ -314,32 +294,52 @@
       }
     },
     {
-      "slug": "scooter-ios",
-      "score": 84,
+      "slug": "luke-agents",
+      "score": 83,
       "inputs": {
         "stars": 0,
-        "commits": 18,
-        "lastPush": "2026-11-09T09:05:36Z",
+        "commits": 100,
+        "lastPush": "2026-11-01T00:00:00Z",
+        "hasRelease": true
+      }
+    },
+    {
+      "slug": "scooter-ios",
+      "score": 83,
+      "inputs": {
+        "stars": 0,
+        "commits": 0,
+        "lastPush": "2026-11-01T00:00:00Z",
+        "hasRelease": true
+      }
+    },
+    {
+      "slug": "homelab",
+      "score": 80,
+      "inputs": {
+        "stars": 0,
+        "commits": 0,
+        "lastPush": "2026-11-01T00:00:00Z",
         "hasRelease": true
       }
     },
     {
       "slug": "bartlett-permits",
-      "score": 83,
+      "score": 72,
       "inputs": {
         "stars": 0,
-        "commits": 90,
-        "lastPush": "2026-10-27T16:42:30Z",
+        "commits": 0,
+        "lastPush": "2026-10-01T00:00:00Z",
         "hasRelease": true
       }
     },
     {
       "slug": "personal-blog",
-      "score": 72,
+      "score": 64,
       "inputs": {
         "stars": 0,
-        "commits": 48,
-        "lastPush": "2026-10-27T16:42:23Z",
+        "commits": 0,
+        "lastPush": "2026-10-01T00:00:00Z",
         "hasRelease": true
       }
     },

@@ -342,8 +342,8 @@ async function main() {
       preferCSSPageSize: true,
     });
     const pages = (pdfBuffer.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length;
-    if (pages > MAX_PAGES) {
-      throw new Error(`resume PDF is ${pages} pages; the limit is ${MAX_PAGES}`);
+    if (pages < 1 || pages > MAX_PAGES) {
+      throw new Error(`resume PDF is ${pages} pages; expected 1 to ${MAX_PAGES}`);
     }
     writeFileSync(outPath, pdfBuffer);
     console.log(`Wrote ${outPath} (${pdfBuffer.length} bytes)`);

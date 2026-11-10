@@ -20,9 +20,8 @@ export default function LeadProjectCard({
 }) {
   const meta = categoryMeta[project.category];
   const video = mediaAsset(project.media.release) ?? mediaAsset(project.media.demo);
-  const href = video
-    ? `/projects/${project.slug}#video`
-    : `/projects/${project.slug}`;
+  const dossier = `/projects/${project.slug}`;
+  const href = video ? `${dossier}#video` : dossier;
   const accent = catColors[project.category] || "#2DD4BF";
   const live = isProjectLive(project);
 
@@ -77,13 +76,13 @@ export default function LeadProjectCard({
           {live && <span className="lead-card__live">Live</span>}
         </p>
         <h3 className="lead-card__title">
-          <Link href={`/projects/${project.slug}`} prefetch={false}>
+          <Link href={dossier} prefetch={false}>
             {project.displayName}
           </Link>
         </h3>
         <p className="lead-card__tagline">{project.tagline}</p>
         <Link
-          href={`/projects/${project.slug}`}
+          href={dossier}
           className="lead-card__cta detail-nav-link"
           prefetch={false}
         >

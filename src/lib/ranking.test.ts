@@ -60,6 +60,12 @@ describe("buildRanking", () => {
     expect(sub).toHaveBeenCalledWith("hidden", "b");
   });
 
+  it("deduplicates a repeated pin instead of showing a project twice", () => {
+    const out = buildRanking(projects, { snapshot: scores, pins: ["a", "a", "c"] });
+    expect(out.map((p) => p.slug).filter((s) => s === "a")).toHaveLength(1);
+    expect(new Set(out.map((p) => p.slug)).size).toBe(out.length);
+  });
+
   it("gives the same order on every run regardless of the date", () => {
     vi.useFakeTimers();
     try {
@@ -108,9 +114,39 @@ describe("committed snapshot", () => {
     expect(ranked).toHaveLength(listed.length);
   });
 
+  it("stores private projects' activity coarsely (no stars, rounded commits, month-only push)", () => {
+    const privateSlugs = new Set(projectConfigs.filter((p) => p.private).map((p) => p.slug));
+    const raw = JSON.parse(readFileSync(join(__dirname, "../data/ranking-snapshot.json"), "utf8")) as {
+      entries: { slug: string; inputs: { stars: number; commits: number; lastPush: string | null } }[];
+    };
+    for (const e of raw.entries.filter((x) => privateSlugs.has(x.slug))) {
+      expect(e.inputs.stars).toBe(0);
+      expect(e.inputs.commits % 100).toBe(0);
+      if (e.inputs.lastPush) expect(e.inputs.lastPush).toMatch(/^\d{4}-\d{2}-01T00:00:00Z$/);
+    }
+  });
+
   it("holds only slugs and numbers, never an owner/repo path or URL", () => {
     const raw = readFileSync(join(__dirname, "../data/ranking-snapshot.json"), "utf8");
     expect(raw).not.toMatch(/duketopceo\/|github\.com|https?:/);
+  });
+});
+
+describe("listed predicate", () => {
+  it("the core's inline predicate agrees with isListedProject", () => {
+    const cases = [
+      {},
+      { parentSlug: "x" },
+      { era: "earlier" as const },
+      { parentSlug: "x", era: "earlier" as const },
+    ];
+    for (const c of cases) {
+      const ranked = buildRanking([{ slug: "s", displayName: "S", ...c }], {
+        snapshot: snap({ s: 1 }),
+        pins: [],
+      });
+      expect(ranked.length === 1).toBe(isListedProject(c));
+    }
   });
 });
 

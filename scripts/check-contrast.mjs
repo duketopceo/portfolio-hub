@@ -63,7 +63,14 @@ for (const f of files) {
       for (const s of SURFACES) {
         const fg = tokens[text];
         const bg = tokens[s];
-        if (!fg || !bg) continue;
+        if (!fg || !bg) {
+          // A named theme must define every token: a skipped pair is a silent pass.
+          if (name !== "default" && (own[text] || own[s] || base[text] || base[s])) {
+            failed = true;
+            console.log(`FAIL ${f} [${name}] ${text} on ${s}: token missing or not a #RRGGBB hex`);
+          }
+          continue;
+        }
         const r = ratio(fg, bg);
         const ok = r >= MIN;
         if (!ok) failed = true;

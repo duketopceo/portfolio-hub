@@ -99,7 +99,7 @@ export default async function Home() {
             title={<span id="home-rest-heading">More projects</span>}
             description={`${rest.length} more, strongest first within each category.`}
           />
-          <CategoryGroups ranked={ranked} registry={all} />
+          <CategoryGroups ranked={ranked} registrySlugs={all.map((p) => p.slug)} />
         </section>
 
         {/* 5 — closing action */}

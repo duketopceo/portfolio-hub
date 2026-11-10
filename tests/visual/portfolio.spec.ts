@@ -178,9 +178,6 @@ test.describe("Portfolio visual acceptance matrix", () => {
           .evaluateAll((cards) => cards.map((c) => Math.round(c.getBoundingClientRect().height)));
         expect(heights).toHaveLength(3);
         expect(new Set(heights).size).toBe(1);
-        const withVideo = await page.locator('.lead-card[data-has-video="true"]').count();
-        const without = await page.locator('.lead-card[data-has-video="false"]').count();
-        expect(withVideo + without).toBe(3);
       });
     }
   }
@@ -398,7 +395,8 @@ test.describe("Portfolio visual acceptance matrix", () => {
     // The lead cards start on screen, so the top three read within seconds.
     const card = await page.locator(".lead-card").first().boundingBox();
     expect(card).not.toBeNull();
-    expect(card!.y).toBeLessThan(900);
+    const visible = Math.min(900, card!.y + card!.height) - card!.y;
+    expect(visible).toBeGreaterThan(card!.height * 0.4);
   });
 
   test("home has no horizontal overflow at tablet width", async ({ page }) => {

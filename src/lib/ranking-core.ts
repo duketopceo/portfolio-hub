@@ -36,7 +36,7 @@ function scoreMap(snapshot: RankingSnapshot): Map<string, number> {
 /**
  * Flat ranking of the listed projects in `projects`.
  * A pinned slug that is not listed is skipped and the next-ranked project
- * fills its slot; `onSubstitute` receives each skipped pin.
+ * takes a lead slot after the listed pins (pin order is display order); `onSubstitute` receives each skipped pin.
  */
 export function buildRanking<T extends Rankable>(
   projects: readonly T[],
@@ -60,7 +60,7 @@ export function buildRanking<T extends Rankable>(
 
   const leads: T[] = [];
   const skipped: string[] = [];
-  for (const slug of pins.slice(0, pinCount)) {
+  for (const slug of [...new Set(pins)].slice(0, pinCount)) {
     const p = bySlug.get(slug);
     if (p) leads.push(p);
     else skipped.push(slug);
@@ -127,9 +127,4 @@ export function categoryGroups<T extends { category: string }>(
     else groups.set(p.category, [p]);
   }
   return [...groups].map(([category, projects]) => ({ category, projects }));
-}
-
-/** Zero-based rank of a slug in a ranked list, or -1. */
-export function rankOf(ranked: readonly { slug: string }[], slug: string): number {
-  return ranked.findIndex((p) => p.slug === slug);
 }

@@ -36,7 +36,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
     (p) => activeCategory === "all" || p.category === activeCategory
   );
   const showBands = activeCategory === "all";
-  const registryOf = (slug: string) => registrySlugs.indexOf(slug);
+  const registryIndex = new Map(registrySlugs.map((slug, i) => [slug, i] as const));
 
   const scopeLabel =
     activeCategory !== "all"
@@ -124,7 +124,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
               ))}
             </div>
           </section>
-          <CategoryGroups ranked={filtered} registry={projects} />
+          <CategoryGroups ranked={filtered} registrySlugs={registrySlugs} />
         </>
       ) : (
         <div className="catalog-grid">
@@ -132,7 +132,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
             <ProjectCard
               key={project.slug}
               project={project}
-              registryIndex={registryOf(project.slug)}
+              registryIndex={registryIndex.get(project.slug) ?? -1}
             />
           ))}
         </div>

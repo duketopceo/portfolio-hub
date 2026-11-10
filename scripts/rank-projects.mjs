@@ -4,6 +4,7 @@
 //
 // Usage:
 //   node scripts/rank-projects.mjs --refresh   fetch activity with the gh CLI, rewrite the snapshot
+//   node scripts/rank-projects.mjs --rebuild   recompute scores from the stored inputs (no network) and rewrite
 //   node scripts/rank-projects.mjs --check     recompute from the stored inputs; exit 1 on drift
 //   node scripts/rank-projects.mjs --top 15    print the ranked slugs (no network)
 //
@@ -22,6 +23,7 @@ const snapshotPath = join(root, "src/data/ranking-snapshot.json");
 // Both files are import-free TypeScript, so native type stripping loads them.
 const { extendedScore } = await import("../src/lib/ranking-score.ts");
 const { getPrimaryDeployment } = await import("../src/data/deployments.ts");
+const { isListedProject } = await import("../src/lib/catalog-filter.ts");
 
 const args = process.argv.slice(2);
 const flag = (n) => args.includes(n);
@@ -34,10 +36,10 @@ function fail(msg) {
 function listedEntries() {
   return catalogFileNames(catalogDir)
     .map((f) => JSON.parse(readFileSync(join(catalogDir, f), "utf8")))
-    .filter((e) => !e.curated.parentSlug && e.curated.era !== "earlier");
+    .filter((e) => isListedProject(e.curated));
 }
 
-/** Same shape the app builds from an enriched project (deployment overlay included). */
+/** Builds the score input from a catalog entry (deployment overlay included). */
 function scoreEntry(entry, input, now) {
   const c = entry.curated;
   const dep = getPrimaryDeployment(entry.slug);
@@ -108,10 +110,25 @@ function fetchActivity(entries) {
 
 const EMPTY = { stars: 0, commits: 0, lastPush: null, hasRelease: false };
 
+/**
+ * The snapshot is committed to a public repository, so a private project's
+ * activity is stored coarsely: commits rounded down to the hundred, last push
+ * to its month, no star count. Idempotent, so --check agrees with --refresh.
+ */
+function coarsen(input) {
+  return {
+    stars: 0,
+    commits: Math.floor(input.commits / 100) * 100,
+    lastPush: input.lastPush ? `${input.lastPush.slice(0, 7)}-01T00:00:00Z` : null,
+    hasRelease: input.hasRelease,
+  };
+}
+
 function build(entries, inputs, asOf) {
   const now = Date.parse(`${asOf}T00:00:00Z`);
   const rows = entries.map((e) => {
-    const input = inputs[e.slug] ?? EMPTY;
+    const raw = inputs[e.slug] ?? EMPTY;
+    const input = e.curated.private ? coarsen(raw) : raw;
     return { slug: e.slug, name: e.curated.displayName, input, score: scoreEntry(e, input, now) };
   });
   rows.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
@@ -138,6 +155,13 @@ if (flag("--refresh")) {
   const snap = build(entries, fetchActivity(entries), asOf);
   writeFileSync(snapshotPath, JSON.stringify(snap, null, 2) + "\n");
   console.log(`rank-projects: wrote ${snap.entries.length} entries (asOf ${asOf})`);
+} else if (flag("--rebuild")) {
+  const prev = readSnapshot();
+  if (!prev) fail("no snapshot; run --refresh");
+  const inputs = Object.fromEntries(prev.entries.map((e) => [e.slug, e.inputs]));
+  const snap = build(entries, inputs, prev.asOf);
+  writeFileSync(snapshotPath, JSON.stringify(snap, null, 2) + "\n");
+  console.log(`rank-projects: rebuilt ${snap.entries.length} entries from stored inputs (asOf ${prev.asOf})`);
 } else if (flag("--check")) {
   const prev = readSnapshot();
   if (!prev) fail("no snapshot; run --refresh");
@@ -154,5 +178,5 @@ if (flag("--refresh")) {
   const names = Object.fromEntries(entries.map((e) => [e.slug, e.curated.displayName]));
   prev.entries.slice(0, n).forEach((e, i) => console.log(`${i + 1}. ${e.slug} (${names[e.slug]}) ${e.score}`));
 } else {
-  fail("pass --refresh, --check or --top <n>");
+  fail("pass --refresh, --rebuild, --check or --top <n>");
 }

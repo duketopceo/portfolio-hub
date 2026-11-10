@@ -11,7 +11,7 @@ describe("check-contrast.mjs", () => {
     const out = execFileSync("node", [script], { encoding: "utf8" });
     expect(out).not.toContain("FAIL");
     for (const theme of ["ink", "paper"]) {
-      for (const token of ["color-text ", "color-text-muted", "color-accent"]) {
+      for (const token of ["color-text ", "color-text-muted", "color-text-faint", "color-accent", "color-signal", "color-pop"]) {
         expect(out).toContain(`[${theme}] ${token}`);
       }
     }
@@ -29,5 +29,18 @@ describe("check-contrast.mjs", () => {
     expect(r.status).toBe(1);
     expect(r.stdout).toMatch(/FAIL .*\[paper\] color-text-faint/);
     expect(r.stdout).toMatch(/ok .*\[ink\] color-text /);
+  });
+
+  it("fails when a named theme leaves a text token undefined or non-hex", () => {
+    const dir = mkdtempSync(join(tmpdir(), "contrast-"));
+    const file = join(dir, "tokens.css");
+    writeFileSync(
+      file,
+      `:root { --color-bg: #000000; --color-surface: #000000; --color-surface-2: #000000; --color-surface-3: #000000; --color-text: #ffffff; --color-text-muted: #ffffff; --color-text-faint: #ffffff; }
+       :root[data-theme="paper"] { --color-bg: #ffffff; --color-surface: #ffffff; --color-surface-2: #ffffff; --color-surface-3: #ffffff; --color-text: rgb(0, 0, 0); --color-text-muted: #000000; --color-text-faint: #000000; }`
+    );
+    const r = spawnSync("node", [script, "--file", file], { encoding: "utf8" });
+    expect(r.status).toBe(1);
+    expect(r.stdout).toMatch(/FAIL .*\[paper\] .*not a #RRGGBB hex/);
   });
 });

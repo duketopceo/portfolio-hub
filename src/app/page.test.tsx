@@ -45,16 +45,20 @@ describe("home layout", () => {
     const html = await home();
     const signal = html.indexOf("home-transmissions-heading");
     expect(signal).toBeGreaterThan(-1);
-    const positions = RANKING_PINS.map((slug) =>
-      html.indexOf(`data-lead-rank="${RANKING_PINS.indexOf(slug) + 1}"`)
-    );
-    for (const pos of positions) {
-      expect(pos).toBeGreaterThan(-1);
-      expect(pos).toBeLessThan(signal);
-    }
-    RANKING_PINS.forEach((slug) => {
-      expect(html.indexOf(`href="/projects/${slug}`)).toBeLessThan(signal);
+    const cards = [...html.matchAll(/<article class="lead-card"[^>]*data-lead-rank="(\d)"[\s\S]*?<\/article>/g)];
+    expect(cards.map((m) => m[1])).toEqual(["1", "2", "3"]);
+    cards.forEach((m, i) => {
+      expect(m[0]).toContain(`href="/projects/${RANKING_PINS[i]}`);
+      expect(m.index!).toBeLessThan(signal);
     });
+  });
+
+  it("never renders a private project's repository path or GitHub URL", async () => {
+    const html = await home();
+    for (const p of projectConfigs.filter((c) => c.private)) {
+      expect(html).not.toContain(`github.com/duketopceo/${p.repoName}`);
+      expect(html).not.toContain(`duketopceo/${p.repoName}`);
+    }
   });
 
   it("drops the orbit poster and its map", async () => {

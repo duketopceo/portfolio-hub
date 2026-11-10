@@ -39,7 +39,7 @@ export interface ActivityInput {
 }
 
 /** Recency bonus by age of the last activity. */
-export function recencyScore(iso: string | null, now: number): number {
+function recencyScore(iso: string | null, now: number): number {
   if (!iso) return 0;
   const t = new Date(iso).getTime();
   if (Number.isNaN(t)) return 0;
