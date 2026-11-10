@@ -11,7 +11,7 @@
     "planetVisual": {
       "size": "lg",
       "shape": "sphere",
-      "color": "#34D399",
+      "color": "#2DD4BF",
       "surface": "rocky",
       "seed": 11,
       "tilt": 16,

@@ -11,7 +11,7 @@
     "planetVisual": {
       "size": "lg",
       "shape": "sphere",
-      "color": "#F472B6",
+      "color": "#FF5C1A",
       "rings": [
         {
           "opacity": 0.24,

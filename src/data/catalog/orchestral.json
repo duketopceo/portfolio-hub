@@ -11,7 +11,7 @@
     "planetVisual": {
       "size": "lg",
       "shape": "sphere",
-      "color": "#38BDF8",
+      "color": "#2DD4BF",
       "moons": [
         {
           "label": "OpenRouter",

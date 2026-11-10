@@ -29,16 +29,18 @@
   --color-nebula-purple: rgba(60, 30, 90, 0.3);
   --color-nebula-teal: rgba(20, 90, 85, 0.25);
 
-  /* ── Category Colors ───────────────────── */
+  /* ── Category Colors (folded into the 3-color palette) ── */
+  --color-signal: #FF5C1A;
+  --color-pop: #A78BFA;
   --color-cat-finance: #2DD4BF;
   --color-cat-ai: #A78BFA;
-  --color-cat-osint: #FBBF24;
-  --color-cat-data: #38BDF8;
-  --color-cat-infra: #F472B6;
-  --color-cat-apps: #34D399;
+  --color-cat-osint: #FF5C1A;
+  --color-cat-data: #2DD4BF;
+  --color-cat-infra: #9AA3AC;
+  --color-cat-apps: #2DD4BF;
 
   /* ── Status ────────────────────────────── */
-  --color-live: #34D399;
+  --color-live: #2DD4BF;
 
   /* ── Glass ─────────────────────────────── */
   --glass-bg: rgba(12, 18, 30, 0.7);

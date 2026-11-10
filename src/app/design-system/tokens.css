@@ -14,15 +14,25 @@
   --color-text-muted: #9AA3AC;
   --color-text-faint: #7E8A96;
 
-  /* Signal teal — live + interactive only */
+  /* PALETTE (BRAND.md, 2026-11-10): two complements + one pop.
+     teal  --color-accent  interactive + live
+     ember --color-signal  classified / alert / accretion heat
+     pop   --color-pop     starlight sparkle, rare highlight
+     Everything else is neutral. Mirrored in src/lib/palette.ts. */
+
+  /* Complement A: signal teal — live + interactive */
   --color-accent: #2DD4BF;
   --color-accent-muted: rgba(45, 212, 191, 0.12);
   --color-accent-subtle: rgba(45, 212, 191, 0.06);
   --color-accent-glow: rgba(45, 212, 191, 0.15);
 
-  /* Classification marks — dossier redaction / alert only */
+  /* Complement B: ember orange — classification, alert, disk heat */
   --color-signal: #FF5C1A;
   --color-signal-muted: rgba(255, 92, 26, 0.14);
+
+  /* Pop: ultraviolet — falling starlight and rare highlights only */
+  --color-pop: #A78BFA;
+  --color-pop-muted: rgba(167, 139, 250, 0.16);
   --color-redact: #C9CDD2;
 
   /* Chart overlays */
@@ -30,8 +40,8 @@
   --chart-grid-major: rgba(228, 234, 240, 0.06);
   --chart-tick: rgba(228, 234, 240, 0.28);
 
-  /* Status */
-  --color-live: #34D399;
+  /* Status — folded into the accent (green retired 2026-11-10) */
+  --color-live: var(--color-accent);
 
   /* Panel (replaces glass — solid, squared, hairline) */
   --glass-bg: rgba(11, 15, 19, 0.88);

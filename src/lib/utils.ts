@@ -40,14 +40,16 @@ export const languageColors: Record<string, string> = {
 
 /**
  * Category-to-accent-color mapping used across navigation, cards, and graphs.
+ * Folded into the three-color palette (teal, ember, ultraviolet) plus a neutral;
+ * mirrors COSMOS_PALETTE in palette.ts.
  */
 export const catColors: Record<string, string> = {
   finance: "#2DD4BF",
   ai: "#A78BFA",
-  osint: "#FBBF24",
-  data: "#38BDF8",
-  infra: "#F472B6",
-  apps: "#34D399",
+  osint: "#FF5C1A",
+  data: "#2DD4BF",
+  infra: "#9AA3AC",
+  apps: "#2DD4BF",
 };
 
 /**

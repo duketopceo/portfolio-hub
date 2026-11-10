@@ -12,30 +12,15 @@ import {
 } from "react";
 import { Canvas, useFrame, useThree, type CameraProps, type RootState } from "@react-three/fiber";
 import { useMediaQuery } from "@/lib/use-media-query";
-import { framePolicy, readRendererString, shouldUseShader } from "@/lib/render-capability";
+import { framePolicy } from "@/lib/render-capability";
+import { probeWebGL } from "@/lib/webgl-probe";
 
 /** Frame-rate cap while a software rasteriser is drawing the scene. */
 const SOFTWARE_FPS = 10;
 
-let softwareRenderer: boolean | undefined;
-
-/**
- * True when WebGL here is a software rasteriser (llvmpipe, SwiftShader).
- * Probed once on a throwaway context so antialias / DPR / frame rate can be
- * chosen before the real context exists. Unknown renderers count as software.
- */
+/** True when WebGL here is a software rasteriser (see probeWebGL). */
 function isSoftwareRenderer(): boolean {
-  if (softwareRenderer !== undefined) return softwareRenderer;
-  if (typeof document === "undefined") return false;
-  let gl: WebGLRenderingContext | null = null;
-  try {
-    gl = document.createElement("canvas").getContext("webgl");
-    softwareRenderer = !shouldUseShader(readRendererString(gl));
-  } catch {
-    softwareRenderer = true;
-  }
-  gl?.getExtension("WEBGL_lose_context")?.loseContext();
-  return softwareRenderer;
+  return probeWebGL() !== "gpu";
 }
 
 /**
