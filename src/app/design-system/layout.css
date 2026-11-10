@@ -53,9 +53,18 @@
   gap: var(--space-component-1);
 }
 
+/* Five leads, one ranked order: three across, then two wider cards. */
 @media (min-width: 900px) {
   .lead-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .lead-grid > .lead-card {
+    grid-column: span 2;
+  }
+
+  .lead-grid > .lead-card:nth-child(n + 4) {
+    grid-column: span 3;
   }
 }
 
@@ -148,7 +157,7 @@
 
 .lead-card__body {
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr auto auto;
   gap: var(--space-micro-2);
   padding: var(--space-component-1);
   min-width: 0;
@@ -191,15 +200,80 @@
   text-decoration: none;
 }
 
-.lead-card__tagline {
-  /* Three lines reserved so every card has the same body height. */
-  min-height: calc(3 * 1.5em);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  color: var(--color-text-muted);
+.lead-card__outcome {
+  color: var(--color-text);
   line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.lead-card__proof {
+  display: grid;
+  align-content: start;
+  gap: var(--space-micro-2);
+  min-width: 0;
+}
+
+.lead-card__metrics {
+  display: grid;
+  gap: var(--space-micro-1);
+  margin: 0;
+}
+
+.lead-card__metric {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-micro-1) var(--space-control-1);
+  padding-block: var(--space-micro-1);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.lead-card__metric dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.lead-card__metric dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.lead-card__proof-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-micro-1) var(--space-control-2);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.lead-card__proof-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.lead-card__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-micro-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lead-card__stack li {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
 }
 
 .lead-card__cta {
@@ -210,7 +284,7 @@
   align-items: center;
 }
 
-/* ── Category groups ───────────────────────────────────── */
+/* ── Capability groups ───────────────────────────────────── */
 .home-leads,
 .home-rest,
 .projects-leads {
@@ -281,4 +355,195 @@
   display: grid;
   justify-items: center;
   gap: var(--space-control-2);
+}
+
+/* ── Dossier measured proof ────────────────────────────── */
+.dossier-evidence {
+  display: grid;
+  gap: var(--space-control-2);
+  margin: 0;
+}
+
+.dossier-evidence__note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ── Project sphere ────────────────────────────────────── */
+.project-sphere {
+  display: grid;
+  gap: var(--space-component-1);
+  margin: 0;
+  justify-items: center;
+}
+
+.project-sphere__svg {
+  width: min(100%, 26rem);
+  height: auto;
+  aspect-ratio: 1;
+  overflow: visible;
+  touch-action: manipulation;
+}
+
+.project-sphere--compact .project-sphere__svg {
+  width: min(100%, 17rem);
+}
+
+.project-sphere__limb {
+  fill: none;
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+}
+
+.project-sphere__wire {
+  fill: none;
+  stroke: var(--color-text-faint);
+  stroke-width: 0.6;
+  opacity: 0.55;
+}
+
+.project-sphere__wire--back {
+  opacity: 0.14;
+}
+
+.project-sphere__wire--edge {
+  stroke-width: 0.9;
+}
+
+.project-sphere__dot {
+  cursor: pointer;
+  outline: none;
+}
+
+.project-sphere__hit {
+  fill: transparent;
+}
+
+.project-sphere__point {
+  transition: stroke-width var(--transition);
+  stroke: var(--color-bg);
+  stroke-width: 0.8;
+}
+
+.project-sphere__dot:hover .project-sphere__point,
+.project-sphere__dot:focus-visible .project-sphere__point {
+  stroke: var(--color-text);
+  stroke-width: 1.6;
+}
+
+.project-sphere__label rect {
+  fill: var(--color-surface-2);
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+}
+
+.project-sphere__label text {
+  fill: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.project-sphere__caption {
+  display: grid;
+  gap: var(--space-control-2);
+  width: 100%;
+  justify-items: center;
+}
+
+.project-sphere__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-micro-1) var(--space-component-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-sphere__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-micro-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.project-sphere__swatch {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+}
+
+.project-sphere__legend-count {
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.project-sphere__details {
+  width: 100%;
+  max-width: 52rem;
+}
+
+.project-sphere__details summary {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+}
+
+.project-sphere__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--space-component-1);
+  padding-top: var(--space-control-2);
+}
+
+.project-sphere__list h3 {
+  margin: 0 0 var(--space-micro-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.project-sphere__list ul {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-sphere__list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.project-sphere__list a:hover,
+.project-sphere__list a:focus-visible {
+  color: var(--color-text);
+}
+
+.home-map {
+  display: grid;
+  gap: var(--space-component-1);
+  justify-items: center;
+  text-align: center;
+}
+
+.projects-map {
+  display: grid;
+  gap: var(--space-component-1);
+  margin-bottom: var(--space-section-1);
 }

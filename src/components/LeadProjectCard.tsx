@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { capabilityOf } from "@/data/capability-meta";
 import { categoryMeta } from "@/data/category-meta";
-import { isProjectLive } from "@/lib/deployments";
+import { isProjectLive, projectLiveHref } from "@/lib/deployments";
 import { mediaAsset, type EnrichedProject } from "@/lib/types";
 import { catColors } from "@/lib/utils";
 
 /**
- * One of the three lead projects (KTD3). Every card has the same footprint:
+ * One of the five lead projects (KTD3). Every card has the same footprint:
  * a fixed-ratio figure over a fixed body. With a video the figure is the
  * poster and a play affordance that opens the dossier's video section (never
  * autoplay); without one it is the project's typographic block.
@@ -18,12 +19,15 @@ export default function LeadProjectCard({
   /** One-based ranking position. */
   rank: number;
 }) {
+  const group = capabilityOf(project);
   const meta = categoryMeta[project.category];
   const video = mediaAsset(project.media.release) ?? mediaAsset(project.media.demo);
   const dossier = `/projects/${project.slug}`;
   const href = video ? `${dossier}#video` : dossier;
-  const accent = catColors[project.category] || "#2DD4BF";
+  const accent = group?.color ?? (catColors[project.category] || "#2DD4BF");
   const live = isProjectLive(project);
+  const measured = project.measured ?? [];
+  const liveHref = projectLiveHref(project);
 
   return (
     <article
@@ -72,7 +76,7 @@ export default function LeadProjectCard({
       <div className="lead-card__body">
         <p className="lead-card__kicker">
           <span className="lead-card__rank">{String(rank).padStart(2, "0")}</span>
-          <span>{meta?.label ?? project.category}</span>
+          <span>{group?.label ?? meta?.label ?? project.category}</span>
           {live && <span className="lead-card__live">Live</span>}
         </p>
         <h3 className="lead-card__title">
@@ -80,7 +84,52 @@ export default function LeadProjectCard({
             {project.displayName}
           </Link>
         </h3>
-        <p className="lead-card__tagline">{project.tagline}</p>
+        <p className="lead-card__outcome">{project.outcome ?? project.tagline}</p>
+        <div className="lead-card__proof">
+          {measured.length > 0 && (
+            <dl className="lead-card__metrics">
+              {measured.map((m) => (
+                <div key={m.label} className="lead-card__metric">
+                  <dt>{m.label}</dt>
+                  <dd>{m.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          <p className="lead-card__proof-links">
+            {measured.length > 0 && (
+              <Link href={`${dossier}#evidence`} prefetch={false} className="detail-nav-link">
+                Sources and method
+              </Link>
+            )}
+            {liveHref && (
+              <a
+                href={liveHref}
+                className="detail-nav-link"
+                {...(liveHref.startsWith("http")
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+              >
+                {liveHref.startsWith("/") ? "Demo" : "Live ↗"}
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                className="detail-nav-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Source ↗
+              </a>
+            )}
+          </p>
+        </div>
+        <ul className="lead-card__stack" aria-label="Stack">
+          {project.techStack.slice(0, 4).map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
         <Link
           href={dossier}
           className="lead-card__cta detail-nav-link"

@@ -6,6 +6,7 @@
     "tagline": "Script-driven multi-agent orchestration across harnesses",
     "description": "Cross-harness dynamic workflows: script-driven multi-agent orchestration spanning Devin, Claude Code, Codex, and OpenCode, with plugins for each.",
     "category": "ai",
+    "capability": "agents-computer-use",
     "type": "platform",
     "featured": false,
     "techStack": [

@@ -6,6 +6,7 @@
     "tagline": "Context compaction for agent harnesses: keep what still matters, tombstone the rest",
     "description": "A retention filter for agent transcripts, not a summarizer. A decision model scores each span against the conversation's moving highlight; top spans stay verbatim, the middle band becomes one-line tombstones, and the full transcript stays on disk. An MCP restore server rehydrates any tombstone on demand. A heuristic scorer works offline with no keys.",
     "category": "ai",
+    "capability": "retrieval-memory",
     "type": "library",
     "featured": false,
     "techStack": [

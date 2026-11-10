@@ -4,8 +4,10 @@
   "curated": {
     "displayName": "Orchestral",
     "tagline": "OpenRouter eval harness for cheap orchestrator + worker stacks",
+    "outcome": "Measures whether cheap orchestrator and worker models pass real tasks, and prices every pass.",
     "description": "Eval harness that tests whether a cheap orchestrator plus cheap workers can produce frontier-quality output through OpenRouter routing.",
     "category": "ai",
+    "capability": "evals-routing",
     "type": "experiment",
     "featured": true,
     "planetVisual": {

@@ -6,6 +6,7 @@
     "tagline": "Sustained production platform — Hetzner, Railway, Cloudflare, Grafana-as-code",
     "description": "Pace Server (Pace HQ) is the sustained production platform: Rust/Axum gateway, Go/Chi agent backend, and scaffolded Python/LangGraph reasoning on Supabase Postgres with RLS. Identity, billing (Stripe), and auth (Stytch) are live at pacehq.io and app.pacehq.io. Remaining ~20%: real tool execution and the Python reasoning service — not vapor.",
     "category": "ai",
+    "capability": "products",
     "type": "platform",
     "featured": true,
     "planetVisual": {

@@ -6,6 +6,7 @@
     "tagline": "Speech-to-text dictation on Groq's inference API",
     "description": "AI-powered speech-to-text dictation — an alternative to hosted dictation tools, built on Groq's low-latency inference API.",
     "category": "apps",
+    "capability": "products",
     "type": "app",
     "featured": false,
     "techStack": [

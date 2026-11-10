@@ -6,6 +6,7 @@
     "tagline": "Personal blog and writing platform",
     "description": "Custom-built blogging platform with a headless CMS backend, server-side rendered with Next.js for SEO optimization. Features a clean reading experience with automatic dark mode, code syntax highlighting with language detection, and RSS feed generation. The editing interface supports markdown with live preview and image optimization.",
     "category": "apps",
+    "capability": "products",
     "type": "app",
     "featured": false,
     "liveUrl": "https://blog.luke-the-duke.com",

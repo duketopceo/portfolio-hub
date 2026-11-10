@@ -2,6 +2,7 @@ import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
 import { formatMonthYear, languageColors, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/category-meta";
+import { capabilityOf } from "@/data/capability-meta";
 import { isProjectLive } from "@/lib/deployments";
 import { getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
@@ -18,6 +19,7 @@ export default function ProjectCard({
   registryIndex,
 }: ProjectCardProps) {
   const meta = categoryMeta[project.category];
+  const group = capabilityOf(project);
   const hasDemo = isProjectLive(project);
   const demoUrl = project.liveUrl || project.demoUrl;
   const langColor = project.language
@@ -29,7 +31,7 @@ export default function ProjectCard({
   const updated = formatMonthYear(project.lastUpdated);
   const release = project.private ? undefined : project.latestRelease;
   const releasedOn = release ? formatMonthYear(release.publishedAt) : "";
-  const accentColor = catColors[project.category] || "#2DD4BF";
+  const accentColor = group?.color ?? (catColors[project.category] || "#2DD4BF");
 
   return (
     <article
@@ -51,7 +53,7 @@ export default function ProjectCard({
             </div>
             <div className="cosmic-project-card__labels">
               <span className="cosmic-card-category">
-                {meta?.label || project.category}
+                {group?.label ?? meta?.label ?? project.category}
               </span>
               {project.private && (
                 <span className="cosmic-card-pill cosmic-card-pill--private">

@@ -4,8 +4,10 @@
   "curated": {
     "displayName": "Kurultai",
     "tagline": "Rust knowledge brain — MCP retrieval, Vite/React 3D graph, OpenRouter Kimi swarm",
+    "outcome": "A Rust retrieval daemon that gives agents hybrid search and memory over notes, transcripts and repositories through MCP.",
     "description": "Kurultai is a Rust + axum knowledge layer with MCP tools, SQLite storage (FTS5, sqlite-vec; sqlCipher/lock patterns where evidenced — not PostgreSQL), and a Vite/React 3D brain visualizing 2000+ nodes. OpenRouter Kimi swarm handles multi-agent retrieval. Built for open, showcasable knowledge infrastructure — heterogeneous sources through connectors, agent-native retrieval without another siloed RAG stack.",
     "category": "ai",
+    "capability": "retrieval-memory",
     "type": "platform",
     "featured": true,
     "planetVisual": {

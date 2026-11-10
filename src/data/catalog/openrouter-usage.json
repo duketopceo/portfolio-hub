@@ -6,6 +6,7 @@
     "tagline": "Workspace-aware OpenRouter org spend dashboard",
     "description": "Agent Zero plugin for OpenRouter org spend analytics — per-key, per-model, and per-provider breakdowns, budgets, and routing recommendations.",
     "category": "ai",
+    "capability": "evals-routing",
     "type": "platform",
     "featured": false,
     "techStack": [

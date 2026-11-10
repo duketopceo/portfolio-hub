@@ -15,6 +15,7 @@ import { isProjectLive } from "@/lib/deployments";
 import { componentsOf } from "@/lib/catalog";
 import { catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/projects";
+import { capabilityOf } from "@/data/capability-meta";
 import DemoEmbed from "@/components/DemoEmbed";
 import {
   ProjectHero,
@@ -23,6 +24,7 @@ import {
   DossierBody,
   ProjectMediaSection,
   ComponentsList,
+  DossierEvidence,
 } from "@/components/dossier";
 import { DossierDemoSection } from "@/components/dossier/demo/DossierDemoSection";
 import { getProjectActivityTimeline } from "@/lib/github-activity";
@@ -81,7 +83,9 @@ export default async function ProjectDetailPage({
       : null,
   ]);
 
-  const meta = categoryMeta[project.category];
+  const categoryEntry = categoryMeta[project.category];
+  const group = capabilityOf(project);
+  const meta = categoryEntry && { ...categoryEntry, label: group?.label ?? categoryEntry.label };
   const hasDemo = isProjectLive(project);
   const embedUrl = project.liveUrl || project.demoUrl || "";
   const isExternalEmbed =
@@ -89,10 +93,10 @@ export default async function ProjectDetailPage({
   const useIframeEmbed =
     isExternalEmbed && !project.demoOffline && project.embeddable === true;
 
-  const accentColor = catColors[project.category] || "#2dd4bf";
+  const accentColor = group?.color ?? (catColors[project.category] || "#2dd4bf");
 
   const relatedProjects = allProjects
-    .filter((p) => p.category === project.category && p.slug !== project.slug)
+    .filter((p) => p.capability === project.capability && p.slug !== project.slug)
     .slice(0, 3);
 
   const pageStyle = {
@@ -113,6 +117,8 @@ export default async function ProjectDetailPage({
         title={project.displayName}
         slug={project.slug}
       />
+
+      <DossierEvidence measured={project.measured} />
 
       {githubActivity && (
         <DossierActivityTimeline

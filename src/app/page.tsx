@@ -5,12 +5,14 @@ import { getSignalActivity } from "@/lib/github-activity";
 import { buildSignalSummary } from "@/lib/signal-summary";
 import { SignalGlance } from "@/components/SignalGlance";
 import LeadProjectCard from "@/components/LeadProjectCard";
-import CategoryGroups from "@/components/CategoryGroups";
+import CapabilityGroups from "@/components/CapabilityGroups";
+import ProjectSphere from "@/components/sphere/ProjectSphere";
+import { toSphereProjects } from "@/lib/sphere-projects";
 import { ActionRow, PageShell, SectionHeading } from "@/components/design";
 
 export const revalidate = 3600;
 
-/** Projects shown per category group on home; /projects lists them all. */
+/** Projects shown per capability group on home; /projects lists them all. */
 const HOME_GROUP_LIMIT = 4;
 
 export default async function Home() {
@@ -70,7 +72,7 @@ export default async function Home() {
       </header>
 
       <PageShell className="home-flow" measure="wide">
-        {/* 2 — the three lead projects */}
+        {/* 2 — the five lead projects */}
         <section className="home-leads" aria-labelledby="home-leads-heading">
           <SectionHeading
             eyebrow="Lead work"
@@ -81,6 +83,24 @@ export default async function Home() {
               <LeadProjectCard key={p.slug} project={p} rank={i + 1} />
             ))}
           </div>
+        </section>
+
+        {/* 2b — every project on one sphere, by capability */}
+        <section className="home-map" aria-labelledby="home-map-heading">
+          <SectionHeading
+            eyebrow="Sector map"
+            title={<span id="home-map-heading">Everything, by capability</span>}
+            description="One dot per project. Hover or focus a dot for its name; open it for the dossier."
+          />
+          <ProjectSphere projects={toSphereProjects(ranked)} variant="compact" />
+          <Link
+            href="/projects"
+            className="detail-cta detail-cta--secondary"
+            data-umami-event="home-cta"
+            data-umami-event-target="map"
+          >
+            Explore the map →
+          </Link>
         </section>
 
         {/* 3 — compact activity strip */}
@@ -94,14 +114,14 @@ export default async function Home() {
           <SignalGlance summary={signal} />
         </section>
 
-        {/* 4 — everything else, ranked, by category */}
+        {/* 4 — everything else, ranked, by capability */}
         <section className="home-rest" aria-labelledby="home-rest-heading">
           <SectionHeading
             eyebrow="The rest of the work"
             title={<span id="home-rest-heading">More projects</span>}
-            description="The top of each category, strongest first."
+            description="The top of each capability group, strongest first."
           />
-          <CategoryGroups
+          <CapabilityGroups
             ranked={ranked}
             registrySlugs={all.map((p) => p.slug)}
             limit={HOME_GROUP_LIMIT}

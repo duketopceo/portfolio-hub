@@ -4,8 +4,10 @@
   "curated": {
     "displayName": "Tallyline",
     "tagline": "Self-hostable, agent-native issue tracker where humans and agents share one board",
+    "outcome": "An agent-native issue tracker where people and agents move work through one state machine, live at tallyline.app.",
     "description": "Self-hostable, agent-native issue tracker where humans and AI agents work the same board. Issues move through one state machine whether a person or an agent moves them, and every change is written to an append-only event log with the actor's identity. Agents reach the board through an MCP server, a CLI with JSON output, or a REST API. AGPL-3.0, with the MCP server and CLI under MIT.",
     "category": "apps",
+    "capability": "products",
     "type": "platform",
     "featured": true,
     "planetVisual": {

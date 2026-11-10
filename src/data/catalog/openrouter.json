@@ -6,6 +6,7 @@
     "tagline": "Role-aligned application demos — Deflect, Motion, Bakeoff, Caesar",
     "description": "Four OpenRouter application demos in github.com/duketopceo/openrouter-demos: Deflect (support classify/deflect/escalate with Guardrails), Motion (GTM inbound → next action with Auto Router), Bakeoff (provider ops — latency, cost, quality launch gate), and Caesar (two-model debate with concession traces). Offline pytest passes on fixtures; live evals require OPENROUTER_API_KEY.",
     "category": "ai",
+    "capability": "evals-routing",
     "type": "platform",
     "featured": false,
     "planetVisual": {

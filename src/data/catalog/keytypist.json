@@ -6,6 +6,7 @@
     "tagline": "Terminal next-key prediction with n-gram and local-LLM engines",
     "description": "A terminal next-key prediction TUI with n-gram and local-LLM engines, plus a daemon that maps your typing speed to keyboard backlight.",
     "category": "ai",
+    "capability": "tooling-infra",
     "type": "app",
     "featured": false,
     "private": false,

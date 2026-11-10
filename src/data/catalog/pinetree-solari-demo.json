@@ -6,6 +6,7 @@
     "tagline": "Browser-to-sandbox pipeline that turns live SaaS pricing pages into CSV and JSON",
     "description": "A Solari demo built for a SWE intern application. One cloud browser loads each configured pricing page, a headless sandbox parses it with a shared parser in two modes (class-based for React pricing cards, heading-based heuristic for conventional pages), and the host merges the per-site output into one CSV and one JSON. The parser is unit-tested against sample HTML without an API key.",
     "category": "data",
+    "capability": "agents-computer-use",
     "type": "experiment",
     "featured": false,
     "techStack": [

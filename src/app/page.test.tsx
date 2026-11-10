@@ -66,7 +66,7 @@ describe("home layout", () => {
     expect(html).not.toContain("solar-system");
   });
 
-  it("caps each category group at its top 4, never repeats a pinned project, and links to the full category", async () => {
+  it("caps each capability group at its top 4, never repeats a pinned project, and links to the full group", async () => {
     const html = await home();
     const rest = html.slice(html.indexOf("home-rest-heading"));
     const ranked = rankProjects(projectConfigs);
@@ -74,13 +74,13 @@ describe("home layout", () => {
     const byCategory = new Map<string, string[]>();
     for (const p of ranked) {
       if (pinned.has(p.slug)) continue;
-      byCategory.set(p.category, [...(byCategory.get(p.category) ?? []), p.slug]);
+      byCategory.set(p.capability as string, [...(byCategory.get(p.capability as string) ?? []), p.slug]);
     }
     for (const [category, slugs] of byCategory) {
       slugs.slice(0, 4).forEach((slug) => expect(rest).toContain(`href="/projects/${slug}"`));
       slugs.slice(4).forEach((slug) => expect(rest).not.toContain(`href="/projects/${slug}"`));
-      const total = ranked.filter((p) => p.category === category).length;
-      expect(rest).toContain(`href="/projects?category=${category}"`);
+      const total = ranked.filter((p) => p.capability === category).length;
+      expect(rest).toContain(`href="/projects?group=${category}"`);
       expect(rest).toMatch(new RegExp(`See all ${total} in `));
     }
     for (const slug of pinned) expect(rest).not.toContain(`href="/projects/${slug}"`);
@@ -91,7 +91,7 @@ describe("home layout", () => {
     const html = await home();
     const rest = html.slice(html.indexOf("home-rest-heading"));
     const ranked = rankProjects(projectConfigs).filter(
-      (p) => p.category === "ai" && !(RANKING_PINS as readonly string[]).includes(p.slug)
+      (p) => p.capability === "agents-computer-use" && !(RANKING_PINS as readonly string[]).includes(p.slug)
     ).slice(0, 4);
     const order = ranked.map((p) => rest.indexOf(`href="/projects/${p.slug}"`));
     expect(order).toEqual([...order].sort((a, b) => a - b));
@@ -104,8 +104,42 @@ describe("home layout", () => {
     const shape = (c: string) =>
       [...c.matchAll(/class="(lead-card__[a-z-]+)/g)]
         .map((m) => m[1])
-        .filter((c) => !["lead-card__play", "lead-card__poster", "lead-card__type", "lead-card__play-icon", "lead-card__live"].includes(c));
+        .filter((c) =>
+          ["lead-card__figure", "lead-card__body", "lead-card__kicker", "lead-card__title", "lead-card__outcome", "lead-card__proof", "lead-card__stack", "lead-card__cta"].includes(c)
+        );
     expect(shape(cards[1])).toEqual(shape(cards[0]));
     cards.slice(2).forEach((c) => expect(shape(c)).toEqual(shape(cards[0])));
+  });
+
+  it("orders each lead card outcome, proof, stack", async () => {
+    const html = await home();
+    const cards = [...html.matchAll(/<article class="lead-card"[\s\S]*?<\/article>/g)].map((m) => m[0]);
+    expect(cards).toHaveLength(5);
+    for (const c of cards) {
+      const outcome = c.indexOf("lead-card__outcome");
+      const proof = c.indexOf("lead-card__proof");
+      const stack = c.indexOf("lead-card__stack");
+      expect(outcome).toBeGreaterThan(-1);
+      expect(proof).toBeGreaterThan(outcome);
+      expect(stack).toBeGreaterThan(proof);
+      // proof is a link even when no number exists
+      expect(c.slice(proof, stack)).toMatch(/href="/);
+    }
+  });
+
+  it("shows the sphere after the lead band and before the signal, linking to /projects", async () => {
+    const html = await home();
+    const leads = html.indexOf("home-leads-heading");
+    const map = html.indexOf("home-map-heading");
+    const signal = html.indexOf("home-transmissions-heading");
+    expect(leads).toBeGreaterThan(-1);
+    expect(map).toBeGreaterThan(leads);
+    expect(signal).toBeGreaterThan(map);
+    const section = html.slice(map, signal);
+    expect(section).toContain('href="/projects"');
+    // the hidden list names every listed project
+    for (const p of rankProjects(projectConfigs)) {
+      expect(section).toContain(`href="/projects/${p.slug}"`);
+    }
   });
 });

@@ -6,6 +6,7 @@
     "tagline": "First-party keyring manager for Omarchy",
     "description": "First-party keyring manager for the Omarchy environment. Securely stores and retrieves credentials for plugins and services.",
     "category": "apps",
+    "capability": "tooling-infra",
     "type": "library",
     "featured": false,
     "techStack": [

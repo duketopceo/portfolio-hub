@@ -6,6 +6,7 @@
     "tagline": "Seven public Agent Zero plugins: Argus review, OmaSeal, Jev compaction, device sync, durable runs, GlitchTip, Notion",
     "description": "A suite of public plugins for the Agent Zero agent runtime, each in its own repository: pull-request review tools backed by Argus, OmaSeal secret access, Jev context compaction, device sync, durable run state, GlitchTip error reporting, and a Notion ingestion server. They appear here as components of one entry rather than seven.",
     "category": "ai",
+    "capability": "agents-computer-use",
     "type": "library",
     "featured": false,
     "siteOnly": true,

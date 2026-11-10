@@ -3,6 +3,8 @@ import FilterBar from "@/components/FilterBar";
 import { toClientProject } from "@/lib/client-project";
 import { PageHeader, PageShell, SectionHeading } from "@/components/design";
 import { rankProjects } from "@/lib/ranking";
+import ProjectSphere from "@/components/sphere/ProjectSphere";
+import { toSphereProjects } from "@/lib/sphere-projects";
 import { earlierWork } from "@/lib/catalog";
 import { publicGithubUrl } from "@/lib/github-public-url";
 
@@ -21,13 +23,14 @@ export const revalidate = 3600;
 export const metadata = {
   title: "Work",
   description:
-    "Browse all projects: AI automation, trading systems, OSINT platforms, infrastructure, and web apps.",
+    "Browse all projects by capability: evals and routing, retrieval and memory, agents and computer use, products, tooling and infrastructure.",
 };
 
 export default async function ProjectsPage() {
   const projects = await getEnrichedProjects();
-  // Ranked order: three pinned leads, then everything by score (src/lib/ranking.ts).
-  const clientProjects = rankProjects(projects).map(toClientProject);
+  // Ranked order: five pinned leads, then everything by score (src/lib/ranking.ts).
+  const ranked = rankProjects(projects);
+  const clientProjects = ranked.map(toClientProject);
   const registrySlugs = projects.map((p) => p.slug);
   // Private earlier work is never rendered, not even by name.
   const earlier = earlierWork().filter((p) => !p.private);
@@ -41,8 +44,12 @@ export default async function ProjectsPage() {
           { content: "Sheet 02" },
         ]}
         title="Work"
-        lede="Three lead projects first, then everything else, strongest first. Filter by category."
+        lede="Five lead projects first, then everything else, strongest first. Filter by capability."
       />
+
+      <section className="projects-map" aria-label="Project map">
+        <ProjectSphere projects={toSphereProjects(ranked)} />
+      </section>
 
       <FilterBar projects={clientProjects} registrySlugs={registrySlugs} />
 

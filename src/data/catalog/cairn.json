@@ -6,6 +6,7 @@
     "tagline": "iOS-first study app: upload anything, quiz until you know it",
     "description": "Upload anything you are studying; Cairn turns it into a study set, quizzes you until you know it, and shows your mastery over time. Built around retrieval practice and successive relearning, with a quality gate on every generated question. Private repository.",
     "category": "apps",
+    "capability": "products",
     "type": "app",
     "featured": false,
     "techStack": [

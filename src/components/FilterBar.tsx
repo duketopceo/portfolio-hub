@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { EnrichedProject, ProjectCategory } from "@/lib/types";
-import { catColors } from "@/lib/utils";
-import { categoryMeta } from "@/data/category-meta";
+import { EnrichedProject } from "@/lib/types";
+import {
+  CAPABILITY_IDS,
+  capabilityMeta,
+  isCapabilityId,
+  type CapabilityId,
+} from "@/data/capability-meta";
 import ProjectCard from "./ProjectCard";
 import LeadProjectCard from "./LeadProjectCard";
-import CategoryGroups from "./CategoryGroups";
+import CapabilityGroups from "./CapabilityGroups";
 import { leadProjects } from "@/lib/ranking-core";
 
 interface FilterBarProps {
@@ -16,39 +20,36 @@ interface FilterBarProps {
   registrySlugs: string[];
 }
 
-const categories: { key: ProjectCategory | "all"; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "finance", label: "Finance" },
-  { key: "ai", label: "AI" },
-  { key: "osint", label: "OSINT" },
-  { key: "data", label: "Data" },
-  { key: "infra", label: "Infra" },
-  { key: "apps", label: "Apps" },
+const groups: { key: CapabilityId | "all"; label: string; color: string }[] = [
+  { key: "all", label: "All", color: "#2DD4BF" },
+  ...CAPABILITY_IDS.map((id) => ({
+    key: id,
+    label: capabilityMeta[id].label,
+    color: capabilityMeta[id].color,
+  })),
 ];
 
 export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
-  const [activeCategory, setActiveCategory] = useState<
-    ProjectCategory | "all"
-  >("all");
+  const [activeGroup, setActiveGroup] = useState<CapabilityId | "all">("all");
 
-  // /projects?category=<key> (the home "See all" links) opens on that category.
+  // /projects?group=<id> (the home "See all" links) opens on that group;
+  // anything else, including the retired ?category=, is ignored.
   useEffect(() => {
-    const wanted = new URLSearchParams(window.location.search).get("category");
-    const match = categories.find((c) => c.key === wanted && c.key !== "all");
+    const wanted = new URLSearchParams(window.location.search).get("group");
     // eslint-disable-next-line react-hooks/set-state-in-effect -- the query string only exists in the browser; reading it during render would mismatch the static HTML.
-    if (match) setActiveCategory(match.key);
+    if (isCapabilityId(wanted)) setActiveGroup(wanted);
   }, []);
 
   // `projects` arrives in ranking order; filtering keeps that order.
   const filtered = projects.filter(
-    (p) => activeCategory === "all" || p.category === activeCategory
+    (p) => activeGroup === "all" || p.capability === activeGroup
   );
-  const showBands = activeCategory === "all";
+  const showBands = activeGroup === "all";
   const registryIndex = new Map(registrySlugs.map((slug, i) => [slug, i] as const));
 
   const scopeLabel =
-    activeCategory !== "all"
-      ? categoryMeta[activeCategory]?.label || activeCategory
+    activeGroup !== "all"
+      ? capabilityMeta[activeGroup].label
       : null;
 
   return (
@@ -58,25 +59,25 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
           <div
             className="catalog-pills filter-pills-row"
             role="group"
-            aria-label="Filter by category"
+            aria-label="Filter by capability"
           >
-            {categories.map((cat) => {
+            {groups.map((cat) => {
               const count =
                 cat.key === "all"
                   ? projects.length
-                  : projects.filter((p) => p.category === cat.key).length;
+                  : projects.filter((p) => p.capability === cat.key).length;
               if (count === 0 && cat.key !== "all") return null;
-              const active = activeCategory === cat.key;
-              const pillColor = catColors[cat.key] || "#2DD4BF";
+              const active = activeGroup === cat.key;
+              const pillColor = cat.color;
               return (
                 <button
                   key={cat.key}
                   type="button"
                   aria-pressed={active}
                   id={`catalog-filter-${cat.key}`}
-                  onClick={() => setActiveCategory(cat.key)}
+                  onClick={() => setActiveGroup(cat.key)}
                   data-umami-event="catalog-filter"
-                  data-umami-event-category={cat.key}
+                  data-umami-event-group={cat.key}
                   className={`catalog-pill${active ? " catalog-pill--active" : ""}`}
                   style={
                     { "--pill-accent": pillColor } as React.CSSProperties
@@ -115,7 +116,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
           <button
             type="button"
             className="detail-cta detail-cta--secondary"
-            onClick={() => setActiveCategory("all")}
+            onClick={() => setActiveGroup("all")}
           >
             Clear filter
           </button>
@@ -132,7 +133,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
               ))}
             </div>
           </section>
-          <CategoryGroups ranked={filtered} registrySlugs={registrySlugs} />
+          <CapabilityGroups ranked={filtered} registrySlugs={registrySlugs} />
         </>
       ) : (
         <div className="catalog-grid">

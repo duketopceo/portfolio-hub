@@ -6,6 +6,7 @@
     "tagline": "OpenRouter-native Agent Zero fork — Temporal, LiteLLM workers, risk scoring, MCP, Python CLI",
     "description": "Khan is a real agent harness built in a concentrated Aug 7–13 sprint: Temporal orchestration, OpenRouter-backed routing, LiteLLM workers, risk scoring, MCP tool surfaces, and a Python CLI. Ships alongside khanai.app as the public face of the stack. Plugin-first, secret-first operations with a multi-agent coordination board — not a self-hosted GPU or local inference cluster.",
     "category": "ai",
+    "capability": "agents-computer-use",
     "type": "platform",
     "featured": false,
     "planetVisual": {

@@ -6,6 +6,7 @@
     "tagline": "Permit operations platform for Bartlett Roofing",
     "description": "Permit operations platform for Bartlett Roofing: map dashboard, SOP-first /ops cockpit, and automation sidecar. Express + React + FastAPI + PostgreSQL.",
     "category": "apps",
+    "capability": "products",
     "type": "platform",
     "featured": false,
     "techStack": [

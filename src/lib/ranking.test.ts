@@ -9,7 +9,7 @@ import { extendedScore } from "./ranking-score";
 import { buildSnapshot, type ActivityInputs } from "./ranking-snapshot-build";
 import {
   buildRanking,
-  categoryGroups,
+  capabilityGroups,
   leadProjects,
   rankProjects,
   rankingSnapshot,
@@ -21,8 +21,8 @@ const catalogFiles = readdirSync(catalogDir)
   .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
   .sort();
 
-function proj(slug: string, category = "ai", name = slug) {
-  return { slug, displayName: name, category };
+function proj(slug: string, capability = "evals-routing", name = slug) {
+  return { slug, displayName: name, capability };
 }
 
 const snap = (scores: Record<string, number>): RankingSnapshot => ({
@@ -32,11 +32,11 @@ const snap = (scores: Record<string, number>): RankingSnapshot => ({
 
 describe("buildRanking", () => {
   const projects = [
-    proj("a", "ai"),
-    proj("b", "finance"),
-    proj("c", "apps"),
-    proj("d", "ai"),
-    proj("e", "finance"),
+    proj("a", "evals-routing"),
+    proj("b", "products"),
+    proj("c", "tooling-infra"),
+    proj("d", "evals-routing"),
+    proj("e", "products"),
   ];
   const scores = snap({ a: 10, b: 90, c: 80, d: 70, e: 60 });
 
@@ -53,7 +53,7 @@ describe("buildRanking", () => {
     // rest: b and c tie at 50, "b" sorts before "c"
     expect(out2.slice(3).map((p) => p.slug)).toEqual(["b", "c"]);
     // categories interleave: finance (b), apps (c)
-    expect(out2.slice(3).map((p) => p.category)).toEqual(["finance", "apps"]);
+    expect(out2.slice(3).map((p) => p.capability)).toEqual(["products", "tooling-infra"]);
   });
 
   it("skips an unlisted pin, fills the slot with the next-ranked project and reports it", () => {
@@ -88,12 +88,12 @@ describe("buildRanking", () => {
 
   it("category group views list no pinned project and keep rank order", () => {
     const ranked = buildRanking(projects, { snapshot: scores, pins: ["a", "e", "d"], pinCount: 3 });
-    const groups = categoryGroups(ranked, 3);
+    const groups = capabilityGroups(ranked, 3);
     const slugs = groups.flatMap((g) => g.projects.map((p) => p.slug));
     expect(slugs).not.toContain("a");
     expect(slugs).not.toContain("e");
     expect(slugs).not.toContain("d");
-    expect(groups.map((g) => g.category)).toEqual(["finance", "apps"]);
+    expect(groups.map((g) => g.capability)).toEqual(["products", "tooling-infra"]);
   });
 });
 
@@ -188,7 +188,7 @@ describe("five-lead band", () => {
   it("leadProjects returns five and category groups exclude every lead", () => {
     const ranked = rankProjects(projectConfigs);
     expect(leadProjects(ranked)).toHaveLength(5);
-    const grouped = categoryGroups(ranked).flatMap((g) => g.projects.map((p) => p.slug));
+    const grouped = capabilityGroups(ranked).flatMap((g) => g.projects.map((p) => p.slug));
     for (const pin of RANKING_PINS) expect(grouped).not.toContain(pin);
     expect(grouped).toHaveLength(ranked.length - 5);
   });

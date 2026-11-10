@@ -6,6 +6,7 @@
     "tagline": "Comprehensive open-source weapons systems database — air, land, sea, munitions",
     "description": "Open-source intelligence database cataloging 183 military hardware platforms across air, land, sea, munitions, and software domains. Features a FastAPI REST API with filtering, pagination, and comparison endpoints. The React frontend provides an intelligence console with platform explorer, analytics dashboard, and side-by-side comparison tools. Includes SIPRI military expenditure data, 675 source citations, and role classification for every platform.",
     "category": "osint",
+    "capability": "products",
     "type": "library",
     "featured": false,
     "planetVisual": {

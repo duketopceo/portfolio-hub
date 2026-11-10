@@ -7,12 +7,12 @@ import {
 } from "@/lib/ranking-core";
 
 export {
-  categoryGroups,
+  capabilityGroups,
   leadProjects,
   orderByRank,
   restProjects,
 } from "@/lib/ranking-core";
-export type { CategoryGroup } from "@/lib/ranking-core";
+export type { CapabilityGroup } from "@/lib/ranking-core";
 export type { Rankable, RankingSnapshot, RankingSnapshotEntry } from "@/lib/ranking-core";
 
 /**

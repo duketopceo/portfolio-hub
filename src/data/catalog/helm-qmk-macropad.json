@@ -6,6 +6,7 @@
     "tagline": "6-key + 1-knob USB-C QMK macropad",
     "description": "Helm is a 6-key + 1-knob USB-C QMK macropad. Includes CAD files, firmware, and the first working build.",
     "category": "apps",
+    "capability": "tooling-infra",
     "type": "experiment",
     "featured": false,
     "techStack": [

@@ -8,6 +8,7 @@ import { toClientProject } from "@/lib/client-project";
 import { isListedProject } from "@/lib/catalog-filter";
 import { rankProjects } from "@/lib/ranking";
 import type { EnrichedProject } from "@/lib/types";
+import { CAPABILITY_IDS, capabilityMeta } from "@/data/capability-meta";
 import FilterBar from "./FilterBar";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -59,36 +60,47 @@ describe("FilterBar", () => {
     expect(container.textContent).toContain(`${ranked.length} projects shown`);
   });
 
-  it("an active filter hides the top-3 band and shows a flat ranked list with a count", async () => {
+  it("an active filter hides the lead band and shows a flat ranked list with a count", async () => {
     await mount();
     await act(async () => {
-      pill("apps").click();
+      pill("tooling-infra").click();
     });
     expect(container.querySelector("[data-lead-rank]")).toBeNull();
     expect(container.querySelector(".category-group")).toBeNull();
-    const expected = ranked.filter((p) => p.category === "apps");
+    const expected = ranked.filter((p) => p.capability === "tooling-infra");
     expect(container.textContent).toContain(`${expected.length} project`);
     const titles = [...container.querySelectorAll(".cosmic-card-title")].map((n) => n.textContent);
     expect(titles).toEqual(expected.map((p) => p.displayName));
-    expect(pill("apps").getAttribute("aria-pressed")).toBe("true");
+    expect(pill("tooling-infra").getAttribute("aria-pressed")).toBe("true");
   });
 
-  it("opens on the category named in ?category= (the home See all links)", async () => {
-    window.history.replaceState({}, "", "/projects?category=apps");
+  it("opens on the group named in ?group= (the home See all links)", async () => {
+    window.history.replaceState({}, "", "/projects?group=tooling-infra");
     try {
       await mount();
-      expect(pill("apps").getAttribute("aria-pressed")).toBe("true");
+      expect(pill("tooling-infra").getAttribute("aria-pressed")).toBe("true");
       expect(container.querySelector("[data-lead-rank]")).toBeNull();
     } finally {
       window.history.replaceState({}, "", "/");
     }
   });
 
-  it("hides empty categories from the filter", async () => {
+  it("ignores the retired ?category= parameter", async () => {
+    window.history.replaceState({}, "", "/projects?category=apps");
+    try {
+      await mount();
+      expect(pill("all").getAttribute("aria-pressed")).toBe("true");
+    } finally {
+      window.history.replaceState({}, "", "/");
+    }
+  });
+
+  it("offers one pill per capability group with its count", async () => {
     await mount();
-    const present = new Set(ranked.map((p) => p.category));
-    for (const key of ["finance", "ai", "osint", "data", "infra", "apps"]) {
-      expect(pill(key) !== null).toBe(present.has(key as never));
+    for (const id of CAPABILITY_IDS) {
+      const count = ranked.filter((p) => p.capability === id).length;
+      expect(pill(id).textContent).toContain(capabilityMeta[id].label);
+      expect(pill(id).textContent).toContain(String(count));
     }
   });
 

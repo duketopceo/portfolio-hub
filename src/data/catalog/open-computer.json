@@ -4,8 +4,10 @@
   "curated": {
     "displayName": "Open Computer",
     "tagline": "Open-source multi-model computer-use agent with disposable sandboxes",
+    "outcome": "An open-source computer-use agent that routes across models and runs each task in a disposable sandbox.",
     "description": "Open-source equivalent of a cloud computer-use agent: multi-model routing, disposable sandboxed execution, and hybrid local/cloud placement.",
     "category": "ai",
+    "capability": "agents-computer-use",
     "type": "platform",
     "featured": false,
     "techStack": [

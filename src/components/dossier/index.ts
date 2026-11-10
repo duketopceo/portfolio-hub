@@ -9,3 +9,4 @@ export { DossierBody } from "./DossierBody";
 export { ShowcaseCard } from "./ShowcaseCard";
 export { ProjectMedia, ProjectMediaView, ProjectMediaSection } from "./ProjectMedia";
 export { ComponentsList } from "./ComponentsList";
+export { DossierEvidence } from "./DossierEvidence";

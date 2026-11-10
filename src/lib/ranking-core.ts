@@ -106,25 +106,27 @@ export function restProjects<T>(ranked: readonly T[], count: number = DEFAULT_PI
   return ranked.slice(count);
 }
 
-export interface CategoryGroup<T> {
-  category: string;
+export interface CapabilityGroup<T> {
+  capability: string;
   projects: T[];
 }
 
 /**
- * Category views over the ranked list. The lead block is excluded, projects
- * stay in rank order inside each group, and groups are ordered by their
- * best-ranked member.
+ * Capability views over the ranked list (KD2). The lead block is excluded,
+ * projects stay in rank order inside each group, and groups are ordered by
+ * their best-ranked member. Entries without a capability are skipped (a test
+ * guarantees every listed project has one).
  */
-export function categoryGroups<T extends { category: string }>(
+export function capabilityGroups<T extends { capability?: string }>(
   ranked: readonly T[],
   leadCount: number = DEFAULT_PIN_COUNT
-): CategoryGroup<T>[] {
+): CapabilityGroup<T>[] {
   const groups = new Map<string, T[]>();
   for (const p of restProjects(ranked, leadCount)) {
-    const list = groups.get(p.category);
+    if (!p.capability) continue;
+    const list = groups.get(p.capability);
     if (list) list.push(p);
-    else groups.set(p.category, [p]);
+    else groups.set(p.capability, [p]);
   }
-  return [...groups].map(([category, projects]) => ({ category, projects }));
+  return [...groups].map(([capability, projects]) => ({ capability, projects }));
 }

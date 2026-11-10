@@ -6,6 +6,7 @@
     "tagline": "Private automatic work journal for Linux — screenshot sampling, dedupe, vision-model summaries into a readable timeline",
     "description": "Dayflow for Omarchy/Wayland is a local-first port of the macOS Dayflow app: a single static Go binary samples a frame every 10 seconds, deduplicates unchanged shots, and every 15 minutes sends the block to a vision model (Gemma 4 via OpenRouter by default) for a plain-language summary. The result is a readable timeline in a QML panel — Today, Standup, Chat, Week, and Settings views — with per-app ignore lists, pause controls, retention pruning, inline edits, and journal chat. Frames and the SQLite store stay in ~/.local/share/dayflow.",
     "category": "apps",
+    "capability": "products",
     "type": "app",
     "featured": false,
     "orbitTier": "secondary",
