@@ -4,6 +4,7 @@ import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import UmamiOutbound from "@/components/UmamiOutbound";
+import ThemeProbe from "@/components/ThemeProbe";
 import { SiteBackground, SiteFooter } from "@/components/SiteChrome";
 import Footer from "@/components/Footer";
 import CosmosPlate from "@/components/cosmos/CosmosPlate";
@@ -70,6 +71,7 @@ export default function RootLayout({
           <Footer />
         </SiteFooter>
         <UmamiOutbound />
+        <ThemeProbe />
         <Script
           src="https://analytics.pacehq.io/script.js"
           data-website-id="85c70ffd-c5dc-4f8a-a18e-b13bbe101904"
