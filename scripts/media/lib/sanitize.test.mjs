@@ -19,6 +19,7 @@ const fake = {
   jwt: ["eyJhbGciOiJIUzI1NiJ9", "eyJzdWIiOiIxMjM0NTY3ODkwIn0", "abcDEF123456xyz"].join("."),
   hex: "0123456789abcdef".repeat(2),
   mixed: "Qx7" + "Lm2Zp9Rt4Vb8Nc1Ys6Wd3Kf5Hg0Jq",
+  bearer: "Authorization: Bearer " + "abcdefgh" + "ijklmnop" + "qrstuvwx",
 };
 
 const rules = [
@@ -39,7 +40,7 @@ const rules = [
   ["github token", `token ${fake.github} was pasted`, "token"],
   ["aws key", `access key ${fake.aws} leaked`, "token"],
   ["jwt", `header ${fake.jwt} shown`, "token"],
-  ["bearer header", "Authorization: Bearer abcdefghijklmnopqrstuvwx", "token"],
+  ["bearer header", fake.bearer, "token"],
   ["long hex digest", `digest ${fake.hex} printed`, "token"],
   ["long mixed secret", `secret ${fake.mixed} printed`, "token"],
 ];
