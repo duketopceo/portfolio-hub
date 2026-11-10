@@ -20,7 +20,7 @@ export function buildCutList(paragraphs, { gap = DEFAULT_GAP_SECONDS, lead = DEF
     const end = round3(cursor + p.seconds);
     cursor = end + gap;
     // A shot holds from its start until the next one begins, so audio gaps stay on the same picture.
-    return { index: i + 1, start, end, duration: round3(p.seconds), text: p.text, ...(p.shot ? { shot: p.shot } : {}) };
+    return { index: i + 1, start, end, duration: round3(p.seconds), text: p.text, ...(p.file ? { file: p.file } : {}), ...(p.shot ? { shot: p.shot } : {}) };
   });
   const total = round3((cuts.length ? cuts[cuts.length - 1].end : 0) + tail);
   return { cuts, total };
@@ -37,7 +37,8 @@ export function shotWindows(cutList) {
 }
 
 export function splitSentences(text) {
-  const parts = text.match(/[^.!?]+(?:[.!?]+["')\]]*|$)/g) ?? [text];
+  // A terminator ends a sentence only before whitespace or the end, so "3.1.0" and "example.com" stay whole.
+  const parts = text.match(/(?:[^.!?]|[.!?](?!["')\]]*(?:\s|$)))+(?:[.!?]+["')\]]*(?=\s|$))?/g) ?? [text];
   return parts.map((s) => s.trim()).filter(Boolean);
 }
 

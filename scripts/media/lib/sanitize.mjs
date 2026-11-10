@@ -17,7 +17,7 @@ const lead = String.raw`(?<![A-Za-z0-9_-])`;
 export const INTERNAL_HOST_NAMES = ["omarchy-max", "omarchy-macbook", "cyberpowa", "cluster1", "cluster2", "cluster3"];
 
 const GENERIC_RULES = [
-  { id: "internal-host", label: "internal hostname", re: /\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:local|internal|lan|home\.arpa|ts\.net|corp|intranet)\b/i },
+  { id: "internal-host", label: "internal hostname", re: /(?<![a-z0-9-])[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:local|internal|lan|home\.arpa|ts\.net|corp|intranet)\b/i },
   { id: "internal-host", label: "loopback or private address", re: /\b(?:localhost|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d{1,3}\.\d{1,3}|0\.0\.0\.0)\b/i },
   { id: "abs-path", label: "absolute filesystem path", re: /(?<![A-Za-z0-9_.:/-])\/(?:home|Users|root|etc|var|usr|opt|tmp|mnt|srv|run|proc|sys|dev|boot|media)\/[^\s"'`)>,]+/ },
   { id: "abs-path", label: "home-relative path", re: /(?<![A-Za-z0-9_])~\/[^\s"'`)>,]+/ },
@@ -38,6 +38,10 @@ const GENERIC_RULES = [
  * this repo's catalog and denylist, so private entries are covered automatically.
  */
 export function buildRules(names = loadPrivateNames(repoRoot)) {
+  // Fail closed: an empty list would let every private name pass as clean.
+  if (names.slugs.size === 0 || names.workOrgs.length === 0 || names.domains.length === 0) {
+    throw new Error("sanitize: private-name list loaded empty (catalog or src/data/private-denylist.ts drift); refusing to run");
+  }
   const rules = [];
   for (const slug of names.slugs) {
     rules.push({ id: "private-name", label: `private repo ${slug}`, re: new RegExp(lead + esc(slug) + boundary, "i") });
@@ -61,6 +65,15 @@ export function buildRules(names = loadPrivateNames(repoRoot)) {
   return rules;
 }
 
+/** NFKC, drop invisible format characters, fold Unicode hyphens to "-", NBSP to space. */
+export function normalizeForScan(text) {
+  return text
+    .normalize("NFKC")
+    .replace(/[\p{Cf}\u00ad]/gu, "")
+    .replace(/[\u2010-\u2015\u2212]/g, "-")
+    .replace(/\u00a0/g, " ");
+}
+
 let defaultRules;
 
 /**
@@ -72,16 +85,33 @@ let defaultRules;
 export function findIssues(text, opts = {}) {
   const rules = opts.rules ?? (defaultRules ??= buildRules());
   const findings = [];
-  const lines = text.split("\n");
-  lines.forEach((line, i) => {
-    for (const { id, label, re } of rules) {
-      const m = line.match(re);
-      if (!m) continue;
-      const hit = m[0];
-      const excerpt = id === "token" ? `${hit.slice(0, 4)}…[${hit.length} chars]` : hit;
-      findings.push({ rule: id, label, line: i + 1, excerpt });
+  const seen = new Set();
+  const record = ({ id, label }, hit, line) => {
+    const key = `${label}@${line}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    findings.push({ rule: id, label, line, excerpt: id === "token" ? `${hit.slice(0, 4)}…[${hit.length} chars]` : hit });
+  };
+  const scan = (source) => {
+    source.split("\n").forEach((line, i) => {
+      for (const rule of rules) {
+        const m = line.match(rule.re);
+        if (m) record(rule, m[0], i + 1);
+      }
+    });
+    // A name or path broken across lines still reads as one string once spoken or captioned,
+    // so every rule also runs on the whitespace-collapsed text (reported at line 0).
+    const flat = source.replace(/\s+/g, " ");
+    for (const rule of rules) {
+      const m = flat.match(rule.re);
+      if (m && !findings.some((f) => f.label === rule.label)) record(rule, m[0], 0);
     }
-  });
+  };
+  scan(text);
+  // Lookalikes (zero-width, soft hyphen, non-breaking or fullwidth forms) read identically
+  // to a viewer, so the normalized copy is scanned too.
+  const normalized = normalizeForScan(text);
+  if (normalized !== text) scan(normalized);
   return findings;
 }
 

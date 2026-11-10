@@ -31,6 +31,7 @@ if (!args.dir || !args.base) {
 const dir = resolve(args.dir);
 const cutList = JSON.parse(readFileSync(join(dir, "cutlist.json"), "utf8"));
 const { slug } = cutList;
+if (!/^[a-z0-9-]+$/.test(slug ?? "")) throw new Error("cutlist.json slug must be lowercase letters, digits, hyphens");
 const vtt = join(dir, `${slug}.vtt`);
 
 // Final assets are checked again here: captions and transcript are what gets published.
@@ -43,7 +44,7 @@ const run = (cmd, argv) => {
 };
 
 // 1. Narration track: each WAV delayed to its cut start, padded to the video length.
-const wavs = cutList.cuts.map((c) => join(dir, "wav", `p${String(c.index).padStart(2, "0")}.wav`));
+const wavs = cutList.cuts.map((c) => join(dir, "wav", c.file));
 const delays = cutList.cuts.map((c, i) => `[${i}:a]adelay=${Math.round(c.start * 1000)}:all=1[a${i}]`);
 const mix = cutList.cuts.map((_, i) => `[a${i}]`).join("") + `amix=inputs=${cutList.cuts.length}:normalize=0,apad,atrim=0:${cutList.total}[aout]`;
 const narration = join(dir, `${slug}-narration.wav`);

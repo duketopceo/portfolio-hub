@@ -3,7 +3,7 @@
 export const forbidden = [
   {
     label: "personal Gmail mailbox",
-    pattern: /[a-z0-9._%+-]+@gmail\.com/i,
+    pattern: /(?<![a-z0-9._%+-])[a-z0-9._%+-]+@gmail\.com/i,
   },
   {
     label: "employer mailbox",

@@ -24,7 +24,11 @@ export function parseScript(raw, source = "script") {
 export function loadSanitizedScript(path) {
   const raw = readFileSync(path, "utf8");
   assertClean(raw, path);
-  return parseScript(raw, path);
+  const script = parseScript(raw, path);
+  // JSON escapes decode to different text than the raw file shows; the decoded strings are what is spoken.
+  const decoded = [script.title ?? "", ...script.paragraphs.flatMap((p) => [p.text, JSON.stringify(p.shot ?? {})])].join("\n");
+  assertClean(decoded, `${path} (decoded)`);
+  return script;
 }
 
 /** Beats for record-web.mjs --beats: one per shot window, `dur` in ms. */

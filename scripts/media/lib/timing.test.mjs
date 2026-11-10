@@ -64,3 +64,20 @@ describe("VTT", () => {
     expect(buildTranscript(cutList)).toBe("One. Two sentences here.\n\nSecond paragraph.\n\nThird.\n");
   });
 });
+
+describe("sentence splitting keeps versions, decimals and domains whole", () => {
+  it("does not split inside 3.1.0 or example.com", () => {
+    expect(splitSentences("Version 3.1.0 indexes 2000 nodes. Visit example.com today.")).toEqual([
+      "Version 3.1.0 indexes 2000 nodes.",
+      "Visit example.com today.",
+    ]);
+  });
+
+  it("splits the proportional boundary at the sentence length ratio", () => {
+    const cl = buildCutList([{ text: "Four. Twelve chars.", seconds: 4 }], { lead: 1, gap: 0, tail: 0 });
+    const cues = buildCues(cl);
+    expect(cues).toHaveLength(2);
+    expect(cues[0].end).toBe(cues[1].start);
+    expect(cues[0].end).toBeCloseTo(1 + (4 * 5) / 18, 2);
+  });
+});

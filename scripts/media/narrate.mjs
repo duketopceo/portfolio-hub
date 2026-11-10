@@ -46,7 +46,7 @@ if (tts.status !== 0) {
 }
 
 const narration = JSON.parse(readFileSync(join(dir, "wav", "narration.json"), "utf8"));
-const cutList = buildCutList(narration.paragraphs.map((p, i) => ({ text: p.text, seconds: p.seconds, shot: script.paragraphs[i].shot })));
+const cutList = buildCutList(narration.paragraphs.map((p, i) => ({ text: p.text, seconds: p.seconds, file: p.file, shot: script.paragraphs[i].shot })));
 const vtt = buildVtt(cutList);
 const transcript = buildTranscript(cutList);
 assertClean(vtt, "generated VTT");

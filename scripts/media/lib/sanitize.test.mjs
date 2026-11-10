@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { SanitizeError, assertClean, buildRules, findIssues } from "./sanitize.mjs";
 import { loadPrivateNames } from "../../lib/private-names.mjs";
-import { parseScript } from "./script.mjs";
+import { loadSanitizedScript, parseScript } from "./script.mjs";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const root = new URL("../../..", import.meta.url).pathname;
 const names = loadPrivateNames(root);
@@ -85,5 +88,38 @@ describe("script format", () => {
     expect(() => parseScript(JSON.stringify({ slug: "Bad Slug", paragraphs: [{ text: "x" }] }))).toThrow(/slug/);
     expect(() => parseScript(JSON.stringify({ slug: "ok", paragraphs: [] }))).toThrow(/paragraphs/);
     expect(() => parseScript(JSON.stringify({ slug: "ok", paragraphs: [{ text: " " }] }))).toThrow(/no text/);
+  });
+});
+
+describe("sanitize evasions", () => {
+  it("catches a path split across a line break", () => {
+    expect(findIssues("see /home/someone/\nconfig for details").map((f) => f.rule)).toContain("abs-path");
+  });
+
+  it("catches a private name that is only visible after JSON decoding", () => {
+    const raw = JSON.stringify({ slug: "x", paragraphs: [{ text: `use ${privateBare}` }] }).replace(privateBare, [...privateBare].map((c) => "\\u00" + c.charCodeAt(0).toString(16)).join(""));
+    expect(raw).not.toContain(privateBare);
+    const dir = mkdtempSync(join(tmpdir(), "san-"));
+    const file = join(dir, "s.json");
+    writeFileSync(file, raw);
+    expect(() => loadSanitizedScript(file)).toThrow(SanitizeError);
+  });
+
+  it("fails closed when the private-name list is empty", () => {
+    expect(() => buildRules({ slugs: new Set(), bareChecked: [], workOrgs: [], domains: [] })).toThrow(/empty/);
+  });
+});
+
+describe("sanitize lookalikes and pathological input", () => {
+  it("catches zero-width, soft-hyphen and non-breaking-hyphen variants of a work org", () => {
+    expect(findIssues("Herzog​-LLC").length).toBeGreaterThan(0);
+    expect(findIssues("Herzog­-LLC").length).toBeGreaterThan(0);
+    expect(findIssues("Herzog‑LLC").length).toBeGreaterThan(0);
+  });
+
+  it("scans a long unbroken line in bounded time", () => {
+    const start = Date.now();
+    findIssues("a".repeat(100000));
+    expect(Date.now() - start).toBeLessThan(2000);
   });
 });
