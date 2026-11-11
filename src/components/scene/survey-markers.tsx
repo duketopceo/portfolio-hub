@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import * as THREE from "three";
-import { TEAL } from "@/components/scene/survey-lines";
+import { FOCUS } from "@/components/scene/survey-lines";
 
 /** Focus furniture: the survey sphere at the origin, the beacon under the
  *  focused body and the sighting line to it. */
@@ -38,7 +38,7 @@ export function SurveySphere() {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        color={TEAL}
+        color={FOCUS}
         size={0.075}
         sizeAttenuation
         transparent
@@ -61,11 +61,11 @@ export function FocusBeacon({ target }: { target: THREE.Vector3 }) {
     <group ref={ref}>
       <mesh rotation-x={-Math.PI / 2}>
         <ringGeometry args={[0.9, 1.05, 48]} />
-        <meshBasicMaterial color={TEAL} transparent opacity={0.55} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={FOCUS} transparent opacity={0.55} side={THREE.DoubleSide} />
       </mesh>
       <mesh rotation-x={-Math.PI / 2}>
         <ringGeometry args={[1.25, 1.28, 48]} />
-        <meshBasicMaterial color={TEAL} transparent opacity={0.25} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={FOCUS} transparent opacity={0.25} side={THREE.DoubleSide} />
       </mesh>
     </group>
   );
@@ -82,7 +82,7 @@ export function SightingLine({ target }: { target: THREE.Vector3 }) {
     return new THREE.Line(
       g,
       new THREE.LineDashedMaterial({
-        color: TEAL,
+        color: FOCUS,
         dashSize: 0.4,
         gapSize: 0.3,
         transparent: true,

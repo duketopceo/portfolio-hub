@@ -8,7 +8,8 @@ import { ringScale, type OrbitSlot } from "@/components/scene/orbit-layout";
 /** Survey linework: orbit hairlines, focus arc, limbs, meridians, line-art
  *  rings. Everything shares one or two LineSegments draw calls. */
 
-export const TEAL = new THREE.Color("#2DD4BF");
+/** Focus/live highlight: white on the white-on-black palette. */
+export const FOCUS = new THREE.Color("#FFFFFF");
 export const HAIRLINE = new THREE.Color("#E9ECEF");
 const SIGNAL = new THREE.Color("#FF5C1A");
 
@@ -176,8 +177,8 @@ export function StaticLines({
     b.dashed(ringInner, 1.2, 0.8, HAIRLINE, 0.08);
     if (focusSlot) {
       // 1px lines only: the focus arc is doubled radially to read heavier.
-      b.line(orbitArcPoints(focusSlot, rx, rz), TEAL, 0.85);
-      b.line(orbitArcPoints(focusSlot, rx, rz, 1.012), TEAL, 0.85);
+      b.line(orbitArcPoints(focusSlot, rx, rz), FOCUS, 0.85);
+      b.line(orbitArcPoints(focusSlot, rx, rz, 1.012), FOCUS, 0.85);
     }
     bodies.forEach((body, bi) => {
       if (!drawRings) return;
@@ -217,7 +218,7 @@ export function BodyLines({ bodies, focusIndex }: { bodies: BodyInfo[]; focusInd
     };
     bodies.forEach((body, bi) => {
       const focused = bi === focusIndex;
-      const color = focused ? TEAL : body.tint;
+      const color = focused ? FOCUS : body.tint;
       const { slot, radius } = body;
       const addBillboard = (fn: () => void) => bb.push({ ...take(fn), cx: slot.x, cz: slot.z });
       addBillboard(() =>

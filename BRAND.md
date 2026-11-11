@@ -193,10 +193,11 @@ redesign: change it only by an explicit owner decision recorded here.
 hole, crosshair/reticle markers in place of glowing planets" is superseded for
 the BACKGROUND ONLY. The site background now carries a slow black hole (dark
 core, thin bright accretion ring, one disk revolution per ~75 s; original
-design, no third-party mark) on every page, and, on the home page only, three
-planet types (cratered rock, banded gas giant, ringed ice world). The home
-project map (FIG.01/02) is unchanged: reticle-marked lit bodies as below. The
-black hole and background planets are scenery, never navigation or meaning.
+design, no third-party mark) on every page. **Round 2 (2026-11-09 plan, KD3):
+the three background planets are removed** and the hole shrinks to a small,
+dim, off-centre body so it recedes behind content. Planets live only in the
+home project map (FIG.01/02): reticle-marked lit bodies as below. The black
+hole is scenery, never navigation or meaning.
 
 Planets on the home map are real lit 3D bodies with procedural surfaces
 (rocky, gas, ice, cratered, terrain), lit by one key light with a hard
@@ -204,8 +205,7 @@ terminator, a 1px survey limb just outside the disc, and a reticle when
 focused. They never glow: no additive blending, no radial falloff outside the
 limb, no bloom. A thin atmosphere is allowed only as a rim tint blended
 INSIDE the silhouette on the lit side (strength capped at 0.5). On software GL
-the bodies fall back to line-art limbs and meridians. The background planets
-use the same shaders and rules; the black hole is the one deliberate
+the bodies fall back to line-art limbs and meridians. The black hole is the one deliberate
 exception (its accretion light is additive emission). See `docs/planets.md`.
 
 ---
@@ -219,10 +219,7 @@ crisp at any DPR, same palette and same positions as the live version):
 
 | Piece | Component | Live (WebGL / canvas) | Static (reduced motion, no WebGL, software GL, Save-Data, failure) | Where |
 |---|---|---|---|---|
-| Black hole | `BlackHole` | R3F shader via `SceneFrame`, ~75 s per revolution | `BlackHoleSvg`: shadow, photon ring, lensed arcs, tilted disk with brighter approaching limb | Site background, every page |
-| Planets (rocky, gas, ice + ring) | `CosmosPlanets` | Lit procedural spheres, same context | `PlanetSvg`: three lit SVG worlds, hard terminator, survey limb | Site background, home only |
-| Stardust | `StardustCanvas` | 2D canvas, sparse falling motes, idle at top of page, paused in hidden tabs | `StaticStardust`: frozen SVG pattern (dots, pop sparkles) | Pages that scroll, further down |
-| Living starfield | `StarfieldScene` | R3F, same context as the black hole | CSS stars (`cosmic-bg::before/::after`) | Site background |
+| Black hole | `BlackHole` (ring glow ported from Rune, MIT: `THIRD_PARTY_NOTICES.md`) | R3F full-screen shader via `SceneFrame`, the whole background: black event horizon, soft white-hot photon ring with an analytic halo, smooth near-edge-on disk spanning the viewport width (wings bleed off both edges) that flows slowly (~75 s per revolution), far side lensed into a bright arc over the hole and a thinner one under it, Doppler-brighter on the left | `BlackHoleSvg`: the same composition as a full-screen still, nothing animates | Site background, every page |
 | Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.01 (hero, beside the intro) |
 | Secondary belt | `BeltScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.02 |
 | Surveyed terrain | `SectorTerrain` | ThreeUI `constellation-field` / `topo-field` | Skips mounting | `/projects` sector map |
@@ -230,14 +227,38 @@ crisp at any DPR, same palette and same positions as the live version):
 | Hyperspace streaks | `WarpFieldLayer` | ThreeUI `warp-field/hyperspace` | Skips mounting | 404 plate |
 | Uplink loader | `UplinkLoader` | ThreeUI | Skips mounting | Route transitions (`loading.tsx`) |
 
-Background contract: ONE WebGL context for the whole background (the
-black hole, planets and stars share it); the live scene lazy-loads after first
-paint and only after a WebGL probe passes; DPR capped at 1.25; the frame loop
-pauses when the tab is hidden or the canvas is off screen; the static plate
-hides only after the live scene's first rendered frame and returns if the
-scene is lost. Stardust is a separate 2D canvas (never a second WebGL
-context). `?cosmos=static` and `?cosmos=live` are QA overrides (live cannot
-beat reduced motion or a missing WebGL context).
+Background contract: the background IS one full-screen black hole and nothing
+else: no starfield, constellation lines, survey grid, mapped stars, stardust or
+streak rings, live or static; planets never appear in it. It is atmosphere
+behind content, not an object competing with it: centred horizontally and
+vertically on the first screen, the disk at least 1.1 viewport widths wide
+(`lib/cosmos-layout.ts` `shadowRadius`), fixed in place and easing down to 55%
+as the page scrolls. Warm white, amber and ember orange only
+(`lib/cosmos-colors.ts`, enforced by `cosmos-colors.test.ts` across every scene
+source). Words come first: the scene is dim by design (`HOLE_LIGHT`), the disk
+wings are held dimmer than the hot inner rim, and a soft scrim (darker toward
+the side edges) and vignette sit over both renditions. Text contrast is
+measured on screenshots with `scripts/capture-background.mjs` (it writes
+`contrast.json`: every text box against the brightest 5% of the pixels painted
+under it). Current result at 1440x900, top of page: every text box passes WCAG
+AA except a few small labels that straddle the photon ring itself (4.07 to
+4.31:1); scrolled, and at 390 wide, all pass. ONE WebGL context for the
+whole background; the live scene lazy-loads after first paint and only after a
+WebGL probe passes. Only renderers named llvmpipe, SwiftShader or softpipe
+count as software GL and start on the static plate; Apple and unknown renderer
+strings start live and measurement decides. DPR is capped at 1 (0.75 on the
+low tier), `preserveDrawingBuffer` is off, and the frame loop pauses when the
+tab is hidden or the canvas is off screen. drei's `PerformanceMonitor` steps
+quality down when frames stay under 45 fps (budget: 55+ on integrated
+graphics): full (DPR 1, lensed arcs, ring and plane glow, two flow octaves) to
+high (arcs collapse to a plain ring glow) to low (DPR 0.75, no glow, one
+octave) to the static plate, never back up, logging each step as
+`[cosmos] tier a -> b` and recording the rung in `data-cosmos-tier` on
+`.cosmic-bg`. The static plate hides only after the live scene's first rendered
+frame and returns if the scene is lost or given up on. `?cosmos=static` and
+`?cosmos=live` are QA overrides (live cannot beat reduced motion or a missing
+WebGL context); `?cosmos-tier=pin` additionally holds full quality and skips
+the monitor, for tests on software GL.
 
 Canvas layers never carry meaning: semantic HTML, labels, and keyboard
 paths work with every layer disabled.
@@ -258,6 +279,8 @@ paths work with every layer disabled.
 **Don't:**
 - Glassmorphism, backdrop-blur panels, soft glows on UI (the background black hole's ring is the one exception), or rounded "SaaS" cards
 - Orange outside classification/alert contexts and the black hole's heat
+- Teal, green or violet inside the black-hole scene (warm white, amber, ember only)
+- Stars, constellation lines, grids, stardust or any second layer in the background
 - Pop violet on controls or body text; any fourth chromatic color
 - A second WebGL context for the background
 - Emoji in production UI

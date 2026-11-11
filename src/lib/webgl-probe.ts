@@ -1,12 +1,13 @@
-import { readRendererString, shouldUseShader } from "@/lib/render-capability";
+import { isNamedSoftwareRenderer, readRendererString } from "@/lib/render-capability";
 
 export type WebGLTier = "gpu" | "software" | "none";
 
 let cached: WebGLTier | undefined;
 
 /**
- * Probe WebGL once on a throwaway context: "gpu" (a real renderer),
- * "software" (llvmpipe, SwiftShader, unidentifiable) or "none" (no context
+ * Probe WebGL once on a throwaway context: "gpu" (any renderer not
+ * named as software, including unknown strings), "software" (llvmpipe,
+ * SwiftShader, softpipe) or "none" (no context
  * at all). The context is released immediately.
  */
 export function probeWebGL(): WebGLTier {
@@ -18,9 +19,9 @@ export function probeWebGL(): WebGLTier {
     gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
     cached = !gl
       ? "none"
-      : shouldUseShader(readRendererString(gl))
-        ? "gpu"
-        : "software";
+      : isNamedSoftwareRenderer(readRendererString(gl))
+        ? "software"
+        : "gpu";
   } catch {
     cached = "none";
   }
