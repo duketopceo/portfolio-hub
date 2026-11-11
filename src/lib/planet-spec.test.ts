@@ -57,7 +57,7 @@ describe("planet spec defaults", () => {
 
   it("derives a surface from the project type when none is authored", () => {
     const by = (type: string) =>
-      resolvePlanetLook({ slug: "x", type, baseColor: "#2DD4BF" }).surface;
+      resolvePlanetLook({ slug: "x", type, baseColor: "#FFB06B" }).surface;
     expect(by("platform")).toBe("gas");
     expect(by("infra")).toBe("cratered");
     expect(by("experiment")).toBe("ice");
@@ -67,7 +67,7 @@ describe("planet spec defaults", () => {
 
 describe("palette", () => {
   it("round-trips hex and mixes endpoints", () => {
-    expect(rgbToHex(hexToRgb("#2DD4BF"))).toBe("#2dd4bf");
+    expect(rgbToHex(hexToRgb("#FFB06B"))).toBe("#ffb06b");
     expect(mixHex("#000000", "#ffffff", 0)).toBe("#000000");
     expect(mixHex("#000000", "#ffffff", 1)).toBe("#ffffff");
   });

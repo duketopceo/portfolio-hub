@@ -17,11 +17,6 @@ export const COSMOS_PALETTE = {
   night: "#000000",
   starlight: "#FFFFFF",
   slate: "#B3B3B3",
-  /**
-   * Deprecated alias of `accent`, kept only so the background scene files
-   * (owned by the black-hole background work) still compile. No teal remains.
-   */
-  teal: "#FFFFFF",
 } as const;
 
 /** CSS custom property that carries each chromatic role. */

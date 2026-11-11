@@ -17,6 +17,20 @@ export function shouldUseShader(renderer: string | null | undefined): boolean {
   return !SOFTWARE_RENDERER.test(renderer);
 }
 
+// Kept separate from SOFTWARE_RENDERER on purpose: this one never treats a
+// missing or unfamiliar string as software. Keep the shared names in sync.
+const NAMED_SOFTWARE_RENDERER = /llvmpipe|swiftshader|softpipe/i;
+
+/**
+ * True only for a renderer string that names a known CPU rasteriser. Unlike
+ * {@link shouldUseShader}, a missing or unfamiliar string (Apple, Adreno, a
+ * browser hiding the renderer) is NOT software: the live background starts
+ * and its frame-rate measurement decides whether to step down.
+ */
+export function isNamedSoftwareRenderer(renderer: string | null | undefined): boolean {
+  return !!renderer && NAMED_SOFTWARE_RENDERER.test(renderer);
+}
+
 /** Unmasked renderer string from a live WebGL context, or null. */
 export function readRendererString(
   gl: WebGLRenderingContext | WebGL2RenderingContext | null | undefined

@@ -6,6 +6,8 @@ All notable releases are tagged as `vMAJOR.MINOR.PATCH` and published to `ghcr.i
 
 ### Changed
 
+- Cosmic background simplified to the black hole alone: starfield, constellation lines, survey grid, mapped stars, stardust and dashed streak rings are removed (live and static). The hole is centred, its disk spans the viewport, it stays fixed and fades gently on scroll, and it is dimmed so page text passes contrast checks (`scripts/capture-background.mjs` reports them)
+- Cosmic background redesign: the black hole is now full-screen (event horizon, thin photon ring, near-edge-on disk with the far side lensed over and under the hole, Doppler-brighter approaching side, slow rotation), in warm white, amber and ember only. Dimming scrim and vignette keep the white page text legible; the static rendition is a full-screen SVG still of the same composition
 - AI-role positioning: five pinned leads (Orchestral, Argus, Kurultai, open-computer, Tallyline) with outcome, proof and stack on every lead card; projects group by capability; a quiet SVG sector sphere heads `/projects` and appears compact on home; the frozen top-15 video queue (`src/data/video-queue.json`) follows the new ranking
 - Cosmic background: slow black hole on every page, three planet types (rock, gas giant, ringed ice) on home, falling stardust further down scrollable pages; every piece has a server-rendered SVG/CSS static rendition for reduced motion and no-WebGL. Palette tightened to teal + ember + one ultraviolet pop (`BRAND.md`)
 - Background scene mounts as one lazy chunk (`CosmosLive`) so `next/dynamic` no longer runs inside the R3F canvas (React error #438 killed the old starfield canvas)

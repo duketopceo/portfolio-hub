@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { framePolicy, shouldUseShader } from "./render-capability";
+import { framePolicy, isNamedSoftwareRenderer, shouldUseShader } from "./render-capability";
 
 describe("shouldUseShader", () => {
   it("is false for llvmpipe, SwiftShader and generic software renderers", () => {
@@ -71,5 +71,20 @@ describe("shouldSkipScene", () => {
     expect(shouldSkipScene({ saveData: false, deviceMemory: 2 })).toBe(true);
     expect(shouldSkipScene({ saveData: false, deviceMemory: 4 })).toBe(false);
     expect(shouldSkipScene({ saveData: false })).toBe(false);
+  });
+});
+
+describe("isNamedSoftwareRenderer", () => {
+  it("is true only for llvmpipe, SwiftShader and softpipe", () => {
+    expect(isNamedSoftwareRenderer("ANGLE (Mesa, llvmpipe (LLVM 19.1.0, 128 bits), OpenGL 4.5)")).toBe(true);
+    expect(isNamedSoftwareRenderer("ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero)), SwiftShader driver)")).toBe(true);
+    expect(isNamedSoftwareRenderer("softpipe")).toBe(true);
+  });
+  it("starts live for Apple, discrete and unknown renderer strings", () => {
+    expect(isNamedSoftwareRenderer("Apple M1 Max")).toBe(false);
+    expect(isNamedSoftwareRenderer("ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)")).toBe(false);
+    expect(isNamedSoftwareRenderer("Mali-G78")).toBe(false);
+    expect(isNamedSoftwareRenderer(null)).toBe(false);
+    expect(isNamedSoftwareRenderer("")).toBe(false);
   });
 });

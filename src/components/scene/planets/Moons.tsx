@@ -4,13 +4,13 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { moonOffset, type OrbitSlot } from "@/components/scene/orbit-layout";
-import { HAIRLINE, TEAL } from "@/components/scene/survey-lines";
+import { HAIRLINE, FOCUS } from "@/components/scene/survey-lines";
 import { planetBodyRadius, type ResolvedPlanetVisual } from "@/lib/planet-visual";
 
 /**
  * Every moon of every planet in ONE InstancedMesh (one draw call), lit by the
  * scene's star. A moon is a notable component of its project; a live moon
- * (the deployed URL) is teal. Orbits clear the planet's rings.
+ * (the deployed URL) is white. Orbits clear the planet's rings.
  */
 export function Moons({
   slots,
@@ -41,7 +41,7 @@ export function Moons({
           count: v.moons.length,
           radius: r * (clear + index * 0.32),
           size: r * (0.11 + (m.kind === "live" ? 0.03 : 0)),
-          color: m.kind === "live" ? TEAL : new THREE.Color(v.color).lerp(HAIRLINE, 0.4),
+          color: m.kind === "live" ? FOCUS : new THREE.Color(v.color).lerp(HAIRLINE, 0.4),
         });
       });
     });

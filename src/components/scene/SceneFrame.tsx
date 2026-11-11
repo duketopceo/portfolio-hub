@@ -59,6 +59,12 @@ interface SceneFrameProps {
   camera?: CameraProps;
   dpr?: [number, number];
   /**
+   * Keep the drawing buffer between frames (pixel readback, screenshots of the
+   * canvas). Costs memory bandwidth every frame; the always-on background
+   * turns it off.
+   */
+  preserveDrawingBuffer?: boolean;
+  /**
    * Called once with `true` on the first rendered frame after the scene's
    * children (overlay markers included) have mounted, and with `false` if
    * the live scene is later lost (context loss or render error). Used by
@@ -114,6 +120,7 @@ export default function SceneFrame({
   className,
   camera,
   dpr = [1, 1.5],
+  preserveDrawingBuffer = true,
   onReadyChange,
 }: SceneFrameProps) {
   const [hostEl, setHostEl] = useState<HTMLDivElement | null>(null);
@@ -190,7 +197,7 @@ export default function SceneFrame({
                 antialias: policy.antialias,
                 alpha: true,
                 powerPreference: "low-power",
-                preserveDrawingBuffer: true,
+                preserveDrawingBuffer,
               }}
               style={{ pointerEvents: "none" }}
               eventSource={hostEl ?? undefined}
