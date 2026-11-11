@@ -4,8 +4,33 @@
   "curated": {
     "displayName": "Argus",
     "tagline": "Vision-model E2E testing — record once, fingerprint-cache every step, heal on drift, cost-metered per run",
+    "outcome": "Vision-model end-to-end tests that replay free from cache, heal only when the UI drifts, and report a dollar figure per run.",
+    "measured": [
+      {
+        "label": "Cold run, gemini-2.5-flash-lite",
+        "value": "$0.0014, 3 of 3 pass",
+        "source": "Argus eval report docs/evals/2026-09-30.md (evals/results/2026-09-30T06-28-49-359Z.json)",
+        "measuredOn": "2026-09-30",
+        "method": "Argus's own eval suite: 3 tasks against a static fixture with an empty cache; vision spend metered per call from OpenRouter cost. One run per model; this is the run matching the committed report, and two other recorded runs of the suite cost $0.0016 and $0.0379 for gemini-2.5-flash-lite."
+      },
+      {
+        "label": "Cold run, kimi-k2.5",
+        "value": "$0.088, 2 of 3 pass",
+        "source": "Argus eval report docs/evals/2026-09-30.md (evals/results/2026-09-30T06-28-49-359Z.json)",
+        "measuredOn": "2026-09-30",
+        "method": "Same suite and fixture, empty cache, one run. Two of three tasks passed; the failures are listed in the report."
+      },
+      {
+        "label": "Warm replay vision calls",
+        "value": "0 of 6",
+        "source": "Argus eval report docs/evals/2026-09-30.md (evals/results/2026-09-30T06-28-49-359Z.json)",
+        "measuredOn": "2026-09-30",
+        "method": "gemini-2.5-flash-lite re-run on the fingerprint cache: the cold run made 6 vision calls, the warm run 0. The kimi-k2.5 warm run made 4 calls."
+      }
+    ],
     "description": "Argus is an open-source, self-hosted vision-model E2E harness — the open TestDriver alternative. Record a flow once, replay near-free on fingerprint cache, heal only on UI drift, and report results as a check + comment on the GitHub PR. Every vision call is metered from OpenRouter per-call cost into a per-run dollar figure. A grounding specialist model can drive element location verified against the DOM, and an opt-in sandbox lane reproduces code-review findings in a hardened network-less container — a finding that fails on head and passes on base is stamped reproduced.",
     "category": "ai",
+    "capability": "evals-routing",
     "type": "library",
     "featured": true,
     "planetVisual": {

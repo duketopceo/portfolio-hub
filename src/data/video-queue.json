@@ -1,0 +1,21 @@
+{
+  "asOf": "2026-11-10",
+  "note": "Frozen top-15 video queue, leads first. Production follows this order (docs/plans/2026-11-09-2247-feat-portfolio-redesign-r2-plan.md U6). Regenerate only deliberately with the ranking snapshot.",
+  "slugs": [
+    "orchestral",
+    "argus",
+    "kurultai",
+    "open-computer",
+    "tallyline",
+    "portfolio-hub",
+    "dayflow-linux",
+    "pace-server",
+    "openrouter",
+    "khan",
+    "wisp",
+    "kate",
+    "military-hardware-db",
+    "omarchy-plugins",
+    "wordink"
+  ]
+}

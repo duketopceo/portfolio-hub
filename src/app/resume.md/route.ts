@@ -1,4 +1,5 @@
-import { basics, skills, projects, work, education, awards } from "@/data/resume";
+import { basics, skills, work, education, awards } from "@/data/resume";
+import { rankedResumeProjects } from "@/lib/resume-order";
 
 // Plain-markdown resume — easiest single-file ingestion for LLMs/AI screeners.
 export const dynamic = "force-static";
@@ -26,7 +27,7 @@ function md() {
   L.push("");
 
   L.push("## Selected Projects", "");
-  for (const p of projects) {
+  for (const p of rankedResumeProjects()) {
     L.push(`### ${p.name}`, "");
     const link = p.url ?? p.caseStudy;
     if (link) L.push(`Link: ${link}`, "");

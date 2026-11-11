@@ -8,7 +8,7 @@ superseded and must not be used for new work.
 
 Exception, 2026-11-10 (owner request 2026-11-09; do not revert silently): the BACKGROUND black hole, background
 planets and stardust are back, redesigned from scratch on the Star Chart
-palette (teal + ember + one ultraviolet pop). The HUD tokens and Exo type
+palette (white accent, ember, amber and soft gold on pure black). The HUD tokens and Exo type
 stay retired; see `BRAND.md` ("Palette" and "Motion & Canvas Layers") for the
 current rules, which include a static SVG/CSS rendition for every piece.
 

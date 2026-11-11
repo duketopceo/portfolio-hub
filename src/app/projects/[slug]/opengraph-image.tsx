@@ -39,7 +39,7 @@ export default async function Image({
           padding: 72,
           background: "#0a0d12",
           color: "#e8edf2",
-          borderLeft: "12px solid #2dd4bf",
+          borderLeft: "12px solid #ffffff",
         }}
       >
         <div
@@ -69,7 +69,7 @@ export default async function Image({
             {tagline.length > 140 ? `${tagline.slice(0, 137)}...` : tagline}
           </div>
         </div>
-        <div style={{ display: "flex", fontSize: 26, color: "#2dd4bf" }}>
+        <div style={{ display: "flex", fontSize: 26, color: "#ffffff" }}>
           Luke Kimball — Cosmic Intelligence
         </div>
       </div>

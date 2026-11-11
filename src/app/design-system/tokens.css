@@ -1,55 +1,61 @@
 :root {
   /* Survey plate background */
-  --color-bg: #07090B;
-  --color-surface: #0B0F13;
-  --color-surface-2: #0F151B;
-  --color-surface-3: #151D24;
-  --color-border: rgba(228, 234, 240, 0.09);
-  --color-border-strong: rgba(228, 234, 240, 0.16);
-  --color-border-glass: rgba(228, 234, 240, 0.12);
-  --color-divider: rgba(228, 234, 240, 0.07);
+  --color-bg: #000000;
+  --color-surface: #070707;
+  --color-surface-2: #0E0E0E;
+  --color-surface-3: #161616;
+  --color-border: rgba(255, 255, 255, 0.09);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+  --color-border-glass: rgba(255, 255, 255, 0.12);
+  --color-divider: rgba(255, 255, 255, 0.07);
 
   /* Text — starlight scale */
-  --color-text: #E9ECEF;
-  --color-text-muted: #9AA3AC;
-  --color-text-faint: #7E8A96;
+  --color-text: #FFFFFF;
+  --color-text-muted: #B8B8B8;
+  --color-text-faint: #9A9A9A;
 
-  /* PALETTE (BRAND.md, 2026-11-10): two complements + one pop.
-     teal  --color-accent  interactive + live
-     ember --color-signal  classified / alert / accretion heat
-     pop   --color-pop     starlight sparkle, rare highlight
-     Everything else is neutral. Mirrored in src/lib/palette.ts. */
+  /* PALETTE (BRAND.md, 2026-11-10, revised: white on black, no teal/green).
+     accent --color-accent  white: interactive + live
+     ember  --color-signal  classified / alert / accretion heat
+     heat   --color-heat    amber: signal heat bars, sparing warm highlight
+     pop    --color-pop     soft gold: starlight sparkle, rare highlight
+     The only hues are warm. Everything else is neutral.
+     Mirrored in src/lib/palette.ts. */
 
-  /* Complement A: signal teal — live + interactive */
-  --color-accent: #2DD4BF;
-  --color-accent-muted: rgba(45, 212, 191, 0.12);
-  --color-accent-subtle: rgba(45, 212, 191, 0.06);
-  --color-accent-glow: rgba(45, 212, 191, 0.15);
+  /* Accent: pure white — live + interactive */
+  --color-accent: #FFFFFF;
+  --color-accent-muted: rgba(255, 255, 255, 0.12);
+  --color-accent-subtle: rgba(255, 255, 255, 0.06);
+  --color-accent-glow: rgba(255, 255, 255, 0.15);
 
-  /* Complement B: ember orange — classification, alert, disk heat */
+  /* Ember orange — classification, alert, disk heat */
   --color-signal: #FF5C1A;
   --color-signal-muted: rgba(255, 92, 26, 0.14);
 
-  /* Pop: ultraviolet — falling starlight and rare highlights only */
-  --color-pop: #A78BFA;
-  --color-pop-muted: rgba(167, 139, 250, 0.16);
-  --color-redact: #C9CDD2;
+  /* Heat: amber — signal heat bars and sparing warm highlights */
+  --color-heat: #FF9F1C;
+  --color-heat-muted: rgba(255, 159, 28, 0.16);
+
+  /* Pop: soft gold — falling starlight and rare highlights only */
+  --color-pop: #F5D76E;
+  --color-pop-muted: rgba(245, 215, 110, 0.16);
+  --color-redact: #C8C8C8;
 
   /* Chart overlays */
-  --chart-grid: rgba(228, 234, 240, 0.035);
-  --chart-grid-major: rgba(228, 234, 240, 0.06);
-  --chart-tick: rgba(228, 234, 240, 0.28);
+  --chart-grid: rgba(255, 255, 255, 0.035);
+  --chart-grid-major: rgba(255, 255, 255, 0.06);
+  --chart-tick: rgba(255, 255, 255, 0.28);
 
-  /* Status — folded into the accent (green retired 2026-11-10) */
+  /* Status — folded into the accent (green and teal retired 2026-11-10) */
   --color-live: var(--color-accent);
 
   /* Panel (replaces glass — solid, squared, hairline) */
-  --glass-bg: rgba(11, 15, 19, 0.88);
-  --glass-bg-hover: rgba(15, 21, 27, 0.94);
-  --glass-border: rgba(228, 234, 240, 0.10);
-  --glass-border-hover: rgba(45, 212, 191, 0.45);
+  --glass-bg: rgba(7, 7, 7, 0.88);
+  --glass-bg-hover: rgba(14, 14, 14, 0.94);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-hover: rgba(255, 255, 255, 0.55);
   --glass-shadow: none;
-  --glass-shadow-hover: 0 0 0 1px rgba(45, 212, 191, 0.18);
+  --glass-shadow-hover: 0 0 0 1px rgba(255, 255, 255, 0.25);
   --glass-blur: 0px;
 
   /* Type scale */

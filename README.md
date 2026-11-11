@@ -20,7 +20,7 @@ I build OpenRouter-native systems that compound — agent harnesses, knowledge l
 
 ## What Cosmic Intelligence is
 
-**Cosmic Intelligence** is the brand and design system for this portfolio — deep-space dark UI, teal accent, modular “worlds” on orbital rails, and dossier pages for each repository. It is the canonical hub; other projects in the ecosystem link back here.
+**Cosmic Intelligence** is the brand and design system for this portfolio — deep-space dark UI, white-on-black, modular “worlds” on orbital rails, and dossier pages for each repository. It is the canonical hub; other projects in the ecosystem link back here.
 
 The homepage is not a flat project list. It is a **solar map**:
 

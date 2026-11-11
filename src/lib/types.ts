@@ -1,3 +1,4 @@
+import type { CapabilityId } from "@/data/capability-meta";
 import type { PlanetAtmosphereSpec, PlanetSurface } from "@/lib/planet-spec";
 export interface GitHubRepo {
   name: string;
@@ -130,6 +131,15 @@ export interface ProjectShowcase {
   outcomes?: string;
 }
 
+/** A recorded measurement: where, when and how it was taken travel with the value. */
+export interface ProjectMeasure {
+  label: string;
+  value: string;
+  source: string;
+  measuredOn: string;
+  method: string;
+}
+
 export interface ProjectConfig {
   slug: string;
   repoName: string;
@@ -139,8 +149,14 @@ export interface ProjectConfig {
   tagline: string;
   description: string;
   category: ProjectCategory;
+  /** Capability group; present on every listed entry. */
+  capability?: CapabilityId;
   type: ProjectType;
   featured: boolean;
+  /** One factual sentence shown first on lead cards. */
+  outcome?: string;
+  /** Recorded measurements; absent when none could be measured honestly. */
+  measured?: ProjectMeasure[];
   /**
    * Homepage orbit tier. Default: featured five → secondary orbit for the rest.
    * Set `catalog-only` to keep a project off the homepage rings (grid/dossier only).

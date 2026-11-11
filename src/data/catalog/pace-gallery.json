@@ -6,6 +6,7 @@
     "tagline": "A public static grid of authored WebGL and DOM component cards",
     "description": "A public static grid of authored WebGL and DOM component cards, each showing a live render, a one-line description and its measured JavaScript byte cost.",
     "category": "apps",
+    "capability": "products",
     "type": "app",
     "featured": false,
     "private": false,

@@ -1,57 +1,55 @@
 "use client";
 
-import { useState } from "react";
-import { EnrichedProject, ProjectCategory } from "@/lib/types";
-import { catColors } from "@/lib/utils";
-import { categoryMeta } from "@/data/category-meta";
+import { useEffect, useState } from "react";
+import { EnrichedProject } from "@/lib/types";
+import {
+  CAPABILITY_IDS,
+  capabilityMeta,
+  isCapabilityId,
+  type CapabilityId,
+} from "@/data/capability-meta";
 import ProjectCard from "./ProjectCard";
+import LeadProjectCard from "./LeadProjectCard";
+import CapabilityGroups from "./CapabilityGroups";
+import { leadProjects } from "@/lib/ranking-core";
 
 interface FilterBarProps {
+  /** Ranked order (src/lib/ranking.ts). */
   projects: EnrichedProject[];
+  /** Catalog order, for each card's stable CI number. */
+  registrySlugs: string[];
 }
 
-const categories: { key: ProjectCategory | "all"; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "finance", label: "Finance" },
-  { key: "ai", label: "AI" },
-  { key: "osint", label: "OSINT" },
-  { key: "data", label: "Data" },
-  { key: "infra", label: "Infra" },
-  { key: "apps", label: "Apps" },
+const groups: { key: CapabilityId | "all"; label: string; color: string }[] = [
+  { key: "all", label: "All", color: "#FFFFFF" },
+  ...CAPABILITY_IDS.map((id) => ({
+    key: id,
+    label: capabilityMeta[id].label,
+    color: capabilityMeta[id].color,
+  })),
 ];
 
-const sortLabels: Record<"recent" | "name" | "stars", string> = {
-  recent: "Recent",
-  name: "Name",
-  stars: "Stars",
-};
+export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
+  const [activeGroup, setActiveGroup] = useState<CapabilityId | "all">("all");
 
-export default function FilterBar({ projects }: FilterBarProps) {
-  const [activeCategory, setActiveCategory] = useState<
-    ProjectCategory | "all"
-  >("all");
-  const [sortBy, setSortBy] = useState<"recent" | "name" | "stars">("recent");
+  // /projects?group=<id> (the home "See all" links) opens on that group;
+  // anything else, including the retired ?category=, is ignored.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("group");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the query string only exists in the browser; reading it during render would mismatch the static HTML.
+    if (isCapabilityId(wanted)) setActiveGroup(wanted);
+  }, []);
 
-  const filtered = projects
-    .filter(
-      (p) => activeCategory === "all" || p.category === activeCategory
-    )
-    .sort((a, b) => {
-      if (sortBy === "recent") {
-        const ta = a.lastUpdated ? Date.parse(a.lastUpdated) : 0;
-        const tb = b.lastUpdated ? Date.parse(b.lastUpdated) : 0;
-        return (
-          (Number.isNaN(tb) ? 0 : tb) - (Number.isNaN(ta) ? 0 : ta) ||
-          a.slug.localeCompare(b.slug)
-        );
-      }
-      if (sortBy === "stars") return b.stars - a.stars || a.slug.localeCompare(b.slug);
-      return a.displayName.localeCompare(b.displayName);
-    });
+  // `projects` arrives in ranking order; filtering keeps that order.
+  const filtered = projects.filter(
+    (p) => activeGroup === "all" || p.capability === activeGroup
+  );
+  const showBands = activeGroup === "all";
+  const registryIndex = new Map(registrySlugs.map((slug, i) => [slug, i] as const));
 
   const scopeLabel =
-    activeCategory !== "all"
-      ? categoryMeta[activeCategory]?.label || activeCategory
+    activeGroup !== "all"
+      ? capabilityMeta[activeGroup].label
       : null;
 
   return (
@@ -60,30 +58,28 @@ export default function FilterBar({ projects }: FilterBarProps) {
         <div className="catalog-toolbar__row">
           <div
             className="catalog-pills filter-pills-row"
-            role="tablist"
-            aria-label="Filter by category"
+            role="group"
+            aria-label="Filter by capability"
           >
-            {categories.map((cat) => {
+            {groups.map((cat) => {
               const count =
                 cat.key === "all"
                   ? projects.length
-                  : projects.filter((p) => p.category === cat.key).length;
+                  : projects.filter((p) => p.capability === cat.key).length;
               if (count === 0 && cat.key !== "all") return null;
-              const active = activeCategory === cat.key;
-              const pillColor = catColors[cat.key] || "#2DD4BF";
-              return (
+              const active = activeGroup === cat.key;
+                            return (
                 <button
                   key={cat.key}
                   type="button"
-                  role="tab"
-                  aria-selected={active}
-                  id={`catalog-tab-${cat.key}`}
-                  onClick={() => setActiveCategory(cat.key)}
+                  aria-pressed={active}
+                  id={`catalog-filter-${cat.key}`}
+                  onClick={() => setActiveGroup(cat.key)}
                   data-umami-event="catalog-filter"
-                  data-umami-event-category={cat.key}
+                  data-umami-event-group={cat.key}
                   className={`catalog-pill${active ? " catalog-pill--active" : ""}`}
                   style={
-                    { "--pill-accent": pillColor } as React.CSSProperties
+                    { "--pill-accent": cat.color } as React.CSSProperties
                   }
                 >
                   <span className="catalog-pill__label">{cat.label}</span>
@@ -95,29 +91,10 @@ export default function FilterBar({ projects }: FilterBarProps) {
             })}
           </div>
 
-          <div
-            className="catalog-sort"
-            role="group"
-            aria-label="Sort projects"
-          >
-            {(["recent", "name", "stars"] as const).map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => setSortBy(opt)}
-                data-umami-event="catalog-sort"
-                data-umami-event-sort={opt}
-                className={`catalog-sort__btn${sortBy === opt ? " catalog-sort__btn--active" : ""}`}
-              >
-                {sortLabels[opt]}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
-      <>
-      <p className="catalog-results-meta">
+      <p className="catalog-results-meta" aria-live="polite">
         <span className="catalog-results-meta__n">{filtered.length}</span>
         <span>
           {" "}
@@ -129,31 +106,45 @@ export default function FilterBar({ projects }: FilterBarProps) {
             · {scopeLabel}
           </span>
         )}
+        {!scopeLabel && <span> · ranked, strongest first</span>}
       </p>
 
-      <div className="catalog-grid">
-        {filtered.map((project, i) => (
-          <div
-            key={project.slug}
-            className="animate-fade-up"
-            style={{ animationDelay: `${i * 40}ms` }}
-          >
-            <ProjectCard
-              project={project}
-              registryIndex={projects.findIndex(
-                (p) => p.slug === project.slug
-              )}
-            />
-          </div>
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
+      {filtered.length === 0 ? (
         <div className="catalog-empty">
-          No projects in this category.
+          <p>No projects match this filter.</p>
+          <button
+            type="button"
+            className="detail-cta detail-cta--secondary"
+            onClick={() => setActiveGroup("all")}
+          >
+            Clear filter
+          </button>
+        </div>
+      ) : showBands ? (
+        <>
+          <section className="projects-leads" aria-labelledby="projects-leads-heading">
+            <h2 id="projects-leads-heading" className="category-group__title">
+              Lead work
+            </h2>
+            <div className="lead-grid">
+              {leadProjects(filtered).map((p, i) => (
+                <LeadProjectCard key={p.slug} project={p} rank={i + 1} />
+              ))}
+            </div>
+          </section>
+          <CapabilityGroups ranked={filtered} registrySlugs={registrySlugs} />
+        </>
+      ) : (
+        <div className="catalog-grid">
+          {filtered.map((project) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              registryIndex={registryIndex.get(project.slug) ?? -1}
+            />
+          ))}
         </div>
       )}
-      </>
     </div>
   );
 }

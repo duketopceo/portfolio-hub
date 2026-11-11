@@ -36,67 +36,77 @@ maps, survey files, and telemetry — not a generic space theme.
 ## Color Palette
 
 All colors are CSS custom properties in `src/app/globals.css`. Near-monochrome
-dark survey plate; teal and ember are the complementary pair, one pop color accents.
+pure black survey plate with pure white text; no teal or green anywhere. The only hues are warm (ember, amber, soft gold) and used sparingly.
+
+**Contrast decision (2026-11-10):** white text on deep black ("ink") ships; the
+black-on-white variant was built, screenshotted and dropped. `scripts/check-contrast.mjs`
+checks body, muted, faint and accent text against every surface at 4.5:1.
 
 ### Surfaces & Lines
 
 | Token | Hex | Role |
 |---|---|---|
-| `--color-bg` | `#07090B` | Survey-plate background |
-| `--color-surface` | `#0B0F13` | Panel base |
-| `--color-surface-2` | `#0F151B` | Raised surface |
-| `--color-surface-3` | `#151D24` | Elevated element |
-| `--color-border` | `rgba(228,234,240,0.09)` | Hairline rules |
-| `--color-border-strong` | `rgba(228,234,240,0.16)` | Plate edges |
-| `--color-divider` | `rgba(228,234,240,0.07)` | Section dividers |
+| `--color-bg` | `#000000` | Survey-plate background |
+| `--color-surface` | `#070707` | Panel base |
+| `--color-surface-2` | `#0E0E0E` | Raised surface |
+| `--color-surface-3` | `#161616` | Elevated element |
+| `--color-border` | `rgba(255,255,255,0.09)` | Hairline rules |
+| `--color-border-strong` | `rgba(255,255,255,0.16)` | Plate edges |
+| `--color-divider` | `rgba(255,255,255,0.07)` | Section dividers |
 
 ### Text
 
 | Token | Value | Use |
 |---|---|---|
-| `--color-text` | `#E9ECEF` | Primary copy |
-| `--color-text-muted` | `#9AA3AC` | Secondary / body |
-| `--color-text-faint` | `#7E8A96` | Marginalia, registry IDs (≥4.84:1 on every surface; verify with `node scripts/check-contrast.mjs`) |
+| `--color-text` | `#FFFFFF` | Primary copy |
+| `--color-text-muted` | `#B8B8B8` | Secondary / body |
+| `--color-text-faint` | `#9A9A9A` | Marginalia, registry IDs (≥6:1 on every surface; verify with `node scripts/check-contrast.mjs`) |
 
-### Palette: two complements plus one pop (2026-11-10)
+### Capability groups and the sector sphere (2026-11-10)
 
-The whole site uses three chromatic colors; everything else is neutral.
-Mirrored for canvas/SVG in `src/lib/palette.ts` (a test fails on drift).
+Projects group by capability, not by the old category list: Evals & routing, Retrieval & memory, Agents & computer use, Products, Tooling & infra (`src/data/capability-meta.ts`). Group order is fixed everywhere (home groups, /projects groups, filter pills, sphere sectors and legend). Five sector colors, distinct by lightness and warmth: white `#FFFFFF`, light grey `#B3B3B3`, amber `#FF9F1C`, soft gold `#F5D76E`, ember `#FF5C1A`. The legend and the grouped list always name the group, so color is never the only cue. The sphere (`src/components/sphere`) is plain SVG, thin grey wireframe, small dots, no glow, and stays still under reduced motion.
+
+### Palette: white on black plus warm accents (2026-11-10, owner decision)
+
+White text on pure black at full contrast. No teal, no green, no violet. The
+only hues are warm and rare; everything else is neutral. Mirrored for
+canvas/SVG in `src/lib/palette.ts` (a test fails on drift and on any cool hue).
 
 | Token | Value | Role |
 |---|---|---|
-| `--color-accent` | `#2DD4BF` | Complement A, signal teal: interactive + live status |
-| `--color-signal` | `#FF5C1A` | Complement B, ember: classification / alert, and the black hole's accretion heat |
-| `--color-pop` | `#A78BFA` | Pop, ultraviolet: falling starlight, ice-world ring and rim, text selection. Rare. |
+| `--color-accent` | `#FFFFFF` | Interactive + live status (white, no hue) |
+| `--color-signal` | `#FF5C1A` | Ember: classification / alert, and the black hole's accretion heat |
+| `--color-heat` | `#FF9F1C` | Amber: signal heat bars, sparing warm highlight |
+| `--color-pop` | `#F5D76E` | Soft gold: falling starlight and rare highlights |
 
-Contrast on the four surfaces (`node scripts/check-contrast.mjs` for text
-tokens; `palette.test.ts` for the three colors): teal and ember and pop all
-clear 4.5:1 on every surface.
+Contrast: `node scripts/check-contrast.mjs` checks body, muted, faint, accent,
+ember and amber text on every surface at 4.5:1; `palette.test.ts` covers the
+palette colors.
 
-Retired and folded: `--color-live` green (`#34D399`) is now an alias of the
-accent; category colors (`catColors`, catalog planet colors) fold into teal,
-ember, pop and the slate neutral `#9AA3AC` (amber, sky blue and pink removed).
-GitHub language dots keep their third-party colors by design.
+Retired: signal teal `#2DD4BF` (accent), green `#34D399` (live) and ultraviolet
+`#A78BFA` (pop). `--color-live` aliases the accent; category and catalog planet
+colors fold into white, ember, soft gold and the grey `#B3B3B3`. GitHub language
+dots keep their third-party colors by design.
 
 Rules:
-- Teal carries interactive elements and live states; use it for the primary
-  action and status, not as decoration on every surface.
+- White carries interactive elements and live states; use it for the primary
+  action and status. Hover is a 1px white ring, focus is a white ring.
 - **Alert / classification meaning is carried by `--color-signal` (ember)**, and
   only ever through the alert treatment: mono ALL-CAPS tag, 1px ember border,
   lock or marker glyph, and the words RESTRICTED / CLASSIFIED / ALERT. Color
   alone never says "alert". Ember also appears as scenery (the black hole's
-  accretion light, the gas giant's storm); scenery is `aria-hidden`, sits behind
-  everything, and is never a control or a label, so it cannot be confused
-  with an alert tag.
-- Pop violet is for sparkle and rare highlights only, never controls or text.
+  accretion light); scenery is `aria-hidden`, sits behind everything, and is
+  never a control or a label.
+- Amber is for heat bars and rare warm highlights, never controls or body text.
+- Soft gold is for sparkle and rare highlights only.
 
 ### Chart Overlays
 
 | Token | Value |
 |---|---|
-| `--chart-grid` | `rgba(228,234,240,0.035)` |
-| `--chart-grid-major` | `rgba(228,234,240,0.06)` |
-| `--chart-tick` | `rgba(228,234,240,0.28)` |
+| `--chart-grid` | `rgba(255,255,255,0.035)` |
+| `--chart-grid-major` | `rgba(255,255,255,0.06)` |
+| `--chart-tick` | `rgba(255,255,255,0.28)` |
 
 ---
 
@@ -110,7 +120,7 @@ border: 1px solid var(--color-border-strong);
 border-radius: var(--radius-lg); /* 3px */
 ```
 
-Hover states use a 1px teal inset ring (`--glass-shadow-hover`), not glow.
+Hover states use a 1px white inset ring (`--glass-shadow-hover`), not glow.
 Panels and controls never glow. The one sanctioned glow is the background
 black hole's accretion ring (scenery, 2026-11-10).
 
@@ -271,15 +281,15 @@ paths work with every layer disabled.
 - Dark survey plate always — no light mode
 - Solid panels, hairline borders, squared corners
 - Mono microcopy for labels, IDs, and marginalia
-- Teal sparingly for interactive/live signal
-- Exactly three chromatic colors (teal, ember, ultraviolet pop) plus neutrals
+- White for interactive/live signal
+- Only warm hues (ember, amber, soft gold), sparingly, plus neutrals
 - A static SVG/CSS rendition for every background piece
 - `prefers-reduced-motion` guards on every canvas layer
 
 **Don't:**
 - Glassmorphism, backdrop-blur panels, soft glows on UI (the background black hole's ring is the one exception), or rounded "SaaS" cards
 - Orange outside classification/alert contexts and the black hole's heat
-- Teal, green or violet inside the black-hole scene (warm white, amber, ember only)
+- Teal, green, blue or violet anywhere (the black-hole scene is warm white, amber, ember only); amber or gold on controls or body text
 - Stars, constellation lines, grids, stardust or any second layer in the background
 - Pop violet on controls or body text; any fourth chromatic color
 - A second WebGL context for the background

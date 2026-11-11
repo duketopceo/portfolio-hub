@@ -6,6 +6,7 @@
     "tagline": "Three Tailscale nodes (cluster1–cluster3) — Mac Mini Swarm with Traefik, tunnels, agents, and monitoring",
     "description": "Personal home lab Docker Swarm on a three-node Tailscale mesh (cluster1 manager, cluster2 and cluster3 workers) running Apple Silicon Mac Minis: Traefik ingress, Cloudflare Tunnel for public routes, asset tracking, monitoring, and auto-discovery. Hosts public showcases such as Cosmic Intelligence and Open Military Hardware DB alongside internal agent stacks. The showcasable infra story for how luke-the-duke.com subdomains are meant to run.",
     "category": "infra",
+    "capability": "tooling-infra",
     "type": "infra",
     "featured": false,
     "planetVisual": {

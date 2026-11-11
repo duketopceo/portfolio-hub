@@ -37,7 +37,8 @@ only extend `UmamiOutbound` for scroll/visibility/lifecycle signals.
 | `intro-choice` / `intro-dismiss` | `destination` | First-visit overlay |
 | `catalog-view` | `view` | Registry ↔ Open PRs toggle |
 | `signal-project` | `slug`, `state` (moving/quiet) | Project link in the home engineering-signal glance |
-| `catalog-filter` | `category` | Category pills on `/projects` |
+| `catalog-filter` | `group` | Capability pills on `/projects` |
+| `sphere-dot-open` | `slug` | A dot on the project sphere (home and `/projects`) |
 | `catalog-sort` | `sort` | recent/name/stars |
 | `scroll-depth` | `depth` (25/50/75/100), `page` | `/projects/*`, `/demos/*` — once per threshold |
 | `dossier-section-view` | `page`, `section` | `DossierSection`/`EvidencePanel` entering viewport (deep pages only) |

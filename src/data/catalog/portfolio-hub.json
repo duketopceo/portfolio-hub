@@ -6,6 +6,7 @@
     "tagline": "This site: a star-chart portfolio with live GitHub activity and a dossier per project",
     "description": "The Next.js app behind luke-the-duke.com. The homepage is a solar map with a primary orbit of featured systems and a secondary orbit of the rest of the catalog; each project has a dossier page. A GitHub App ingests about 90 days of activity, rendered as condensed charts and grouped pull requests. The catalog in src/data is the single source of truth, nothing is auto-discovered.",
     "category": "apps",
+    "capability": "products",
     "type": "app",
     "featured": false,
     "techStack": [

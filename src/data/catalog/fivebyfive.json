@@ -6,6 +6,7 @@
     "tagline": "Firmware for a 5-key, 5-knob USB macropad on RP2040",
     "description": "Firmware for a 5-key, 5-knob USB macropad on RP2040, built for QMK and Vial.",
     "category": "infra",
+    "capability": "tooling-infra",
     "type": "infra",
     "featured": false,
     "private": false,

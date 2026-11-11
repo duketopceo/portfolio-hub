@@ -6,6 +6,7 @@
     "tagline": "Vision-model indexer that auto-renames Wayland screenshots by date and caption",
     "description": "Auto-renames and indexes Wayland screenshots with a vision model, filing them by date and caption and writing a markdown catalog.",
     "category": "ai",
+    "capability": "tooling-infra",
     "type": "app",
     "featured": false,
     "private": false,

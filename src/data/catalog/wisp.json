@@ -6,6 +6,7 @@
     "tagline": "Push-to-talk voice computer-use agent for Omarchy, decided by Jev",
     "description": "Jev-powered voice computer-use agent for Omarchy on Hyprland and Asahi. Push-to-talk feeds whisper.cpp, Jev returns a typed decision, and the result drives a guarded hyprctl launch with a breathing dim overlay.",
     "category": "ai",
+    "capability": "agents-computer-use",
     "type": "app",
     "featured": false,
     "techStack": [

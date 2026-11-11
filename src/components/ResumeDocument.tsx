@@ -2,18 +2,18 @@ import Link from "next/link";
 import {
   basics,
   skills,
-  projects,
   work,
   education,
   awards,
   resumeRevisionDate,
 } from "@/data/resume";
+import { rankedResumeProjects } from "@/lib/resume-order";
 
 export function ResumeDocument() {
   return (
     <div className="resume-doc">
       <header className="resume-doc__hero">
-        <p className="resume-doc__eyebrow">Applied AI · OpenRouter-native</p>
+        <p className="resume-doc__eyebrow">Applied AI</p>
         <h1 className="resume-doc__name">{basics.name}</h1>
         <p className="resume-doc__label">{basics.label}</p>
         <p className="resume-doc__headline">{basics.headline}</p>
@@ -35,9 +35,6 @@ export function ResumeDocument() {
         </ul>
 
         <div className="resume-doc__lead-cta">
-          <Link href="/projects/openrouter" className="detail-nav-link">
-            OpenRouter demos →
-          </Link>
           <Link href="/projects" className="detail-nav-link">
             Project dossiers →
           </Link>
@@ -64,7 +61,7 @@ export function ResumeDocument() {
       <section className="resume-doc__section">
         <h2 className="resume-doc__section-title">Selected projects</h2>
         <div className="resume-doc__projects">
-          {projects.map((p) => (
+          {rankedResumeProjects().map((p) => (
             <article key={p.name} className="resume-doc__project">
               <header className="resume-doc__project-head">
                 <h3>{p.name}</h3>

@@ -111,13 +111,6 @@ test.describe("Portfolio visual acceptance matrix", () => {
         // baselines only. Its static renditions have their own deterministic
         // captures below (reduced motion / WebGL disabled).
         await page.addStyleTag({ content: ".cosmic-bg { display: none !important; }" });
-        // The home orbit tour advances focus on a timer; pause it so the
-        // baseline always shows the same project.
-        const tourButton = page.locator(".poster__tour");
-        if (await tourButton.isVisible()) {
-          await tourButton.click();
-          await page.mouse.move(0, 0);
-        }
         await expect(page).toHaveScreenshot(
           `${route.name}-${viewport.name}.png`,
           { fullPage: true, mask: masked.map((selector) => page.locator(selector)) },
@@ -173,6 +166,32 @@ test.describe("Portfolio visual acceptance matrix", () => {
     );
     expect(Array.from(emails)).toEqual([publicAlias]);
   });
+
+  // Five lead cards: cards in one row share one height; on a phone they stack and
+// each takes the height its proof needs.
+  for (const viewport of viewports) {
+    for (const path of ["/", "/projects"]) {
+      test(`lead cards share one height: ${path} ${viewport.name}`, async ({ page }) => {
+        await page.setViewportSize({ width: viewport.width, height: viewport.height });
+        await page.goto(path, { waitUntil: "networkidle" });
+        const boxes = await page
+          .locator(".lead-card")
+          .evaluateAll((cards) =>
+            cards.map((c) => {
+              const r = c.getBoundingClientRect();
+              return { top: Math.round(r.top + window.scrollY), height: Math.round(r.height) };
+            }),
+          );
+        expect(boxes).toHaveLength(5);
+        if (viewport.width >= 900) {
+          const rows = new Map<number, number[]>();
+          for (const b of boxes) rows.set(b.top, [...(rows.get(b.top) ?? []), b.height]);
+          expect(rows.size).toBe(2);
+          for (const heights of rows.values()) expect(new Set(heights).size).toBe(1);
+        }
+      });
+    }
+  }
 
   test("no intro overlay or card torch on first visit", async ({
     browser,
@@ -389,26 +408,30 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 
-  test("home is a poster: hero, planet map, activity, closing row", async ({
+  test("home leads with the hero, five lead cards, the sphere, the signal, ranked groups and a closing row", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(/Luke\s*Kimball/i);
-    await expect(page.locator(".solar-system")).toHaveCount(1);
-    await expect(page.locator('.solar-system a[href^="/projects/"]').first()).toBeAttached();
-    await expect(page.locator(".home-lead__card")).toHaveCount(0);
+    await expect(page.locator(".solar-system")).toHaveCount(0);
+    await expect(page.locator(".lead-card")).toHaveCount(5);
+    await expect(page.locator(".home-map svg.project-sphere__svg")).toHaveCount(1);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
+    await expect(page.locator(".category-group").first()).toBeAttached();
     await expect(page.locator(".home-close")).toHaveCount(1);
-    await expect(page.locator(".home-catalog__item")).toHaveCount(0);
-    await expect(page.locator(".sheet__plate")).toHaveCount(0);
+    const order = await page.evaluate(() => {
+      const top = (sel: string) => document.querySelector(sel)!.getBoundingClientRect().top;
+      return [top(".lead-card"), top(".home-map"), top(".home-transmissions"), top(".category-group"), top(".home-close")];
+    });
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
     await expect(page.getByRole("link", { name: /See the work/ })).toHaveAttribute(
       "href",
       "/projects",
     );
   });
 
-  test("home hero, actions, and map sit above the fold at 1440x900", async ({
+  test("home hero, actions and the first lead card sit above the fold at 1440x900", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -423,74 +446,12 @@ test.describe("Portfolio visual acceptance matrix", () => {
       expect(box!.y).toBeGreaterThanOrEqual(0);
       expect(box!.y + box!.height).toBeLessThanOrEqual(900);
     }
-    // The map must be mostly on screen, not just its top edge.
-    const stage = await page.locator(".solar-system__stage").boundingBox();
-    expect(stage).not.toBeNull();
-    expect(Math.min(900, stage!.y + stage!.height) - stage!.y).toBeGreaterThan(
-      stage!.height * 0.6,
-    );
-  });
-
-  test("planet markers link to dossiers and arrow keys move the focus card", async ({
-    page,
-  }) => {
-    await page.goto("/", { waitUntil: "networkidle" });
-    const links = page.locator(
-      '.solar-system a.planet-node[href^="/projects/"]:visible',
-    );
-    await expect(links).toHaveCount(5);
-    const title = page.locator(".solar-focus-card__title");
-    const first = await title.textContent();
-    await page.locator('.solar-system a.planet-node[tabindex="0"]:visible').focus();
-    await page.keyboard.press("ArrowRight");
-    await expect(title).not.toHaveText(first ?? "");
-    // DOM focus follows the selection: the focused marker is the card's project.
-    await expect(page.locator("a.planet-node:focus")).toHaveAttribute(
-      "href",
-      (await page.locator(".solar-focus-card").getAttribute("href")) ?? "",
-    );
-    await expect(page.locator(".solar-focus-card")).toHaveAttribute(
-      "href",
-      /^\/projects\//,
-    );
-  });
-
-  test("using the map stops the orbit tour and only Play resumes it", async ({
-    page,
-  }) => {
-    await page.goto("/", { waitUntil: "networkidle" });
-    const tour = page.locator(".poster__tour");
-    await expect(tour).toHaveText("Pause tour");
-    await page.getByRole("button", { name: "Next project in orbit order" }).click();
-    await expect(tour).toHaveText("Play tour");
-    await tour.click();
-    await expect(tour).toHaveText("Pause tour");
-    // Play really resumes: the card advances on its own, with the pointer and
-    // focus still on the tour button.
-    const title = page.locator(".solar-focus-card__title");
-    const before = await title.textContent();
-    await expect(title).not.toHaveText(before ?? "", { timeout: 9_000 });
-  });
-
-  test("reduced motion keeps the full plate, with no tour or running animation", async ({
-    page,
-  }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/", { waitUntil: "networkidle" });
-    await expect(page.locator("canvas")).toHaveCount(0);
-    await expect(
-      page.locator('.solar-plate a.planet-node[href^="/projects/"]'),
-    ).toHaveCount(5);
-    await expect(page.locator(".solar-plate--hidden")).toHaveCount(0);
-    await expect(page.locator(".poster__tour")).toBeHidden();
-    const running = await page.evaluate(() =>
-      document
-        .querySelector(".poster")!
-        .getAnimations({ subtree: true })
-        .filter((a) => (a as CSSAnimation).animationName)
-        .map((a) => (a as CSSAnimation).animationName),
-    );
-    expect(running).toEqual([]);
+    // The lead cards start on screen, so the leading projects read within seconds.
+    const card = await page.locator(".lead-card").first().boundingBox();
+    expect(card).not.toBeNull();
+    const visible = Math.min(900, card!.y + card!.height) - card!.y;
+    // The cards are taller now (outcome, proof, stack); the poster and title read on screen.
+    expect(visible).toBeGreaterThan(150);
   });
 
   test("home has no horizontal overflow at tablet width", async ({ page }) => {

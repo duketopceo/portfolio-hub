@@ -4,7 +4,7 @@ import type {
 } from "@/lib/github-activity-types";
 import { condenseProjectActivity } from "@/lib/activity-aggregate";
 import { listedProjects } from "@/lib/catalog";
-import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
+import { featuredSlugs } from "@/lib/featured";
 import type { SignalContribution } from "@/lib/signal-summary";
 
 const now = new Date("2026-08-19T12:00:00.000Z");
@@ -320,7 +320,7 @@ export function fixtureProjectActivity(slug: string): ProjectActivityPayload {
  * featured. Fixture-only; built from the live catalog so slugs stay valid.
  */
 export function fixtureSignalContributions(): SignalContribution[] {
-  const featured = new Set<string>(HOMEPAGE_FEATURED_SLUGS);
+  const featured = new Set<string>(featuredSlugs());
   const others = listedProjects()
     .filter((p) => !p.private && p.repoName && !featured.has(p.slug))
     .slice(0, 6);

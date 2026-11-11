@@ -13,7 +13,7 @@ import {
 } from "./planet-spec";
 
 const look = (slug: string, authored = {}) =>
-  resolvePlanetLook({ slug, type: "platform", baseColor: "#A78BFA", authored });
+  resolvePlanetLook({ slug, type: "platform", baseColor: "#F5D76E", authored });
 
 describe("planet spec defaults", () => {
   it("is deterministic per slug and varies across slugs", () => {
@@ -57,7 +57,7 @@ describe("planet spec defaults", () => {
 
   it("derives a surface from the project type when none is authored", () => {
     const by = (type: string) =>
-      resolvePlanetLook({ slug: "x", type, baseColor: "#2DD4BF" }).surface;
+      resolvePlanetLook({ slug: "x", type, baseColor: "#FFB06B" }).surface;
     expect(by("platform")).toBe("gas");
     expect(by("infra")).toBe("cratered");
     expect(by("experiment")).toBe("ice");
@@ -67,7 +67,7 @@ describe("planet spec defaults", () => {
 
 describe("palette", () => {
   it("round-trips hex and mixes endpoints", () => {
-    expect(rgbToHex(hexToRgb("#2DD4BF"))).toBe("#2dd4bf");
+    expect(rgbToHex(hexToRgb("#FFB06B"))).toBe("#ffb06b");
     expect(mixHex("#000000", "#ffffff", 0)).toBe("#000000");
     expect(mixHex("#000000", "#ffffff", 1)).toBe("#ffffff");
   });
@@ -78,7 +78,7 @@ describe("palette", () => {
       return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     };
     for (const surface of PLANET_SURFACES) {
-      const [lo, mid, hi] = derivePalette("#A78BFA", surface);
+      const [lo, mid, hi] = derivePalette("#F5D76E", surface);
       expect(lum(lo), surface).toBeLessThan(lum(mid));
       expect(lum(mid), surface).toBeLessThan(lum(hi));
     }

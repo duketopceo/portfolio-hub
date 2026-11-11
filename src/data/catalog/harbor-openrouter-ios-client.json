@@ -6,6 +6,7 @@
     "tagline": "Unofficial OpenRouter iOS client with BYOK",
     "description": "Unofficial native iOS client for OpenRouter. Bring-your-own-key only: the key stays in the iOS Keychain and there is no backend. Not affiliated with OpenRouter.",
     "category": "apps",
+    "capability": "products",
     "type": "app",
     "featured": false,
     "techStack": [

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { listedProjects } from "@/lib/catalog";
-import { HOMEPAGE_FEATURED_SLUGS } from "@/lib/project-completeness";
+import { featuredSlugs } from "@/lib/featured";
 
 const upstream = vi.hoisted(() => ({
   data: null as null | {
@@ -37,8 +37,9 @@ describe("U7 /hire", () => {
     upstream.data = null;
     const html = await hire();
     const listed = new Set(listedProjects().map((p) => p.slug));
-    expect(HOMEPAGE_FEATURED_SLUGS).toHaveLength(5);
-    for (const slug of HOMEPAGE_FEATURED_SLUGS) {
+    const featured = featuredSlugs();
+    expect(featured).toHaveLength(5);
+    for (const slug of featured) {
       expect(listed.has(slug)).toBe(true);
       expect(html).toContain(`href="/projects/${slug}"`);
     }
@@ -48,7 +49,7 @@ describe("U7 /hire", () => {
     upstream.data = null;
     const html = await hire();
     const posters = listedProjects()
-      .filter((p) => (HOMEPAGE_FEATURED_SLUGS as readonly string[]).includes(p.slug))
+      .filter((p) => featuredSlugs().includes(p.slug))
       .flatMap((p) =>
         typeof p.media.release === "string" || !p.media.release.poster
           ? []

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CAPABILITY_IDS } from "../capability-meta";
 import { PLANET_SURFACES, SPEC_LIMITS } from "../../lib/planet-spec";
 
 /**
@@ -74,13 +75,30 @@ const showcase = z.strictObject({
   outcomes: z.string().optional(),
 });
 
+/** One verifiable figure (KD4): omitted when it cannot be measured, never estimated. */
+const measuredItem = z.strictObject({
+  label: z.string().min(1),
+  value: z.string().min(1),
+  /** Where the number comes from: a run report or command, without secrets or paths. */
+  source: z.string().min(1),
+  /** ISO date of the run. */
+  measuredOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  method: z.string().min(1),
+});
+
 export const curatedSchema = z.strictObject({
   displayName: z.string().min(1),
   tagline: z.string(),
   description: z.string(),
   category: z.enum(["finance", "ai", "osint", "infra", "apps", "data"]),
+  /** Capability group (KD2). Required for listed entries (a test enforces it). */
+  capability: z.enum(CAPABILITY_IDS).optional(),
   type: z.enum(["app", "library", "infra", "experiment", "platform"]),
   featured: z.boolean(),
+  /** One factual sentence: what the project achieves, shown first on lead cards. */
+  outcome: z.string().optional(),
+  /** Recorded measurements shown as proof on the lead card and dossier. */
+  measured: z.array(measuredItem).optional(),
   private: z.boolean(),
   techStack: z.array(z.string()),
   highlights: z.array(z.string()),

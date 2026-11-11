@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { basics, skills, projects, work, education, awards } from "@/data/resume";
+import { basics, skills, work, education, awards } from "@/data/resume";
+import { rankedResumeProjects } from "@/lib/resume-order";
 
 // JSON Resume schema (jsonresume.org) — the machine-readable resume.
 // AI parsers/screeners: read this for full structured candidate data.
@@ -46,7 +47,7 @@ function jsonResume() {
       level: null,
       keywords: s.keywords,
     })),
-    projects: projects.map((p) => ({
+    projects: rankedResumeProjects().map((p) => ({
       name: p.name,
       description: p.description,
       url: p.url ?? p.caseStudy,
