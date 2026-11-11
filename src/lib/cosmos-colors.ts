@@ -2,7 +2,7 @@
  * The black-hole scene's own colours: warm white, amber and ember orange,
  * nothing cool. Kept apart from the site palette (lib/palette.ts) on purpose:
  * the scene never uses teal, green or violet, so it cannot pick them up when
- * the site accents change. Shared by the shader, the SVG plate and stardust.
+ * the site accents change. Shared by the shader and the SVG plate.
  */
 export const HOLE_COLORS = {
   /** White-hot: photon ring, inner disk rim, brightest stars. */

@@ -15,38 +15,6 @@ export const BOX_PER_SHADOW = 5.5;
 const W = BOX_PER_SHADOW * SH * 2; // 220
 const H = 124;
 
-/**
- * Broken elliptical streaks that circle the disk. Each ring is one dashed
- * ellipse whose dash offset animates (cosmos.css, 60-90 s per turn, inner
- * rings faster), so the plate rotates without any script. pathLength is
- * normalised to 100 and every dash pattern sums to a divisor of 100, so the
- * loop is seamless. The far half sits under the shadow, like the disk.
- */
-const STREAKS = [
-  { r: 1.6, dash: "5 3 2 10", cls: "a", opacity: 0.32 },
-  { r: 2.4, dash: "8 4 3 5", cls: "b", opacity: 0.24 },
-  { r: 3.3, dash: "4 11 6 4", cls: "c", opacity: 0.18 },
-  { r: 4.2, dash: "9 6 2 8", cls: "d", opacity: 0.12 },
-] as const;
-
-function DiskStreaks() {
-  return (
-    <g fill="none" stroke={C.white} strokeWidth="0.9" strokeLinecap="round">
-      {STREAKS.map((s) => (
-        <ellipse
-          key={s.cls}
-          className={`cosmos-bh-streak cosmos-bh-streak--${s.cls}`}
-          rx={s.r * SH}
-          ry={s.r * SH * TILT}
-          pathLength={100}
-          strokeDasharray={s.dash}
-          strokeOpacity={s.opacity}
-        />
-      ))}
-    </g>
-  );
-}
-
 /** Half-disc (top or bottom) of the lensed image, radius `r`. */
 const halfDisc = (r: number, top: boolean) => `M${-r} 0A${r} ${r} 0 0 ${top ? 1 : 0} ${r} 0Z`;
 
@@ -54,7 +22,7 @@ const halfDisc = (r: number, top: boolean) => `M${-r} 0A${r} ${r} 0 0 ${top ? 1 
  * Static black hole, full-screen: a black shadow, a thin photon ring, a hot
  * disk seen near edge-on, and the disk's far side lensed up over and under
  * the hole, brighter on the approaching (left) side. Pure SVG, server
- * rendered, crisp at any DPR. Same composition and constants as the WebGL
+ * rendered, crisp at any DPR, nothing animates. Same composition and constants as the WebGL
  * scene; stands in for it under reduced motion and when WebGL is unavailable,
  * failed or too slow. Warm white, amber and ember only.
  */
@@ -131,7 +99,6 @@ export default function BlackHoleSvg() {
       <g mask="url(#bh-doppler-mask)">
         {/* Whole disk first: its far half is hidden by the shadow below. */}
         <ellipse rx={R_OUT * SH} ry={R_OUT * SH * TILT} fill="url(#bh-disk)" />
-        <DiskStreaks />
         {/* The far side of the disk bent over the top (strong) and under (faint). */}
         <g mask="url(#bh-taper-mask)">
           <path d={halfDisc(top, true)} fill="url(#bh-lens)" />
@@ -142,12 +109,11 @@ export default function BlackHoleSvg() {
       {/* Event-horizon shadow, soft halo and thin photon ring. */}
       <circle r={SH} fill="#000" />
       <circle r={SH * 1.08} fill="none" stroke={C.amber} strokeOpacity="0.6" strokeWidth="6" filter="url(#bh-bloom)" />
-      <circle r={SH * 1.02} fill="none" stroke={C.white} strokeOpacity="1" strokeWidth="0.9" />
+      <circle r={SH * 1.02} fill="none" stroke={C.white} strokeOpacity="1" strokeWidth="0.4" />
 
       {/* Near half of the disk crosses in front of the shadow. */}
       <g clipPath="url(#bh-front)" mask="url(#bh-doppler-mask)">
         <ellipse rx={R_OUT * SH} ry={R_OUT * SH * TILT} fill="url(#bh-disk)" />
-        <DiskStreaks />
       </g>
     </svg>
   );

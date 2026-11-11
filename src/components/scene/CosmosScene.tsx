@@ -1,79 +1,45 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { setUniform } from "@/components/scene/uniforms";
-import StarfieldScene, { setLens, type LensUniforms } from "@/components/scene/StarfieldScene";
 import BlackHole, { createBlackHoleMaterial } from "@/components/scene/BlackHole";
-import {
-  bodyOpacity,
-  bodyPlacement,
-  layoutVariant,
-  scrollOffset,
-} from "@/lib/cosmos-layout";
+import { bodyPlacement, layoutVariant, scrollFade, shadowRadius } from "@/lib/cosmos-layout";
 import { tierSettings, type CosmosTier } from "@/lib/cosmos-quality";
 
-/** Camera distance (CosmosLive places the camera here); only the stars use the camera. */
-export const CAMERA_Z = 42;
-/** Scene light level: the hole is background, the page text is drawn over it. */
-const HOLE_LIGHT = 1;
-/** How far the lowest light (faint lensed image under the hole) reaches below its centre, in shadow radii. */
-const BELOW = 1.5;
+/** Scene light level: dim on purpose, the page's text is drawn over it (see BRAND.md contrast notes). */
+export const HOLE_LIGHT = 0.22;
 
 /**
- * The whole background in one canvas: a quiet starfield and one full-screen
- * black hole placed from the shared layout table. The hole drifts up with
- * the page and fades out as it leaves. `tier` is the current rung of the
- * quality ladder (cosmos-quality.ts).
+ * The whole background in one canvas: a single full-screen black hole placed
+ * from the shared layout table. It stays fixed behind the page and fades a
+ * little as the page scrolls. `tier` is the current rung of the quality
+ * ladder (cosmos-quality.ts).
  */
 export default function CosmosScene({ tier = "full" }: { tier?: CosmosTier }) {
   const holeMaterial = useMemo(() => createBlackHoleMaterial(), []);
-  const holeMesh = useRef<THREE.Mesh>(null);
-  // Shared with the starfield, which bends star positions around the hole.
-  const lens = useMemo<LensUniforms>(
-    () => ({ uLens: { value: new THREE.Vector4(0, 0, 0.1, 0) }, uAspect: { value: 1 } }),
-    []
-  );
   const settings = tierSettings(tier);
 
   useEffect(() => () => holeMaterial.dispose(), [holeMaterial]);
   useEffect(() => {
     setUniform(holeMaterial, "uDetail", settings.detail);
     setUniform(holeMaterial, "uGlow", settings.glow ? 1 : 0);
-  }, [holeMaterial, settings.detail, settings.glow]);
+    setUniform(holeMaterial, "uLens", settings.lensing ? 1 : 0);
+  }, [holeMaterial, settings.detail, settings.glow, settings.lensing]);
 
   useFrame(({ clock, size }) => {
     const aspect = size.width / size.height;
-    const variant = layoutVariant(size.width, size.height);
+    const p = bodyPlacement(layoutVariant(size.width, size.height));
     const sy = typeof window === "undefined" ? 0 : window.scrollY;
     const innerH = typeof window === "undefined" ? 1 : window.innerHeight;
-
-    const p = bodyPlacement(variant, "blackhole");
-    const off = scrollOffset(sy, innerH, p.parallax);
-    // Height units: y in [-1, 1], x in [-aspect, aspect]. `size` is the shadow
-    // diameter as a fraction of the smaller viewport side.
-    const radius = p.size * Math.min(aspect, 1);
-    const cx = (p.x - 0.5) * 2 * aspect;
-    const cy = (0.5 - (p.y + off)) * 2;
-    // Gone once the lowest light has left through the top.
-    const opacity = bodyOpacity(p.y + off + (radius * BELOW) / 2);
-    if (holeMesh.current) holeMesh.current.visible = opacity > 0.01;
+    // Height units: y in [-1, 1], x in [-aspect, aspect].
+    (holeMaterial.uniforms.uCenter.value as THREE.Vector2).set((p.x - 0.5) * 2 * aspect, (0.5 - p.y) * 2);
     setUniform(holeMaterial, "uAspect", aspect);
     setUniform(holeMaterial, "uTime", clock.getElapsedTime());
-    setUniform(holeMaterial, "uRadius", radius);
-    setUniform(holeMaterial, "uOpacity", opacity * HOLE_LIGHT);
-    (holeMaterial.uniforms.uCenter.value as THREE.Vector2).set(cx, cy);
-
-    // Lensing inputs for the stars: hole centre and shadow radius in NDC
-    // (the same height units), off when the tier drops it or the hole is gone.
-    setLens(lens, cx / aspect, cy, radius, settings.lensing ? opacity : 0, aspect);
+    setUniform(holeMaterial, "uRadius", shadowRadius(aspect, p.size));
+    setUniform(holeMaterial, "uOpacity", HOLE_LIGHT * scrollFade(sy, innerH));
   });
 
-  return (
-    <>
-      <StarfieldScene links={settings.links} lens={lens} />
-      <BlackHole material={holeMaterial} meshRef={holeMesh} />
-    </>
-  );
+  return <BlackHole material={holeMaterial} />;
 }

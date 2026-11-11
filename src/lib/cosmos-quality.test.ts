@@ -20,12 +20,11 @@ describe("cosmos quality ladder", () => {
     expect(high.lensing).toBe(false);
     expect({ ...high, lensing: true }).toEqual(full);
   });
-  it("gets cheaper each step: fewer pixels, no glow, no links, no extra octave", () => {
+  it("gets cheaper each step: fewer pixels, no glow, no extra octave", () => {
     const high = tierSettings("high");
     const low = tierSettings("low");
     expect(low.dpr[1]).toBeLessThan(high.dpr[1]);
     expect(high.glow && !low.glow).toBe(true);
-    expect(high.links && !low.links).toBe(true);
     expect(high.detail).toBe(1);
     expect(low.detail).toBe(0);
   });

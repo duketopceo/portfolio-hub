@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { PerformanceMonitor } from "@react-three/drei";
 import { parseTierPin } from "@/lib/cosmos-mode";
 import SceneFrame from "@/components/scene/SceneFrame";
-import CosmosScene, { CAMERA_Z } from "@/components/scene/CosmosScene";
+import CosmosScene from "@/components/scene/CosmosScene";
 import {
   DECLINE_BELOW_FPS,
   stepDown,
@@ -13,7 +13,7 @@ import {
 } from "@/lib/cosmos-quality";
 
 /**
- * The live background: one SceneFrame (one WebGL context) holding the scene,
+ * The live background: one SceneFrame (one WebGL context) holding the hole,
  * watched by drei's PerformanceMonitor. Sustained frames under budget step
  * quality down (high -> low) and then give the stage back to the static plate
  * via `onGiveUp`; it never steps back up. The scene is imported statically
@@ -52,7 +52,7 @@ export default function CosmosLive({
   return (
     <SceneFrame
       className="cosmic-bg__field"
-      camera={{ position: [0, 0, CAMERA_Z], fov: 50 }}
+      camera={{ position: [0, 0, 1] }}
       dpr={tierSettings(tier).dpr}
       preserveDrawingBuffer={false}
       onReadyChange={onReadyChange}

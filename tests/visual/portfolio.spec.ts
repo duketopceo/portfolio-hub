@@ -106,7 +106,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
         await expectNoHorizontalOverflow(page);
         await expect(page.locator("main")).toBeVisible();
         // The fixed full-viewport cosmic background (black hole,
-        // stardust, stars; canvas and SVG layers) is animated and would paint
+        // canvas and SVG layers) is animated and would paint
         // over the hero; .cosmic-bg contains every such layer, so hide it for
         // baselines only. Its static renditions have their own deterministic
         // captures below (reduced motion / WebGL disabled).
@@ -201,66 +201,56 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator(".cosmic-bg canvas")).toHaveCount(0);
   });
 
-  test("live background renders pixels in its one WebGL canvas", async ({
+  test("live background renders the black hole in its one WebGL canvas", async ({
     page,
   }) => {
     test.setTimeout(120_000);
     await page.goto("/?cosmos=live&cosmos-tier=pin", { waitUntil: "networkidle" });
-    const canvases = page.locator(".cosmic-bg canvas[data-engine]");
-    await expect(canvases).toHaveCount(1, { timeout: 30_000 });
-    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "live", {
-      timeout: 60_000,
+    await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(1, { timeout: 30_000 });
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "live", { timeout: 60_000 });
+    // The canvas does not preserve its drawing buffer, so reading it directly
+    // is timing-dependent. Put it over magenta instead: the event horizon is
+    // the one fully opaque black disc, so it must show as a large dark area.
+    await page.addStyleTag({
+      content:
+        ".cosmic-bg{background:#f0f !important} .cosmic-bg__scrim,.cosmic-bg__vignette,.cosmic-bg__noise,.cosmos-plate{display:none !important}",
     });
-
-    for (let index = 0; index < 1; index += 1) {
-      const canvas = canvases.nth(index);
-      await expect
-        .poll(
-          () =>
-            // The background canvas does not preserve its drawing buffer, so
-            // read it inside animation frames and keep the best of a few.
-            canvas.evaluate(
-              (element) =>
-                new Promise<number>((resolve) => {
-                  const source = element as HTMLCanvasElement;
-                  let best = 0;
-                  let frames = 0;
-                  const sample = () => {
-                    const probe = document.createElement("canvas");
-                    probe.width = Math.max(1, Math.min(320, source.width));
-                    probe.height = Math.max(1, Math.min(180, source.height));
-                    const context = probe.getContext("2d");
-                    if (context) {
-                      context.drawImage(source, 0, 0, probe.width, probe.height);
-                      const pixels = context.getImageData(0, 0, probe.width, probe.height).data;
-                      let painted = 0;
-                      for (let i = 3; i < pixels.length; i += 4) {
-                        if (pixels[i] > 0) painted += 1;
-                      }
-                      best = Math.max(best, painted);
-                    }
-                    frames += 1;
-                    if (best <= 100 && frames < 300) requestAnimationFrame(sample);
-                    else resolve(best);
-                  };
-                  requestAnimationFrame(sample);
-                }),
-            ),
-          { timeout: 30_000 },
-        )
-        .toBeGreaterThan(100);
-    }
+    await expect
+      .poll(
+        async () => {
+          const png = await page.locator(".cosmic-bg").screenshot();
+          return page.evaluate(async (b64) => {
+            const img = new Image();
+            img.src = `data:image/png;base64,${b64}`;
+            await img.decode();
+            const c = document.createElement("canvas");
+            c.width = img.width;
+            c.height = img.height;
+            const g = c.getContext("2d");
+            if (!g) return 0;
+            g.drawImage(img, 0, 0);
+            const d = g.getImageData(0, 0, c.width, c.height).data;
+            let dark = 0;
+            for (let i = 0; i < d.length; i += 4) if (d[i] < 40 && d[i + 1] < 40 && d[i + 2] < 40) dark += 1;
+            return dark;
+          }, png.toString("base64"));
+        },
+        { timeout: 30_000 },
+      )
+      .toBeGreaterThan(5_000);
   });
 
-  test("live background is one WebGL context and a 2D stardust canvas on long pages", async ({
+  test("live background is exactly one WebGL canvas and one black-hole plate on every page", async ({
     page,
   }) => {
     test.setTimeout(120_000);
     await page.goto("/about?cosmos=live&cosmos-tier=pin", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(1, { timeout: 30_000 });
-    // The background is a black hole only: no planet bodies on any page.
+    // The background is one black hole: no second canvas (no stardust), no planets, no star layers.
+    await expect(page.locator(".cosmic-bg canvas")).toHaveCount(1);
     await expect(page.locator(".cosmos-body")).toHaveCount(1);
     await expect(page.locator(".cosmos-body--blackhole")).toHaveCount(1);
+    await expect(page.locator(".cosmos-dust, .cosmic-bg__stars, .cosmic-bg__grid")).toHaveCount(0);
   });
 
   // Software GL here runs the live scene at about 10 fps, well under budget:
@@ -352,15 +342,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
     });
   }
 
-  // R6: the plate's disk streaks turn slowly in CSS when motion is allowed
-  // and WebGL is missing; reduced motion shows them still.
-  const streakAnimation = (page: import("@playwright/test").Page) =>
-    page.locator(".cosmos-bh-streak--a").first().evaluate((el) => {
-      const cs = getComputedStyle(el);
-      return { name: cs.animationName, duration: cs.animationDuration };
-    });
-
-  test("without WebGL the black hole rotates in CSS over 60-90 s", async ({ page }) => {
+  test("the static black hole is a still: no streak rings, no animation", async ({ page }) => {
     await page.addInitScript(() => {
       const original = HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
@@ -370,19 +352,8 @@ test.describe("Portfolio visual acceptance matrix", () => {
     });
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "static");
-    const a = await streakAnimation(page);
-    expect(a.name).toBe("cosmos-bh-turn");
-    const seconds = Number.parseFloat(a.duration);
-    expect(seconds).toBeGreaterThanOrEqual(60);
-    expect(seconds).toBeLessThanOrEqual(90);
-    const d = await page.locator(".cosmos-bh-streak--d").first().evaluate((el) => getComputedStyle(el).animationDuration);
-    expect(Number.parseFloat(d)).toBeLessThanOrEqual(90);
-  });
-
-  test("reduced motion shows the black hole still, with no animation", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/", { waitUntil: "networkidle" });
-    expect((await streakAnimation(page)).name).toBe("none");
+    await expect(page.locator(".cosmic-bg .cosmos-plate svg")).toHaveCount(1);
+    await expect(page.locator(".cosmos-bh-streak")).toHaveCount(0);
   });
 
   test("reduced motion creates no WebGL canvases", async ({ page }) => {

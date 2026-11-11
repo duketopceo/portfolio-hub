@@ -2,8 +2,8 @@ import type { WebGLTier } from "@/lib/webgl-probe";
 import { shouldSkipScene } from "@/lib/render-capability";
 
 /**
- * "static": the server-rendered SVG plate and CSS stardust only.
- * "live": the WebGL black hole over the starfield and the canvas stardust.
+ * "static": the server-rendered SVG plate only.
+ * "live": the WebGL black hole.
  */
 export type CosmosMode = "static" | "live";
 

@@ -10,7 +10,6 @@ re-implemented.
 | Ported logic | Rune source file | Used in |
 |---|---|---|
 | `gauss`, `bloom` (two-lobe falloff) and the soft-knee idea, for the soft ring glow | `crates/rune-fx/src/shaders/common.wgsl`, `crates/rune-fx/src/shaders/glow.wgsl` (variant 0) | `src/components/scene/BlackHole.tsx` |
-| Radial displacement profile `f(x) = x * exp(-x * x) * 2.33`, for the lensing of the starfield | `crates/rune-fx/src/shaders/distort.wgsl` (shockwave variant) | `src/components/scene/StarfieldScene.tsx` |
 
 Rune's license (MIT), reproduced as required:
 

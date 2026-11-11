@@ -11,7 +11,7 @@ import { HOLE_COLORS } from "@/lib/cosmos-colors";
  * hole, Doppler-brightened on the approaching (left) side, turning slowly.
  * The classic glowing-ring look, original rendering; only the soft bloom is
  * ported (below). Colours are warm white, amber and ember only.
- * Cost: two noise octaves (one on the low quality tier), see cosmos-quality.ts.
+ * Cost: two soft noise octaves (one on the low quality tier), see cosmos-quality.ts.
  * The ring glow (bloom, gauss) is ported from Rune's glow shader: see the
  * attribution at the top of FRAGMENT and THIRD_PARTY_NOTICES.md.
  *
@@ -51,6 +51,7 @@ uniform float uSpin;      // rad/s at mid-radius
 uniform float uOpacity;   // scene light level (shadow is always fully black)
 uniform float uGlow;      // 1 = soft bloom + disk haze, 0 = off (low tier)
 uniform float uDetail;    // 1 = two noise octaves, 0 = one (low quality tier)
+uniform float uLens;      // 1 = lensed arcs over and under the hole, 0 = plain ring glow (high tier and below)
 uniform vec3 uWhite;
 uniform vec3 uAmber;
 uniform vec3 uEmber;
@@ -83,9 +84,10 @@ float vnoise(vec3 x) {
     mix(mix(hash(i + vec3(0, 0, 1)), hash(i + vec3(1, 0, 1)), f.x), mix(hash(i + vec3(0, 1, 1)), hash(i + vec3(1, 1, 1)), f.x), f.y),
     f.z);
 }
-// Azimuthal streaks that rotate: high frequency in radius, low in angle.
+// Slow, soft flow in the disk: low frequency in radius and angle, turns
+// with the disk. No hard streaks; it only breathes the brightness a little.
 float streaks(float rr, float ang) {
-  vec3 q = vec3(rr * 4.0, cos(ang) * 2.2, sin(ang) * 2.2);
+  vec3 q = vec3(rr * 1.6, cos(ang) * 1.4, sin(ang) * 1.4);
   float n = 0.7 * vnoise(q);
   // The second octave is skipped on the low tier, where its mean
   // contribution stands in so brightness matches across tiers.
@@ -115,13 +117,15 @@ void main() {
   vec2 d = vec2(p.x, p.y / TILT);
   float rd = length(d);
   float omega = uSpin * pow(0.55 / max(rd * 0.25, 0.2), 0.75);
-  float inBand = smoothstep(R_IN, R_IN + 0.04, rd) * (1.0 - smoothstep(3.4, R_OUT, rd));
+  float inBand = smoothstep(R_IN, R_IN + 0.04, rd) * (1.0 - smoothstep(5.0, R_OUT + 1.6, rd));
   vec3 disk = vec3(0.0);
   if (inBand > 0.0) {
-    float t = clamp((rd - R_IN) / (R_OUT - R_IN), 0.0, 1.0);
+    float t = clamp((rd - R_IN) / (R_OUT * 1.6 - R_IN), 0.0, 1.0);
     float n = streaks(rd, atan(d.y, d.x) - omega * uTime);
-    float bright = pow(1.0 - t, 2.0) * (0.55 + 0.9 * n) * 2.3;
-    disk = heat(t) * bright * doppler(d.x / rd, 0.7) * inBand;
+    float bright = pow(1.0 - t, 1.5) * (0.75 + 0.5 * n) * 2.0;
+    // The wings (where page text usually runs) are held dimmer than the hot inner rim.
+    float wing = mix(1.0, 0.3, smoothstep(1.2, 2.2, rd));
+    disk = heat(t) * bright * doppler(d.x / rd, 0.7) * inBand * wing;
   }
 
   // The shadow hides the far half (screen y > 0); the near half crosses in front.
@@ -132,7 +136,10 @@ void main() {
   // and a faint copy under it. Thick at the top, tapering toward the sides
   // where it joins the primary disk.
   vec3 lens = vec3(0.0);
-  if (s > 1.0 && s < 1.0 + REACH * 1.5) {
+  if (uLens < 0.5 && s > 1.0) {
+    // Cheap stand-in for the arcs: a plain warm glow hugging the shadow.
+    lens = heat(0.06 + (s - 1.0) * 0.4) * exp(-(s - 1.0) / 0.3) * 1.1 * doppler(p.x / s, 0.5);
+  } else if (s > 1.0 && s < 1.0 + REACH * 1.5) {
     float up = p.y / s;
     float top = smoothstep(-0.3, 0.8, up);
     float bot = smoothstep(0.25, -0.8, up);
@@ -141,9 +148,9 @@ void main() {
     float tl = (s - 1.0) / (REACH * thick);
     float tb = (s - 1.0) / (REACH * thickB);
     float la = atan(p.y, p.x) - uSpin * 1.3 * uTime;
-    float ln = streaks(0.9 + tl * 2.0, la);
-    float wTop = top * pow(max(1.0 - tl, 0.0), 2.4) * (0.85 + 0.3 * ln);
-    float wBot = bot * 0.7 * pow(max(1.0 - tb, 0.0), 2.6) * (0.85 + 0.3 * ln);
+    float ln = streaks(0.9 + tl * 1.0, la);
+    float wTop = top * pow(max(1.0 - tl, 0.0), 2.4) * (0.9 + 0.2 * ln);
+    float wBot = bot * 0.7 * pow(max(1.0 - tb, 0.0), 2.6) * (0.9 + 0.2 * ln);
     lens = heat(tl * 0.5) * wTop * 2.6 * doppler(p.x / s, 0.55)
          + heat(0.04 + tb * 0.5) * wBot * 2.4 * doppler(p.x / s, 0.55);
   }
@@ -159,11 +166,13 @@ void main() {
   vec3 glow = vec3(0.0);
   if (uGlow > 0.5) {
     float bl = bloom(s - 1.0, 0.7, 2.2) * step(1.0, s);
-    float haze = exp(-pow(p.y / (0.3 + 0.1 * abs(p.x)), 2.0)) * exp(-abs(p.x) / 3.6) * step(1.0, s);
+    float haze = exp(-pow(p.y / (0.3 + 0.1 * abs(p.x)), 2.0)) * exp(-abs(p.x) / 6.5) * step(1.0, s);
     glow = (uAmber * bl * 0.16 + uEmber * haze * 0.16) * doppler(p.x / max(s, 0.001), 0.4);
   }
 
-  vec3 E = disk + lens + photon + glow;
+  // Wide atmosphere: a faint ember glow that fills the viewport.
+  vec3 air = uEmber * exp(-s / 4.5) * 0.12 * uGlow * step(1.0, s);
+  vec3 E = disk + lens + photon + glow + air;
   // Gentle highlight roll-off.
   E = 1.0 - exp(-E * 1.1);
   vec3 srgb = pow(E, vec3(0.85));
@@ -187,6 +196,7 @@ export function createBlackHoleMaterial(): THREE.ShaderMaterial {
       uSpin: { value: (Math.PI * 2) / DISK_PERIOD_SECONDS },
       uOpacity: { value: 1 },
       uDetail: { value: 1 },
+      uLens: { value: 1 },
       uGlow: { value: 1 },
       uWhite: { value: new THREE.Color(HOLE_COLORS.white) },
       uAmber: { value: new THREE.Color(HOLE_COLORS.amber) },
@@ -196,15 +206,8 @@ export function createBlackHoleMaterial(): THREE.ShaderMaterial {
 }
 
 /** Clip-space quad covering the whole canvas; the shader places the hole. */
-export default function BlackHole({
-  material,
-  meshRef,
-}: {
-  material: THREE.ShaderMaterial;
-  meshRef?: React.Ref<THREE.Mesh>;
-}) {
+export default function BlackHole({ material }: { material: THREE.ShaderMaterial }) {
   const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
   useEffect(() => () => geometry.dispose(), [geometry]);
-  // Drawn after the stars (renderOrder 1) so the shadow hides them.
-  return <mesh ref={meshRef} geometry={geometry} material={material} frustumCulled={false} renderOrder={1} />;
+  return <mesh geometry={geometry} material={material} frustumCulled={false} />;
 }

@@ -9,7 +9,7 @@
    mono microcopy, catalog numbers, redacted blocks, squared corners.
    Teal is a signal color — live/interactive elements only. */
 
-/* ── Star chart background — survey plate, grid, sharp stars, grain ── */
+/* ── Cosmic background: one black hole, film grain, scrim, vignette ── */
 .cosmic-bg {
   position: fixed;
   inset: 0;
@@ -17,80 +17,6 @@
   pointer-events: none;
   overflow: hidden;
   background: var(--color-bg);
-}
-
-/* Blueprint survey grid — minor 24px + major 96px hairlines,
-   vignette-masked so edges fall off into darkness */
-.cosmic-bg__grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, rgba(255, 235, 214, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 235, 214, 0.05) 1px, transparent 1px),
-    linear-gradient(to right, rgba(255, 235, 214, 0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 235, 214, 0.028) 1px, transparent 1px);
-  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
-  mask-image: radial-gradient(ellipse 90% 80% at 50% 38%, black 30%, transparent 88%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 38%, black 30%, transparent 88%);
-}
-
-/* Mapped stars — sharp points, no glow blobs. A few carry amber. */
-.cosmic-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.55) 0%, transparent 100%),
-    radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.38) 0%, transparent 100%),
-    radial-gradient(1px 1px at 45% 25%, rgba(255,255,255,0.62) 0%, transparent 100%),
-    radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,0.36) 0%, transparent 100%),
-    radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,0.34) 0%, transparent 100%),
-    radial-gradient(1px 1px at 92% 15%, rgba(255,255,255,0.58) 0%, transparent 100%),
-    radial-gradient(1px 1px at 30% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.28) 0%, transparent 100%),
-    radial-gradient(1px 1px at 5% 45%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 38% 92%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 78% 55%, rgba(255,255,255,0.42) 0%, transparent 100%),
-    radial-gradient(1px 1px at 15% 88%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 88% 42%, rgba(255,255,255,0.36) 0%, transparent 100%),
-    radial-gradient(1px 1px at 50% 8%, rgba(255,255,255,0.55) 0%, transparent 100%);
-  animation: twinkle 9s ease-in-out infinite alternate;
-}
-
-.cosmic-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 18% 22%, rgba(255, 220, 180, 0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 72% 18%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 42% 78%, rgba(255, 255, 255, 0.36) 0%, transparent 100%),
-    radial-gradient(1px 1px at 95% 65%, rgba(255, 255, 255, 0.32) 0%, transparent 100%),
-    radial-gradient(1px 1px at 8% 55%, rgba(255, 176, 107, 0.45) 0%, transparent 100%);
-  animation: twinkle-slow 15s ease-in-out infinite alternate;
-  animation-delay: -3s;
-  opacity: 0.8;
-}
-
-@keyframes twinkle-slow {
-  0%   { opacity: 0.45; }
-  50%  { opacity: 0.9; }
-  100% { opacity: 0.5; }
-}
-
-@keyframes twinkle {
-  0%   { opacity: 0.65; }
-  45%  { opacity: 1; }
-  100% { opacity: 0.75; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cosmic-bg::before,
-  .cosmic-bg::after {
-    animation: none;
-    opacity: 0.8;
-  }
 }
 
 /* Uplink loader — route transition plate */
@@ -123,27 +49,6 @@
   pointer-events: none;
 }
 
-/* ── Extra star layers — chart depth ── */
-.cosmic-bg__stars {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.cosmic-bg__stars--far {
-  background-image:
-    radial-gradient(0.5px 0.5px at 23% 18%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(0.5px 0.5px at 67% 33%, rgba(255,255,255,0.42), transparent),
-    radial-gradient(0.5px 0.5px at 44% 67%, rgba(255,255,255,0.45), transparent),
-    radial-gradient(0.5px 0.5px at 82% 82%, rgba(255,255,255,0.38), transparent),
-    radial-gradient(0.5px 0.5px at 11% 44%, rgba(255,214,170,0.34), transparent),
-    radial-gradient(0.5px 0.5px at 56% 19%, rgba(255,255,255,0.44), transparent),
-    radial-gradient(0.5px 0.5px at 93% 57%, rgba(255,255,255,0.36), transparent),
-    radial-gradient(0.5px 0.5px at 31% 88%, rgba(255,255,255,0.32), transparent);
-  animation: star-far-pulse 14s ease-in-out infinite alternate;
-  animation-delay: -6s;
-}
-
 /* Film grain — dithered plate texture */
 .cosmic-bg__noise {
   position: absolute;
@@ -158,16 +63,6 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse 110% 85% at 50% 42%, transparent 35%, rgba(0, 0, 0, 0.62) 80%, rgba(0, 0, 0, 0.85) 100%);
-}
-
-@keyframes star-far-pulse {
-  0%   { opacity: 0.32; }
-  45%  { opacity: 0.72; }
-  100% { opacity: 0.38; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cosmic-bg__stars { animation: none; opacity: 0.6; }
 }
 
 /* ── Content rail: same max-width + padding as Header/Footer ── */

@@ -10,7 +10,6 @@ const SCENE_FILES = [
   ...walk("src/components/scene"),
   ...walk("src/components/cosmos"),
   ...walk("src/components/planet"),
-  "src/lib/stardust.ts",
 ];
 
 /** Hue in degrees of a #RRGGBB colour. */

@@ -2,15 +2,15 @@ import { bodyPlacement } from "@/lib/cosmos-layout";
 import BlackHoleSvg, { BOX_PER_SHADOW } from "./BlackHoleSvg";
 
 /**
- * Server-rendered static background: the black hole as SVG, positioned from
- * the same layout table as the WebGL scene (wide and tall variants, switched
- * by container aspect ratio in CSS). Visible by default; SiteBackground hides
- * it only while the live scene is rendering. The disk streaks turn slowly in
- * CSS (cosmos.css) unless the visitor asks for reduced motion.
+ * Server-rendered static background: the black hole as a full-screen SVG
+ * still, positioned and sized from the same layout table and span rule as
+ * the WebGL scene (wide and tall variants, switched by container aspect
+ * ratio in CSS). Visible by default; SiteBackground hides it only while the
+ * live scene is rendering. Nothing animates.
  */
 export default function CosmosPlate() {
-  const w = bodyPlacement("wide", "blackhole");
-  const t = bodyPlacement("tall", "blackhole");
+  const w = bodyPlacement("wide");
+  const t = bodyPlacement("tall");
   const style = {
     "--xw": w.x,
     "--yw": w.y,
