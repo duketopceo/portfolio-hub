@@ -14,7 +14,7 @@
 //    account can appear in frame;
 //  - fixed viewport, deviceScaleFactor 1, UTC, en-US, frozen clock.
 import { spawnSync } from "node:child_process";
-import { mkdirSync, renameSync, rmSync } from "node:fs";
+import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
@@ -23,6 +23,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 
 // A scenario is a list of beats run in order. `hold` is the pause (ms) after the beat.
 // Add a scenario here for each web project: routes only, no typing of real data.
+// A beat may carry `dur` (ms from the beat's start) instead of `hold`: the recorder then waits
+// until that moment, so narrated shots stay on the cut list (see --beats, docs/MEDIA.md section 7).
 const SCENARIOS = {
   "portfolio-hub": [
     { goto: "/", hold: 3500 },
@@ -51,12 +53,12 @@ function parseArgs(argv) {
 
 const args = parseArgs(process.argv.slice(2));
 const { scenario, base, slug } = args;
-if (!scenario || !base || !slug || !args.out) {
-  console.error("usage: record-web.mjs --scenario NAME --base URL --slug SLUG --out DIR [--width 1280 --height 720 --allow-remote]");
+if ((!scenario && !args.beats) || !base || !slug || !args.out) {
+  console.error("usage: record-web.mjs (--scenario NAME | --beats FILE.json) --base URL --slug SLUG --out DIR [--width 1280 --height 720 --allow-remote]");
   console.error(`scenarios: ${Object.keys(SCENARIOS).join(", ")}`);
   process.exit(2);
 }
-const beats = SCENARIOS[scenario];
+const beats = args.beats ? JSON.parse(readFileSync(resolve(args.beats), "utf8")) : SCENARIOS[scenario];
 if (!beats) {
   console.error(`unknown scenario "${scenario}"; known: ${Object.keys(SCENARIOS).join(", ")}`);
   process.exit(2);
@@ -87,6 +89,7 @@ await context.route("**/*", (route) => {
   if (url.protocol === "data:" || url.protocol === "blob:" || url.origin === origin.origin) return route.continue();
   return route.abort();
 });
+const pageCreatedAt = Date.now();
 const page = await context.newPage();
 await page.clock.install({ time: new Date("2026-10-01T12:00:00Z") });
 await page.clock.resume();
@@ -96,12 +99,24 @@ await page.goto(new URL("/", origin).toString(), { waitUntil: "networkidle" });
 const gotIt = page.getByRole("button", { name: /got it/i });
 if (await gotIt.first().isVisible({ timeout: 3000 }).catch(() => false)) await gotIt.first().click();
 
+// t0 is beat time zero; the footage before it (page load, popover) is `leadMs` and is
+// trimmed by assemble.mjs so shot windows line up with the narration track.
+const t0 = Date.now();
+const leadMs = t0 - pageCreatedAt;
+let elapsed = 0;
 for (const beat of beats) {
+  const beatStart = Date.now();
   if (beat.goto) await page.goto(new URL(beat.goto, origin).toString(), { waitUntil: "networkidle" });
   if (beat.scroll !== undefined) {
     await page.evaluate((y) => window.scrollTo({ top: y, behavior: "smooth" }), beat.scroll);
   }
-  await page.waitForTimeout(beat.hold ?? 1500);
+  if (beat.dur !== undefined) {
+    elapsed += beat.dur;
+    await page.waitForTimeout(Math.max(0, t0 + elapsed - Date.now()));
+  } else {
+    await page.waitForTimeout(beat.hold ?? 1500);
+    elapsed += Date.now() - beatStart;
+  }
 }
 
 const video = page.video();
@@ -109,6 +124,7 @@ await context.close(); // finalizes the WebM
 const raw = await video.path();
 await browser.close();
 
+writeFileSync(join(out, `${slug}-timing.json`), JSON.stringify({ leadMs, beatsMs: elapsed }, null, 2) + "\n");
 const rawNamed = join(out, `${slug}-raw.webm`);
 renameSync(raw, rawNamed);
 rmSync(rawDir, { recursive: true, force: true });

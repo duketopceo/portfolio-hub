@@ -13,6 +13,9 @@
     "check:design": "node scripts/check-design-system.mjs",
     "check:privacy": "node scripts/check-privacy.mjs",
     "check:privacy:built": "node scripts/check-privacy-built.mjs",
+    "media:sanitize": "node scripts/media/sanitize.mjs",
+    "media:narrate": "node scripts/media/narrate.mjs",
+    "media:assemble": "node scripts/media/assemble.mjs",
     "catalog:index": "node scripts/catalog-index.mjs",
     "catalog:sync": "node scripts/sync-catalog.mjs",
     "notion:seed": "node scripts/notion/seed-episodes.mjs"

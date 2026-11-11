@@ -4,47 +4,17 @@
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadPrivateNames } from "./lib/private-names.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const rootFlag = process.argv.indexOf("--root");
 const scanRoot = rootFlag > -1 ? process.argv[rootFlag + 1] : repoRoot;
 
 const read = (p) => readFileSync(p, "utf8");
-const quoted = (block) => [...block.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 
-// Hand-listed non-catalog names come from the TS denylist file.
-const denylistSrc = read(join(repoRoot, "src/data/private-denylist.ts"));
-const listOf = (name) => {
-  const m = denylistSrc.match(new RegExp(`export const ${name}\\s*=\\s*\\[([\\s\\S]*?)\\]`));
-  return m ? quoted(m[1]) : [];
-};
-const defaultOwner = quoted(
-  denylistSrc.match(/DEFAULT_REPO_OWNER\s*=\s*("[^"]+")/)?.[1] ?? '""',
-)[0];
-const workOrgs = listOf("workOrgNames");
-const domains = listOf("employerDomains");
-
-// Private catalog entries, read from src/data/catalog/*.json (one file per
-// entry: `slug`, `curated.displayName`, `curated.private`, `github.repoName/owner`).
-const slugs = new Set();
-const bareNames = new Set(); // private repoNames, for the quoted-token scan
-const publicNames = new Set(); // slugs + displayNames: public by design
-const catalogDir = join(repoRoot, "src/data/catalog");
-const catalogFiles = existsSync(catalogDir)
-  ? readdirSync(catalogDir).filter((f) => f.endsWith(".json") && !f.startsWith("_"))
-  : [];
-for (const file of catalogFiles) {
-  const entry = JSON.parse(read(join(catalogDir, file)));
-  publicNames.add(String(entry.slug).toLowerCase());
-  if (entry.curated?.displayName) publicNames.add(entry.curated.displayName.toLowerCase());
-  const name = entry.github?.repoName;
-  if (!name || entry.curated?.private !== true) continue;
-  slugs.add(`${entry.github.owner ?? defaultOwner}/${name}`);
-  bareNames.add(name);
-}
-// A bare repoName that equals a listed slug or displayName is public anyway.
-const exempt = [...bareNames].filter((n) => publicNames.has(n.toLowerCase()));
-const bareChecked = [...bareNames].filter((n) => !publicNames.has(n.toLowerCase()));
+// Private catalog slugs, work orgs and employer domains come from the shared
+// loader that the video sanitizer also uses (scripts/lib/private-names.mjs).
+const { slugs, bareChecked, exempt, workOrgs, domains } = loadPrivateNames(repoRoot);
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // Tolerate JSON-escaped slashes (`\/`) as found in RSC payloads.

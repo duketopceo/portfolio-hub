@@ -83,9 +83,12 @@ describe("check:privacy:built", () => {
 
   it("fails when zero private patterns can be derived", () => {
     const sandbox = mkdtempSync(join(tmpdir(), "privacy-built-empty-"));
-    mkdirSync(join(sandbox, "scripts"));
+    mkdirSync(join(sandbox, "scripts/lib"), { recursive: true });
     mkdirSync(join(sandbox, "src/data/catalog"), { recursive: true });
     copyFileSync(script, join(sandbox, "scripts/check-privacy-built.mjs"));
+    for (const lib of ["private-names.mjs", "catalog-files.mjs"]) {
+      copyFileSync(join(process.cwd(), "scripts/lib", lib), join(sandbox, "scripts/lib", lib));
+    }
     copyFileSync(
       join(process.cwd(), "src/data/private-denylist.ts"),
       join(sandbox, "src/data/private-denylist.ts"),
