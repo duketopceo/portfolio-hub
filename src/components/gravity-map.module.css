@@ -1,0 +1,277 @@
+/*
+ * Gravity map surface.
+ *
+ * Constraints from scripts/check-design-system.mjs: no backdrop-filter, no raw
+ * CSS custom-property fallbacks, and border-radius at most 4px unless circular.
+ */
+
+.root {
+  position: relative;
+  width: 100%;
+  height: min(78vh, 760px);
+  min-height: 460px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  cursor: crosshair;
+  /* Hidden until a real context is drawing, so a JS-less page shows the plate
+     instead of an empty box where the canvas would be. */
+  display: none;
+}
+
+:global(html[data-gravity-canvas="live"]) .stage {
+  display: block;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── static plate ───────────────────────────────────────────────────────────
+   The fallback for no-JS, no-2D-context, and forced-colours.
+
+   Visible by default on purpose: the server cannot know whether a canvas will
+   exist, so the safe default is the readable list. The component sets
+   data-gravity-canvas="live" once a real 2D context is drawing, which is the
+   only state that hides this. */
+
+.staticPlate {
+  padding: var(--space-md);
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/*
+ * The flag lives on <html>, which is outside this module's scope, so it needs
+ * :global. Scoped to .root so another page can never trip these rules.
+ */
+:global(html[data-gravity-canvas="live"]) .staticPlate {
+  display: none;
+}
+
+
+
+.staticSection {
+  margin-bottom: var(--space-md);
+}
+
+.staticLabel {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin: 0 0 var(--space-sm);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-divider);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.staticLabel span {
+  color: var(--color-text-faint);
+}
+
+.staticList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.staticCard {
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.staticName {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.staticName a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.staticName a:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.staticWhy {
+  margin: 6px 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+/* ── hover card ─────────────────────────────────────────────────────────── */
+
+.card {
+  position: fixed;
+  z-index: 40;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 72%);
+  pointer-events: none;
+}
+
+.cardMedia {
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg);
+}
+
+.cardMedia video,
+.cardMedia img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardBody {
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+}
+
+.cardName {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.pill {
+  flex: none;
+  padding: 2px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  color: var(--color-text-faint);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cardWhy {
+  margin: var(--space-micro-2) 0 0;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.cardDesc {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: var(--space-micro-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--space-sm) 0 0;
+}
+
+.cardMeta span {
+  padding: 2px 5px;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  color: var(--color-text-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.cardFoot {
+  margin: var(--space-sm) 0 0;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-divider);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cardFoot a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.cardFoot a:hover {
+  text-decoration: underline;
+}
+
+.cardFoot span {
+  color: var(--color-text-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
+
+/* ── mobile ─────────────────────────────────────────────────────────────────
+   The scene is height-bound on a phone; give it more of the viewport and keep
+   the static plate's cards single-column so they are readable at 360px. */
+
+@media (max-width: 640px) {
+  .root {
+    height: min(70vh, 520px);
+    min-height: 380px;
+  }
+
+  .staticPlate {
+    padding: var(--space-sm);
+  }
+
+  .staticList {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    width: calc(100vw - 24px);
+  }
+}
+
+/* Forced colours: the canvas ink is fixed white, so hand the whole map to the
+   static plate rather than drawing invisible-on-white marks. */
+@media (forced-colors: active) {
+  .stage {
+    display: none;
+  }
+
+  .staticPlate {
+    display: block;
+  }
+}
