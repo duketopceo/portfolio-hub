@@ -1,0 +1,35 @@
+{
+  "slug": "reactor-sim",
+  "order": 70,
+  "curated": {
+    "displayName": "Reactor Sim",
+    "tagline": "Deterministic PWR plant simulator \u2014 real reactor physics in a walkable Unity control room",
+    "description": "An original, deterministic pressurised-water-reactor simulator: point kinetics with six delayed-neutron groups, xenon/iodine poison dynamics, decay heat, a reactivity ledger and lumped thermal-hydraulics, wrapped in a Unity control room built from procedural Blender assets. Educational entertainment built from published reactor engineering \u2014 a game, not a licensed training simulator.",
+    "category": "apps",
+    "type": "app",
+    "featured": false,
+    "techStack": [
+      "C#",
+      "Unity",
+      "Blender",
+      "Physics Simulation"
+    ],
+    "private": false,
+    "highlights": [
+      "Six delayed-neutron groups using Keepin data with analytic sub-stepping",
+      "Xenon and iodine poison dynamics including the post-shutdown xenon pit",
+      "Three-group decay heat after SCRAM",
+      "Reactivity ledger: rod S-curve worth, absorber depletion, boron, Doppler, moderator, xenon",
+      "Procedural Blender assets feed the walkable control room"
+    ],
+    "architecture": "C# simulation core (kinetics \u2192 poisons \u2192 decay heat \u2192 reactivity ledger \u2192 thermal-hydraulics) \u2192 Unity control room \u2192 procedural Blender assets",
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    }
+  },
+  "github": {
+    "repoName": "reactor-sim",
+    "owner": "duketopceo"
+  }
+}
