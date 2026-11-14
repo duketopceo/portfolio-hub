@@ -1,245 +1,101 @@
 import { describe, expect, it } from "vitest";
+import { CAPABILITY_IDS, capabilityMeta } from "@/data/capability-meta";
+import { siteRedirects } from "@/data/redirects";
+import { RANKING_PINS } from "@/data/ranking-pins";
+import { listedProjects } from "@/lib/catalog";
+import { rankProjects } from "@/lib/ranking";
 import {
   buildGravityMap,
-  FINISHED_PRODUCTS,
-  GRAVITY_CENTRES,
-  MIN_CENTRE_SIZE,
-  REPO_CENTRE,
-  taxonomyGaps,
-  type MapRepo,
+  memberJitter,
+  centrePositions,
+  leadPositions,
+  memberPositions,
+  TALL_FRAME,
+  WIDE_FRAME,
 } from "./gravity-map";
-import type { EnrichedProject } from "@/lib/types";
 
-function project(slug: string, over: Partial<EnrichedProject> = {}): EnrichedProject {
-  return {
-    slug,
-    displayName: over.displayName ?? slug,
-    tagline: "t",
-    description: "d",
-    category: "apps",
-    type: "app",
-    featured: false,
-    private: false,
-    techStack: ["TypeScript"],
-    highlights: [],
-    media: { release: "to-record", demo: "n/a" },
-    repoName: slug,
-    repo: null,
-    lastUpdated: "2026-01-01T00:00:00Z",
-    language: null,
-    languages: [],
-    stars: 0,
-    forks: 0,
-    openIssuesCount: 0,
-    ciStatus: null,
-    githubUrl: null,
-    ...over,
-  } as EnrichedProject;
-}
-
-/** One project per mapped slug, so the taxonomy can be checked in isolation. */
-function fullCatalog(): EnrichedProject[] {
-  return Object.keys(REPO_CENTRE).map((slug) => project(slug));
-}
+const ranked = rankProjects(listedProjects());
+const map = buildGravityMap(ranked);
 
 describe("buildGravityMap", () => {
-  it("separates finished products from the categories", () => {
-    const map = buildGravityMap(fullCatalog());
-    expect(map.heroes).toHaveLength(Object.keys(FINISHED_PRODUCTS).length);
-    expect(map.heroes.every((h) => h.isHero)).toBe(true);
+  it("uses the five pinned leads, in pin order", () => {
+    expect(map.heroes.map((h) => h.slug)).toEqual([...RANKING_PINS]);
   });
 
-  it("does not count a hero inside its category", () => {
-    const map = buildGravityMap(fullCatalog());
-    const inFields = Object.values(map.fields)
-      .flat()
-      .filter((r) => FINISHED_PRODUCTS[r.slug]);
-    expect(inFields).toHaveLength(0);
+  it("takes each lead's line from its catalog outcome", () => {
+    for (const h of map.heroes) {
+      const p = ranked.find((r) => r.slug === h.slug);
+      expect(h.why).toBe(p?.outcome ?? p?.tagline);
+      expect(h.why.length).toBeGreaterThan(20);
+    }
   });
 
-  it("counts every repo exactly once", () => {
-    const map = buildGravityMap(fullCatalog());
-    const counted =
-      map.heroes.length +
-      Object.values(map.fields).reduce((n, list) => n + list.length, 0);
-    expect(counted).toBe(fullCatalog().length);
+  it("has one centre per capability group, in CAPABILITY_ORDER, with the shared colours", () => {
+    expect(map.centres.map((c) => c.id)).toEqual([...CAPABILITY_IDS]);
+    for (const c of map.centres) {
+      expect(c.label).toBe(capabilityMeta[c.id].label);
+      expect(c.color).toBe(capabilityMeta[c.id].color);
+    }
   });
 
-  it("never exposes a link for a private entry", () => {
-    const catalog = [
-      project("kate", { private: true }),
-      project("argus"),
-    ];
-    const map = buildGravityMap(catalog);
-    const all: MapRepo[] = [
-      ...map.heroes,
-      ...Object.values(map.fields).flat(),
-    ];
-    const priv = all.filter((r) => r.private);
-    expect(priv.length).toBeGreaterThan(0);
-    expect(priv.every((r) => r.href === null)).toBe(true);
-    expect(all.filter((r) => !r.private).every((r) => r.href !== null)).toBe(true);
+  it("places every capability-tagged project once: leads plus members equals the group", () => {
+    for (const c of map.centres) {
+      const leads = map.heroes.filter((h) => h.capability === c.id).length;
+      expect(c.members.length + leads).toBe(c.count);
+    }
+    const tagged = ranked.filter((p) => (CAPABILITY_IDS as readonly string[]).includes(p.capability ?? ""));
+    expect(map.total).toBe(tagged.length);
   });
 
-  it("orders heroes public-first", () => {
-    const catalog = Object.keys(FINISHED_PRODUCTS).map((slug) =>
-      project(slug, { private: slug === "pace-server" }),
-    );
-    const map = buildGravityMap(catalog);
-    const firstPrivate = map.heroes.findIndex((h) => h.private);
-    const lastPublic = map.heroes.map((h) => !h.private).lastIndexOf(true);
-    expect(firstPrivate).toBeGreaterThan(lastPublic);
+  it("includes reactor-sim under Products and snapdex as ordinary catalog entries", () => {
+    const products = map.centres.find((c) => c.id === "products");
+    const all = map.centres.flatMap((c) => c.members.map((m) => m.slug));
+    expect(products?.members.some((m) => m.slug === "reactor-sim")).toBe(true);
+    expect(all).toContain("snapdex");
   });
 
-  it("takes the release video and poster when recorded", () => {
-    const catalog = [
-      project("argus", {
-        media: {
-          release: {
-            url: "https://media.example/a.mp4",
-            poster: "https://media.example/a.jpg",
-            transcript: "x",
-          },
-          demo: "n/a",
-        },
-      }),
-    ];
-    const repo = buildGravityMap(catalog).fields.models[0];
-    expect(repo.video).toBe("https://media.example/a.mp4");
-    expect(repo.poster).toBe("https://media.example/a.jpg");
+  it("never lists a lead among the members", () => {
+    const members = new Set(map.centres.flatMap((c) => c.members.map((m) => m.slug)));
+    for (const h of map.heroes) expect(members.has(h.slug)).toBe(false);
   });
 
-  it("leaves video unset when the release is unrecorded", () => {
-    const repo = buildGravityMap([project("argus")]).fields.models[0];
-    expect(repo.video).toBeUndefined();
-  });
-
-  it("backfills a poster for a video that has none in the catalog", () => {
-    const catalog = [
-      project("kurultai", {
-        media: {
-          release: { url: "https://media.example/k.mp4", transcript: "x" },
-          demo: "n/a",
-        },
-      }),
-    ];
-    const hero = buildGravityMap(catalog).heroes.find((h) => h.slug === "kurultai");
-    expect(hero?.video).toBe("https://media.example/k.mp4");
-    expect(hero?.poster).toBe("/media/gravity/kurultai-launch.jpg");
-  });
-
-  it("keeps the catalog poster when one is recorded", () => {
-    const catalog = [
-      project("argus", {
-        media: {
-          release: {
-            url: "https://media.example/a.mp4",
-            poster: "https://media.example/real.jpg",
-            transcript: "x",
-          },
-          demo: "n/a",
-        },
-      }),
-    ];
-    expect(buildGravityMap(catalog).fields.models[0].poster).toBe(
-      "https://media.example/real.jpg",
-    );
-  });
-
-  it("gives a still to a repo with no video", () => {
-    const hero = buildGravityMap([project("reactor-sim")]).heroes[0];
-    expect(hero.video).toBeUndefined();
-    expect(hero.still).toBe("/media/gravity/reactor-sim.jpg");
-  });
-
-  it("never gives a repo both a video and a still", () => {
-    const catalog = [
-      project("kurultai", {
-        media: {
-          release: { url: "https://media.example/k.mp4", transcript: "x" },
-          demo: "n/a",
-        },
-      }),
-    ];
-    const hero = buildGravityMap(catalog).heroes[0];
-    expect(hero.video).toBeDefined();
-    expect(hero.still).toBeUndefined();
-  });
-
-  it("sorts featured before the rest within a field", () => {
-    // Both non-heroes in Ship & Quality: a hero would be pulled out of the
-    // field entirely (covered separately), which is not what this measures.
-    const catalog = [
-      project("argus", { featured: false }),
-      project("orchestral", { featured: true }),
-    ];
-    const field = buildGravityMap(catalog).fields.models;
-    expect(field.map((r) => r.slug)).toEqual(["orchestral", "argus"]);
+  it("skips a pin that is not listed", () => {
+    const m = buildGravityMap(ranked, ["no-such-slug", "argus"]);
+    expect(m.heroes.map((h) => h.slug)).toEqual(["argus"]);
   });
 });
 
-describe("taxonomyGaps", () => {
-  it("reports nothing when every slug is mapped", () => {
-    // Every mapped slug present, so nothing should be reported.
-    const catalog = fullCatalog();
-    const missing = catalog.filter(
-      (p) => !REPO_CENTRE[p.slug] && !FINISHED_PRODUCTS[p.slug],
-    );
-    expect(missing).toHaveLength(0);
-    expect(taxonomyGaps(catalog)).toHaveLength(0);
+describe("layout", () => {
+  for (const [name, frame] of [["wide", WIDE_FRAME], ["tall", TALL_FRAME]] as const) {
+    it(`keeps every body inside the ${name} frame at any phase`, () => {
+      const centres = centrePositions(5, frame);
+      for (const t of [0, 1.3, 3.9]) {
+        const all = [
+          ...leadPositions(5, frame, t),
+          ...centres.flatMap((c) => memberPositions(12, c, t, memberJitter(12, 3))),
+        ];
+        for (const p of all) {
+          expect(p.x).toBeGreaterThan(0);
+          expect(p.x).toBeLessThan(frame.w);
+          expect(p.y).toBeGreaterThan(0);
+          expect(p.y).toBeLessThan(frame.h);
+        }
+      }
+    });
+  }
+
+  it("keeps the same jitter for the same seed", () => {
+    expect(memberJitter(6, 4)).toEqual(memberJitter(6, 4));
+    expect(memberJitter(6, 4)).not.toEqual(memberJitter(6, 5));
   });
 
-  it("flags an unmapped slug", () => {
-    const gaps = taxonomyGaps([project("brand-new-repo")]);
-    expect(gaps.join(" ")).toContain("brand-new-repo");
+  it("is deterministic", () => {
+    expect(memberPositions(7, { x: 10, y: 10 }, 0.5)).toEqual(memberPositions(7, { x: 10, y: 10 }, 0.5));
   });
+});
 
-  it("flags a hero whose slug is not in the catalog", () => {
-    const gaps = taxonomyGaps([project("argus")]);
-    expect(gaps.join(" ")).toContain("hero");
-  });
-
-  it("flags a named centre below the floor", () => {
-    const gaps = taxonomyGaps([project("argus")]);
-    expect(gaps.join(" ")).toMatch(/\(< 4\)/);
-  });
-
-  it("keeps every named centre at or above the floor", () => {
-    const map = buildGravityMap(fullCatalog());
-    for (const centre of map.centres) {
-      expect(centre.count).toBeGreaterThanOrEqual(MIN_CENTRE_SIZE);
-    }
-  });
-
-  it("gives every centre a distinct key", () => {
-    const keys = GRAVITY_CENTRES.map((c) => c.key);
-    expect(new Set(keys).size).toBe(keys.length);
-  });
-
-  /*
-   * The map is a hard black-and-white contract: hue must never carry meaning.
-   * These guard the two ways that could regress — a colour sneaking back into
-   * a centre definition, or a tone outside the 0..1 luminance range.
-   */
-  it("carries no hue, only luminance", () => {
-    for (const centre of GRAVITY_CENTRES) {
-      expect(centre).not.toHaveProperty("colour");
-      expect(typeof centre.tone).toBe("number");
-      expect(centre.tone).toBeGreaterThan(0);
-      expect(centre.tone).toBeLessThanOrEqual(1);
-    }
-  });
-
-  it("gives every centre a distinct tone", () => {
-    const tones = GRAVITY_CENTRES.map((c) => c.tone);
-    expect(new Set(tones).size).toBe(tones.length);
-  });
-
-  it("keeps tone out of the rendered field data", () => {
-    const map = buildGravityMap(fullCatalog());
-    for (const centre of map.centres) {
-      expect(centre).not.toHaveProperty("colour");
-      expect(typeof centre.tone).toBe("number");
-    }
+describe("retired /gravity page", () => {
+  it("redirects to /projects", () => {
+    expect(siteRedirects).toContainEqual({ source: "/gravity", destination: "/projects", permanent: true });
   });
 });

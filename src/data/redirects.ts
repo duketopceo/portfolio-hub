@@ -93,6 +93,7 @@ export const siteRedirects: Array<{
   { source: "/demos/kurultai", destination: "/projects/kurultai#demo", permanent: true },
   { source: "/demos/dayflow", destination: "/projects/dayflow-linux#demo", permanent: true },
   { source: "/openrouter", destination: "/projects/openrouter", permanent: true },
+  { source: "/gravity", destination: "/projects", permanent: true },
   { source: "/now", destination: "/about#now", permanent: true },
   { source: "/contributions", destination: "/about#contributions", permanent: true },
   { source: "/contact", destination: "/hire#contact", permanent: true },

@@ -1,277 +1,287 @@
 /*
- * Gravity map surface.
- *
- * Constraints from scripts/check-design-system.mjs: no backdrop-filter, no raw
- * CSS custom-property fallbacks, and border-radius at most 4px unless circular.
+ * Gravity map. White on black, warm accents only through the capability
+ * colours. check-design-system.mjs forbids backdrop-filter and radii above 4px.
  */
 
 .root {
-  position: relative;
+  display: grid;
+  gap: var(--space-control-2);
   width: 100%;
-  height: min(78vh, 760px);
-  min-height: 460px;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-  background: var(--color-bg);
+  margin: 0;
+  justify-items: center;
 }
 
-.stage {
-  position: absolute;
-  inset: 0;
-  cursor: crosshair;
-  /* Hidden until a real context is drawing, so a JS-less page shows the plate
-     instead of an empty box where the canvas would be. */
-  display: none;
-}
-
-:global(html[data-gravity-canvas="live"]) .stage {
-  display: block;
-}
-
-.canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* ── static plate ───────────────────────────────────────────────────────────
-   The fallback for no-JS, no-2D-context, and forced-colours.
-
-   Visible by default on purpose: the server cannot know whether a canvas will
-   exist, so the safe default is the readable list. The component sets
-   data-gravity-canvas="live" once a real 2D context is drawing, which is the
-   only state that hides this. */
-
-.staticPlate {
-  padding: var(--space-md);
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-/*
- * The flag lives on <html>, which is outside this module's scope, so it needs
- * :global. Scoped to .root so another page can never trip these rules.
- */
-:global(html[data-gravity-canvas="live"]) .staticPlate {
-  display: none;
-}
-
-
-
-.staticSection {
-  margin-bottom: var(--space-md);
-}
-
-.staticLabel {
-  display: flex;
-  gap: 8px;
-  align-items: baseline;
-  margin: 0 0 var(--space-sm);
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--color-divider);
-  color: var(--color-text);
+.copy {
+  margin: 0;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.staticLabel span {
-  color: var(--color-text-faint);
-}
-
-.staticList {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-}
-
-.staticCard {
-  padding: var(--space-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-}
-
-.staticName {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  margin: 0;
-  color: var(--color-text);
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-.staticName a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.staticName a:hover {
-  color: var(--color-text);
-  text-decoration: underline;
-}
-
-.staticWhy {
-  margin: 6px 0 0;
   color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  line-height: 1.5;
+  text-align: center;
 }
 
-/* ── hover card ─────────────────────────────────────────────────────────── */
+.svg {
+  width: 100%;
+  max-width: 62rem;
+  height: auto;
+  overflow: visible;
+  touch-action: manipulation;
+}
 
-.card {
-  position: fixed;
-  z-index: 40;
-  overflow: hidden;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  box-shadow: 0 24px 70px rgb(0 0 0 / 72%);
+/* Dark backing keeps names and dots legible over the black-hole glow. */
+.backing {
+  fill: rgba(0, 0, 0, 0.78);
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+}
+
+.orbits ellipse {
+  fill: none;
+  stroke: var(--color-text-faint);
+  stroke-width: 0.6;
+  stroke-dasharray: 2 6;
+  opacity: 0.5;
+}
+
+.hit {
+  fill: transparent;
+}
+
+.dot {
+  cursor: pointer;
+  outline: none;
+}
+
+.point {
+  stroke: var(--color-bg);
+  stroke-width: 0.8;
+  opacity: 0.85;
+}
+
+.dot:hover .point {
+  stroke: var(--color-text);
+  stroke-width: 1.4;
+  opacity: 1;
+}
+
+.hover,
+.leadLabel,
+.groupLabel,
+.groupCount {
+  font-family: var(--font-mono);
+  paint-order: stroke;
+  stroke: var(--color-bg);
+  stroke-linejoin: round;
   pointer-events: none;
 }
 
-.cardMedia {
-  aspect-ratio: 16 / 9;
-  background: var(--color-bg);
+.hover {
+  font-size: 11px;
+  fill: var(--color-text);
+  stroke-width: 4px;
 }
 
-.cardMedia video,
-.cardMedia img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cardBody {
-  padding: var(--space-sm) var(--space-md) var(--space-md);
-}
-
-.cardName {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  margin: 0;
-  color: var(--color-text);
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
+.leadLabel {
+  font-size: 13px;
   font-weight: 600;
+  fill: var(--color-text);
+  stroke-width: 5px;
 }
 
-.pill {
-  flex: none;
-  padding: 2px 6px;
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
-  color: var(--color-text-faint);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
+.groupLabel {
+  font-size: 12px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  stroke-width: 5px;
 }
 
-.cardWhy {
-  margin: var(--space-micro-2) 0 0;
-  color: var(--color-text);
-  font-size: var(--text-sm);
-  line-height: 1.5;
+.groupCount {
+  font-size: 10.5px;
+  fill: var(--color-text-muted);
+  stroke-width: 4px;
 }
 
-.cardDesc {
-  display: -webkit-box;
-  overflow: hidden;
-  margin: var(--space-micro-2) 0 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  line-height: 1.55;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+.centre {
+  cursor: pointer;
+  outline: none;
 }
 
-.cardMeta {
+.core {
+  stroke: var(--color-bg);
+  stroke-width: 1.5;
+}
+
+.leadRing {
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.leadCore {
+  fill: var(--color-text);
+}
+
+.lead {
+  cursor: pointer;
+  outline: none;
+}
+
+.centre:hover .core,
+.centre:focus-visible .core,
+.lead:hover .leadRing,
+.lead:focus-visible .leadRing {
+  stroke: var(--color-text);
+  stroke-width: 2.4;
+  opacity: 1;
+}
+
+.centre:focus-visible .hit,
+.lead:focus-visible .hit {
+  stroke: var(--color-text);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+
+.legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: var(--space-sm) 0 0;
+  justify-content: center;
+  gap: var(--space-micro-1) var(--space-component-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.cardMeta span {
-  padding: 2px 5px;
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
-  color: var(--color-text-faint);
+.legendButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-micro-2);
+  min-height: 2.75rem;
+  padding: 0 var(--space-micro-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
   font-family: var(--font-mono);
-  font-size: 10px;
-}
-
-.cardFoot {
-  margin: var(--space-sm) 0 0;
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--color-divider);
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--color-text-muted);
+  cursor: pointer;
 }
 
-.cardFoot a {
+.legendButton:hover,
+.legendButton[aria-pressed="true"] {
   color: var(--color-text);
-  text-decoration: none;
+  border-color: var(--color-border-strong);
 }
 
-.cardFoot a:hover {
-  text-decoration: underline;
+.legendButton:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
 }
 
-.cardFoot span {
+.swatch {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.85), 0 0 0 2px rgba(255, 255, 255, 0.22);
+}
+
+.legendCount {
   color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .card {
-    transition: none;
-  }
+.leads {
+  display: grid;
+  gap: var(--space-micro-2);
+  width: 100%;
+  max-width: 52rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* ── mobile ─────────────────────────────────────────────────────────────────
-   The scene is height-bound on a phone; give it more of the viewport and keep
-   the static plate's cards single-column so they are readable at 360px. */
-
-@media (max-width: 640px) {
-  .root {
-    height: min(70vh, 520px);
-    min-height: 380px;
-  }
-
-  .staticPlate {
-    padding: var(--space-sm);
-  }
-
-  .staticList {
-    grid-template-columns: 1fr;
-  }
-
-  .card {
-    width: calc(100vw - 24px);
-  }
+.leads li {
+  display: grid;
+  gap: 2px;
 }
 
-/* Forced colours: the canvas ink is fixed white, so hand the whole map to the
-   static plate rather than drawing invisible-on-white marks. */
+.leadLink {
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.leadLink:focus-visible,
+.list a:focus-visible,
+.details summary:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.leadWhy {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.details {
+  width: 100%;
+  max-width: 52rem;
+}
+
+.details summary {
+  min-height: 2.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--space-component-1);
+  padding-top: var(--space-control-2);
+}
+
+.list h3 {
+  margin: 0 0 var(--space-micro-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list a {
+  display: inline-block;
+  padding: 0.25rem 0;
+  color: var(--color-text);
+}
+
 @media (forced-colors: active) {
-  .stage {
-    display: none;
+  .backing {
+    fill: Canvas;
+    stroke: CanvasText;
   }
-
-  .staticPlate {
-    display: block;
+  .core,
+  .point,
+  .leadCore {
+    fill: CanvasText;
   }
 }
