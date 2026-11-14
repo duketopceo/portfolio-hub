@@ -147,6 +147,26 @@ node scripts/media/sanitize.mjs <work-dir>/<slug>.vtt <work-dir>/<slug>-transcri
 
 A paragraph is a shot. `shot` takes the same `goto` / `scroll` beats as `record-web.mjs`. Write public-facing facts only (catalog entry, public README), 150 to 300 words for 60 to 120 seconds. Keep paths, hostnames and keys out of narration; the sanitizer rejects them.
 
+### Bring your own footage
+
+Record the product yourself (Playwright, wf-recorder, VHS), then let the script pick the clips. A shot takes `clip` (a bare file name in the clips directory; the sanitizer rejects paths) with optional `in` and `out` seconds instead of `goto` / `scroll`:
+
+```json
+{ "text": "Narration for shot one.", "shot": { "clip": "brain-orbit.mp4", "in": 2, "out": 14 } }
+```
+
+```bash
+nice systemd-run --user --scope -p MemoryMax=24G \
+  node scripts/media/assemble.mjs --dir <work-dir> --clips <clips-dir> --burn-captions --loudnorm --width 1920 --height 1080
+```
+
+- Every paragraph must have a `clip`; mixing clip shots with record-web shots is rejected. No `--base` and no recorder run.
+- Each shot plays from `in` for exactly its cut-list window (`shotWindows`), never past `out`. A clip shorter than its window holds its last frame, so narration and captions keep their timing. The same clip can be used by several shots with different `in` values.
+- Clips are scaled to fit and padded to `--width` x `--height` (default 1920x1080 in this mode) at 30 fps. `segments.json` in the work dir records what was cut.
+- `--loudnorm` runs single-pass EBU R128 on the narration (about -16 LUFS, true peak -1.5 dB). It also works with record-web shots.
+- Mapping and filter graph are pure functions in `scripts/media/lib/footage.mjs`, tested in `footage.test.mjs`.
+- Own footage has the same privacy rule as everything else: record only a demo or fixture instance, and review the contact sheet frame by frame.
+
 ### How timing works (R9)
 
 - `kokoro_tts.py` writes `p01.wav ...` and reads each file's length.
