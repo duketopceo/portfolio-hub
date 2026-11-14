@@ -44,6 +44,19 @@ export interface GravityMapData {
   total: number;
 }
 
+/** The serializable slice of a ranked project the map reads. */
+export function toGravityInput(
+  ranked: readonly GravityInput[]
+): GravityInput[] {
+  return ranked.map((p) => ({
+    slug: p.slug,
+    displayName: p.displayName,
+    tagline: p.tagline,
+    capability: p.capability,
+    outcome: p.outcome,
+  }));
+}
+
 /** `ranked` is the ranked list from `rankProjects`; its order is kept. */
 export function buildGravityMap(
   ranked: readonly GravityInput[],

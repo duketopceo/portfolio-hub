@@ -28,7 +28,15 @@ const FRAME_MS = 33;
  * Clicking a group applies the /projects group filter. Plain SVG; the dots are
  * decorative for assistive tech because the lists below name every project.
  */
-export default function GravityMap({ projects }: { projects: readonly GravityInput[] }) {
+export default function GravityMap({
+  projects,
+  variant = "full",
+}: {
+  projects: readonly GravityInput[];
+  /** `compact` is for home: no hover labels, groups link to /projects, lists read by screen readers only. */
+  variant?: "full" | "compact";
+}) {
+  const compact = variant === "compact";
   const data = useMemo(() => buildGravityMap(projects), [projects]);
   const tall = useMediaQuery("(max-width: 640px)");
   const frame = tall ? TALL_FRAME : WIDE_FRAME;
@@ -76,6 +84,8 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
     [data.centres]
   );
   const orbit = centreOrbit(frame);
+  // Phone width cannot hold sixteen dots around one centre; show eight and a "+N".
+  const cap = tall ? 8 : Infinity;
   const leads = leadPositions(data.heroes.length, frame, t);
 
   function pick(id: CapabilityId) {
@@ -102,7 +112,7 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
 
   return (
     <figure ref={figureRef} className={styles.root} aria-label="Gravity map of projects by capability">
-      <p className={styles.copy}>Five lead projects. Click a group to see the rest.</p>
+      {!compact && <p className={styles.copy}>Five lead projects. Click a group to see the rest.</p>}
 
       <svg
         className={styles.svg}
@@ -130,7 +140,9 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
 
         {data.centres.map((c, ci) => {
           const pos = centres[ci];
-          const dots = memberPositions(c.members.length, pos, t, jitters[ci]);
+          const shown = c.members.slice(0, cap);
+          const extra = c.members.length - shown.length;
+          const dots = memberPositions(shown.length, pos, t, jitters[ci]);
           const above = pos.y < frame.h / 2 - 1;
           const ly = above ? pos.y - 76 : pos.y + 86;
           // Keep the label inside the frame; a long name near an edge slides inward.
@@ -139,7 +151,10 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
           return (
             <g key={c.id}>
               {dots.map((p, k) => {
-                const m = c.members[k];
+                const m = shown[k];
+                if (compact) {
+                  return <circle key={m.slug} className={styles.point} cx={p.x} cy={p.y} r={3} fill={c.color} aria-hidden="true" />;
+                }
                 return (
                   <Link
                     key={m.slug}
@@ -162,26 +177,56 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
                   </Link>
                 );
               })}
-              <g
-                className={styles.centre}
-                role="button"
-                tabIndex={0}
-                aria-pressed={selected === c.id}
-                aria-label={`${c.label}, ${c.count} projects. Show this group.`}
-                data-umami-event="gravity-group"
-                data-umami-event-group={c.id}
-                onClick={() => pick(c.id)}
-                onKeyDown={keyPick(c.id)}
-              >
+              {compact ? (
+                <Link
+                  href={`/projects?group=${c.id}`}
+                  prefetch={false}
+                  className={styles.centre}
+                  aria-label={`${c.label}, ${c.count} projects. Show this group.`}
+                  data-umami-event="home-map-group"
+                  data-umami-event-group={c.id}
+                >
                 <circle className={styles.hit} cx={pos.x} cy={pos.y} r={22} />
                 <circle className={styles.core} cx={pos.x} cy={pos.y} r={8} fill={c.color} />
+                {extra > 0 && (
+                  <text className={styles.groupCount} x={pos.x + 14} y={pos.y + 4} textAnchor="start">
+                    +{extra}
+                  </text>
+                )}
                 <text className={styles.groupLabel} x={lx} y={ly} textAnchor="middle" fill={c.color}>
                   {c.label}
                 </text>
                 <text className={styles.groupCount} x={lx} y={ly + 15} textAnchor="middle">
                   {c.count} projects
                 </text>
-              </g>
+                </Link>
+              ) : (
+                <g
+                  className={styles.centre}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={selected === c.id}
+                  aria-label={`${c.label}, ${c.count} projects. Show this group.`}
+                  data-umami-event="gravity-group"
+                  data-umami-event-group={c.id}
+                  onClick={() => pick(c.id)}
+                  onKeyDown={keyPick(c.id)}
+                >
+                <circle className={styles.hit} cx={pos.x} cy={pos.y} r={22} />
+                <circle className={styles.core} cx={pos.x} cy={pos.y} r={8} fill={c.color} />
+                {extra > 0 && (
+                  <text className={styles.groupCount} x={pos.x + 14} y={pos.y + 4} textAnchor="start">
+                    +{extra}
+                  </text>
+                )}
+                <text className={styles.groupLabel} x={lx} y={ly} textAnchor="middle" fill={c.color}>
+                  {c.label}
+                </text>
+                <text className={styles.groupCount} x={lx} y={ly + 15} textAnchor="middle">
+                  {c.count} projects
+                </text>
+                </g>
+              )}
             </g>
           );
         })}
@@ -193,6 +238,7 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
               key={h.slug}
               href={`/projects/${h.slug}`}
               prefetch={false}
+              tabIndex={compact ? -1 : undefined}
               className={styles.lead}
               aria-label={`${h.name}. ${h.why}`}
               data-umami-event="gravity-lead-open"
@@ -209,36 +255,46 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
         })}
       </svg>
 
-      <ul className={styles.legend} aria-label="Capability groups">
-        {data.centres.map((c) => (
-          <li key={c.id}>
-            <button
-              type="button"
-              className={styles.legendButton}
-              aria-pressed={selected === c.id}
-              onClick={() => pick(c.id)}
-            >
-              <span className={styles.swatch} style={{ background: c.color }} aria-hidden="true" />
-              {c.label}
-              <span className={styles.legendCount}>{c.count}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      {tall && !compact && (
+        <ul className={styles.legend} aria-label="Capability groups">
+          {data.centres.map((c) => (
+            <li key={c.id}>
+              <button
+                type="button"
+                className={styles.legendButton}
+                aria-pressed={selected === c.id}
+                onClick={() => pick(c.id)}
+              >
+                <span className={styles.swatch} style={{ background: c.color }} aria-hidden="true" />
+                {c.label}
+                <span className={styles.legendCount}>{c.count}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
-      <ol className={styles.leads} aria-label="Lead projects">
-        {data.heroes.map((h) => (
-          <li key={h.slug}>
-            <Link href={`/projects/${h.slug}`} prefetch={false} className={styles.leadLink}>
-              {h.name}
-            </Link>
-            <span className={styles.leadWhy}>{h.why}</span>
-          </li>
-        ))}
-      </ol>
+      {!compact && (
+        <ol className={styles.leads} aria-label="Lead projects">
+          {data.heroes.map((h) => (
+            <li key={h.slug}>
+              <Link href={`/projects/${h.slug}`} prefetch={false} className={styles.leadLink}>
+                {h.name}
+              </Link>
+              <span className={styles.leadWhy}>{h.why}</span>
+            </li>
+          ))}
+        </ol>
+      )}
 
-      <details className={styles.details}>
-        <summary>All projects by capability</summary>
+      {!compact && (
+        <Link href="/projects/sphere" prefetch={false} className={styles.switch}>
+          View as sphere
+        </Link>
+      )}
+
+      {compact ? (
+        <div className="sr-only">
         <div className={styles.list}>
           {data.centres.map((c) => (
             <section key={c.id} aria-labelledby={`gravity-list-${c.id}`}>
@@ -246,7 +302,7 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
               <ul>
                 {[...data.heroes.filter((h) => h.capability === c.id), ...c.members].map((m) => (
                   <li key={m.slug}>
-                    <Link href={`/projects/${m.slug}`} prefetch={false}>
+                    <Link href={`/projects/${m.slug}`} prefetch={false} tabIndex={compact ? -1 : undefined}>
                       {m.name}
                     </Link>
                   </li>
@@ -255,7 +311,28 @@ export default function GravityMap({ projects }: { projects: readonly GravityInp
             </section>
           ))}
         </div>
-      </details>
+        </div>
+      ) : (
+        <details className={styles.details}>
+          <summary>All projects by capability</summary>
+        <div className={styles.list}>
+          {data.centres.map((c) => (
+            <section key={c.id} aria-labelledby={`gravity-list-${c.id}`}>
+              <h3 id={`gravity-list-${c.id}`}>{c.label}</h3>
+              <ul>
+                {[...data.heroes.filter((h) => h.capability === c.id), ...c.members].map((m) => (
+                  <li key={m.slug}>
+                    <Link href={`/projects/${m.slug}`} prefetch={false} tabIndex={compact ? -1 : undefined}>
+                      {m.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+        </details>
+      )}
     </figure>
   );
 }

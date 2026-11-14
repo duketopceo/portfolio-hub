@@ -112,7 +112,9 @@ describe("sitemap", () => {
     const urls = sitemap()
       .map((e) => e.url)
       .filter((u) => u.includes("/projects/"))
-      .map((u) => u.split("/projects/")[1]);
+      .map((u) => u.split("/projects/")[1])
+      // /projects/sphere is a route, not a dossier.
+      .filter((slug) => slug !== "sphere");
     expect(urls.sort()).toEqual(listedProjects().map((p) => p.slug).sort());
   });
 });

@@ -124,7 +124,7 @@ describe("home layout", () => {
     }
   });
 
-  it("shows the sphere after the lead band and before the signal, linking to /projects", async () => {
+  it("shows the gravity map after the lead band and before the signal, linking to /projects", async () => {
     const html = await home();
     const leads = html.indexOf("home-leads-heading");
     const map = html.indexOf("home-map-heading");

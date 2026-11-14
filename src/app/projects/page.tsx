@@ -3,8 +3,8 @@ import FilterBar from "@/components/FilterBar";
 import { toClientProject } from "@/lib/client-project";
 import { PageHeader, PageShell, SectionHeading } from "@/components/design";
 import { rankProjects } from "@/lib/ranking";
-import ProjectsMap from "@/components/ProjectsMap";
-import { toSphereProjects } from "@/lib/sphere-projects";
+import GravityMap from "@/components/GravityMap";
+import { toGravityInput } from "@/lib/gravity-map";
 import { earlierWork } from "@/lib/catalog";
 import { publicGithubUrl } from "@/lib/github-public-url";
 
@@ -48,16 +48,7 @@ export default async function ProjectsPage() {
       />
 
       <section className="projects-map" aria-label="Project map">
-        <ProjectsMap
-          sphere={toSphereProjects(ranked)}
-          gravity={ranked.map((p) => ({
-            slug: p.slug,
-            displayName: p.displayName,
-            tagline: p.tagline,
-            capability: p.capability,
-            outcome: p.outcome,
-          }))}
-        />
+        <GravityMap projects={toGravityInput(ranked)} />
       </section>
 
       <FilterBar projects={clientProjects} registrySlugs={registrySlugs} />
