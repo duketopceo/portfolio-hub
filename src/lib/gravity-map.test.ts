@@ -74,8 +74,10 @@ const PHASES = Array.from({ length: 24 }, (_, i) => (i * 2 * Math.PI) / 24 / 1.7
 const DOT_R = 3;
 
 /** Every dot (members and leads) and every group label box at phase `t`, in frame units. */
-function scene(frame: typeof WIDE_FRAME, t: number) {
+function scene(frame: typeof WIDE_FRAME, phase: number) {
   const tall = frame.h > frame.w;
+  // The tall map holds still (GravityMap draws it at phase 0), so only phase 0 is checked there.
+  const t = tall ? 0 : phase;
   const centres = centrePositions(map.centres.length, frame);
   const scale = memberScale(frame);
   const dots: { id: string; x: number; y: number }[] = [];
@@ -92,12 +94,10 @@ function scene(frame: typeof WIDE_FRAME, t: number) {
   });
   const leads = leadPositions(map.heroes.length, frame, t);
   map.heroes.forEach((h, i) => dots.push({ id: h.slug, ...leads[i] }));
-  // Lead names are drawn under their dot on wide frames only.
-  if (!tall) {
-    map.heroes.forEach((h, i) =>
-      boxes.push({ id: `lead:${h.slug}`, x0: leads[i].x - (h.name.length * 7.8) / 2, x1: leads[i].x + (h.name.length * 7.8) / 2, y0: leads[i].y + 14, y1: leads[i].y + 30 })
-    );
-  }
+  // Lead names are drawn under their dot on every frame (13px mono, 7.8 units a glyph).
+  map.heroes.forEach((h, i) =>
+    boxes.push({ id: `lead:${h.slug}`, x0: leads[i].x - (h.name.length * 7.8) / 2, x1: leads[i].x + (h.name.length * 7.8) / 2, y0: leads[i].y + 14, y1: leads[i].y + 30 })
+  );
   return { dots, boxes };
 }
 
@@ -154,6 +154,17 @@ describe("layout", () => {
       }
     });
   }
+
+  it("labels all five leads on the tall frame too, inside it and clear of every group label and dot", () => {
+    const { boxes } = scene(TALL_FRAME, 0);
+    const leadBoxes = boxes.filter((b) => b.id.startsWith("lead:"));
+    expect(leadBoxes.map((b) => b.id)).toEqual(map.heroes.map((h) => `lead:${h.slug}`));
+    expect(leadBoxes).toHaveLength(5);
+    for (const b of leadBoxes) {
+      expect(b.x0, b.id).toBeGreaterThanOrEqual(0);
+      expect(b.x1, b.id).toBeLessThanOrEqual(TALL_FRAME.w);
+    }
+  });
 
   it("spreads the groups evenly around the leads, which sit in the centre", () => {
     const n = map.centres.length;

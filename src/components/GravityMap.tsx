@@ -355,11 +355,9 @@ function MapSvg({
             <circle className={styles.hit} cx={p.x} cy={p.y} r={26} />
             <circle className={styles.leadRing} cx={p.x} cy={p.y} r={10} />
             <circle className={styles.leadCore} cx={p.x} cy={p.y} r={5} />
-            {!tall && (
-              <text className={styles.leadLabel} x={p.x} y={p.y + 26} textAnchor="middle">
-                {h.name}
-              </text>
-            )}
+            <text className={styles.leadLabel} x={p.x} y={p.y + 26} textAnchor="middle">
+              {h.name}
+            </text>
           </Link>
         );
       })}
