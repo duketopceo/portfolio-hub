@@ -29,9 +29,9 @@ export default function DemoEmbed({ url, title, embeddable }: DemoEmbedProps) {
         >
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
-              <span className="w-2 h-2 rounded-full" style={{ background: "rgba(255,95,87,0.6)" }} />
-              <span className="w-2 h-2 rounded-full" style={{ background: "rgba(255,189,46,0.6)" }} />
-              <span className="w-2 h-2 rounded-full" style={{ background: "rgba(39,201,63,0.6)" }} />
+              <span className="w-2 h-2 rounded-full" style={{ background: "rgba(255,255,255,0.35)" }} />
+              <span className="w-2 h-2 rounded-full" style={{ background: "rgba(255,255,255,0.35)" }} />
+              <span className="w-2 h-2 rounded-full" style={{ background: "rgba(255,255,255,0.35)" }} />
             </div>
             <div
               className="ml-2 px-2.5 py-0.5 rounded-sm truncate max-w-xs"

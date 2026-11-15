@@ -99,9 +99,9 @@ export function mixHex(a: string, b: string, t: number): string {
   return rgbToHex(x.map((v, i) => v + (y[i] - v) * t) as Rgb);
 }
 
-const NIGHT = "#070A0D";
-const WHITE = "#F2F5F7";
-const GREY = "#7C858E";
+const NIGHT = "#070707";
+const WHITE = "#F2F2F2";
+const GREY = "#808080";
 
 /** Palette derived from the base colour; shaped per surface type. */
 export function derivePalette(base: string, surface: PlanetSurface): PlanetPalette {

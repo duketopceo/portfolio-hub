@@ -12,7 +12,7 @@
     "planetVisual": {
       "size": "md",
       "shape": "diamond",
-      "color": "#FF5C1A",
+      "color": "#FFFFFF",
       "moons": [
         {
           "label": "omhdb",

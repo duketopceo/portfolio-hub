@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EnrichedProject } from "@/lib/types";
-import { formatMonthYear, languageColors, catColors } from "@/lib/utils";
+import { formatMonthYear, languageColors, LANGUAGE_DOT, catColors } from "@/lib/utils";
 import { categoryMeta } from "@/data/category-meta";
 import { capabilityAccent, capabilityLabel } from "@/data/capability-meta";
 import { isProjectLive } from "@/lib/deployments";
@@ -27,7 +27,7 @@ export default function ProjectCard({
   const hasDemo = isProjectLive(project);
   const demoUrl = project.liveUrl || project.demoUrl;
   const langColor = project.language
-    ? languageColors[project.language] || "#6B7280"
+    ? languageColors[project.language] || LANGUAGE_DOT
     : null;
   const topics = project.private ? [] : (project.topics ?? []).slice(0, 3);
   const forks = project.private ? 0 : (project.forks ?? 0);
@@ -126,7 +126,7 @@ export default function ProjectCard({
               <span className="cosmic-card-pill">
                 <span
                   className="cosmic-card-pill__dot"
-                  style={{ backgroundColor: langColor || "#6B7280" }}
+                  style={{ backgroundColor: langColor || LANGUAGE_DOT }}
                 />
                 {project.language}
               </span>

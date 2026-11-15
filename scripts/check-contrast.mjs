@@ -19,9 +19,7 @@ const TEXT = [
   "color-accent",
   "color-signal",
   "color-heat",
-  "color-pop",
-  "color-group-sand",
-  "color-group-clay",
+  "color-tint",
 ];
 
 const lum = (hex) => {

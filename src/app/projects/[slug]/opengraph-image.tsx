@@ -37,9 +37,9 @@ export default async function Image({
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          background: "#0a0d12",
-          color: "#e8edf2",
-          borderLeft: "12px solid #ffffff",
+          background: "#000000",
+          color: "#F2EFEA",
+          borderLeft: "12px solid #FFFFFF",
         }}
       >
         <div
@@ -48,7 +48,7 @@ export default async function Image({
             fontSize: 26,
             letterSpacing: 4,
             textTransform: "uppercase",
-            color: "#9aa3ac",
+            color: "#B8B8B8",
           }}
         >
           {sector ? `${sector} sector` : "Project dossier"}
@@ -62,14 +62,14 @@ export default async function Image({
               display: "flex",
               fontSize: 36,
               lineHeight: 1.35,
-              color: "#9aa3ac",
+              color: "#B8B8B8",
               maxWidth: 980,
             }}
           >
             {tagline.length > 140 ? `${tagline.slice(0, 137)}...` : tagline}
           </div>
         </div>
-        <div style={{ display: "flex", fontSize: 26, color: "#ffffff" }}>
+        <div style={{ display: "flex", fontSize: 26, color: "#FFFFFF" }}>
           Luke Kimball — Cosmic Intelligence
         </div>
       </div>

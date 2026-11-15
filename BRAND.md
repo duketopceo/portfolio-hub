@@ -35,12 +35,17 @@ maps, survey files, and telemetry — not a generic space theme.
 
 ## Color Palette
 
-All colors are CSS custom properties in `src/app/globals.css`. Near-monochrome
-pure black survey plate with pure white text; no teal or green anywhere. The only hues are warm (ember, amber, soft gold) and used sparingly.
+All colors are CSS custom properties in `src/app/design-system/tokens.css`
+(canonical) and `src/app/globals.css`. **Owner decision, 2026-11-15:** the site
+is true black, white and a very slightly warm off-white, with greys for muted
+text, and at most **two** accent colours used sparingly where meaning needs
+them. No purple, violet, blue, teal or green anywhere (UI, SVG, shaders, OG
+images, favicons). Groups and categories carry no colour of their own; they are
+told apart by name and position.
 
 **Contrast decision (2026-11-10):** white text on deep black ("ink") ships; the
 black-on-white variant was built, screenshotted and dropped. `scripts/check-contrast.mjs`
-checks body, muted, faint and accent text against every surface at 4.5:1.
+checks body, tint, muted, faint and accent text against every surface at 4.5:1.
 
 ### Surfaces & Lines
 
@@ -58,46 +63,62 @@ checks body, muted, faint and accent text against every surface at 4.5:1.
 
 | Token | Value | Use |
 |---|---|---|
-| `--color-text` | `#FFFFFF` | Primary copy |
+| `--color-text` | `#FFFFFF` | Primary copy and headings |
+| `--color-tint` | `#F2EFEA` | Warm off-white: secondary copy (the home lede), lines, some labels. Easier on the eyes than pure white; the tint is only 8 levels from grey. |
 | `--color-text-muted` | `#B8B8B8` | Secondary / body |
 | `--color-text-faint` | `#9A9A9A` | Marginalia, registry IDs (≥6:1 on every surface; verify with `node scripts/check-contrast.mjs`) |
 
-### Capability groups and the sector sphere (2026-11-10)
+Borders, dividers and hairlines are the same tint at low alpha
+(`rgba(242,239,234,...)`), so plate edges read warm-white, not cold.
 
-Projects group by capability, not by the old category list: Evals & routing, Retrieval & memory, Agents & computer use, Products, Tooling & infra (`src/data/capability-meta.ts`). Group order is fixed everywhere (home groups, /projects groups, filter pills, sphere sectors and legend). Five sector colors, distinct by lightness and warmth: white `#FFFFFF`, light grey `#B3B3B3`, amber `#FF9F1C`, soft gold `#F5D76E`, ember `#FF5C1A`. The legend and the grouped list always name the group, so color is never the only cue. The sphere (`src/components/sphere`) is plain SVG, thin grey wireframe, small dots, no glow, and stays still under reduced motion.
+### Capability groups and the gravity map (2026-11-15)
 
-### Palette: white on black plus warm accents (2026-11-10, owner decision)
+Seven capability groups (`src/data/capability-meta.ts`): Evals & routing,
+Retrieval & memory, Agents & computer use, Desktop & dev tools, Platforms & web,
+Mobile apps, Hardware, sim & infra. Order is fixed everywhere (home map, /projects
+groups, filter pills, sphere sectors, legend). **Groups have no colour.** Every
+group's `color` is white, and the old sand, clay, soft gold, grey, amber and ember
+group colours are retired: a group is named in text and placed on the map, and
+the legend and lists always say its name. All showcase posters are white and
+off-white thin-line diagrams on black. The sphere (`src/components/sphere`) is
+plain SVG, thin grey wireframe, small dots, no glow, and stays still under reduced
+motion.
 
-White text on pure black at full contrast. No teal, no green, no violet. The
-only hues are warm and rare; everything else is neutral. Mirrored for
-canvas/SVG in `src/lib/palette.ts` (a test fails on drift and on any cool hue).
+### Palette: black, white, tinted white, greys, two accents (2026-11-15, owner decision)
 
-| Token | Value | Role |
-|---|---|---|
-| `--color-accent` | `#FFFFFF` | Interactive + live status (white, no hue) |
-| `--color-signal` | `#FF5C1A` | Ember: classification / alert, and a group colour on the map |
-| `--color-heat` | `#FF9F1C` | Amber: signal heat bars, sparing warm highlight |
-| `--color-pop` | `#F5D76E` | Soft gold: falling starlight and rare highlights |
+| Role | Token | Hex | Where it is used |
+|---|---|---|---|
+| Ground | `--color-bg` (+ surfaces `#070707`, `#0E0E0E`, `#161616`) | `#000000` | Background and panels |
+| Primary | `--color-text`, `--color-accent` | `#FFFFFF` | Body, headings, controls, focus rings, poster line art |
+| Tint | `--color-tint` | `#F2EFEA` | Secondary copy, hairlines, some stars |
+| Greys | `--color-text-muted`, `--color-text-faint`, `--color-redact` | `#B8B8B8`, `#9A9A9A`, `#C8C8C8` | Muted text, marginalia, redaction bars |
+| Accent 1: amber | `--color-heat` (also `--color-live`) | `#FF9F1C` | Highlight, live and active state, signal heat bars, release markers, a few stars |
+| Accent 2: ember | `--color-signal` | `#FF5C1A` | Alert, classification, failure only |
 
-Contrast: `node scripts/check-contrast.mjs` checks body, muted, faint, accent,
-ember and amber text on every surface at 4.5:1; `palette.test.ts` covers the
-palette colors.
+Mirrored for canvas/SVG in `src/lib/palette.ts` (`palette.test.ts` fails on
+drift, on a third chromatic colour, and on any hue outside warm). Mechanical
+guardrails: `scripts/check-design-system.mjs` (part of `npm run lint`) fails any
+hex, `rgb()`, `hsl()` or Tailwind colour outside black, white, greys, the tint and
+the two accents, in `src`, `public` and `scripts`; `node scripts/check-contrast.mjs`
+checks text contrast.
 
-Retired: signal teal `#2DD4BF` (accent), green `#34D399` (live) and ultraviolet
-`#A78BFA` (pop). `--color-live` aliases the accent; category and catalog planet
-colors fold into white, ember, soft gold and the grey `#B3B3B3`. GitHub language
-dots keep their third-party colors by design.
+Retired: signal teal `#2DD4BF`, green `#34D399`, ultraviolet `#A78BFA`, soft gold
+`#F5D76E` (`--color-pop`), sand `#E8DCC8`, clay `#A89C8A`, and every GitHub
+language brand colour (language dots are one neutral grey; the language name
+carries the meaning). Product screenshots in `public/demos` and
+`public/projects` are evidence of third-party UIs and are not recoloured.
 
 Rules:
-- White carries interactive elements and live states; use it for the primary
-  action and status. Hover is a 1px white ring, focus is a white ring.
-- **Alert / classification meaning is carried by `--color-signal` (ember)**, and
-  only ever through the alert treatment: mono ALL-CAPS tag, 1px ember border,
-  lock or marker glyph, and the words RESTRICTED / CLASSIFIED / ALERT. Color
-  alone never says "alert". Ember also appears as a capability-group colour on
-  the gravity map, where the group's name carries the meaning.
-- Amber is for heat bars and rare warm highlights, never controls or body text.
-- Soft gold is for sparkle and rare highlights only.
+- White carries interactive elements; hover is a 1px white ring, focus is a
+  white ring.
+- Amber is used sparingly, only where meaning needs it: live or active state,
+  a highlight, a heat bar. Never body text, never large fills, never a group
+  colour.
+- **Alert / classification / failure is carried by ember** and only through the
+  alert treatment: mono ALL-CAPS tag, 1px ember border, lock or marker glyph, and
+  the words RESTRICTED / CLASSIFIED / ALERT. Colour alone never says "alert".
+- Never a third chromatic colour. If a design needs one, it needs another cue
+  (shape, weight, label, position) instead.
 
 ### Chart Overlays
 
@@ -223,7 +244,7 @@ crisp at any DPR, same palette and same positions as the live version):
 
 | Piece | Component | Live (WebGL / canvas) | Static (reduced motion, no WebGL, software GL, Save-Data, failure) | Where |
 |---|---|---|---|---|
-| Starfield | `Starfield` (`lib/starfield.ts`) | R3F points via `SceneFrame`, the whole background: 3,200 round points at 1440 x 900 in three parallax layers (far, mid, near), a slow sideways drift, a very subtle twinkle on about 40% of them, a small scroll parallax; warm white and amber only (`STAR_COLORS`) | `starfield-still-{wide,tall}.svg` (`scripts/generate-starfield-still.mjs`, same generator), a pre-rendered SVG, nothing animates | Site background, every page |
+| Starfield | `Starfield` (`lib/starfield.ts`) | R3F points via `SceneFrame`, the whole background: 3,200 round points at 1440 x 900 in three parallax layers (far, mid, near), a slow sideways drift, a very subtle twinkle on about 40% of them, a small scroll parallax; white, the warm tint and a few amber (`STAR_COLORS`) | `starfield-still-{wide,tall}.svg` (`scripts/generate-starfield-still.mjs`, same generator), a pre-rendered SVG, nothing animates | Site background, every page |
 | Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.01 (hero, beside the intro) |
 | Secondary belt | `BeltScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.02 |
 | Surveyed terrain | `SectorTerrain` | ThreeUI `constellation-field` / `topo-field` | Skips mounting | `/projects` sector map |
@@ -235,8 +256,8 @@ Background contract (revised 2026-11-14, owner requests: "all background be
 space and stars", then "drop the black hole"): the background is deep black
 space with a layered starfield and nothing else. No central object (no black
 hole, planet or glow), no constellation lines, survey grid, mapped stars,
-stardust clouds, streak rings or warm band, live or static. Stars are warm
-white (a fifth lean warm, a few amber), never tinted green, teal, blue or
+stardust clouds, streak rings or warm band, live or static. Stars are white
+(a fifth lean to the warm tint, a few amber), never tinted green, teal, blue or
 violet. It is atmosphere behind content, not an object competing with it:
 fixed in place, with a small depth shift of the stars as the page scrolls.
 Star counts per quality tier at 1440 x 900: full 3,200, high 2,200, low 1,000,
@@ -273,17 +294,18 @@ paths work with every layer disabled.
 - Dark survey plate always — no light mode
 - Solid panels, hairline borders, squared corners
 - Mono microcopy for labels, IDs, and marginalia
-- White for interactive/live signal
-- Only warm hues (ember, amber, soft gold), sparingly, plus neutrals
+- White for primary text and controls, the warm tint for secondary copy and lines
+- At most two accents (amber for live/highlight, ember for alert), sparingly, plus neutrals
 - A static SVG/CSS rendition for every background piece
 - `prefers-reduced-motion` guards on every canvas layer
 
 **Don't:**
 - Glassmorphism, backdrop-blur panels, soft glows on UI, or rounded "SaaS" cards
-- Orange outside classification/alert contexts and the capability-group colour
-- Teal, green, blue or violet anywhere (the stars are warm white and amber only); amber or gold on controls or body text
+- Ember outside alert and classification contexts
+- Purple, violet, blue, teal or green anywhere (the stars are white, the tint and a few amber)
+- A per-group or per-category colour; amber on controls or body text
 - Constellation lines, grids, nebula or stardust clouds, or any layer beyond the starfield in the background, and above all no central object such as a black hole
-- Pop violet on controls or body text; any fourth chromatic color
+- A third chromatic colour, soft gold, sand or clay
 - A second WebGL context for the background
 - Emoji in production UI
 - Canvas/WebGL as the only carrier of meaning
