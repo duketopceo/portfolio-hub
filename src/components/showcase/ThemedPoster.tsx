@@ -145,12 +145,48 @@ const arcMotif: Motif = (rand) => {
   );
 };
 
+/** A phone outline with list rows and a home bar: a pocket-sized app. */
+const mobileMotif: Motif = (rand) => {
+  const x = r1(124 + rand() * 24);
+  return (
+    <g>
+      <rect x={x} y="24" width="72" height="134" className="showcase-art__rule" fill="none" />
+      <path d={`M${r1(x + 28)} 31 H${r1(x + 44)}`} className="showcase-art__dim" />
+      {Array.from({ length: 4 }, (_, i) => (
+        <path key={i} d={`M${r1(x + 10)} ${r1(52 + i * 20)} h${r1(30 + rand() * 30)}`} className={i === 1 ? "showcase-art__line" : "showcase-art__dim"} />
+      ))}
+      <circle cx={r1(x + 58)} cy="72" r="3" className="showcase-art__dot" />
+      <path d={`M${r1(x + 26)} 148 H${r1(x + 46)}`} className="showcase-art__rule" />
+    </g>
+  );
+};
+
+/** A terminal window with prompt lines and a block cursor. */
+const devtoolsMotif: Motif = (rand) => (
+  <g>
+    <rect x="40" y="32" width="240" height="116" className="showcase-art__rule" fill="none" />
+    <path d="M40 48 H280" className="showcase-art__rule" />
+    {Array.from({ length: 4 }, (_, i) => {
+      const y = r1(66 + i * 18);
+      return (
+        <g key={i}>
+          <path d={`M54 ${y} l6 3 l-6 3`} className={i === 3 ? "showcase-art__line" : "showcase-art__dim"} fill="none" />
+          <path d={`M68 ${y + 3} h${r1(50 + rand() * 120)}`} className={i === 3 ? "showcase-art__line" : "showcase-art__dim"} />
+        </g>
+      );
+    })}
+    <rect x={r1(126 + rand() * 60)} y="116" width="8" height="12" className="showcase-art__fill" />
+  </g>
+);
+
 const MOTIFS: Record<CapabilityId, Motif> = {
   "evals-routing": evalsMotif,
   "retrieval-memory": memoryMotif,
   "agents-computer-use": agentsMotif,
-  products: productsMotif,
-  "tooling-infra": toolingMotif,
+  "desktop-devtools": devtoolsMotif,
+  "platforms-web": productsMotif,
+  "mobile-apps": mobileMotif,
+  "hardware-sim": toolingMotif,
 };
 
 /**

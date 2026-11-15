@@ -35,10 +35,10 @@ const snap = (scores: Record<string, number>): RankingSnapshot => ({
 describe("buildRanking", () => {
   const projects = [
     proj("a", "evals-routing"),
-    proj("b", "products"),
-    proj("c", "tooling-infra"),
+    proj("b", "platforms-web"),
+    proj("c", "hardware-sim"),
     proj("d", "evals-routing"),
-    proj("e", "products"),
+    proj("e", "platforms-web"),
   ];
   const scores = snap({ a: 10, b: 90, c: 80, d: 70, e: 60 });
 
@@ -54,8 +54,8 @@ describe("buildRanking", () => {
     const out2 = buildRanking(projects, { snapshot: tie, pins: ["d", "e", "a"] });
     // rest: b and c tie at 50, "b" sorts before "c"
     expect(out2.slice(3).map((p) => p.slug)).toEqual(["b", "c"]);
-    // capability groups interleave: products (b), tooling-infra (c)
-    expect(out2.slice(3).map((p) => p.capability)).toEqual(["products", "tooling-infra"]);
+    // capability groups interleave: platforms-web (b), hardware-sim (c)
+    expect(out2.slice(3).map((p) => p.capability)).toEqual(["platforms-web", "hardware-sim"]);
   });
 
   it("skips an unlisted pin, fills the slot with the next-ranked project and reports it", () => {
@@ -95,7 +95,7 @@ describe("buildRanking", () => {
     expect(slugs).not.toContain("a");
     expect(slugs).not.toContain("e");
     expect(slugs).not.toContain("d");
-    expect(groups.map((g) => g.capability)).toEqual(["products", "tooling-infra"]);
+    expect(groups.map((g) => g.capability)).toEqual(["platforms-web", "hardware-sim"]);
   });
 });
 
@@ -187,21 +187,23 @@ describe("fixed capability order and portfolio-hub placement", () => {
 
   it("groups follow the fixed order whatever the rank order is", () => {
     const rows = [
-      { slug: "l1", capability: "products" },
-      { slug: "x", capability: "tooling-infra" },
-      { slug: "y", capability: "products" },
+      { slug: "l1", capability: "platforms-web" },
+      { slug: "x", capability: "hardware-sim" },
+      { slug: "y", capability: "platforms-web" },
       { slug: "z", capability: "evals-routing" },
       { slug: "w", capability: "agents-computer-use" },
       { slug: "v", capability: "retrieval-memory" },
+      { slug: "u", capability: "desktop-devtools" },
+      { slug: "t", capability: "mobile-apps" },
     ];
     expect(capabilityGroups(rows, 1).map((g) => g.capability)).toEqual([...CAPABILITY_IDS]);
   });
 
-  it("portfolio-hub follows the rest of Products on the committed catalog, and the flat rank is unchanged", () => {
+  it("portfolio-hub follows the rest of Platforms & web on the committed catalog, and the flat rank is unchanged", () => {
     const ranked = rankProjects(projectConfigs);
-    const products = capabilityGroups(ranked).find((g) => g.capability === "products")!;
-    expect(products.projects.length).toBeGreaterThan(1);
-    expect(products.projects.at(-1)!.slug).toBe("portfolio-hub");
+    const platforms = capabilityGroups(ranked).find((g) => g.capability === "platforms-web")!;
+    expect(platforms.projects.length).toBeGreaterThan(1);
+    expect(platforms.projects.at(-1)!.slug).toBe("portfolio-hub");
     expect(capabilityGroups(ranked).map((g) => g.capability)).toEqual(
       CAPABILITY_IDS.filter((id) => capabilityGroups(ranked).some((g) => g.capability === id))
     );

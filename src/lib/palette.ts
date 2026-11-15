@@ -17,6 +17,10 @@ export const COSMOS_PALETTE = {
   night: "#000000",
   starlight: "#FFFFFF",
   slate: "#B3B3B3",
+  /** Sand: warm neutral for the desktop and dev tools group. */
+  sand: "#E8DCC8",
+  /** Clay: warm grey for the hardware, sim and infra group. */
+  clay: "#A89C8A",
 } as const;
 
 /** CSS custom property that carries each chromatic role. */
@@ -25,6 +29,8 @@ export const PALETTE_TOKENS = {
   ember: "--color-signal",
   heat: "--color-heat",
   pop: "--color-pop",
+  sand: "--color-group-sand",
+  clay: "--color-group-clay",
 } as const;
 
 export type PaletteRole = keyof typeof PALETTE_TOKENS;

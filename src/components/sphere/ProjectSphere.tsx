@@ -20,7 +20,7 @@ const R = 176;
 const SPIN = (2 * Math.PI) / 120;
 const START_PHI = (-24 * Math.PI) / 180;
 const LATITUDES = [-60, -30, 0, 30, 60].map((d) => (d * Math.PI) / 180);
-/** Every 24 degrees, so the five 72-degree sector edges are among them. */
+/** Every 24 degrees (decorative; sector edges are 360 / group count apart). */
 const MERIDIANS = Array.from({ length: 15 }, (_, i) => (i * 24 * Math.PI) / 180);
 const EDGE_MERIDIANS = new Set([0, 3, 6, 9, 12]);
 

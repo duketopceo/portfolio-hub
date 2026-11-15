@@ -110,4 +110,13 @@ describe("showcase card data", () => {
     expect(rows.size).toBe(tiered.length);
     for (const p of tiered) expect(rows.get(p.slug), p.slug).toBe(p.showcaseCard!.tier);
   });
+
+  it("matches docs/showcase/categories.md: every listed project's new group, row for row", () => {
+    const doc = readFileSync(join(process.cwd(), "docs/showcase/categories.md"), "utf8");
+    const rows = new Map(
+      [...doc.matchAll(/^\| `([a-z0-9-]+)` \| `([a-z-]+)` \| `([a-z-]+)` \|/gm)].map((m) => [m[1], m[3]] as const),
+    );
+    expect(rows.size).toBe(listed.length);
+    for (const p of listed) expect(rows.get(p.slug), p.slug).toBe(p.capability);
+  });
 });

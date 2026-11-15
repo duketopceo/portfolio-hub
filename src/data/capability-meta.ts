@@ -7,14 +7,18 @@ export const CAPABILITY_IDS = [
   "evals-routing",
   "retrieval-memory",
   "agents-computer-use",
-  "products",
-  "tooling-infra",
+  "desktop-devtools",
+  "platforms-web",
+  "mobile-apps",
+  "hardware-sim",
 ] as const;
 
 export type CapabilityId = (typeof CAPABILITY_IDS)[number];
 
 export interface CapabilityMeta {
   label: string;
+  /** Short label for phone widths, where the full one would not fit beside its dots. */
+  short: string;
   description: string;
   /** One of the COSMOS_PALETTE values (src/lib/palette.ts); a test enforces it. */
   color: string;
@@ -23,28 +27,45 @@ export interface CapabilityMeta {
 export const capabilityMeta: Record<CapabilityId, CapabilityMeta> = {
   "evals-routing": {
     label: "Evals & routing",
+    short: "Evals",
     description: "Measuring models on cost and quality, and routing work to the right one",
     color: "#FFFFFF",
   },
   "retrieval-memory": {
     label: "Retrieval & memory",
-    description: "Search, ranking and context for agents that remember",
+    short: "Memory",
+    description: "Search, ranking, context and journals: what an agent can recall",
     color: "#B3B3B3",
   },
   "agents-computer-use": {
     label: "Agents & computer use",
+    short: "Agents",
     description: "Agent runtimes, harnesses and tools that act on a computer",
     color: "#FF9F1C",
   },
-  products: {
-    label: "Products",
-    description: "Shipped applications and platforms",
+  "desktop-devtools": {
+    label: "Desktop & dev tools",
+    short: "Dev tools",
+    description: "Linux desktop software, CLIs and standards for building with agents",
+    color: "#E8DCC8",
+  },
+  "platforms-web": {
+    label: "Platforms & web",
+    short: "Platforms",
+    description: "Hosted products, servers and sites that run in production",
     color: "#F5D76E",
   },
-  "tooling-infra": {
-    label: "Tooling & infra",
-    description: "Developer tools, desktop plugins, hardware and infrastructure",
+  "mobile-apps": {
+    label: "Mobile apps",
+    short: "Mobile",
+    description: "iPhone apps built, signed and shipped from Linux",
     color: "#FF5C1A",
+  },
+  "hardware-sim": {
+    label: "Hardware, sim & infra",
+    short: "Hardware",
+    description: "Firmware, simulators, installations and the home cluster",
+    color: "#A89C8A",
   },
 };
 

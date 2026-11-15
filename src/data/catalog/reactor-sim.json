@@ -6,7 +6,7 @@
     "tagline": "Deterministic PWR plant simulator — real reactor physics in a walkable Unity control room",
     "description": "An original, deterministic pressurised-water-reactor simulator: point kinetics with six delayed-neutron groups, xenon/iodine poison dynamics, decay heat, a reactivity ledger and lumped thermal-hydraulics, wrapped in a Unity control room built from procedural Blender assets. Educational entertainment built from published reactor engineering — a game, not a licensed training simulator.",
     "category": "apps",
-    "capability": "products",
+    "capability": "hardware-sim",
     "type": "app",
     "featured": false,
     "techStack": [

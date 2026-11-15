@@ -41,6 +41,11 @@
   --color-pop-muted: rgba(245, 215, 110, 0.16);
   --color-redact: #C8C8C8;
 
+  /* Capability group neutrals (warm greys, below the chroma threshold):
+     sand = desktop and dev tools, clay = hardware, sim and infra. */
+  --color-group-sand: #E8DCC8;
+  --color-group-clay: #A89C8A;
+
   /* Chart overlays */
   --chart-grid: rgba(255, 255, 255, 0.035);
   --chart-grid-major: rgba(255, 255, 255, 0.06);
@@ -109,6 +114,8 @@
   --page-pad-x: clamp(1rem, 4vw, 3rem);
   --page-pad-y: clamp(2.5rem, 5vw, 5rem);
   --page-max: min(90rem, 100%);
+  /* Sticky site header: one bar plus its hairline (mirrored in lib/cosmos-layout.ts). */
+  --site-header-h: 3.6rem;
 
   /* Existing rail aliases */
   --cosmic-page-pad-x: var(--page-pad-x);
