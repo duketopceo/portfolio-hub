@@ -120,8 +120,10 @@ export const CAPABILITY_ORDER = [
   "evals-routing",
   "retrieval-memory",
   "agents-computer-use",
-  "products",
-  "tooling-infra",
+  "desktop-devtools",
+  "platforms-web",
+  "mobile-apps",
+  "hardware-sim",
 ] as const;
 
 /**

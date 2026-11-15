@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
   // Keep worktree builds rooted here when the parent checkout also has a lockfile.
   turbopack: { root: fileURLToPath(new URL(".", import.meta.url)) },
 
+  // Dev only: Next blocks the HMR socket from any origin but localhost, and without
+  // it the dev client never hydrates (no effects run, so the background stays on
+  // its static plate). The dev server is opened as 127.0.0.1.
+  allowedDevOrigins: ["127.0.0.1"],
+
   // three.js stack needs transpilation under Turbopack
   transpilePackages: ["three", "@react-three/fiber", "@react-three/drei"],
 

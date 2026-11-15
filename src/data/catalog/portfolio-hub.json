@@ -6,7 +6,7 @@
     "tagline": "This site: a star-chart portfolio with live GitHub activity and a dossier per project",
     "description": "The Next.js app behind luke-the-duke.com. The homepage is a solar map with a primary orbit of featured systems and a secondary orbit of the rest of the catalog; each project has a dossier page. A GitHub App ingests about 90 days of activity, rendered as condensed charts and grouped pull requests. The catalog in src/data is the single source of truth, nothing is auto-discovered.",
     "category": "apps",
-    "capability": "products",
+    "capability": "platforms-web",
     "type": "app",
     "featured": false,
     "techStack": [
@@ -29,6 +29,36 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Three.js",
+        "GitHub App",
+        "Vitest",
+        "Playwright"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-03-12",
+          "summary": "First commit: a personal portfolio site for recruiters."
+        },
+        "done": [
+          "v3.0.0 and v3.1.0: hosted resume, llms.txt, Railway deploy config",
+          "Star Chart and cosmic background redesign",
+          "AI-role positioning: five lead projects, capability groups, sector sphere",
+          "Frozen top-15 video queue"
+        ],
+        "next": [
+          "Narrated videos for the top-15 queue",
+          "A looping clip on every card",
+          "Real captures replacing generated posters"
+        ],
+        "source": "portfolio-hub CHANGELOG.md (read 2026-11-14); src/data/video-queue.json note; first commit from git log"
+      }
     }
   },
   "github": {

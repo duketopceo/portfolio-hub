@@ -106,8 +106,8 @@ test.describe("Portfolio visual acceptance matrix", () => {
 
         await expectNoHorizontalOverflow(page);
         await expect(page.locator("main")).toBeVisible();
-        // The fixed full-viewport cosmic background (black hole,
-        // canvas and SVG layers) is animated and would paint
+        // The fixed full-viewport cosmic background (starfield canvas
+        // and still) is animated and would paint
         // over the hero; .cosmic-bg contains every such layer, so hide it for
         // baselines only. Its static renditions have their own deterministic
         // captures below (reduced motion / WebGL disabled).
@@ -217,11 +217,18 @@ test.describe("Portfolio visual acceptance matrix", () => {
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "static");
-    await expect(page.locator(".cosmic-bg .cosmos-plate svg")).toHaveCount(1);
+    await expect(page.locator(".cosmic-bg .cosmos-stars-still")).toHaveCount(1);
     await expect(page.locator(".cosmic-bg canvas")).toHaveCount(0);
   });
 
-  test("live background renders the black hole in its one WebGL canvas", async ({
+  test("?cosmos=live mounts the canvas and flips data-cosmos to live", async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.goto("/?cosmos=live&cosmos-tier=pin", { waitUntil: "networkidle" });
+    await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "live", { timeout: 30_000 });
+    await expect(page.locator(".cosmic-bg canvas")).toHaveCount(1, { timeout: 30_000 });
+  });
+
+  test("live background draws the starfield in its one WebGL canvas", async ({
     page,
   }) => {
     test.setTimeout(120_000);
@@ -229,8 +236,8 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(1, { timeout: 30_000 });
     await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-scene", "live", { timeout: 60_000 });
     // The canvas does not preserve its drawing buffer, so reading it directly
-    // is timing-dependent. Put it over magenta instead: the event horizon is
-    // the one fully opaque black disc, so it must show as a large dark area.
+    // is timing-dependent. Put it over magenta instead: stars add white light,
+    // so they show as pixels with a green channel (magenta has none).
     await page.addStyleTag({
       content:
         ".cosmic-bg{background:#f0f !important} .cosmic-bg__scrim,.cosmic-bg__vignette,.cosmic-bg__noise,.cosmos-plate{display:none !important}",
@@ -250,27 +257,26 @@ test.describe("Portfolio visual acceptance matrix", () => {
             if (!g) return 0;
             g.drawImage(img, 0, 0);
             const d = g.getImageData(0, 0, c.width, c.height).data;
-            let dark = 0;
-            for (let i = 0; i < d.length; i += 4) if (d[i] < 40 && d[i + 1] < 40 && d[i + 2] < 40) dark += 1;
-            return dark;
+            let lit = 0;
+            for (let i = 0; i < d.length; i += 4) if (d[i + 1] > 60) lit += 1;
+            return lit;
           }, png.toString("base64"));
         },
         { timeout: 30_000 },
       )
-      .toBeGreaterThan(5_000);
+      .toBeGreaterThan(500);
   });
 
-  test("live background is exactly one WebGL canvas and one black-hole plate on every page", async ({
+  test("live background is exactly one WebGL canvas and one starfield plate on every page", async ({
     page,
   }) => {
     test.setTimeout(120_000);
     await page.goto("/about?cosmos=live&cosmos-tier=pin", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg canvas[data-engine]")).toHaveCount(1, { timeout: 30_000 });
-    // The background is one black hole: no second canvas (no stardust), no planets, no star layers.
+    // The background is stars only: no second canvas, no central object, no planets, no grid.
     await expect(page.locator(".cosmic-bg canvas")).toHaveCount(1);
-    await expect(page.locator(".cosmos-body")).toHaveCount(1);
-    await expect(page.locator(".cosmos-body--blackhole")).toHaveCount(1);
-    await expect(page.locator(".cosmos-dust, .cosmic-bg__stars, .cosmic-bg__grid")).toHaveCount(0);
+    await expect(page.locator(".cosmos-stars-still")).toHaveCount(1);
+    await expect(page.locator(".cosmos-body, .cosmos-svg, .cosmos-dust, .cosmic-bg__grid")).toHaveCount(0);
   });
 
   // Software GL here runs the live scene at about 10 fps, well under budget:
@@ -285,7 +291,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
     });
     await page.goto("/about?cosmos=live", { waitUntil: "networkidle" });
     const bg = page.locator(".cosmic-bg");
-    // The first rung down drops the starfield lensing, then glow and octave.
+    // Each rung down thins the starfield; the last hands over to the still.
     await expect(bg).toHaveAttribute("data-cosmos-tier", "high", { timeout: 60_000 });
     await expect(bg).toHaveAttribute("data-cosmos-tier", "low", { timeout: 60_000 });
     await expect(bg).toHaveAttribute("data-cosmos-tier", "plate", { timeout: 60_000 });
@@ -362,7 +368,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
     });
   }
 
-  test("the static black hole is a still: no streak rings, no animation", async ({ page }) => {
+  test("the static starfield is a still: no central object, no animation", async ({ page }) => {
     await page.addInitScript(() => {
       const original = HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
@@ -372,8 +378,8 @@ test.describe("Portfolio visual acceptance matrix", () => {
     });
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator(".cosmic-bg")).toHaveAttribute("data-cosmos", "static");
-    await expect(page.locator(".cosmic-bg .cosmos-plate svg")).toHaveCount(1);
-    await expect(page.locator(".cosmos-bh-streak")).toHaveCount(0);
+    await expect(page.locator(".cosmic-bg .cosmos-stars-still")).toHaveCount(1);
+    await expect(page.locator(".cosmic-bg svg")).toHaveCount(0);
   });
 
   test("reduced motion creates no WebGL canvases", async ({ page }) => {
@@ -409,50 +415,62 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 
-  test("home leads with the hero, five lead cards, the gravity map, the signal, ranked groups and a closing row", async ({
+  test("home is the landing: words, gravity map, the card grid, the signal and a closing row", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(/Luke\s*Kimball/i);
     await expect(page.locator(".solar-system")).toHaveCount(0);
+    await expect(page.locator('.landing__map svg[aria-label^="Lead projects"]')).toHaveCount(1);
+    await expect(page.locator(".landing__map [role=button][data-umami-event=gravity-group]")).toHaveCount(7);
     await expect(page.locator(".lead-card")).toHaveCount(5);
-    await expect(page.locator('.home-map svg[aria-label^="Lead projects"]')).toHaveCount(1);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
     await expect(page.locator(".category-group").first()).toBeAttached();
     await expect(page.locator(".home-close")).toHaveCount(1);
     const order = await page.evaluate(() => {
       const top = (sel: string) => document.querySelector(sel)!.getBoundingClientRect().top;
-      return [top(".lead-card"), top(".home-map"), top(".home-transmissions"), top(".category-group"), top(".home-close")];
+      return [top(".landing__map"), top(".lead-card"), top(".category-group"), top(".home-transmissions"), top(".home-close")];
     });
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    await expect(page.getByRole("link", { name: /See the work/ })).toHaveAttribute(
+    await expect(page.locator(".landing__actions").getByRole("link", { name: /Resume/ })).toHaveAttribute(
       "href",
-      "/projects",
+      "/resume",
     );
   });
 
-  test("home hero, actions and the first lead card sit above the fold at 1440x900", async ({
+  test("home words take the left quarter and the map the right three quarters at 1440x900", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/", { waitUntil: "networkidle" });
     for (const locator of [
       page.locator("h1"),
-      page.getByRole("link", { name: /See the work/ }),
-      page.getByRole("link", { name: "Resume", exact: true }).first(),
+      page.locator(".landing__actions").getByRole("link", { name: /Resume/ }),
+      page.locator(".landing__actions").getByRole("link", { name: "Hire" }),
+      page.locator(".landing__map svg"),
     ]) {
       const box = await locator.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.y).toBeGreaterThanOrEqual(0);
       expect(box!.y + box!.height).toBeLessThanOrEqual(900);
     }
-    // The lead cards start on screen, so the leading projects read within seconds.
-    const card = await page.locator(".lead-card").first().boundingBox();
-    expect(card).not.toBeNull();
-    const visible = Math.min(900, card!.y + card!.height) - card!.y;
-    // The cards are taller now (outcome, proof, stack); the poster and title read on screen.
-    expect(visible).toBeGreaterThan(150);
+    const words = await page.locator(".landing__words").boundingBox();
+    const map = await page.locator(".landing__map").boundingBox();
+    expect(words!.width / 1440).toBeCloseTo(0.25, 1);
+    expect(map!.width / 1440).toBeCloseTo(0.75, 1);
+    expect(map!.x).toBeGreaterThanOrEqual(words!.x + words!.width - 1);
+  });
+
+  test("home has no horizontal overflow at phone width, words first, then the map", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expectNoHorizontalOverflow(page);
+    const [words, map] = await page.evaluate(() => [
+      document.querySelector(".landing__words")!.getBoundingClientRect().top,
+      document.querySelector(".landing__map")!.getBoundingClientRect().top,
+    ]);
+    expect(words).toBeLessThan(map);
   });
 
   test("home has no horizontal overflow at tablet width", async ({ page }) => {

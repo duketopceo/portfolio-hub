@@ -13,7 +13,7 @@ import {
 } from "@/lib/cosmos-quality";
 
 /**
- * The live background: one SceneFrame (one WebGL context) holding the hole,
+ * The live background: one SceneFrame (one WebGL context) holding the starfield,
  * watched by drei's PerformanceMonitor. Sustained frames under budget step
  * quality down (high -> low) and then give the stage back to the static plate
  * via `onGiveUp`; it never steps back up. The scene is imported statically

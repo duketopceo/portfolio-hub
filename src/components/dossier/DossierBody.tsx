@@ -49,14 +49,6 @@ export function DossierBody({
     <div className="cosmic-page dossier-page__two-col">
       <div className="dossier-page__main-stack">
         <DossierSection
-          title="What it is"
-          id={`dossier-about-${slug}`}
-          surface="glass"
-        >
-          <p className="cosmic-readable">{project.description}</p>
-        </DossierSection>
-
-        <DossierSection
           title="Backend"
           id={`dossier-backend-${slug}`}
           surface="glass"

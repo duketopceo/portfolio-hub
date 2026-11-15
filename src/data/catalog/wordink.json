@@ -6,7 +6,7 @@
     "tagline": "Speech-to-text dictation on Groq's inference API",
     "description": "AI-powered speech-to-text dictation — an alternative to hosted dictation tools, built on Groq's low-latency inference API.",
     "category": "apps",
-    "capability": "products",
+    "capability": "desktop-devtools",
     "type": "app",
     "featured": false,
     "techStack": [
@@ -24,6 +24,35 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "A",
+      "skills": [
+        "TypeScript",
+        "Python",
+        "Groq",
+        "Whisper"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2025-10-08",
+          "summary": "First commit: a dictation SDK and gateway."
+        },
+        "done": [
+          "Desktop app 1.0.0 released 2026-11-03 for Linux, macOS and Windows",
+          "Groq by default, local Parakeet with no key",
+          "One-line installers on all three platforms",
+          "Open source with no telemetry"
+        ],
+        "next": [
+          "Parakeet v3 as the local default",
+          "Find the roughly 9 s app overhead on Groq requests",
+          "Publish the web SDK and gateway to npm",
+          "Omarchy bar plugin",
+          "Signed macOS and Windows builds"
+        ],
+        "source": "WordInk ROADMAP.md (read 2026-11-14); first commit from git log"
+      }
     }
   },
   "github": {

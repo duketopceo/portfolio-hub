@@ -1,51 +1,31 @@
-/* Cosmic background: one full-screen black hole. The static plate is an SVG
-   still of the same composition as the live WebGL scene; the scrim and
-   vignette sit above both. BRAND.md "Motion & Canvas Layers". Everything
-   here is decorative; the canvas never carries meaning. */
+/* Cosmic background: deep space and stars. The live WebGL starfield
+   (components/scene/Starfield.tsx) draws over a pre-rendered SVG still made by
+   the same generator; the scrim and vignette sit above both. BRAND.md "Motion
+   & Canvas Layers". Everything here is decorative; the canvas never carries
+   meaning. */
 
 .cosmos-plate {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  /* Sizes are fractions of the smaller viewport side. */
+  /* The container query below switches the still by aspect ratio. */
   container-type: size;
   transition: opacity 900ms ease;
 }
 
-/* Dim on purpose: the hole is atmosphere, the page's text is drawn over it
-   (live scene light level: CosmosScene HOLE_LIGHT). */
-.cosmos-body--blackhole {
-  opacity: 0.5;
-}
-
-/* The box is the SVG's viewBox (220 x 124 = 5.5 shadow diameters wide) and
-   is sized like the live shader: the shadow is the larger of the layout size
-   and whatever makes the disk span 1.1 viewport widths, so the wings bleed
-   off both edges (lib/cosmos-layout.ts shadowRadius: 5.5 * 2 * 0.1019 = 1.12). */
-.cosmos-body {
+/* Static starfield: a pre-rendered SVG still (scripts/generate-starfield-still.mjs).
+   Wide for landscape, tall for portrait. */
+.cosmos-stars-still {
   position: absolute;
-  left: calc(var(--xw) * 100%);
-  top: calc(var(--yw) * 100%);
-  width: max(calc(var(--sw) * min(100cqw, 100cqh)), calc(100cqw * 1.12));
-  aspect-ratio: 220 / 124;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  background: url("/brand/starfield-still-wide.svg") center / cover no-repeat;
   pointer-events: none;
 }
 
-/* Portrait: second arrangement from the same layout table. */
 @container (max-aspect-ratio: 20/21) {
-  .cosmos-body {
-    left: calc(var(--xt) * 100%);
-    top: calc(var(--yt) * 100%);
-    width: max(calc(var(--st) * min(100cqw, 100cqh)), calc(100cqw * 1.12));
+  .cosmos-stars-still {
+    background-image: url("/brand/starfield-still-tall.svg");
   }
-}
-
-.cosmos-svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
 }
 
 /* Hand the stage to the WebGL scene only after its first rendered frame. */
@@ -53,9 +33,8 @@
   opacity: 0;
 }
 
-/* Legibility layers over both renditions. The scrim is a soft overall dim
-   plus a darker band down the middle where the content column sits, so no
-   bright part of the disk lands directly behind a paragraph. */
+/* Legibility layers over both renditions: a soft overall dim, a little more
+   toward the side edges. */
 .cosmic-bg__scrim {
   position: absolute;
   inset: 0;
@@ -63,23 +42,6 @@
   background:
     linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2) 36%, rgba(0, 0, 0, 0.2) 64%, rgba(0, 0, 0, 0.5)),
     rgba(0, 0, 0, 0.1);
-}
-
-/* Static rendition: where scroll-driven animation exists, the frozen hole
-   dims a little as the visitor moves down the page, matching the live
-   scene's fade. Opacity only, no motion. */
-@supports (animation-timeline: scroll()) {
-  .cosmic-bg[data-scene="plate"] .cosmos-body {
-    animation: cosmos-body-fade linear both;
-    animation-timeline: scroll(root block);
-    animation-range: 0 150vh;
-  }
-}
-
-@keyframes cosmos-body-fade {
-  to {
-    opacity: 0.28;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

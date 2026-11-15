@@ -6,7 +6,7 @@
     "tagline": "Umbrella catalog + subtree publisher for 11 bar plugins",
     "description": "Authoring catalog and publish pipeline for the Omarchy plugin estate — hardware (fan, power), markets (ticker), AI-agent surfaces (agents, numbat, bumblebee, neo, pplx, wisp shell), and overlays (standby, nexus, connections). Each plugin subtree-publishes to its own repo for `omarchy plugin add`; most are listed on the official marketplace.",
     "category": "apps",
-    "capability": "tooling-infra",
+    "capability": "desktop-devtools",
     "type": "library",
     "featured": false,
     "techStack": [
@@ -27,6 +27,16 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "C",
+      "skills": [
+        "QML",
+        "TypeScript",
+        "Omarchy",
+        "Plugins",
+        "pytest"
+      ]
     }
   },
   "github": {

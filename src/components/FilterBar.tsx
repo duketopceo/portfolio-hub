@@ -1,6 +1,6 @@
 "use client";
 
-import { GROUP_EVENT } from "@/lib/gravity-map";
+import { GROUP_ACTIVE_EVENT, GROUP_EVENT } from "@/lib/gravity-map";
 import { useEffect, useState } from "react";
 import { EnrichedProject } from "@/lib/types";
 import {
@@ -22,7 +22,7 @@ interface FilterBarProps {
 }
 
 const groups: { key: CapabilityId | "all"; label: string; color: string }[] = [
-  { key: "all", label: "All", color: "#FFFFFF" },
+  { key: "all", label: "All", color: "var(--color-accent)" },
   ...CAPABILITY_IDS.map((id) => ({
     key: id,
     label: capabilityMeta[id].label,
@@ -47,6 +47,11 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
     window.addEventListener(GROUP_EVENT, onGroup);
     return () => window.removeEventListener(GROUP_EVENT, onGroup);
   }, []);
+
+  // Tell the gravity map which group is showing so it can mark it.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent(GROUP_ACTIVE_EVENT, { detail: activeGroup }));
+  }, [activeGroup]);
 
   // `projects` arrives in ranking order; filtering keeps that order.
   const filtered = projects.filter(

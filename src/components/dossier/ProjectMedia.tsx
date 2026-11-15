@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { mediaAsset, type MediaAsset, type MediaKind, type MediaSlot, type ProjectMedia as ProjectMediaConfig } from "@/lib/types";
 import { MediaFrame, PageShell } from "@/components/design";
 
@@ -26,6 +26,8 @@ interface ProjectMediaViewProps {
   onWaiting?: () => void;
   onError?: () => void;
   videoRef?: React.Ref<HTMLVideoElement>;
+  /** Shown in place of the catalog poster until the video plays (the generated poster). */
+  fallbackPoster?: ReactNode;
 }
 
 export function ProjectMediaView({
@@ -39,6 +41,7 @@ export function ProjectMediaView({
   onWaiting,
   onError,
   videoRef,
+  fallbackPoster,
 }: ProjectMediaViewProps) {
   const name = `${title} ${LABEL[kind]}`;
 
@@ -48,8 +51,13 @@ export function ProjectMediaView({
       caption={media.transcript}
     >
       <div className="dossier-media__stage">
+        {fallbackPoster && status !== "playing" && (
+          <div className="dossier-media__fallback" aria-hidden="true">
+            {fallbackPoster}
+          </div>
+        )}
         {status === "error" ? (
-          media.poster ? (
+          fallbackPoster ? null : media.poster ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={media.poster} alt="" className="dossier-media__poster" />
           ) : (
@@ -66,7 +74,7 @@ export function ProjectMediaView({
               ref={videoRef}
               className="dossier-media__video"
               src={media.url}
-              poster={media.poster}
+              poster={fallbackPoster ? undefined : media.poster}
               preload="none"
               playsInline
               controls={status === "playing"}
@@ -116,11 +124,13 @@ export function ProjectMedia({
   slot,
   title,
   slug,
+  fallbackPoster,
 }: {
   kind: MediaKind;
   slot: MediaSlot;
   title: string;
   slug?: string;
+  fallbackPoster?: ReactNode;
 }) {
   const [status, setStatus] = useState<MediaStatus>("idle");
   const ref = useRef<HTMLVideoElement>(null);
@@ -135,6 +145,7 @@ export function ProjectMedia({
       slug={slug}
       status={status}
       videoRef={ref}
+      fallbackPoster={fallbackPoster}
       onPlay={() => {
         setStatus("loading");
         ref.current?.play().catch(() => setStatus("error"));
@@ -146,23 +157,37 @@ export function ProjectMedia({
   );
 }
 
-/** Release video then demo recording; no section when neither is present. */
+/**
+ * At most one video block: the release film when there is one, else the demo
+ * recording. No section when neither is present. `fallbackPoster` replaces the
+ * catalog poster (often black) until the video plays.
+ */
 export function ProjectMediaSection({
   media,
   title,
   slug,
+  fallbackPoster,
 }: {
   media: ProjectMediaConfig;
   title: string;
   slug?: string;
+  fallbackPoster?: ReactNode;
 }) {
-  if (!mediaAsset(media.release) && !mediaAsset(media.demo)) {
-    return null;
-  }
+  const kind: MediaKind | null = mediaAsset(media.release)
+    ? "release"
+    : mediaAsset(media.demo)
+      ? "demo"
+      : null;
+  if (!kind) return null;
   return (
     <PageShell id="video" className="dossier-page__demo dossier-page__media">
-      <ProjectMedia kind="release" slot={media.release} title={title} slug={slug} />
-      <ProjectMedia kind="demo" slot={media.demo} title={title} slug={slug} />
+      <ProjectMedia
+        kind={kind}
+        slot={media[kind]}
+        title={title}
+        slug={slug}
+        fallbackPoster={fallbackPoster}
+      />
     </PageShell>
   );
 }

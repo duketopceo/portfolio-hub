@@ -96,7 +96,36 @@
       "Fingerprint cache over re-invocation — Vision calls only on drift, not every run",
       "DOM-verified grounding — Model coordinate output checked against the DOM before any click",
       "Cost ledger first-class — Per-call OpenRouter pricing rolled into the run report"
-    ]
+    ],
+    "showcaseCard": {
+      "tier": "A",
+      "skills": [
+        "TypeScript",
+        "Playwright",
+        "OpenRouter",
+        "GitHub Actions",
+        "Docker"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-09-08",
+          "summary": "First commit: an execution-backed pull request reviewer."
+        },
+        "done": [
+          "Proof and adoption: demo assets, npm trusted publishing, clean-install smoke in CI",
+          "Execution-backed review: probe lane and sandbox regression probes",
+          "v0.5.0: nit consolidation, deterministic rules lane, scan, eval corpus, incremental review",
+          "GitHub App onboarding and init --pr"
+        ],
+        "next": [
+          "Live Agent Zero verification, blocked on the upstream marketplace listing",
+          "Runner health dashboard",
+          "Org spend alerts and caps",
+          "GitHub Enterprise support"
+        ],
+        "source": "Argus ROADMAP.md status snapshot 2026-10-11 (read 2026-11-14); first commit from git log"
+      }
+    }
   },
   "github": {
     "repoName": "Argus",

@@ -22,7 +22,7 @@ describe("ProjectMediaSection (live)", () => {
     container.remove();
   });
 
-  it("an error on one video swaps only that player, the other keeps its player and play button", async () => {
+  it("renders at most one video block (release first, else demo) and swaps the player on error", async () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
@@ -36,20 +36,37 @@ describe("ProjectMediaSection (live)", () => {
       );
     });
     const videos = container.querySelectorAll("video");
-    expect(videos).toHaveLength(2);
+    expect(videos).toHaveLength(1);
+    expect(videos[0].getAttribute("aria-label")).toBe("Argus release video");
 
     await act(async () => {
       videos[0].dispatchEvent(new Event("error"));
     });
 
-    const after = container.querySelectorAll("video");
-    expect(after).toHaveLength(1);
-    expect(after[0].getAttribute("aria-label")).toBe("Argus demo recording");
+    expect(container.querySelectorAll("video")).toHaveLength(0);
     expect(container.querySelector('img[src="https://m/r-poster.jpg"]')).not.toBeNull();
+  });
+
+  it("falls back to the demo recording when there is no release, and uses the fallback poster", async () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    await act(async () => {
+      root.render(
+        <ProjectMediaSection
+          media={{ release: "to-record", demo: asset }}
+          title="Argus"
+          slug="argus"
+          fallbackPoster={<span data-testid="fb">poster</span>}
+        />
+      );
+    });
+    const video = container.querySelector("video")!;
+    expect(video.getAttribute("aria-label")).toBe("Argus demo recording");
+    expect(video.hasAttribute("poster")).toBe(false);
+    expect(container.querySelector('[data-testid="fb"]')).not.toBeNull();
     const play = container.querySelector("button.dossier-media__play");
-    expect(play?.getAttribute("data-umami-event")).toBe("media-play");
     expect(play?.getAttribute("data-umami-event-kind")).toBe("demo");
-    expect(play?.getAttribute("data-umami-event-slug")).toBe("argus");
   });
 
   it("turns captions on by default when the asset has a captions track", async () => {

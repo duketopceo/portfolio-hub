@@ -77,6 +77,36 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "Python",
+        "Temporal",
+        "OpenRouter",
+        "LiteLLM",
+        "MCP",
+        "Python CLI"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-08-07",
+          "summary": "Concentrated build of an OpenRouter-native agent platform (the repo's git history starts earlier because it inherits a fork)."
+        },
+        "done": [
+          "Temporal and OpenRouter routing",
+          "LiteLLM workers and risk scoring",
+          "MCP surfaces and the Python CLI",
+          "Vault and memory persistence"
+        ],
+        "next": [
+          "Wire the live agent loop to the typed contracts",
+          "Harden eval fixtures for production guardrails",
+          "Expand connector coverage",
+          "Publish release downloads"
+        ],
+        "source": "catalog finishLine and showcase.status for khan (read 2026-11-14); start date from the finishLine text, not git"
+      }
     }
   },
   "github": {

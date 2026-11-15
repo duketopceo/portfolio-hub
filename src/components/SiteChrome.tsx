@@ -18,8 +18,8 @@ export function SiteFooter({ children }: { children: ReactNode }) {
 }
 
 /**
- * Site background: one full-screen black hole and nothing else. The static
- * plate (SVG still of the same composition) is server-rendered and is what
+ * Site background: deep space and stars, nothing else. The static plate (SVG
+ * stills of the same sky) is server-rendered and is what
  * first paint, reduced motion, and every WebGL failure show. After first
  * paint, when the visitor allows motion and WebGL is not a named software
  * rasteriser, the live scene mounts on top (one WebGL context, via

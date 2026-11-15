@@ -63,22 +63,22 @@ describe("FilterBar", () => {
   it("an active filter hides the lead band and shows a flat ranked list with a count", async () => {
     await mount();
     await act(async () => {
-      pill("tooling-infra").click();
+      pill("hardware-sim").click();
     });
     expect(container.querySelector("[data-lead-rank]")).toBeNull();
     expect(container.querySelector(".category-group")).toBeNull();
-    const expected = ranked.filter((p) => p.capability === "tooling-infra");
+    const expected = ranked.filter((p) => p.capability === "hardware-sim");
     expect(container.textContent).toContain(`${expected.length} project`);
     const titles = [...container.querySelectorAll(".cosmic-card-title")].map((n) => n.textContent);
     expect(titles).toEqual(expected.map((p) => p.displayName));
-    expect(pill("tooling-infra").getAttribute("aria-pressed")).toBe("true");
+    expect(pill("hardware-sim").getAttribute("aria-pressed")).toBe("true");
   });
 
   it("opens on the group named in ?group= (the home See all links)", async () => {
-    window.history.replaceState({}, "", "/projects?group=tooling-infra");
+    window.history.replaceState({}, "", "/projects?group=hardware-sim");
     try {
       await mount();
-      expect(pill("tooling-infra").getAttribute("aria-pressed")).toBe("true");
+      expect(pill("hardware-sim").getAttribute("aria-pressed")).toBe("true");
       expect(container.querySelector("[data-lead-rank]")).toBeNull();
     } finally {
       window.history.replaceState({}, "", "/");

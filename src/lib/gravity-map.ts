@@ -31,6 +31,8 @@ export interface GravityHero extends GravityDot {
 export interface GravityCentre {
   id: CapabilityId;
   label: string;
+  /** Short name for phone widths. */
+  short: string;
   color: string;
   /** Every listed project in the group, leads included. */
   count: number;
@@ -82,6 +84,7 @@ export function buildGravityMap(
     return {
       id,
       label: capabilityMeta[id].label,
+      short: capabilityMeta[id].short,
       color: capabilityMeta[id].color,
       count: inGroup.length,
       members: inGroup
@@ -93,19 +96,31 @@ export function buildGravityMap(
   return { heroes, centres, total: centres.reduce((n, c) => n + c.count, 0) };
 }
 
-/** Layout frames: a wide one for desktop and a tall one for phones. */
+/** Layout frames: a wide one for desktop and tablets and a tall one for phones. */
 export interface GravityFrame {
   w: number;
   h: number;
 }
-export const WIDE_FRAME: GravityFrame = { w: 960, h: 560 };
-export const TALL_FRAME: GravityFrame = { w: 400, h: 640 };
+export const WIDE_FRAME: GravityFrame = { w: 1000, h: 720 };
+export const TALL_FRAME: GravityFrame = { w: 400, h: 620 };
 
 /** Vertical flattening of the two orbit systems (own values, tuned by eye). */
 export const LEAD_FLATTEN = 0.62;
 export const MEMBER_FLATTEN = 0.78;
 /** Member ring radii in frame units; inner ring first. */
-export const MEMBER_RINGS = [24, 40, 56] as const;
+export const MEMBER_RINGS = [24, 44, 66] as const;
+/** Largest fraction of a ring radius that jitter adds (see `memberJitter`). */
+export const JITTER_R = 0.08;
+
+/** Phones draw the member rings smaller so a cluster fits beside the frame edge. */
+export function memberScale(frame: GravityFrame): number {
+  return frame.w > frame.h ? 1 : 0.72;
+}
+
+/** Half the height a member cluster can occupy, in frame units (outer ring plus jitter). */
+export function clusterHalfHeight(frame: GravityFrame): number {
+  return MEMBER_RINGS[2] * (1 + JITTER_R) * MEMBER_FLATTEN * memberScale(frame);
+}
 
 export interface Placed {
   x: number;
@@ -116,11 +131,14 @@ export interface Placed {
 export function centreOrbit(frame: GravityFrame): { rx: number; ry: number } {
   const wide = frame.w > frame.h;
   return wide
-    ? { rx: frame.w * 0.4, ry: frame.h * 0.32 }
-    : { rx: frame.w * 0.36, ry: frame.h * 0.34 };
+    ? { rx: frame.w * 0.4, ry: frame.h * 0.33 }
+    : { rx: frame.w * 0.34, ry: frame.h * 0.36 };
 }
 
-/** Centre positions, one per capability, spread on an ellipse starting at the top. */
+/**
+ * Centre positions, one per capability, spread evenly on an ellipse starting
+ * at the top and going clockwise. The five leads orbit inside it.
+ */
 export function centrePositions(count: number, frame: GravityFrame): Placed[] {
   const cx = frame.w / 2;
   const cy = frame.h / 2;
@@ -129,6 +147,34 @@ export function centrePositions(count: number, frame: GravityFrame): Placed[] {
     const a = -Math.PI / 2 + (i * 2 * Math.PI) / count;
     return { x: cx + rx * Math.cos(a), y: cy + ry * Math.sin(a) };
   });
+}
+
+export interface LabelPlacement {
+  /** Text anchor (middle) x, kept inside the frame. */
+  x: number;
+  /** Baseline of the group name; the count line sits `COUNT_DROP` below. */
+  y: number;
+  /** Half the width of the name, frame units. */
+  half: number;
+}
+export const COUNT_DROP = 15;
+/** Mono glyph advance at the group-label size plus its letter spacing, frame units. */
+const LABEL_ADVANCE = 9.2;
+
+/**
+ * Where a group's name and count go: above the cluster for groups in the top
+ * half, below for the rest, nudged inward near a frame edge so a long name
+ * never leaves the frame.
+ */
+export function labelPlacement(pos: Placed, frame: GravityFrame, text: string): LabelPlacement {
+  const reach = clusterHalfHeight(frame);
+  const above = pos.y < frame.h / 2 - 1;
+  const half = (text.length * LABEL_ADVANCE) / 2 + 4;
+  return {
+    x: Math.min(Math.max(pos.x, half), frame.w - half),
+    y: above ? pos.y - reach - 24 : pos.y + reach + 22,
+    half,
+  };
 }
 
 /** Lead positions on the inner ellipse at orbit phase `t` (radians). */
@@ -154,15 +200,16 @@ export interface Jitter {
 /** Small seeded offsets so the rings read as scatter, not a lattice. */
 export function memberJitter(count: number, seed: number): Jitter[] {
   const rand = seededRandom(seed * 7919 + 13);
-  return Array.from({ length: count }, () => ({ a: (rand() - 0.5) * 0.7, r: (rand() - 0.5) * 0.24 }));
+  return Array.from({ length: count }, () => ({ a: (rand() - 0.5) * 0.7, r: (rand() - 0.5) * 2 * JITTER_R }));
 }
 
-/** Member positions around a centre at phase `t`: three rings, alternating spin. */
+/** Member positions around a centre at phase `t`: three rings, alternating spin. `scale` shrinks the rings. */
 export function memberPositions(
   count: number,
   centre: Placed,
   t: number,
-  jitter: readonly Jitter[] = []
+  jitter: readonly Jitter[] = [],
+  scale = 1
 ): Placed[] {
   return Array.from({ length: count }, (_, k) => {
     const ring = k % MEMBER_RINGS.length;
@@ -171,10 +218,13 @@ export function memberPositions(
     const dir = ring % 2 === 0 ? 1 : -1;
     const j = jitter[k] ?? { a: 0, r: 0 };
     const a = (slot * 2 * Math.PI) / perRing + ring * 1.1 + j.a + dir * t * (1 - ring * 0.25);
-    const r = MEMBER_RINGS[ring] * (1 + j.r);
+    const r = MEMBER_RINGS[ring] * (1 + j.r) * scale;
     return { x: centre.x + r * Math.cos(a), y: centre.y + r * MEMBER_FLATTEN * Math.sin(a) };
   });
 }
 
 /** Window event the map dispatches to apply a capability group in the filter bar. */
 export const GROUP_EVENT = "projects:group";
+
+/** Window event the project grid sends with its active group id (or "all"), so the map can mark it. */
+export const GROUP_ACTIVE_EVENT = "projects:group-active";

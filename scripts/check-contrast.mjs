@@ -20,6 +20,8 @@ const TEXT = [
   "color-signal",
   "color-heat",
   "color-pop",
+  "color-group-sand",
+  "color-group-clay",
 ];
 
 const lum = (hex) => {

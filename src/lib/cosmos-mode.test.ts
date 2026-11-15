@@ -1,7 +1,17 @@
 import { describe, expect, it } from "vitest";
+import { isNamedSoftwareRenderer } from "./render-capability";
 import { parseCosmosOverride, parseTierPin, pickCosmosMode } from "./cosmos-mode";
 
 const base = { reducedMotion: false, webgl: "gpu", saveData: false } as const;
+
+describe("pickCosmosMode on Asahi (Mesa Apple M1 Max)", () => {
+  it("is live for a real GPU through Mesa, with and without the override", () => {
+    const webgl = isNamedSoftwareRenderer("ANGLE (Mesa, Apple M1 Max (G13C C0), OpenGL ES 3.2)") ? "software" : "gpu";
+    const input = { reducedMotion: false, webgl, saveData: false, deviceMemory: 32 } as const;
+    expect(pickCosmosMode(input)).toBe("live");
+    expect(pickCosmosMode({ ...input, override: "live" })).toBe("live");
+  });
+});
 
 describe("pickCosmosMode", () => {
   it("is live on a GPU with motion allowed", () => {

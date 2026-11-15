@@ -75,6 +75,47 @@ const showcase = z.strictObject({
   outcomes: z.string().optional(),
 });
 
+/** Readiness tier (docs/showcase/readiness-tiers.md): A full video, B short video of at least 15 s, C GIF only. */
+export const SHOWCASE_TIERS = ["A", "B", "C"] as const;
+
+/** Muted autoplay-style loop (MP4 or WebM preferred over GIF for weight) plus its still poster. */
+const showcaseLoop = z.strictObject({
+  /** Path under the site origin or a media-host URL; .mp4, .webm or .gif. */
+  url: z.string().min(1),
+  /** Still frame shown before play and under reduced motion. Required so the slot never shows a blank frame. */
+  poster: z.string().min(1),
+  /** One line of what the loop shows, used as the accessible name. */
+  alt: z.string().min(1),
+});
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD");
+
+/** Beginning to where it is to what is left. Every entry names its source; unsourced entries stay empty. */
+const showcaseRoadmap = z.strictObject({
+  started: z.strictObject({ date: isoDate, summary: z.string().min(1) }),
+  done: z.array(z.string().min(1)).min(1),
+  next: z.array(z.string().min(1)),
+  /** Where the facts come from (repo file or catalog field and the date read). */
+  source: z.string().min(1),
+});
+
+/**
+ * Showcase card slots (docs/showcase). Separate from `showcase`, which is the
+ * private entries' hand-written card with required copy. All fields are
+ * optional except `tier`; cards render without any media.
+ */
+const showcaseCard = z.strictObject({
+  tier: z.enum(SHOWCASE_TIERS),
+  /** Static themed poster; absent means the generated deterministic poster. */
+  thumbnail: z.string().min(1).optional(),
+  gif: showcaseLoop.optional(),
+  /** Narrated video; reuses the media-asset shape (transcript required). */
+  video: mediaAsset.optional(),
+  /** Technologies and skills the project demonstrates, taken from the catalog stack. */
+  skills: z.array(z.string().min(1)).min(1).optional(),
+  roadmap: showcaseRoadmap.optional(),
+});
+
 /** One verifiable figure (KD4): omitted when it cannot be measured, never estimated. */
 const measuredItem = z.strictObject({
   label: z.string().min(1),
@@ -108,6 +149,7 @@ export const curatedSchema = z.strictObject({
   demoUrl: z.string().optional(),
   media,
   showcase: showcase.optional(),
+  showcaseCard: showcaseCard.optional(),
   parentSlug: z.string().optional(),
   era: z.literal("earlier").optional(),
   embeddable: z.boolean().optional(),

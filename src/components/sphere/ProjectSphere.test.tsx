@@ -20,12 +20,12 @@ describe("ProjectSphere markup", () => {
     }
   });
 
-  it("renders the five-group legend with counts", () => {
+  it("renders the legend with counts", () => {
     const html = renderToStaticMarkup(<ProjectSphere projects={projects} />);
     for (const id of CAPABILITY_IDS) {
       expect(html).toContain(capabilityMeta[id].label.replace(/&/g, "&amp;"));
     }
-    expect(html.match(/project-sphere__legend-item/g)).toHaveLength(5);
+    expect(html.match(/project-sphere__legend-item/g)).toHaveLength(CAPABILITY_IDS.length);
   });
 
   it("shows the list as a disclosure on the full variant and hides it on the compact one", () => {

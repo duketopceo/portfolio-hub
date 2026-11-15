@@ -6,18 +6,32 @@
     "tagline": "Firmware for a 5-key, 5-knob USB macropad on RP2040",
     "description": "Firmware for a 5-key, 5-knob USB macropad on RP2040, built for QMK and Vial.",
     "category": "infra",
-    "capability": "tooling-infra",
+    "capability": "hardware-sim",
     "type": "infra",
     "featured": false,
     "private": false,
-    "techStack": ["RP2040", "QMK", "Vial", "Embedded"],
+    "techStack": [
+      "RP2040",
+      "QMK",
+      "Vial",
+      "Embedded"
+    ],
     "highlights": [
       "5-key, 5-knob USB macropad",
       "RP2040 microcontroller firmware",
       "QMK and Vial support"
     ],
     "architecture": "USB macropad → RP2040 firmware → QMK/Vial key and knob handling",
-    "media": { "release": "to-record", "demo": "to-record" }
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "C"
+    }
   },
-  "github": { "repoName": "fivebyfive", "owner": "duketopceo" }
+  "github": {
+    "repoName": "fivebyfive",
+    "owner": "duketopceo"
+  }
 }

@@ -18,10 +18,29 @@ describe("capability groups", () => {
     }
   });
 
-  it("meta covers the five ids and every color is a palette value", () => {
+  it("meta covers the seven ids and every color is a palette value", () => {
     expect(Object.keys(capabilityMeta).sort()).toEqual([...CAPABILITY_IDS].sort());
     const palette = new Set<string>(Object.values(COSMOS_PALETTE));
     for (const id of CAPABILITY_IDS) expect(palette.has(capabilityMeta[id].color), id).toBe(true);
+  });
+
+  it("spreads the listed projects evenly: every group holds 4 to 9, none more than twice another", () => {
+    const listed = projectConfigs.filter(isListedProject);
+    const counts = CAPABILITY_IDS.map((id) => listed.filter((p) => p.capability === id).length);
+    for (const [i, n] of counts.entries()) {
+      expect(n, CAPABILITY_IDS[i]).toBeGreaterThanOrEqual(4);
+      expect(n, CAPABILITY_IDS[i]).toBeLessThanOrEqual(9);
+    }
+    expect(Math.max(...counts)).toBeLessThanOrEqual(2 * Math.min(...counts));
+  });
+
+  it("retired the Products and Tooling & infra dumping grounds", () => {
+    expect(isCapabilityId("products")).toBe(false);
+    expect(isCapabilityId("tooling-infra")).toBe(false);
+  });
+
+  it("gives every group a short phone label", () => {
+    for (const id of CAPABILITY_IDS) expect(capabilityMeta[id].short.length, id).toBeLessThanOrEqual(10);
   });
 
   it("an unknown capability is rejected", () => {
@@ -29,7 +48,7 @@ describe("capability groups", () => {
     expect(isCapabilityId(undefined)).toBe(false);
   });
 
-  it("every sector colour is visible on the black background (>= 3:1) and the five are distinct", () => {
+  it("every sector colour is visible on the black background (>= 3:1) and the seven are distinct", () => {
     const lum = (hex: string) => {
       const [r, g, b] = [1, 3, 5]
         .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -42,7 +61,8 @@ describe("capability groups", () => {
       const c = capabilityMeta[id].color;
       expect((lum(c) + 0.05) / (lum(bg) + 0.05), `${id} ${c} on black`).toBeGreaterThanOrEqual(3);
     }
-    expect(new Set(colors).size).toBe(5);
+    expect(new Set(colors).size).toBe(CAPABILITY_IDS.length);
+    expect(CAPABILITY_IDS.length).toBe(7);
     expect(capabilityMeta["evals-routing"].color.toUpperCase()).toBe("#FFFFFF");
   });
 });

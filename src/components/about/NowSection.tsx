@@ -74,7 +74,7 @@ export async function NowSection() {
                   </span>
                 )}
               </div>
-              <ProjectCard project={project} />
+              <ProjectCard project={project} media={false} />
             </div>
           </div>
         ))}

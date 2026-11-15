@@ -6,7 +6,7 @@
     "tagline": "Comprehensive open-source weapons systems database — air, land, sea, munitions",
     "description": "Open-source intelligence database cataloging 183 military hardware platforms across air, land, sea, munitions, and software domains. Features a FastAPI REST API with filtering, pagination, and comparison endpoints. The React frontend provides an intelligence console with platform explorer, analytics dashboard, and side-by-side comparison tools. Includes SIPRI military expenditure data, 675 source citations, and role classification for every platform.",
     "category": "osint",
-    "capability": "products",
+    "capability": "retrieval-memory",
     "type": "library",
     "featured": false,
     "planetVisual": {
@@ -41,6 +41,33 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "Data",
+        "OSINT",
+        "JSON",
+        "Documentation"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-03-11",
+          "summary": "First commit: a sourced open database of military platforms."
+        },
+        "done": [
+          "v3.0.0: 183 platforms, 675 citations, REST API, intelligence console",
+          "JSON, CSV, SQLite and SQL exports",
+          "SIPRI spending, arms companies and transfers integrated",
+          "Docker deployment, CI and 51 tests"
+        ],
+        "next": [
+          "V3.1: 500+ platforms and PostgreSQL migration",
+          "V3.2: semantic search and RAG",
+          "V4.0: advanced frontend visualisations"
+        ],
+        "source": "open-military-hardware-db ROADMAP.md (read 2026-11-14); first commit from git log"
+      }
     }
   },
   "github": {
