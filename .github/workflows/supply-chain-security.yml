@@ -95,10 +95,20 @@ jobs:
   trivy:
     name: Trivy (image / IaC)
     runs-on: ubuntu-latest
-    if: hashFiles('Dockerfile', 'docker-compose.yml') != ''
     steps:
       - uses: actions/checkout@v4
+      # hashFiles() is not available in a job-level `if` (the workflow file was rejected
+      # as invalid on every push), so the Docker check is a step output instead.
+      - name: Detect Docker files
+        id: docker
+        run: |
+          if [ -n "$(find . -maxdepth 1 \( -name Dockerfile -o -name docker-compose.yml \) -print -quit)" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
       - uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0 (SHA-pinned, immutable)
+        if: steps.docker.outputs.present == 'true'
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -107,7 +117,7 @@ jobs:
           severity: 'HIGH,CRITICAL'
           exit-code: '1'  # BLOCKER: HIGH/CRITICAL fails
       - uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: always() && steps.docker.outputs.present == 'true'
         with:
           sarif_file: 'trivy-results.sarif'
         continue-on-error: true
