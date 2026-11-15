@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { projectConfigs } from "@/data/projects";
 import { RANKING_PINS } from "@/data/ranking-pins";
-import { capabilityGroups, rankProjects } from "@/lib/ranking";
+import { CAPABILITY_IDS, capabilityMeta } from "@/data/capability-meta";
+import { rankProjects } from "@/lib/ranking";
 import type { EnrichedProject } from "@/lib/types";
 
 const enriched = vi.hoisted(() => ({ all: [] as unknown[] }));
@@ -66,34 +67,6 @@ describe("home layout", () => {
     expect(html).not.toContain("solar-system");
   });
 
-  it("caps each capability group at its top 4, never repeats a pinned project, and links to the full group", async () => {
-    const html = await home();
-    const rest = html.slice(html.indexOf("home-rest-heading"));
-    const ranked = rankProjects(projectConfigs);
-    const pinned = new Set<string>(RANKING_PINS);
-    // Group views use the fixed order and put portfolio-hub last in its group.
-    const byCapability = new Map<string, string[]>(
-      capabilityGroups(ranked).map((g) => [g.capability, g.projects.map((p) => p.slug)])
-    );
-    for (const [capability, slugs] of byCapability) {
-      slugs.slice(0, 4).forEach((slug) => expect(rest).toContain(`href="/projects/${slug}"`));
-      slugs.slice(4).forEach((slug) => expect(rest).not.toContain(`href="/projects/${slug}"`));
-      const total = ranked.filter((p) => p.capability === capability).length;
-      expect(rest).toContain(`href="/projects?group=${capability}"`);
-      expect(rest).toMatch(new RegExp(`See all ${total} in `));
-    }
-    for (const slug of pinned) expect(rest).not.toContain(`href="/projects/${slug}"`);
-    expect(rest).toContain('href="/projects"');
-  });
-
-  it("groups cards in rank order inside each category", async () => {
-    const html = await home();
-    const rest = html.slice(html.indexOf("home-rest-heading"));
-    const ranked = (capabilityGroups(rankProjects(projectConfigs)).find((g) => g.capability === "agents-computer-use")?.projects ?? []).slice(0, 4);
-    const order = ranked.map((p) => rest.indexOf(`href="/projects/${p.slug}"`));
-    expect(order).toEqual([...order].sort((a, b) => a - b));
-  });
-
   it("gives lead cards with and without video the same structure", async () => {
     const html = await home();
     const cards = [...html.matchAll(/<article class="lead-card"[\s\S]*?<\/article>/g)].map((m) => m[0]);
@@ -124,19 +97,53 @@ describe("home layout", () => {
     }
   });
 
-  it("shows the gravity map after the lead band and before the signal, linking to /projects", async () => {
+  it("leads with the words on the left and the gravity map on the right, then the card grid, the signal and the close", async () => {
     const html = await home();
-    const leads = html.indexOf("home-leads-heading");
-    const map = html.indexOf("home-map-heading");
+    const landing = html.indexOf('class="landing"');
+    const words = html.indexOf("landing__words");
+    const map = html.indexOf("landing__map");
+    const catalog = html.indexOf('id="project-catalog"');
     const signal = html.indexOf("home-transmissions-heading");
-    expect(leads).toBeGreaterThan(-1);
-    expect(map).toBeGreaterThan(leads);
-    expect(signal).toBeGreaterThan(map);
-    const section = html.slice(map, signal);
-    expect(section).toContain('href="/projects"');
-    // the hidden list names every listed project
-    for (const p of rankProjects(projectConfigs)) {
-      expect(section).toContain(`href="/projects/${p.slug}"`);
+    const close = html.indexOf("home-close");
+    expect(landing).toBeGreaterThan(-1);
+    expect([landing, words, map, catalog, signal, close].every((n, i, a) => i === 0 || n > a[i - 1])).toBe(true);
+    expect(html.match(/<h1[ >]/g)).toHaveLength(1);
+    expect(html).toMatch(/Luke\s*<br\/>\s*Kimball/);
+    expect(html).not.toContain("home-hero");
+  });
+
+  it("names the five leads as text links, in pin order, with Resume and Hire as the actions", async () => {
+    const html = await home();
+    const words = html.slice(html.indexOf("landing__words"), html.indexOf("landing__map"));
+    const links = [...words.matchAll(/href="\/projects\/([a-z0-9-]+)"/g)].map((m) => m[1]);
+    expect(links).toEqual([...RANKING_PINS]);
+    const resume = words.indexOf('href="/resume"');
+    const hire = words.indexOf('href="/hire"');
+    expect(resume).toBeGreaterThan(words.indexOf("landing__leads"));
+    expect(hire).toBeGreaterThan(resume);
+    // Resume is the primary action: no secondary modifier on it.
+    expect(words.slice(words.lastIndexOf("<a", resume), resume)).not.toContain("detail-cta--secondary");
+  });
+
+  it("puts every listed project on the map, in one group each", async () => {
+    const html = await home();
+    const map = html.slice(html.indexOf("landing__map"), html.indexOf('id="project-catalog"'));
+    expect(map).toContain('aria-label="Lead projects at the centre, capability groups around them"');
+    const groups = [...map.matchAll(/role="button"[^>]*aria-label="([^"]+), (\d+) projects\. Show this group\."/g)];
+    expect(groups.map((m) => m[1].replaceAll("&amp;", "&"))).toEqual(CAPABILITY_IDS.map((id) => capabilityMeta[id].label));
+    const ranked = rankProjects(projectConfigs);
+    expect(groups.reduce((n, m) => n + Number(m[2]), 0)).toBe(ranked.length);
+    for (const p of ranked) expect(map).toContain(`href="/projects/${p.slug}"`);
+  });
+
+  it("follows the map with one card per listed project, grouped by capability, and links to /projects", async () => {
+    const html = await home();
+    const grid = html.slice(html.indexOf('id="project-catalog"'), html.indexOf("home-transmissions-heading"));
+    const ranked = rankProjects(projectConfigs);
+    for (const p of ranked) {
+      expect(grid, p.slug).toContain(`href="/projects/${p.slug}"`);
     }
+    expect((grid.match(/class="category-group"/g) ?? []).length).toBeGreaterThanOrEqual(CAPABILITY_IDS.length - 1);
+    expect(grid).toContain('href="/projects"');
   });
 });

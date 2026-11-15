@@ -409,50 +409,62 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 
-  test("home leads with the hero, five lead cards, the gravity map, the signal, ranked groups and a closing row", async ({
+  test("home is the landing: words, gravity map, the card grid, the signal and a closing row", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(/Luke\s*Kimball/i);
     await expect(page.locator(".solar-system")).toHaveCount(0);
+    await expect(page.locator('.landing__map svg[aria-label^="Lead projects"]')).toHaveCount(1);
+    await expect(page.locator(".landing__map [role=button][data-umami-event=gravity-group]")).toHaveCount(7);
     await expect(page.locator(".lead-card")).toHaveCount(5);
-    await expect(page.locator('.home-map svg[aria-label^="Lead projects"]')).toHaveCount(1);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
     await expect(page.locator(".category-group").first()).toBeAttached();
     await expect(page.locator(".home-close")).toHaveCount(1);
     const order = await page.evaluate(() => {
       const top = (sel: string) => document.querySelector(sel)!.getBoundingClientRect().top;
-      return [top(".lead-card"), top(".home-map"), top(".home-transmissions"), top(".category-group"), top(".home-close")];
+      return [top(".landing__map"), top(".lead-card"), top(".category-group"), top(".home-transmissions"), top(".home-close")];
     });
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    await expect(page.getByRole("link", { name: /See the work/ })).toHaveAttribute(
+    await expect(page.locator(".landing__actions").getByRole("link", { name: /Resume/ })).toHaveAttribute(
       "href",
-      "/projects",
+      "/resume",
     );
   });
 
-  test("home hero, actions and the first lead card sit above the fold at 1440x900", async ({
+  test("home words take the left quarter and the map the right three quarters at 1440x900", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/", { waitUntil: "networkidle" });
     for (const locator of [
       page.locator("h1"),
-      page.getByRole("link", { name: /See the work/ }),
-      page.getByRole("link", { name: "Resume", exact: true }).first(),
+      page.locator(".landing__actions").getByRole("link", { name: /Resume/ }),
+      page.locator(".landing__actions").getByRole("link", { name: "Hire" }),
+      page.locator(".landing__map svg"),
     ]) {
       const box = await locator.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.y).toBeGreaterThanOrEqual(0);
       expect(box!.y + box!.height).toBeLessThanOrEqual(900);
     }
-    // The lead cards start on screen, so the leading projects read within seconds.
-    const card = await page.locator(".lead-card").first().boundingBox();
-    expect(card).not.toBeNull();
-    const visible = Math.min(900, card!.y + card!.height) - card!.y;
-    // The cards are taller now (outcome, proof, stack); the poster and title read on screen.
-    expect(visible).toBeGreaterThan(150);
+    const words = await page.locator(".landing__words").boundingBox();
+    const map = await page.locator(".landing__map").boundingBox();
+    expect(words!.width / 1440).toBeCloseTo(0.25, 1);
+    expect(map!.width / 1440).toBeCloseTo(0.75, 1);
+    expect(map!.x).toBeGreaterThanOrEqual(words!.x + words!.width - 1);
+  });
+
+  test("home has no horizontal overflow at phone width, words first, then the map", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expectNoHorizontalOverflow(page);
+    const [words, map] = await page.evaluate(() => [
+      document.querySelector(".landing__words")!.getBoundingClientRect().top,
+      document.querySelector(".landing__map")!.getBoundingClientRect().top,
+    ]);
+    expect(words).toBeLessThan(map);
   });
 
   test("home has no horizontal overflow at tablet width", async ({ page }) => {

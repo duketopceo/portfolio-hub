@@ -6,7 +6,11 @@ import { listedProjects } from "@/lib/catalog";
 import { rankProjects } from "@/lib/ranking";
 import {
   buildGravityMap,
+  centreOrbit,
+  COUNT_DROP,
+  labelPlacement,
   memberJitter,
+  memberScale,
   centrePositions,
   leadPositions,
   memberPositions,
@@ -47,11 +51,11 @@ describe("buildGravityMap", () => {
     expect(map.total).toBe(tagged.length);
   });
 
-  it("includes reactor-sim under Products and snapdex as ordinary catalog entries", () => {
-    const products = map.centres.find((c) => c.id === "products");
-    const all = map.centres.flatMap((c) => c.members.map((m) => m.slug));
-    expect(products?.members.some((m) => m.slug === "reactor-sim")).toBe(true);
-    expect(all).toContain("snapdex");
+  it("includes reactor-sim under Hardware, sim & infra and snapdex under Retrieval & memory", () => {
+    const hardware = map.centres.find((c) => c.id === "hardware-sim");
+    const memory = map.centres.find((c) => c.id === "retrieval-memory");
+    expect(hardware?.members.some((m) => m.slug === "reactor-sim")).toBe(true);
+    expect(memory?.members.some((m) => m.slug === "snapdex")).toBe(true);
   });
 
   it("never lists a lead among the members", () => {
@@ -65,24 +69,111 @@ describe("buildGravityMap", () => {
   });
 });
 
+const frames = [["wide", WIDE_FRAME], ["tall", TALL_FRAME]] as const;
+const PHASES = Array.from({ length: 24 }, (_, i) => (i * 2 * Math.PI) / 24 / 1.7);
+const DOT_R = 3;
+
+/** Every dot (members and leads) and every group label box at phase `t`, in frame units. */
+function scene(frame: typeof WIDE_FRAME, t: number) {
+  const tall = frame.h > frame.w;
+  const centres = centrePositions(map.centres.length, frame);
+  const scale = memberScale(frame);
+  const dots: { id: string; x: number; y: number }[] = [];
+  const boxes: { id: string; x0: number; x1: number; y0: number; y1: number }[] = [];
+  map.centres.forEach((c, i) => {
+    const pos = centres[i];
+    const j = memberJitter(c.members.length, i + 1);
+    memberPositions(c.members.length, pos, t, j, scale).forEach((p, k) =>
+      dots.push({ id: c.members[k].slug, ...p })
+    );
+    dots.push({ id: `${c.id}:core`, ...pos });
+    const lp = labelPlacement(pos, frame, tall ? c.short : c.label);
+    boxes.push({ id: c.id, x0: lp.x - lp.half, x1: lp.x + lp.half, y0: lp.y - 11, y1: lp.y + COUNT_DROP + 4 });
+  });
+  const leads = leadPositions(map.heroes.length, frame, t);
+  map.heroes.forEach((h, i) => dots.push({ id: h.slug, ...leads[i] }));
+  // Lead names are drawn under their dot on wide frames only.
+  if (!tall) {
+    map.heroes.forEach((h, i) =>
+      boxes.push({ id: `lead:${h.slug}`, x0: leads[i].x - (h.name.length * 7.8) / 2, x1: leads[i].x + (h.name.length * 7.8) / 2, y0: leads[i].y + 14, y1: leads[i].y + 30 })
+    );
+  }
+  return { dots, boxes };
+}
+
 describe("layout", () => {
-  for (const [name, frame] of [["wide", WIDE_FRAME], ["tall", TALL_FRAME]] as const) {
-    it(`keeps every body inside the ${name} frame at any phase`, () => {
-      const centres = centrePositions(5, frame);
-      for (const t of [0, 1.3, 3.9]) {
-        const all = [
-          ...leadPositions(5, frame, t),
-          ...centres.flatMap((c) => memberPositions(12, c, t, memberJitter(12, 3))),
-        ];
-        for (const p of all) {
-          expect(p.x).toBeGreaterThan(0);
-          expect(p.x).toBeLessThan(frame.w);
-          expect(p.y).toBeGreaterThan(0);
-          expect(p.y).toBeLessThan(frame.h);
+  for (const [name, frame] of frames) {
+    it(`keeps every body and label inside the ${name} frame at any phase`, () => {
+      for (const t of PHASES) {
+        const { dots, boxes } = scene(frame, t);
+        for (const p of dots) {
+          expect(p.x, p.id).toBeGreaterThan(DOT_R);
+          expect(p.x, p.id).toBeLessThan(frame.w - DOT_R);
+          expect(p.y, p.id).toBeGreaterThan(DOT_R);
+          expect(p.y, p.id).toBeLessThan(frame.h - DOT_R);
+        }
+        for (const b of boxes) {
+          expect(b.x0, b.id).toBeGreaterThanOrEqual(0);
+          expect(b.x1, b.id).toBeLessThanOrEqual(frame.w);
+          expect(b.y0, b.id).toBeGreaterThanOrEqual(0);
+          expect(b.y1, b.id).toBeLessThanOrEqual(frame.h);
+        }
+      }
+    });
+
+    it(`never overlaps two dots on the ${name} frame at any phase`, () => {
+      for (const t of PHASES) {
+        const { dots } = scene(frame, t);
+        for (let i = 0; i < dots.length; i++) {
+          for (let k = i + 1; k < dots.length; k++) {
+            const d = Math.hypot(dots[i].x - dots[k].x, dots[i].y - dots[k].y);
+            expect(d, `${dots[i].id} / ${dots[k].id} at t=${t.toFixed(2)}`).toBeGreaterThan(2 * DOT_R + 1);
+          }
+        }
+      }
+    });
+
+    it(`never overlaps two labels, or a label and a dot, on the ${name} frame at any phase`, () => {
+      for (const t of PHASES) {
+        const { dots, boxes } = scene(frame, t);
+        for (let i = 0; i < boxes.length; i++) {
+          for (let k = i + 1; k < boxes.length; k++) {
+            const a = boxes[i];
+            const b = boxes[k];
+            const hit = a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+            expect(hit, `${a.id} x ${b.id} at t=${t.toFixed(2)}`).toBe(false);
+          }
+          for (const d of dots) {
+            // Skip the dot a lead name hangs from.
+            if (boxes[i].id === `lead:${d.id}`) continue;
+            const a = boxes[i];
+            const hit = d.x + DOT_R > a.x0 && d.x - DOT_R < a.x1 && d.y + DOT_R > a.y0 && d.y - DOT_R < a.y1;
+            expect(hit, `${a.id} x dot ${d.id} at t=${t.toFixed(2)}`).toBe(false);
+          }
         }
       }
     });
   }
+
+  it("spreads the groups evenly around the leads, which sit in the centre", () => {
+    const n = map.centres.length;
+    const centres = centrePositions(n, WIDE_FRAME);
+    const cx = WIDE_FRAME.w / 2;
+    const cy = WIDE_FRAME.h / 2;
+    const { rx, ry } = centreOrbit(WIDE_FRAME);
+    const angles = centres.map((c) => Math.atan2((c.y - cy) / ry, (c.x - cx) / rx)).map((a) => (a + 2 * Math.PI) % (2 * Math.PI));
+    angles.sort((a, b) => a - b);
+    for (let i = 0; i < n; i++) {
+      const gap = (angles[(i + 1) % n] - angles[i] + 2 * Math.PI) % (2 * Math.PI);
+      expect(gap).toBeCloseTo((2 * Math.PI) / n, 3);
+    }
+    const lead = leadPositions(5, WIDE_FRAME, 0);
+    const mean = { x: lead.reduce((s, p) => s + p.x, 0) / 5, y: lead.reduce((s, p) => s + p.y, 0) / 5 };
+    expect(Math.hypot(mean.x - cx, mean.y - cy)).toBeLessThan(1);
+    for (const p of lead) {
+      for (const c of centres) expect(Math.hypot(p.x - c.x, p.y - c.y)).toBeGreaterThan(100);
+    }
+  });
 
   it("keeps the same jitter for the same seed", () => {
     expect(memberJitter(6, 4)).toEqual(memberJitter(6, 4));
@@ -91,6 +182,7 @@ describe("layout", () => {
 
   it("is deterministic", () => {
     expect(memberPositions(7, { x: 10, y: 10 }, 0.5)).toEqual(memberPositions(7, { x: 10, y: 10 }, 0.5));
+    expect(scene(WIDE_FRAME, 0.7)).toEqual(scene(WIDE_FRAME, 0.7));
   });
 });
 

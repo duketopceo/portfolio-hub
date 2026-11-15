@@ -11,6 +11,19 @@
   justify-items: center;
 }
 
+/* The home map: fills the box its parent gives it, straight on the starfield. */
+.landing {
+  height: 100%;
+  min-height: 0;
+  align-content: center;
+}
+
+.landing .svg {
+  max-width: none;
+  height: 100%;
+  min-height: 0;
+}
+
 .copy {
   margin: 0;
   font-family: var(--font-mono);
@@ -29,11 +42,31 @@
   touch-action: manipulation;
 }
 
-/* Dark backing keeps names and dots legible over the black-hole glow. */
+/* A dark backing keeps names and dots legible over the black-hole glow and the stars. */
 .backing {
-  fill: rgba(0, 0, 0, 0.78);
+  fill: rgba(0, 0, 0, 0.6);
   stroke: var(--color-border-strong);
   stroke-width: 1;
+}
+
+.cluster {
+  transition: opacity var(--transition-slow);
+}
+
+/* A group is picked: the others step back, its own dots stay. */
+.root[data-has-selection] .cluster:not([data-selected]) {
+  opacity: 0.4;
+}
+
+.selectRing {
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 1.4;
+  opacity: 0;
+}
+
+.cluster[data-selected] .selectRing {
+  opacity: 0.9;
 }
 
 .orbits ellipse {

@@ -1,49 +1,151 @@
 /* Ranked layout (round 2): home hero, lead cards, category groups. */
 
-/* ── Home hero ─────────────────────────────────────────── */
-.home-hero {
-  width: var(--page-max);
-  margin-inline: auto;
-  padding: clamp(2.5rem, 7vw, 5.5rem) var(--page-pad-x) 0;
+/* ── Landing: the words on the left quarter, the gravity map on the right three quarters ── */
+.landing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
 }
 
-.home-hero__inner {
+.landing__words {
+  order: 2;
   display: grid;
   gap: var(--space-component-1);
-  max-width: 34rem;
+  align-content: start;
+  padding: var(--space-component-2) var(--page-pad-x) var(--space-component-1);
 }
 
-.home-hero__title {
+.landing__map {
+  order: 3;
+  min-width: 0;
+  min-height: 0;
+}
+
+.landing__name {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(3rem, 1.5rem + 6vw, 6.5rem);
-  line-height: 0.9;
+  font-size: clamp(2.5rem, 1rem + 6vw, 4.25rem);
+  line-height: 0.92;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--color-text);
 }
 
-.home-hero__copy {
-  display: grid;
-  gap: var(--space-control-2);
-  justify-items: start;
-}
-
-.home-hero__lede {
+.landing__lede {
   max-width: 30rem;
   font-size: var(--text-lg);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--color-text-muted);
   text-wrap: pretty;
 }
 
-.home-hero__tagline {
+.landing__leads {
+  display: grid;
+  gap: var(--space-micro-2);
+}
+
+.landing__leads-title {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-text-faint);
+}
+
+.landing__leads ol {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing__leads li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-control-1);
+  border-top: 1px solid var(--color-divider);
+}
+
+.landing__leads li:last-child {
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.landing__leads a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 4px;
+}
+
+.landing__leads a:hover {
+  text-decoration-color: var(--color-text);
+}
+
+.landing__leads a:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.landing__lead-group {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+/* Tablet: the map first, then the words. */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .landing__map {
+    order: 1;
+    padding-inline: var(--page-pad-x);
+    padding-top: var(--space-control-2);
+  }
+}
+
+/* Phone: the words, then a compact map that uses the full width. */
+@media (max-width: 640px) {
+  .landing__name {
+    font-size: clamp(2.5rem, 12vw, 3.25rem);
+  }
+}
+
+/* Desktop: one screen. The left quarter holds the words, the map fills the rest. */
+@media (min-width: 1024px) {
+  .landing {
+    grid-template-columns: minmax(0, 25fr) minmax(0, 75fr);
+    height: calc(100svh - var(--site-header-h));
+    min-height: 40rem;
+  }
+
+  .landing__words {
+    order: 1;
+    align-content: center;
+    gap: var(--space-component-1);
+    padding: var(--space-component-1) var(--space-control-2) var(--space-component-1)
+      max(var(--page-pad-x), calc((100vw - 90rem) / 2 + var(--page-pad-x)));
+  }
+
+  .landing__map {
+    order: 2;
+    height: 100%;
+    padding: var(--space-control-1) var(--space-micro-2);
+  }
+
+  .landing__name {
+    font-size: clamp(2rem, 0.4rem + 2.6vw, 3.25rem);
+  }
+
+  .landing__lede {
+    font-size: var(--text-base);
+  }
 }
 
 /* ── Lead cards ────────────────────────────────────────── */
@@ -301,8 +403,6 @@
 }
 
 /* ── Capability groups ───────────────────────────────────── */
-.home-leads,
-.home-rest,
 .projects-leads {
   display: grid;
   gap: var(--space-component-1);
@@ -355,10 +455,6 @@
   min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
-}
-
-.home-rest__all {
-  justify-self: start;
 }
 
 /* ── Filter controls ───────────────────────────────────── */
@@ -560,11 +656,14 @@
   color: var(--color-text);
 }
 
-.home-map {
+.home-work {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-component-1);
-  justify-items: center;
-  text-align: center;
+}
+
+.home-work__all {
+  justify-self: start;
 }
 
 .projects-map {

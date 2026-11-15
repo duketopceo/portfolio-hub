@@ -4,16 +4,14 @@ import { leadProjects, rankProjects } from "@/lib/ranking";
 import { getSignalActivity } from "@/lib/github-activity";
 import { buildSignalSummary } from "@/lib/signal-summary";
 import { SignalGlance } from "@/components/SignalGlance";
-import LeadProjectCard from "@/components/LeadProjectCard";
-import CapabilityGroups from "@/components/CapabilityGroups";
+import FilterBar from "@/components/FilterBar";
 import GravityMap from "@/components/GravityMap";
 import { toGravityInput } from "@/lib/gravity-map";
+import { toClientProject } from "@/lib/client-project";
+import { capabilityMeta, isCapabilityId } from "@/data/capability-meta";
 import { ActionRow, PageShell, SectionHeading } from "@/components/design";
 
 export const revalidate = 3600;
-
-/** Projects shown per capability group on home; /projects lists them all. */
-const HOME_GROUP_LIMIT = 4;
 
 export default async function Home() {
   const [all, activity] = await Promise.all([
@@ -35,71 +33,81 @@ export default async function Home() {
 
   return (
     <div className="home">
-      {/* 1 — hero: who, what, one primary and one secondary action */}
-      <header className="home-hero">
-        <div className="home-hero__inner">
-          <h1 id="home-title" className="home-hero__title">
+      {/* 1 — landing: the words on the left quarter, the gravity map on the right three quarters */}
+      <section className="landing" aria-labelledby="home-title">
+        <div className="landing__words">
+          <h1 id="home-title" className="landing__name">
             Luke
             <br />
             Kimball
           </h1>
-          <div className="home-hero__copy">
-            <p className="home-hero__lede">
-              Applied AI engineer. I build agent runtimes and the platforms
-              they run on.
-            </p>
-            <p className="home-hero__tagline">Systems that compound.</p>
-            <ActionRow className="home-hero__actions">
-              <Link
-                href="/projects"
-                className="detail-cta"
-                data-umami-event="home-cta"
-                data-umami-event-target="work"
-              >
-                See the work →
-              </Link>
-              <Link
-                href="/resume"
-                className="detail-cta detail-cta--secondary"
-                data-umami-event="home-cta"
-                data-umami-event-target="resume"
-              >
-                Resume
-              </Link>
-            </ActionRow>
-          </div>
+          <p className="landing__lede">
+            Applied AI engineer. I build agent runtimes and the platforms they
+            run on.
+          </p>
+          <nav className="landing__leads" aria-label="Lead projects">
+            <p className="landing__leads-title">Five lead projects</p>
+            <ol>
+              {leads.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={`/projects/${p.slug}`}
+                    prefetch={false}
+                    data-umami-event="home-lead-link"
+                    data-umami-event-slug={p.slug}
+                  >
+                    {p.displayName}
+                  </Link>
+                  <span className="landing__lead-group">
+                    {isCapabilityId(p.capability) ? capabilityMeta[p.capability].short : ""}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </nav>
+          <ActionRow className="landing__actions">
+            <Link
+              href="/resume"
+              className="detail-cta"
+              data-umami-event="home-cta"
+              data-umami-event-target="resume"
+            >
+              Resume →
+            </Link>
+            <Link
+              href="/hire"
+              className="detail-cta detail-cta--secondary"
+              data-umami-event="home-cta"
+              data-umami-event-target="hire"
+            >
+              Hire
+            </Link>
+          </ActionRow>
         </div>
-      </header>
+        <div className="landing__map">
+          <GravityMap projects={toGravityInput(ranked)} variant="landing" />
+        </div>
+      </section>
 
       <PageShell className="home-flow" measure="wide">
-        {/* 2 — the five lead projects */}
-        <section className="home-leads" aria-labelledby="home-leads-heading">
+        {/* 2 — every project, one card each; a group picked on the map filters this grid */}
+        <section className="home-work" aria-labelledby="home-work-heading">
           <SectionHeading
-            eyebrow="Lead work"
-            title={<span id="home-leads-heading">Start here</span>}
+            eyebrow="Work"
+            title={<span id="home-work-heading">Every project</span>}
+            description="Open a card for the dossier. Pick a group on the map above to filter."
           />
-          <div className="lead-grid">
-            {leads.map((p, i) => (
-              <LeadProjectCard key={p.slug} project={p} rank={i + 1} />
-            ))}
-          </div>
-        </section>
-
-        {/* 2b — every project on the gravity map, by capability */}
-        <section className="home-map" aria-labelledby="home-map-heading">
-          <SectionHeading
-            eyebrow="Sector map"
-            title={<span id="home-map-heading">Everything, by capability</span>}
-            description="Five lead projects. Open a group to see the rest."
+          <FilterBar
+            projects={ranked.map(toClientProject)}
+            registrySlugs={all.map((p) => p.slug)}
           />
-          <GravityMap projects={toGravityInput(ranked)} variant="compact" />
           <Link
             href="/projects"
-            className="detail-cta detail-cta--secondary"
+            className="detail-cta detail-cta--secondary home-work__all"
             data-umami-event="home-cta"
-            data-umami-event-target="map"
+            data-umami-event-target="all-projects"
           >
-            Explore the map →
+            Work page, with earlier work →
           </Link>
         </section>
 
@@ -114,29 +122,7 @@ export default async function Home() {
           <SignalGlance summary={signal} />
         </section>
 
-        {/* 4 — everything else, ranked, by capability */}
-        <section className="home-rest" aria-labelledby="home-rest-heading">
-          <SectionHeading
-            eyebrow="The rest of the work"
-            title={<span id="home-rest-heading">More projects</span>}
-            description="The top of each capability group, strongest first."
-          />
-          <CapabilityGroups
-            ranked={ranked}
-            registrySlugs={all.map((p) => p.slug)}
-            limit={HOME_GROUP_LIMIT}
-          />
-          <Link
-            href="/projects"
-            className="detail-cta detail-cta--secondary home-rest__all"
-            data-umami-event="home-cta"
-            data-umami-event-target="all-projects"
-          >
-            All projects →
-          </Link>
-        </section>
-
-        {/* 5 — closing action */}
+        {/* 4 — closing action */}
         <section className="home-close" aria-label="Next steps">
           <p className="home-close__line">
             Hiring for applied AI or agent infrastructure?
