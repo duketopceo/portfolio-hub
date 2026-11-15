@@ -10,14 +10,28 @@
     "type": "app",
     "featured": false,
     "private": false,
-    "techStack": ["Python", "Wayland", "vision-model", "markdown"],
+    "techStack": [
+      "Python",
+      "Wayland",
+      "vision-model",
+      "markdown"
+    ],
     "highlights": [
       "Auto-renames screenshots by date and caption",
       "Filing-by-date plus a caption index",
       "Writes a readable markdown catalog"
     ],
     "architecture": "Screenshot event → vision-model caption → dated file + markdown catalog",
-    "media": { "release": "to-record", "demo": "to-record" }
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "C"
+    }
   },
-  "github": { "repoName": "snapdex", "owner": "duketopceo" }
+  "github": {
+    "repoName": "snapdex",
+    "owner": "duketopceo"
+  }
 }

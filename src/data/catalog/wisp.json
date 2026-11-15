@@ -28,6 +28,38 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "Python",
+        "Jev",
+        "whisper.cpp",
+        "PipeWire",
+        "Hyprland",
+        "Omarchy"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-09-18",
+          "summary": "First commit: a voice companion for any window on Linux."
+        },
+        "done": [
+          "v0.9.0 and the unified alignment release",
+          "Companion core: typed composer, cursor buddy, answers from window text",
+          "v1.0.0-rc.3 Linux prerelease (2026-11-09)",
+          "Chrome extension side panel and native messaging host",
+          "OpenRouter region-denied explanation and wispd doctor --live"
+        ],
+        "next": [
+          "Stable v1.0 verification",
+          "Dictation and voice uplift",
+          "Agents, memory and home screen",
+          "Connectors and paid bundle",
+          "Clicking for the user, last"
+        ],
+        "source": "wisp ROADMAP.md (updated 2026-11-14, read 2026-11-14); first commit from git log"
+      }
     }
   },
   "github": {

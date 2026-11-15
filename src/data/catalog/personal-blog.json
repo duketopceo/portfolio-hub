@@ -27,6 +27,9 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "C"
     }
   },
   "github": {

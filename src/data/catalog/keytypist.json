@@ -10,14 +10,28 @@
     "type": "app",
     "featured": false,
     "private": false,
-    "techStack": ["Python", "TUI", "local-LLM", "n-gram"],
+    "techStack": [
+      "Python",
+      "TUI",
+      "local-LLM",
+      "n-gram"
+    ],
     "highlights": [
       "Next-key prediction running in the terminal",
       "n-gram and local-LLM prediction engines",
       "Daemon maps typing speed to keyboard backlight"
     ],
     "architecture": "Terminal event → n-gram / local-LLM prediction → next-key hint + backlight mapping",
-    "media": { "release": "to-record", "demo": "to-record" }
+    "media": {
+      "release": "to-record",
+      "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "C"
+    }
   },
-  "github": { "repoName": "keytypist", "owner": "duketopceo" }
+  "github": {
+    "repoName": "keytypist",
+    "owner": "duketopceo"
+  }
 }

@@ -51,7 +51,34 @@
       "Bakeoff — provider comparison and launch-gate scoring",
       "Caesar — debate traces with concession rules"
     ],
-    "architecture": "OpenRouter routing → Role-specific eval harness → Guardrails / presets → Launch-gate scoring"
+    "architecture": "OpenRouter routing → Role-specific eval harness → Guardrails / presets → Launch-gate scoring",
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "OpenRouter",
+        "Guardrails",
+        "Auto Router",
+        "Python",
+        "pytest"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-09-11",
+          "summary": "First commit in the current history (the repo was re-imported); ROADMAP dates phases 0 to 7 to August 2026."
+        },
+        "done": [
+          "Five harnesses: support deflection, GTM motion, provider bakeoff, guardrail probe, Caesar debate",
+          "Local dashboard, offline fixtures and tests, metrics and SQLite logger",
+          "Caesar trace replay viewer and CI",
+          "Portfolio integration at luke-the-duke.com"
+        ],
+        "next": [
+          "A blessed live OpenRouter run and bakeoff sign-off",
+          "Submission polish: walkthrough redo and launch note"
+        ],
+        "source": "openrouter-demos ROADMAP.md status table (updated 2026-08-25, read 2026-11-14); first commit from git log"
+      }
+    }
   },
   "github": {
     "repoName": "openrouter-demos",

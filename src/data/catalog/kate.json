@@ -51,7 +51,31 @@
       "Crew model — members, colors, and ratings come from the API",
       "Offline outbox for journal and idea writes"
     ],
-    "architecture": "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync"
+    "architecture": "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync",
+    "showcaseCard": {
+      "tier": "A",
+      "skills": [
+        "Swift",
+        "SwiftUI",
+        "SwiftPM",
+        "Cloudflare Workers",
+        "xtool"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-10-11",
+          "summary": "First commit: a shared field journal for any crew."
+        },
+        "done": [
+          "Site and API live on Cloudflare Workers with open sign-up",
+          "Native iOS client built and deployed from Linux"
+        ],
+        "next": [
+          "Prepare the iOS app for the App Store"
+        ],
+        "source": "catalog showcase.status for kate (read 2026-11-14); first commit date from local git log"
+      }
+    }
   },
   "github": {
     "repoName": "kate",

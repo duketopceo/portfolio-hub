@@ -27,6 +27,16 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "C",
+      "skills": [
+        "QML",
+        "TypeScript",
+        "Omarchy",
+        "Plugins",
+        "pytest"
+      ]
     }
   },
   "github": {

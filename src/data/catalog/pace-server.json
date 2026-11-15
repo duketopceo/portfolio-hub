@@ -110,7 +110,38 @@
       "Multi-host production — Hetzner compute, Railway app hosting, Cloudflare edge",
       "Grafana-as-code — dashboards and alerts as versioned infrastructure"
     ],
-    "finishLine": "Gateway, auth, and Stripe billing are live (pacehq.io, app.pacehq.io). Remaining ~20%: real tool execution and Python reasoning service hardening — hire is for last-mile finishing."
+    "finishLine": "Gateway, auth, and Stripe billing are live (pacehq.io, app.pacehq.io). Remaining ~20%: real tool execution and Python reasoning service hardening — hire is for last-mile finishing.",
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "Rust",
+        "Axum",
+        "Go",
+        "Chi",
+        "Python",
+        "LangGraph",
+        "React",
+        "Supabase",
+        "Stripe",
+        "Railway"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-05-04",
+          "summary": "First commit: a production platform spanning a Rust gateway, Go services and a Python reasoning service."
+        },
+        "done": [
+          "Gateway, auth and Stripe billing live",
+          "Agent system built"
+        ],
+        "next": [
+          "Real tool execution in production",
+          "Python reasoning service hardening",
+          "Prove the agent system end to end"
+        ],
+        "source": "catalog finishLine and showcase.status for pace-server (read 2026-11-14); first commit date from local git log"
+      }
+    }
   },
   "github": {
     "repoName": "Pace-Server",

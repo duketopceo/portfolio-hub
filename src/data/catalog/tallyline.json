@@ -59,6 +59,37 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "A",
+      "skills": [
+        "TypeScript",
+        "Next.js",
+        "Hono",
+        "Postgres",
+        "MCP",
+        "Docker"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-10-08",
+          "summary": "First commit: a project tracker for Luke's own projects, planned as a self-hosted Linear replacement."
+        },
+        "done": [
+          "Safety and PM-ready units: plan import, project pages, weekly cycles, search, agent inbox",
+          "CLI, installer and bring-your-own AI provider with a spend limit",
+          "Mobile server: QR pairing, push relay, delta reads",
+          "iOS app: offline outbox, widgets, share sheet, TestFlight",
+          "Release v2.0.0"
+        ],
+        "next": [
+          "Cloud beta units in review",
+          "Backups, deploys and Kate import, which need Luke",
+          "Push relay with the Apple key",
+          "External TestFlight and App Store submission"
+        ],
+        "source": "tallyline ROADMAP.md Done and Open tables (status 2026-11-05, read 2026-11-14); first commit from git log"
+      }
     }
   },
   "github": {

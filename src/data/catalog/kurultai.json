@@ -70,7 +70,39 @@
       "Vite/React 3D brain over 2000+ knowledge nodes",
       "OpenRouter Kimi swarm for multi-agent retrieval"
     ],
-    "architecture": "Source connectors → SQLite (FTS5 + sqlite-vec) → axum API → MCP tools → Vite/React 3D brain + OpenRouter swarm"
+    "architecture": "Source connectors → SQLite (FTS5 + sqlite-vec) → axum API → MCP tools → Vite/React 3D brain + OpenRouter swarm",
+    "showcaseCard": {
+      "tier": "A",
+      "skills": [
+        "Rust",
+        "SQLite",
+        "axum",
+        "FTS5",
+        "sqlite-vec",
+        "MCP",
+        "Vite",
+        "React",
+        "OpenRouter"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-07-18",
+          "summary": "First commit: one shared brain for every agent on a machine."
+        },
+        "done": [
+          "Solo stage: hybrid search, 8 MCP tools, daemon and Brain UI, connectors, export and import",
+          "Team stage: personal, team and company scopes, Postgres store, device keys, acceptance suite",
+          "Company stage seed: ontology graph and proposal queue"
+        ],
+        "next": [
+          "Brain explorer to 100 percent",
+          "RBAC on search and ask",
+          "Slack, webhook and Notion connectors",
+          "A second person joining a hub without an engineer"
+        ],
+        "source": "kurultai ROADMAP.md (read 2026-11-14); first commit from git log"
+      }
+    }
   },
   "github": {
     "repoName": "kurultai",

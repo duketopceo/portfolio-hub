@@ -41,6 +41,33 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "Data",
+        "OSINT",
+        "JSON",
+        "Documentation"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-03-11",
+          "summary": "First commit: a sourced open database of military platforms."
+        },
+        "done": [
+          "v3.0.0: 183 platforms, 675 citations, REST API, intelligence console",
+          "JSON, CSV, SQLite and SQL exports",
+          "SIPRI spending, arms companies and transfers integrated",
+          "Docker deployment, CI and 51 tests"
+        ],
+        "next": [
+          "V3.1: 500+ platforms and PostgreSQL migration",
+          "V3.2: semantic search and RAG",
+          "V4.0: advanced frontend visualisations"
+        ],
+        "source": "open-military-hardware-db ROADMAP.md (read 2026-11-14); first commit from git log"
+      }
     }
   },
   "github": {

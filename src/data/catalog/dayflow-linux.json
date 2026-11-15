@@ -38,7 +38,37 @@
       "Blocks over streams — 15-minute chunks make the timeline readable and the model calls bounded",
       "Edits overlay raw rows — corrections flow into analytics without rewriting history",
       "Dead-letter retries — failed summaries retry 3x then quarantine; `dayflow retry` resets"
-    ]
+    ],
+    "showcaseCard": {
+      "tier": "A",
+      "skills": [
+        "Go",
+        "QML",
+        "SQLite",
+        "OpenRouter",
+        "Wayland"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-09-04",
+          "summary": "First commit: a Linux port of the Dayflow macOS work journal."
+        },
+        "done": [
+          "v1.6.0: 10 s capture, dedupe, 15-minute vision summaries, local-first storage",
+          "Multi-provider routing and agent-session recaps",
+          "FTS5 search over all five agent harnesses",
+          "Omarchy marketplace listing with scripted install",
+          "Opt-in knowledge-brain sync"
+        ],
+        "next": [
+          "Ribbon Log UI redesign",
+          "Per-agent-conversation playback ranges",
+          "Classic UI polish",
+          "Open issues: reflections UI, summary ratings, streaming chat"
+        ],
+        "source": "dayflow-linux ROADMAP.md (updated 2026-10-05, read 2026-11-14); first commit from git log"
+      }
+    }
   },
   "github": {
     "repoName": "dayflow-linux",

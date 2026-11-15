@@ -25,6 +25,33 @@
     "media": {
       "release": "to-record",
       "demo": "to-record"
+    },
+    "showcaseCard": {
+      "tier": "B",
+      "skills": [
+        "Python",
+        "Sandboxing",
+        "Multi-Model Routing"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-10-10",
+          "summary": "First commit: a one-command, cost-capped agent runner on the owner's own machines."
+        },
+        "done": [
+          "Conformance harness and fs-protocol spec v0.1",
+          "Execplane with a live CubeSandbox adapter",
+          "Escalation gate and router service",
+          "Router bench and placement policy"
+        ],
+        "next": [
+          "P1: deterministic test hardening",
+          "P2: cost-capped run replays three golden tasks",
+          "P3: console UX and brand",
+          "P5: marketplaces"
+        ],
+        "source": "open-computer ROADMAP.md numbering map and phase table (read 2026-11-14); first commit from git log"
+      }
     }
   },
   "github": {

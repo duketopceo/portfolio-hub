@@ -131,6 +131,32 @@ export interface ProjectShowcase {
   outcomes?: string;
 }
 
+/** Readiness tier: A full video, B short video of at least 15 s, C GIF only. */
+export type ShowcaseTier = "A" | "B" | "C";
+
+export interface ShowcaseLoop {
+  url: string;
+  poster: string;
+  alt: string;
+}
+
+export interface ShowcaseRoadmap {
+  started: { date: string; summary: string };
+  done: string[];
+  next: string[];
+  source: string;
+}
+
+/** Showcase card slots; every field but `tier` is optional. */
+export interface ShowcaseCardData {
+  tier: ShowcaseTier;
+  thumbnail?: string;
+  gif?: ShowcaseLoop;
+  video?: MediaAsset;
+  skills?: string[];
+  roadmap?: ShowcaseRoadmap;
+}
+
 /** A recorded measurement: where, when and how it was taken travel with the value. */
 export interface ProjectMeasure {
   label: string;
@@ -172,6 +198,8 @@ export interface ProjectConfig {
   media: ProjectMedia;
   /** Hand-written card shown in place of activity/README on private entries. */
   showcase?: ProjectShowcase;
+  /** Showcase card slots: tier, loop, skills, roadmap (docs/showcase). */
+  showcaseCard?: ShowcaseCardData;
   /** Marks this entry as a component of the named parent: no dossier of its own. */
   parentSlug?: string;
   /** Marks archived work listed under "earlier work" on /projects: no dossier. */

@@ -70,7 +70,35 @@
       "OpenRouter multi-model routing",
       "Cost-quality frontier measurement"
     ],
-    "architecture": "Prompt bench → orchestrator → worker pool → scoring → report"
+    "architecture": "Prompt bench → orchestrator → worker pool → scoring → report",
+    "showcaseCard": {
+      "tier": "A",
+      "skills": [
+        "Python",
+        "OpenRouter",
+        "Eval",
+        "LLM"
+      ],
+      "roadmap": {
+        "started": {
+          "date": "2026-09-09",
+          "summary": "First commit: an eval harness asking whether a cheap planner plus cheap workers matches frontier output through OpenRouter."
+        },
+        "done": [
+          "Core harness: YAML specs, plan, delegate, assemble, per-pair scoring and cost metering",
+          "Anti-gaming stack: spec anchors, holdout set, audit gate, tautology detection",
+          "Observatory SPA and isolated execution through a CubeSandbox adapter",
+          "Fail-closed publication and spec self-check",
+          "v3 task family machinery with pinned real-repo fixtures"
+        ],
+        "next": [
+          "Gauntlet reels: a video artifact per model run",
+          "Jev A/B lane: the headline experiment, run it",
+          "v3 task curation and calibration"
+        ],
+        "source": "orchestral ROADMAP.md (updated 2026-10-13, read 2026-11-14); first commit from git log"
+      }
+    }
   },
   "github": {
     "repoName": "orchestral",
