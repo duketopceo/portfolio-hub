@@ -16,11 +16,23 @@ import {
   memberScale,
   TALL_FRAME,
   WIDE_FRAME,
+  type GravityFrame,
   type GravityInput,
 } from "@/lib/gravity-map";
 import type { CapabilityId } from "@/data/capability-meta";
 import { useMediaQuery } from "@/lib/use-media-query";
 import styles from "./gravity-map.module.css";
+
+/**
+ * Which frame fits: the tall one on phones and in any portrait window (words
+ * above, map below), the wide one otherwise. Both are rendered and CSS picks
+ * one with these same queries (gravity-map.module.css), so there is no flash
+ * of the wrong map before hydration. Keep the two in step.
+ */
+const TALL_QUERY = "(max-width: 640px), (orientation: portrait)";
+
+/** Hit radius of a group centre, frame units: 60 wide, about 44 CSS px at the smallest scale a frame is shown. */
+const CENTRE_HIT = 30;
 
 /** Radians per second of orbit phase: one slow turn in about two and a half minutes. */
 const SPIN = (2 * Math.PI) / 150;
@@ -48,11 +60,13 @@ export default function GravityMap({
 }) {
   const landing = variant === "landing";
   const data = useMemo(() => buildGravityMap(projects), [projects]);
-  const tall = useMediaQuery("(max-width: 640px)");
-  const frame = tall ? TALL_FRAME : WIDE_FRAME;
+  // Client-only reads, used for animation alone: the markup never depends on them.
+  const tall = useMediaQuery(TALL_QUERY);
   // Server value true: the markup never assumes motion; the client reads the real setting.
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)", true);
-  const animate = !reduceMotion && !tall;
+  // Touch devices hold still: no orbit loop on a battery.
+  const coarse = useMediaQuery("(pointer: coarse)", true);
+  const animate = !reduceMotion && !tall && !coarse;
 
   const [t, setT] = useState(0);
   const [selected, setSelected] = useState<CapabilityId | null>(null);
@@ -99,16 +113,6 @@ export default function GravityMap({
     return () => window.removeEventListener(GROUP_ACTIVE_EVENT, onActive);
   }, [data.centres]);
 
-  const centres = useMemo(() => centrePositions(data.centres.length, frame), [data.centres.length, frame]);
-  const jitters = useMemo(
-    () => data.centres.map((c, i) => memberJitter(c.members.length, i + 1)),
-    [data.centres]
-  );
-  const orbit = centreOrbit(frame);
-  const scale = memberScale(frame);
-  const phase = animate ? t : 0;
-  const leads = leadPositions(data.heroes.length, frame, phase);
-
   function pick(id: CapabilityId) {
     setSelected(id);
     window.dispatchEvent(new CustomEvent(GROUP_EVENT, { detail: id }));
@@ -130,6 +134,11 @@ export default function GravityMap({
       pick(id);
     }
   };
+
+  const setHolding = (v: boolean) => {
+    holding.current = v;
+  };
+  const mapProps = { data, landing, selected, label, setLabel, setHolding, pick, keyPick };
 
   const lists = (
     <div className={styles.list}>
@@ -159,110 +168,10 @@ export default function GravityMap({
     >
       {!landing && <p className={styles.copy}>Five lead projects. Click a group to see the rest.</p>}
 
-      <svg
-        className={styles.svg}
-        viewBox={`0 0 ${frame.w} ${frame.h}`}
-        role="group"
-        aria-label="Lead projects at the centre, capability groups around them"
-        onPointerEnter={(e) => {
-          if (e.pointerType === "mouse") holding.current = true;
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType !== "mouse") return;
-          holding.current = false;
-          setLabel(null);
-        }}
-      >
-        {!landing && (
-          <rect className={styles.backing} x={0} y={0} width={frame.w} height={frame.h} rx={4} aria-hidden="true" />
-        )}
-        <g aria-hidden="true" className={styles.orbits}>
-          <ellipse cx={frame.w / 2} cy={frame.h / 2} rx={orbit.rx} ry={orbit.ry} />
-        </g>
+      <MapSvg {...mapProps} frame={WIDE_FRAME} tall={false} phase={animate ? t : 0} className={styles.svgWide} />
+      <MapSvg {...mapProps} frame={TALL_FRAME} tall phase={0} className={styles.svgTall} />
 
-        {data.centres.map((c, ci) => {
-          const pos = centres[ci];
-          const dots = memberPositions(c.members.length, pos, phase, jitters[ci], scale);
-          const text = tall ? c.short : c.label;
-          const lp = labelPlacement(pos, frame, text);
-          return (
-            <g key={c.id} className={styles.cluster} data-selected={selected === c.id ? "" : undefined}>
-              {dots.map((p, k) => {
-                const m = c.members[k];
-                return (
-                  <Link
-                    key={m.slug}
-                    href={`/projects/${m.slug}`}
-                    prefetch={false}
-                    tabIndex={-1}
-                    aria-hidden="true"
-                    className={styles.dot}
-                    onPointerEnter={(e) => {
-                      if (e.pointerType === "mouse") setLabel(m.slug);
-                    }}
-                  >
-                    <circle className={styles.hit} cx={p.x} cy={p.y} r={10} />
-                    <circle className={styles.point} cx={p.x} cy={p.y} r={3} />
-                    {label === m.slug && (
-                      <text className={styles.hover} x={p.x} y={p.y - 9} textAnchor="middle">
-                        {m.name}
-                      </text>
-                    )}
-                  </Link>
-                );
-              })}
-              <g
-                className={styles.centre}
-                role="button"
-                tabIndex={0}
-                aria-pressed={selected === c.id}
-                aria-label={`${c.label}, ${c.count} projects. Show this group.`}
-                data-umami-event="gravity-group"
-                data-umami-event-group={c.id}
-                onClick={() => pick(c.id)}
-                onKeyDown={keyPick(c.id)}
-              >
-                <circle className={styles.hit} cx={pos.x} cy={pos.y} r={22} />
-                <circle className={styles.selectRing} cx={pos.x} cy={pos.y} r={14} />
-                <circle className={styles.core} cx={pos.x} cy={pos.y} r={8} />
-                <circle className={styles.coreDot} cx={pos.x} cy={pos.y} r={2.5} />
-                <text className={styles.groupLabel} x={lp.x} y={lp.y} textAnchor="middle">
-                  {text}
-                </text>
-                <text className={styles.groupCount} x={lp.x} y={lp.y + COUNT_DROP} textAnchor="middle">
-                  {c.count} projects
-                </text>
-              </g>
-            </g>
-          );
-        })}
-
-        {data.heroes.map((h, i) => {
-          const p = leads[i];
-          return (
-            <Link
-              key={h.slug}
-              href={`/projects/${h.slug}`}
-              prefetch={false}
-              className={styles.lead}
-              aria-label={`${h.name}. ${h.why}`}
-              data-umami-event="gravity-lead-open"
-              data-umami-event-slug={h.slug}
-            >
-              <circle className={styles.hit} cx={p.x} cy={p.y} r={26} />
-              <circle className={styles.leadRing} cx={p.x} cy={p.y} r={10} />
-              <circle className={styles.leadCore} cx={p.x} cy={p.y} r={5} />
-              {!tall && (
-                <text className={styles.leadLabel} x={p.x} y={p.y + 26} textAnchor="middle">
-                  {h.name}
-                </text>
-              )}
-            </Link>
-          );
-        })}
-      </svg>
-
-      {tall && !landing && (
+      {!landing && (
         <ul className={styles.legend} aria-label="Capability groups">
           {data.centres.map((c) => (
             <li key={c.id}>
@@ -305,5 +214,155 @@ export default function GravityMap({
         </>
       )}
     </figure>
+  );
+}
+
+interface MapSvgProps {
+  data: ReturnType<typeof buildGravityMap>;
+  frame: GravityFrame;
+  tall: boolean;
+  landing: boolean;
+  phase: number;
+  className: string;
+  selected: CapabilityId | null;
+  label: string | null;
+  setLabel: (slug: string | null) => void;
+  setHolding: (v: boolean) => void;
+  pick: (id: CapabilityId) => void;
+  keyPick: (id: CapabilityId) => (e: React.KeyboardEvent) => void;
+}
+
+/**
+ * One rendering of the map at one frame. The wide and tall maps are both in
+ * the page; CSS shows exactly one (see TALL_QUERY). On touch the dots ignore
+ * taps (the lists name every project and the filtered grid shows the group),
+ * so a tap on a group is always a filter and no name is hover-only.
+ */
+function MapSvg({
+  data,
+  frame,
+  tall,
+  landing,
+  phase,
+  className,
+  selected,
+  label,
+  setLabel,
+  setHolding,
+  pick,
+  keyPick,
+}: MapSvgProps) {
+  const centres = useMemo(() => centrePositions(data.centres.length, frame), [data.centres.length, frame]);
+  const jitters = useMemo(
+    () => data.centres.map((c, i) => memberJitter(c.members.length, i + 1)),
+    [data.centres]
+  );
+  const orbit = centreOrbit(frame);
+  const scale = memberScale(frame);
+  const leads = leadPositions(data.heroes.length, frame, phase);
+
+  return (
+    <svg
+      className={`${styles.svg} ${className}`}
+      viewBox={`0 0 ${frame.w} ${frame.h}`}
+      role="group"
+      aria-label="Lead projects at the centre, capability groups around them"
+      onPointerEnter={(e) => {
+        if (e.pointerType === "mouse") setHolding(true);
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType !== "mouse") return;
+        setHolding(false);
+        setLabel(null);
+      }}
+    >
+      {!landing && (
+        <rect className={styles.backing} x={0} y={0} width={frame.w} height={frame.h} rx={4} aria-hidden="true" />
+      )}
+      <g aria-hidden="true" className={styles.orbits}>
+        <ellipse cx={frame.w / 2} cy={frame.h / 2} rx={orbit.rx} ry={orbit.ry} />
+      </g>
+
+      {data.centres.map((c, ci) => {
+        const pos = centres[ci];
+        const dots = memberPositions(c.members.length, pos, phase, jitters[ci], scale);
+        const text = tall ? c.short : c.label;
+        const lp = labelPlacement(pos, frame, text);
+        return (
+          <g key={c.id} className={styles.cluster} data-selected={selected === c.id ? "" : undefined}>
+            {dots.map((p, k) => {
+              const m = c.members[k];
+              return (
+                <Link
+                  key={m.slug}
+                  href={`/projects/${m.slug}`}
+                  prefetch={false}
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  className={styles.dot}
+                  onPointerEnter={(e) => {
+                    if (e.pointerType === "mouse") setLabel(m.slug);
+                  }}
+                >
+                  <circle className={styles.hit} cx={p.x} cy={p.y} r={10} />
+                  <circle className={styles.point} cx={p.x} cy={p.y} r={3} />
+                  {label === m.slug && (
+                    <text className={styles.hover} x={p.x} y={p.y - 9} textAnchor="middle">
+                      {m.name}
+                    </text>
+                  )}
+                </Link>
+              );
+            })}
+            <g
+              className={styles.centre}
+              role="button"
+              tabIndex={0}
+              aria-pressed={selected === c.id}
+              aria-label={`${c.label}, ${c.count} projects. Show this group.`}
+              data-umami-event="gravity-group"
+              data-umami-event-group={c.id}
+              onClick={() => pick(c.id)}
+              onKeyDown={keyPick(c.id)}
+            >
+              <circle className={styles.hit} cx={pos.x} cy={pos.y} r={CENTRE_HIT} />
+              <circle className={styles.selectRing} cx={pos.x} cy={pos.y} r={14} />
+              <circle className={styles.core} cx={pos.x} cy={pos.y} r={8} />
+              <circle className={styles.coreDot} cx={pos.x} cy={pos.y} r={2.5} />
+              <text className={styles.groupLabel} x={lp.x} y={lp.y} textAnchor="middle">
+                {text}
+              </text>
+              <text className={styles.groupCount} x={lp.x} y={lp.y + COUNT_DROP} textAnchor="middle">
+                {c.count} projects
+              </text>
+            </g>
+          </g>
+        );
+      })}
+
+      {data.heroes.map((h, i) => {
+        const p = leads[i];
+        return (
+          <Link
+            key={h.slug}
+            href={`/projects/${h.slug}`}
+            prefetch={false}
+            className={styles.lead}
+            aria-label={`${h.name}. ${h.why}`}
+            data-umami-event="gravity-lead-open"
+            data-umami-event-slug={h.slug}
+          >
+            <circle className={styles.hit} cx={p.x} cy={p.y} r={26} />
+            <circle className={styles.leadRing} cx={p.x} cy={p.y} r={10} />
+            <circle className={styles.leadCore} cx={p.x} cy={p.y} r={5} />
+            {!tall && (
+              <text className={styles.leadLabel} x={p.x} y={p.y + 26} textAnchor="middle">
+                {h.name}
+              </text>
+            )}
+          </Link>
+        );
+      })}
+    </svg>
   );
 }

@@ -22,4 +22,6 @@ body {
   font-size: var(--text-base);
   /* Orbital/chart elements bleed off-viewport by design — clip, don't scroll */
   overflow-x: clip;
+  /* iPhone home indicator: the last line of the footer never sits under it. */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }

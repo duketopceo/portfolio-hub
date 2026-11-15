@@ -129,7 +129,13 @@ describe("home layout", () => {
     const html = await home();
     const map = html.slice(html.indexOf("landing__map"), html.indexOf('id="project-catalog"'));
     expect(map).toContain('aria-label="Lead projects at the centre, capability groups around them"');
-    const groups = [...map.matchAll(/role="button"[^>]*aria-label="([^"]+), (\d+) projects\. Show this group\."/g)];
+    // Both the wide and the tall rendering are in the markup (CSS shows one: no hydration flash).
+    expect(map).toContain("svgWide");
+    expect(map).toContain("svgTall");
+    const all = [...map.matchAll(/role="button"[^>]*aria-label="([^"]+), (\d+) projects\. Show this group\."/g)];
+    expect(all).toHaveLength(CAPABILITY_IDS.length * 2);
+    const groups = all.slice(0, CAPABILITY_IDS.length);
+    expect(all.slice(CAPABILITY_IDS.length).map((m) => m[1])).toEqual(groups.map((m) => m[1]));
     expect(groups.map((m) => m[1].replaceAll("&amp;", "&"))).toEqual(CAPABILITY_IDS.map((id) => capabilityMeta[id].label));
     const ranked = rankProjects(projectConfigs);
     expect(groups.reduce((n, m) => n + Number(m[2]), 0)).toBe(ranked.length);

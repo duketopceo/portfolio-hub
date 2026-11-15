@@ -194,6 +194,101 @@ test.describe("Portfolio visual acceptance matrix", () => {
     }
   }
 
+  // Phones and tablets (touch contexts, so the coarse-pointer rules apply). Home and
+  // one dossier get baselines; every viewport must have no horizontal scroll, tap
+  // targets of 44 px or more, a gravity map that picks a group by tap, and exactly
+  // one visible rendering of the map (chosen by CSS, so no flash of the wrong one).
+  const touchViewports = [
+    { name: "iphone-375", width: 375, height: 812 },
+    { name: "iphone-430", width: 430, height: 932 },
+    { name: "ipad-mini-744", width: 744, height: 1133 },
+    { name: "ipad-820", width: 820, height: 1180 },
+    { name: "ipad-pro-portrait-1024", width: 1024, height: 1366 },
+    { name: "ipad-pro-landscape-1366", width: 1366, height: 1024 },
+    { name: "ipad-landscape-1180", width: 1180, height: 820 },
+  ] as const;
+
+  for (const viewport of touchViewports) {
+    test(`touch layout ${viewport.name}`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({
+        baseURL,
+        viewport: { width: viewport.width, height: viewport.height },
+        deviceScaleFactor: 1,
+        isMobile: true,
+        hasTouch: true,
+        colorScheme: "dark",
+      });
+      const page = await context.newPage();
+      try {
+        await stubThirdParty(page);
+        await dropHttpsUpgradeFromDocuments(page);
+        for (const [path, name] of [
+          ["/", "home"],
+          ["/projects/orchestral", "dossier-orchestral"],
+        ] as const) {
+          await page.goto(path, { waitUntil: "networkidle" });
+          await expectNoHorizontalOverflow(page);
+          const tooSmall = await page.evaluate(() => {
+            const out: string[] = [];
+            const sel = 'a[href], button, summary, [role="button"]';
+            for (const el of document.querySelectorAll<HTMLElement>(sel)) {
+              const cs = getComputedStyle(el);
+              if (cs.display === "none" || cs.visibility === "hidden" || cs.pointerEvents === "none") continue;
+              if (el.closest(".sr-only") || el.getAttribute("tabindex") === "-1" || el.closest("svg")) continue;
+              if (el.closest('[aria-hidden="true"]')) continue;
+              if (cs.display === "inline" && el.closest("p, li, dd, td, figcaption")) continue;
+              const b = el.getBoundingClientRect();
+              if (b.width === 0 || b.height === 0) continue;
+              if (b.height < 43.5 || b.width < 43.5) out.push(`${el.tagName}.${el.className} ${Math.round(b.width)}x${Math.round(b.height)}`);
+            }
+            return out;
+          });
+          expect(tooSmall, `${path} small tap targets`).toEqual([]);
+          if (name === "home") {
+            // One map visible; the group centres are at least 44 CSS px to tap.
+            const visible = await page.locator("figure svg:visible").count();
+            expect(visible).toBe(1);
+            const hit = await page
+              .locator('figure svg:visible [role="button"] circle')
+              .first()
+              .evaluate((c) => {
+                const r = c.getBoundingClientRect();
+                return Math.min(r.width, r.height);
+              });
+            expect(hit).toBeGreaterThanOrEqual(43.5);
+          }
+          await page.addStyleTag({ content: ".cosmic-bg { display: none !important; }" });
+          await expect(page).toHaveScreenshot(`touch-${name}-${viewport.name}.png`, {
+            fullPage: true,
+            mask: masked.map((selector) => page.locator(selector)),
+          });
+        }
+      } finally {
+        await context.close();
+      }
+    });
+  }
+
+  test("tapping a group on the touch map filters the grid", async ({ browser, baseURL }) => {
+    const context = await browser.newContext({
+      baseURL,
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    try {
+      await stubThirdParty(page);
+      await dropHttpsUpgradeFromDocuments(page);
+      await page.goto("/", { waitUntil: "networkidle" });
+      await page.locator('figure svg:visible [role="button"]').first().tap();
+      await expect(page).toHaveURL(/group=/);
+      await expect(page.locator("#project-catalog")).toBeVisible();
+    } finally {
+      await context.close();
+    }
+  });
+
   test("no intro overlay or card torch on first visit", async ({
     browser,
     baseURL,

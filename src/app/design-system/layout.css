@@ -8,15 +8,16 @@
 }
 
 .landing__words {
-  order: 2;
+  order: 1;
   display: grid;
   gap: var(--space-component-1);
   align-content: start;
-  padding: var(--space-component-2) var(--page-pad-x) var(--space-component-1);
+  padding: var(--space-component-2) max(var(--page-pad-x), env(safe-area-inset-right, 0px))
+    var(--space-component-1) max(var(--page-pad-x), env(safe-area-inset-left, 0px));
 }
 
 .landing__map {
-  order: 3;
+  order: 2;
   min-width: 0;
   min-height: 0;
 }
@@ -35,7 +36,7 @@
   max-width: 30rem;
   font-size: var(--text-lg);
   line-height: 1.5;
-  color: var(--color-text-muted);
+  color: var(--color-tint);
   text-wrap: pretty;
 }
 
@@ -101,12 +102,32 @@
   color: var(--color-text-faint);
 }
 
-/* Tablet: the map first, then the words. */
-@media (min-width: 641px) and (max-width: 1023px) {
+/* Stacked (phones, portrait tablets, any portrait window): the words, then the map. */
+
+/* Tablet portrait: the words use two columns so the map is not pushed a screen away. */
+@media (min-width: 641px) and (orientation: portrait) {
+  .landing__words {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-component-2);
+    align-items: start;
+  }
+
+  .landing__name,
+  .landing__lede {
+    grid-column: 1;
+  }
+
+  .landing__leads {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .landing__actions {
+    grid-column: 1 / -1;
+  }
+
   .landing__map {
-    order: 1;
     padding-inline: var(--page-pad-x);
-    padding-top: var(--space-control-2);
   }
 }
 
@@ -117,8 +138,9 @@
   }
 }
 
-/* Desktop: one screen. The left quarter holds the words, the map fills the rest. */
-@media (min-width: 1024px) {
+/* Landscape windows from 1024px wide (iPad landscape, laptops): one screen, side by side.
+   The left quarter holds the words, the map fills the rest. */
+@media (min-width: 1024px) and (orientation: landscape) {
   .landing {
     grid-template-columns: minmax(0, 25fr) minmax(0, 75fr);
     height: calc(100svh - var(--site-header-h));
@@ -127,10 +149,19 @@
 
   .landing__words {
     order: 1;
+    grid-template-columns: minmax(0, 1fr);
     align-content: center;
     gap: var(--space-component-1);
     padding: var(--space-component-1) var(--space-control-2) var(--space-component-1)
       max(var(--page-pad-x), calc((100vw - 90rem) / 2 + var(--page-pad-x)));
+  }
+
+  .landing__name,
+  .landing__lede,
+  .landing__leads,
+  .landing__actions {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .landing__map {
