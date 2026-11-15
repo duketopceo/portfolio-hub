@@ -118,19 +118,14 @@
 }
 
 .showcase-art__name {
-  position: relative;
-  padding: var(--space-control-2);
-  max-width: 100%;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(1.125rem, 0.6rem + 1.6vw, 1.75rem);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
+  position: absolute;
+  left: var(--space-control-1);
+  bottom: var(--space-micro-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-  color: var(--color-text);
-  background: linear-gradient(to top, var(--color-bg), transparent);
+  color: var(--color-text-faint);
 }
 
 /* Project grid card: media sits flush above the body ------------------ */
@@ -331,4 +326,19 @@
   .showcase-media__loop {
     transition: none;
   }
+}
+
+/* Dossier video: the generated poster stands in for a black catalog poster */
+.dossier-media__fallback {
+  position: absolute;
+  inset: 0;
+}
+
+.dossier-media__fallback + .dossier-media__video {
+  opacity: 0;
+}
+
+/* Dossier explanation sits directly under the header at full content width */
+.dossier-page__explain {
+  padding-block: var(--space-component-2);
 }

@@ -9,7 +9,6 @@ import { DossierSection } from "./DossierSection";
 import { DossierServicesTable } from "./DossierServicesTable";
 import { DossierBackendSection } from "./DossierBackendSection";
 import { ShowcaseCard } from "./ShowcaseCard";
-import ShowcaseExplainer from "@/components/showcase/ShowcaseExplainer";
 
 function renderShowcaseMarkdown(text: string): string {
   const escaped = text
@@ -49,14 +48,6 @@ export function DossierBody({
   return (
     <div className="cosmic-page dossier-page__two-col">
       <div className="dossier-page__main-stack">
-        <DossierSection
-          title="What it is"
-          id={`dossier-about-${slug}`}
-          surface="glass"
-        >
-          <ShowcaseExplainer project={project} accentColor={accentColor} />
-        </DossierSection>
-
         <DossierSection
           title="Backend"
           id={`dossier-backend-${slug}`}

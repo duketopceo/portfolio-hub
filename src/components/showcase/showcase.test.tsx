@@ -10,6 +10,8 @@ import { listedProjects } from "@/lib/catalog";
 import type { EnrichedProject, ShowcaseCardData } from "@/lib/types";
 import ProjectCard from "@/components/ProjectCard";
 import ThemedPoster from "./ThemedPoster";
+import { SLUG_MOTIFS } from "./posters";
+import { projectConfigs } from "@/data/projects";
 import ShowcaseMedia from "./ShowcaseMedia";
 import ShowcaseExplainer from "./ShowcaseExplainer";
 import RoadmapTimeline from "./RoadmapTimeline";
@@ -59,8 +61,25 @@ describe("ThemedPoster", () => {
     for (const id of [...CAPABILITY_IDS, undefined]) {
       const html = render("x", id);
       expect(html).toContain("<svg");
-      expect(html).toContain("showcase-art__name");
+      expect(html).not.toContain("showcase-art__name");
     }
+  });
+
+  it("draws a different diagram for each project in the same group, and drops the big name", () => {
+    const evals = ["orchestral", "argus", "openrouter", "openrouter-usage"];
+    const svgs = evals.map((s) => render(s, "evals-routing").replace(/data-poster-slug="[^"]+"/, ""));
+    expect(new Set(svgs).size).toBe(evals.length);
+    expect(render("orchestral", "evals-routing")).not.toContain("Name");
+  });
+
+  it("gives every tiered project its own diagram (no two posters alike)", () => {
+    const slugs = projectConfigs.filter((p) => p.showcaseCard).map((p) => p.slug);
+    for (const slug of slugs) expect(SLUG_MOTIFS[slug], slug).toBeDefined();
+    const svgs = slugs.map((slug) => {
+      const p = projectConfigs.find((c) => c.slug === slug)!;
+      return render(slug, p.capability).replace(/data-poster-slug="[^"]+"/, "");
+    });
+    expect(new Set(svgs).size).toBe(slugs.length);
   });
 
   it("uses tokens through classes: no colour literals in the markup, only the accent variable", () => {

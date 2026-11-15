@@ -25,10 +25,14 @@ import {
   ProjectMediaSection,
   ComponentsList,
   DossierEvidence,
+  DossierSection,
 } from "@/components/dossier";
 import { DossierDemoSection } from "@/components/dossier/demo/DossierDemoSection";
 import { getProjectActivityTimeline } from "@/lib/github-activity";
 import { MediaFrame, PageShell } from "@/components/design";
+import ShowcaseExplainer from "@/components/showcase/ShowcaseExplainer";
+import ThemedPoster from "@/components/showcase/ThemedPoster";
+import { isShowcaseEligible } from "@/lib/showcase";
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -114,13 +118,33 @@ export default async function ProjectDetailPage({
         registryIndex={registryIndex}
       />
 
+      <PageShell className="dossier-page__explain">
+        <DossierSection
+          title="What it is"
+          id={`dossier-about-${project.slug}`}
+          surface="glass"
+        >
+          <ShowcaseExplainer project={project} accentColor={accentColor} />
+        </DossierSection>
+      </PageShell>
+
+      <DossierEvidence measured={project.measured} />
+
       <ProjectMediaSection
         media={project.media}
         title={project.displayName}
         slug={project.slug}
+        fallbackPoster={
+          isShowcaseEligible(project.slug) ? (
+            <ThemedPoster
+              slug={project.slug}
+              name={project.displayName}
+              capability={project.capability}
+              accent={accentColor}
+            />
+          ) : undefined
+        }
       />
-
-      <DossierEvidence measured={project.measured} />
 
       {githubActivity && (
         <DossierActivityTimeline

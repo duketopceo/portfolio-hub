@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactElement } from "react";
 import { isCapabilityId, type CapabilityId } from "@/data/capability-meta";
 import { seedFromSlug, seededRandom } from "@/lib/showcase";
+import { SLUG_MOTIFS } from "./posters";
 
 const W = 320;
 const H = 180;
@@ -164,7 +165,7 @@ export default function ThemedPoster({
   name,
   capability,
   accent,
-  showName = true,
+  showName = false,
   className,
 }: {
   slug: string;
@@ -172,11 +173,13 @@ export default function ThemedPoster({
   capability?: string | null;
   /** The capability colour (capabilityAccent). */
   accent: string;
+  /** A tiny mono label. Off by default: the card title already names the project. */
   showName?: boolean;
   className?: string;
 }) {
   const rand = seededRandom(seedFromSlug(slug));
-  const motif = (isCapabilityId(capability) ? MOTIFS[capability] : arcMotif)(rand);
+  const groupMotif = isCapabilityId(capability) ? MOTIFS[capability] : arcMotif;
+  const motif = (SLUG_MOTIFS[slug] ?? groupMotif)(rand);
   const offset = r1(rand() * 16);
   const style = { "--poster-accent": accent } as CSSProperties;
   return (
