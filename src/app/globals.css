@@ -29,6 +29,8 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--color-bg);
+  /* Third-party shader: force it to greys so no hue enters the palette. */
+  filter: grayscale(1);
 }
 
 .uplink-loader-label {

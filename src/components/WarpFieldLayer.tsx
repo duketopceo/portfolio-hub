@@ -30,7 +30,7 @@ export default function WarpFieldLayer() {
           streakOpacity={0.5}
           fov={70}
           brightness={0.7}
-          saturation={0.4}
+          saturation={0}
         />
       </div>
     </DecorativeEffectBoundary>
