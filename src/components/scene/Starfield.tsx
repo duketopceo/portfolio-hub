@@ -108,10 +108,9 @@ function createStarGeometry(count: number): THREE.BufferGeometry {
 }
 
 /**
- * The starfield in the same canvas as the black hole (one WebGL context): a
+ * The whole background scene (one WebGL context): a
  * few thousand round points in three parallax layers, a slow sideways drift,
- * a very subtle twinkle on some, and a small scroll parallax. Drawn before the
- * hole, so the hole's shadow hides the stars behind it. Warm white only
+ * a very subtle twinkle on some, and a small scroll parallax. Warm white only
  * (`STAR_COLORS`). `count` is the quality tier's figure (cosmos-quality.ts).
  */
 export default function Starfield({ count }: { count: number }) {

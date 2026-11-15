@@ -13,7 +13,7 @@ import {
 } from "@/lib/cosmos-quality";
 
 /**
- * The live background: one SceneFrame (one WebGL context) holding the hole,
+ * The live background: one SceneFrame (one WebGL context) holding the starfield,
  * watched by drei's PerformanceMonitor. Sustained frames under budget step
  * quality down (high -> low) and then give the stage back to the static plate
  * via `onGiveUp`; it never steps back up. The scene is imported statically
@@ -25,12 +25,10 @@ export default function CosmosLive({
   onReadyChange,
   onTierChange,
   onGiveUp,
-  focus = "page",
 }: {
   onReadyChange: (ready: boolean) => void;
   onTierChange: (tier: CosmosTier) => void;
   onGiveUp: () => void;
-  focus?: "page" | "landing";
 }) {
   const [tier, setTier] = useState<CosmosTier>("full");
   // QA only: ?cosmos-tier=pin holds full quality and skips the monitor.
@@ -65,7 +63,7 @@ export default function CosmosLive({
           onDecline={(api) => decline(api.fps)}
         />
       )}
-      <CosmosScene tier={tier} focus={focus} />
+      <CosmosScene tier={tier} />
     </SceneFrame>
   );
 }

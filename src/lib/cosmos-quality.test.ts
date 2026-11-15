@@ -13,20 +13,8 @@ describe("cosmos quality ladder", () => {
       expect(tierSettings(t).dpr[1]).toBeLessThanOrEqual(1);
     }
   });
-  it("drops the lensing first, and only the lensing", () => {
-    const full = tierSettings("full");
-    const high = tierSettings("high");
-    expect(full.lensing).toBe(true);
-    expect(high.lensing).toBe(false);
-    expect({ ...high, lensing: true, stars: full.stars }).toEqual(full);
-  });
-  it("gets cheaper each step: fewer pixels, no glow, no extra octave", () => {
-    const high = tierSettings("high");
-    const low = tierSettings("low");
-    expect(low.dpr[1]).toBeLessThan(high.dpr[1]);
-    expect(high.glow && !low.glow).toBe(true);
-    expect(high.detail).toBe(1);
-    expect(low.detail).toBe(0);
+  it("gets cheaper each step: fewer pixels at the bottom, fewer stars on every rung", () => {
+    expect(tierSettings("low").dpr[1]).toBeLessThan(tierSettings("high").dpr[1]);
   });
   it("thins the starfield on every rung and scales it by viewport area", () => {
     const [full, high, low] = (["full", "high", "low"] as const).map((t) => tierSettings(t).stars);

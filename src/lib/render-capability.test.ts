@@ -84,6 +84,8 @@ describe("isNamedSoftwareRenderer", () => {
     expect(isNamedSoftwareRenderer("Apple M1 Max")).toBe(false);
     expect(isNamedSoftwareRenderer("ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)")).toBe(false);
     expect(isNamedSoftwareRenderer("Mali-G78")).toBe(false);
+    // Asahi Linux, a real GPU through Mesa (reported on the owner's machine).
+    expect(isNamedSoftwareRenderer("ANGLE (Mesa, Apple M1 Max (G13C C0), OpenGL ES 3.2)")).toBe(false);
     expect(isNamedSoftwareRenderer(null)).toBe(false);
     expect(isNamedSoftwareRenderer("")).toBe(false);
   });

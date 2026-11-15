@@ -3,7 +3,7 @@ import { shouldSkipScene } from "@/lib/render-capability";
 
 /**
  * "static": the server-rendered SVG plate only.
- * "live": the WebGL black hole.
+ * "live": the WebGL starfield.
  */
 export type CosmosMode = "static" | "live";
 
@@ -33,7 +33,7 @@ export interface CosmosModeInput {
 
 /**
  * Decide the background rendition. Reduced motion, no WebGL, a software
- * rasteriser (per-pixel black-hole shader would burn the CPU), Save-Data and
+ * rasteriser (thousands of points would burn the CPU), Save-Data and
  * very low-memory devices all get the static plate. The override can force
  * "static" always; it can force "live" only when a WebGL context exists and
  * the visitor has not asked for reduced motion.

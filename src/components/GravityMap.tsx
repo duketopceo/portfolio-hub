@@ -33,7 +33,8 @@ const FRAME_MS = 33;
  * (`#project-catalog`) and scrolls to it. Plain SVG; the dots are decorative
  * for assistive tech because the lists name every project.
  *
- * `landing` is the home page's map: it fills the height its parent gives it,
+ * White thin lines on black, no accent colour: a group is told apart by where
+ * it sits and by its name, the same language as the project cards. `landing` is the home page's map: it fills the height its parent gives it,
  * sits straight on the starfield (no panel behind it), and keeps the lists for
  * screen readers only. On phones both variants hold still, use short group
  * names and leave the lead names to the list of leads beside them.
@@ -201,7 +202,7 @@ export default function GravityMap({
                     }}
                   >
                     <circle className={styles.hit} cx={p.x} cy={p.y} r={10} />
-                    <circle className={styles.point} cx={p.x} cy={p.y} r={3} fill={c.color} />
+                    <circle className={styles.point} cx={p.x} cy={p.y} r={3} />
                     {label === m.slug && (
                       <text className={styles.hover} x={p.x} y={p.y - 9} textAnchor="middle">
                         {m.name}
@@ -223,8 +224,9 @@ export default function GravityMap({
               >
                 <circle className={styles.hit} cx={pos.x} cy={pos.y} r={22} />
                 <circle className={styles.selectRing} cx={pos.x} cy={pos.y} r={14} />
-                <circle className={styles.core} cx={pos.x} cy={pos.y} r={8} fill={c.color} />
-                <text className={styles.groupLabel} x={lp.x} y={lp.y} textAnchor="middle" fill={c.color}>
+                <circle className={styles.core} cx={pos.x} cy={pos.y} r={8} />
+                <circle className={styles.coreDot} cx={pos.x} cy={pos.y} r={2.5} />
+                <text className={styles.groupLabel} x={lp.x} y={lp.y} textAnchor="middle">
                   {text}
                 </text>
                 <text className={styles.groupCount} x={lp.x} y={lp.y + COUNT_DROP} textAnchor="middle">
@@ -270,7 +272,7 @@ export default function GravityMap({
                 aria-pressed={selected === c.id}
                 onClick={() => pick(c.id)}
               >
-                <span className={styles.swatch} style={{ background: c.color }} aria-hidden="true" />
+                <span className={styles.swatch} aria-hidden="true" />
                 {c.label}
                 <span className={styles.legendCount}>{c.count}</span>
               </button>

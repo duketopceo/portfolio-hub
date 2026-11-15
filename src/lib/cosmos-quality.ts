@@ -3,10 +3,8 @@
  * the frame rate stays under budget it steps down one rung at a time and,
  * from "low", hands the stage to the static plate. It never steps back up:
  * a visitor whose machine failed repeatedly keeps the calm plate rather than
- * flapping between renditions. The lensed arcs and flow detail go first
- * ("full" -> "high": the arcs collapse to a plain ring glow); "low" then
- * drops the ring glow and the flow octave, and renders fewer pixels. Every
- * step also thins the starfield (3200 -> 2200 -> 1000 stars at 1440 x 900).
+ * flapping between renditions. Each step thins the starfield (3200 -> 2200 ->
+ * 1000 stars at 1440 x 900) and "low" also renders fewer pixels.
  */
 export type CosmosTier = "full" | "high" | "low" | "plate";
 
@@ -16,21 +14,15 @@ export const DECLINE_BELOW_FPS = 45;
 export interface TierSettings {
   /** Device-pixel-ratio range handed to the canvas. */
   dpr: [number, number];
-  /** The far side of the disk lensed into arcs over and under the hole. */
-  lensing: boolean;
-  /** Soft bloom around the shadow edge (ported Rune glow). */
-  glow: boolean;
-  /** Extra noise octave in the disk shader: 1 = on, 0 = off. */
-  detail: 0 | 1;
   /** Stars drawn on a 1440 x 900 viewport; scaled by `starCount` for other sizes. */
   stars: number;
 }
 
 const SETTINGS: Record<Exclude<CosmosTier, "plate">, TierSettings> = {
-  // DPR capped at 1 even on full: the disk is soft light, not fine detail.
-  full: { dpr: [1, 1], lensing: true, glow: true, detail: 1, stars: 3200 },
-  high: { dpr: [1, 1], lensing: false, glow: true, detail: 1, stars: 2200 },
-  low: { dpr: [0.75, 0.75], lensing: false, glow: false, detail: 0, stars: 1000 },
+  // DPR capped at 1 even on full: stars are 1 to 2.5 px points.
+  full: { dpr: [1, 1], stars: 3200 },
+  high: { dpr: [1, 1], stars: 2200 },
+  low: { dpr: [0.75, 0.75], stars: 1000 },
 };
 
 /** Viewport area (px squared) the `stars` figures are quoted for. */

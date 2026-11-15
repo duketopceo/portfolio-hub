@@ -159,7 +159,7 @@ export interface LabelPlacement {
 }
 export const COUNT_DROP = 15;
 /** Mono glyph advance at the group-label size plus its letter spacing, frame units. */
-const LABEL_ADVANCE = 8.4;
+const LABEL_ADVANCE = 9.2;
 
 /**
  * Where a group's name and count go: above the cluster for groups in the top
