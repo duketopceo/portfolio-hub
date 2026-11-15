@@ -6,19 +6,23 @@ Groups were derived from what each project is, using its catalog description and
 
 ## Groups
 
-| Group | Id | Colour | Before | After |
-|---|---|---|---|---|
-| Evals & routing | `evals-routing` | white | 4 | 4 |
-| Retrieval & memory | `retrieval-memory` | #B3B3B3 | 2 | 5 |
-| Agents & computer use | `agents-computer-use` | #FF9F1C | 6 | 6 |
-| Desktop & dev tools | `desktop-devtools` | #E8DCC8 (sand) | new | 5 |
-| Platforms & web | `platforms-web` | #F5D76E | new | 6 |
-| Mobile apps | `mobile-apps` | #FF5C1A | new | 4 |
-| Hardware, sim & infra | `hardware-sim` | #A89C8A (clay) | new | 6 |
-| Products | `products` | | 16 | retired |
-| Tooling & infra | `tooling-infra` | | 8 | retired |
+| Group | Id | Before | After |
+|---|---|---|---|
+| Evals & routing | `evals-routing` | 4 | 4 |
+| Retrieval & memory | `retrieval-memory` | 2 | 5 |
+| Agents & computer use | `agents-computer-use` | 6 | 6 |
+| Desktop & dev tools | `desktop-devtools` | new | 5 |
+| Platforms & web | `platforms-web` | new | 5 |
+| Mobile apps | `mobile-apps` | new | 4 |
+| Hardware, sim & infra | `hardware-sim` | new | 6 |
+| Products | `products` | 16 | retired |
+| Tooling & infra | `tooling-infra` | 8 | retired |
 
-Total 36 listed projects. Sand and clay are warm greys below the palette's chroma threshold (`--color-group-sand`, `--color-group-clay`); both pass 4.5:1 as text on every surface (`scripts/check-contrast.mjs`).
+Total 35 listed projects (Bartlett Permits was removed on 2026-11-15, which took Platforms & web from 6 to 5).
+
+## Colour
+
+Groups carry no colour (owner decision, 2026-11-15). A group is told apart by its name and its position on the gravity map, never by a hue: every group's `color` in `src/data/capability-meta.ts` is the same white, and the sand, clay, gold, grey, amber and ember group colours are retired. Posters for every group are white and off-white thin-line diagrams on black. The palette is in `BRAND.md`.
 
 ## Mapping
 
@@ -44,7 +48,6 @@ Total 36 listed projects. Sand and clay are warm greys below the palette's chrom
 | `omarchy-plugins` | `tooling-infra` | `desktop-devtools` | Linux desktop bar widgets; it was in Tooling & infra. |
 | `omaseal` | `tooling-infra` | `desktop-devtools` | Keyring manager for the Linux desktop and agents; it was in Tooling & infra. |
 | `wordink` | `products` | `desktop-devtools` | Dictation app for Linux, macOS and Windows desktops; it was in Products. |
-| `bartlett-permits` | `products` | `platforms-web` | Hosted operations platform; it was in Products. Still excluded from the showcase card system. |
 | `pace-gallery` | `products` | `platforms-web` | Public static web gallery; it was in Products. |
 | `pace-server` | `products` | `platforms-web` | Production platform (gateway, auth, billing); it was in Products. |
 | `personal-blog` | `products` | `platforms-web` | Hosted writing site; it was in Products. |

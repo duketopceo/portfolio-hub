@@ -14,7 +14,7 @@ Every tier gets a loop that plays next to the explanation on its dossier.
 
 ## Excluded
 
-`bartlett-permits` is not tiered and gets no generated poster or card slots: Bartlett projects stay out of Cosmic branding. Earlier work (archived) and components of a parent entry have no dossier and are not tiered.
+Bartlett Permits was removed from the portfolio on 2026-11-15 (owner request); `/projects/bartlett-permits` redirects to `/projects`. The exclusion rule stays: `SHOWCASE_EXCLUDED` keeps any Bartlett entry out of the showcase card system, since Bartlett projects stay out of Cosmic branding. Earlier work (archived) and components of a parent entry have no dossier and are not tiered.
 
 ## Privacy
 

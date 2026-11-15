@@ -334,16 +334,6 @@
       }
     },
     {
-      "slug": "bartlett-permits",
-      "score": 72,
-      "inputs": {
-        "stars": 0,
-        "commits": 0,
-        "lastPush": "2026-10-01T00:00:00Z",
-        "hasRelease": true
-      }
-    },
-    {
       "slug": "personal-blog",
       "score": 64,
       "inputs": {

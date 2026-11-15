@@ -14,7 +14,6 @@ Generated 2026-11-10 by `node scripts/site-map.mjs --base https://luke-the-duke.
 | `/projects/agent-zero-plugins` | 200 | 58.1 | 71 | Agent Zero plugins · Cosmic Intelligence |
 | `/projects/agentflow` | 200 | 163.0 | 76 | AgentFlow · Cosmic Intelligence |
 | `/projects/argus` | 200 | 265.6 | 111 | Argus · Cosmic Intelligence |
-| `/projects/bartlett-permits` | 200 | 52.7 | 68 | Bartlett Permits · Cosmic Intelligence |
 | `/projects/cairn` | 200 | 54.5 | 83 | Cairn · Cosmic Intelligence |
 | `/projects/dayflow-linux` | 200 | 247.3 | 123 | Dayflow · Cosmic Intelligence |
 | `/projects/dixi` | 200 | 202.5 | 90 | Dixi · Cosmic Intelligence |
@@ -122,6 +121,7 @@ Sources come from `src/data/redirects.ts` (`siteRedirects`, `retiredSlugs`) plus
 | `/projects/server-cluster` | 308 | `/projects` |
 | `/projects/omarchy-neo` | 308 | `/projects` |
 | `/projects/bartlett-data-platform` | 308 | `/projects` |
+| `/projects/bartlett-permits` | 308 | `/projects` |
 | `/projects/pace-grafana-dashboards` | 308 | `/projects` |
 | `/projects/luke-the-duke-show` | 308 | `/projects` |
 | `/projects/openclaw-macmini-hardened` | 308 | `/projects` |
