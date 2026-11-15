@@ -517,8 +517,8 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(/Luke\s*Kimball/i);
     await expect(page.locator(".solar-system")).toHaveCount(0);
-    await expect(page.locator('.landing__map svg[aria-label^="Lead projects"]')).toHaveCount(1);
-    await expect(page.locator(".landing__map [role=button][data-umami-event=gravity-group]")).toHaveCount(7);
+    await expect(page.locator('.landing__map svg[aria-label^="Lead projects"]:visible')).toHaveCount(1);
+    await expect(page.locator(".landing__map svg:visible [role=button][data-umami-event=gravity-group]")).toHaveCount(7);
     await expect(page.locator(".lead-card")).toHaveCount(5);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
     await expect(page.locator(".category-group").first()).toBeAttached();
@@ -543,7 +543,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
       page.locator("h1"),
       page.locator(".landing__actions").getByRole("link", { name: /Resume/ }),
       page.locator(".landing__actions").getByRole("link", { name: "Hire" }),
-      page.locator(".landing__map svg"),
+      page.locator(".landing__map svg:visible"),
     ]) {
       const box = await locator.boundingBox();
       expect(box).not.toBeNull();
@@ -567,6 +567,29 @@ test.describe("Portfolio visual acceptance matrix", () => {
     ]);
     expect(words).toBeLessThan(map);
   });
+
+  // The 25/75 landing: stacked (words above the map) in portrait, side by side in landscape from 1024px.
+  for (const [width, height, sideBySide] of [
+    [744, 1133, false],
+    [820, 1180, false],
+    [1024, 1366, false],
+    [1180, 820, true],
+    [1366, 1024, true],
+  ] as const) {
+    test(`landing is ${sideBySide ? "side by side" : "stacked"} at ${width}x${height}`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto("/", { waitUntil: "networkidle" });
+      const words = (await page.locator(".landing__words").boundingBox())!;
+      const map = (await page.locator(".landing__map").boundingBox())!;
+      if (sideBySide) {
+        expect(map.x).toBeGreaterThanOrEqual(words.x + words.width - 1);
+        const svg = (await page.locator(".landing__map svg:visible").boundingBox())!;
+        expect(svg.y + svg.height).toBeLessThanOrEqual(height);
+      } else {
+        expect(map.y).toBeGreaterThanOrEqual(words.y + words.height - 1);
+      }
+    });
+  }
 
   test("home has no horizontal overflow at tablet width", async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
