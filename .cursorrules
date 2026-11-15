@@ -16,7 +16,7 @@ If anything here disagrees with `BRAND.md`, `BRAND.md` wins.
 
 - White on black, full contrast. No teal, green, blue or violet anywhere, in UI or scene code.
 - Warm accents only, used sparingly: ember for alerts and classification, amber for signal heat, soft gold for rare highlights.
-- The background is the single full-bleed black hole (one WebGL context, quality ladder, static still for reduced motion and no-WebGL). No starfield, grid or stardust layers.
+- The background is deep space: a layered warm-white starfield plus the single black hole (one WebGL context, quality ladder with star-count tiers, pre-rendered static still for reduced motion and no-WebGL). No grid, constellation lines or stardust clouds.
 - Text stays legible over the background; `node scripts/check-contrast.mjs` must pass.
 - Canvas and WebGL never carry meaning; every visual has an accessible HTML equivalent.
 - No invented numbers: every metric on the site comes from a recorded run with its source and date.

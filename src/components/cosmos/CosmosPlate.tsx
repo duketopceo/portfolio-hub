@@ -21,6 +21,7 @@ export default function CosmosPlate() {
   } as React.CSSProperties;
   return (
     <div className="cosmos-plate" aria-hidden="true">
+      <div className="cosmos-stars-still" />
       <div className="cosmos-body cosmos-body--blackhole" style={style}>
         <BlackHoleSvg />
       </div>

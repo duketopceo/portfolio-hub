@@ -18,8 +18,8 @@ export function SiteFooter({ children }: { children: ReactNode }) {
 }
 
 /**
- * Site background: one full-screen black hole and nothing else. The static
- * plate (SVG still of the same composition) is server-rendered and is what
+ * Site background: a starfield and one full-screen black hole, nothing else.
+ * The static plate (SVG stills of the same composition) is server-rendered and is what
  * first paint, reduced motion, and every WebGL failure show. After first
  * paint, when the visitor allows motion and WebGL is not a named software
  * rasteriser, the live scene mounts on top (one WebGL context, via
@@ -37,18 +37,21 @@ export function SiteBackground({ plate }: { plate: ReactNode }) {
   // CosmosLive reports the tier before giving up, so the attribute ends on "plate".
   const onGiveUp = useCallback(() => setGaveUp(true), []);
   const live = mode === "live" && !gaveUp;
+  // On the home landing the hole sits at the gravity map's centre (cosmos-layout.ts).
+  const focus = pathname === "/" ? "landing" : "page";
   if (pathname?.startsWith("/podcast")) return null;
   return (
     <div
       className="cosmic-bg"
       aria-hidden="true"
       data-cosmos={live ? "live" : "static"}
+      data-focus={focus}
       data-scene={live && sceneReady ? "live" : "plate"}
       data-cosmos-tier={mode === "live" ? tier : undefined}
     >
       {plate}
       {live ? (
-        <CosmosLive onReadyChange={setSceneReady} onTierChange={setTier} onGiveUp={onGiveUp} />
+        <CosmosLive onReadyChange={setSceneReady} onTierChange={setTier} onGiveUp={onGiveUp} focus={focus} />
       ) : null}
       <div className="cosmic-bg__noise" />
       <div className="cosmic-bg__scrim" />

@@ -26,6 +26,22 @@ export const DISK_SPAN = 1.1;
 const WIDE: BodyPlacement = { x: 0.5, y: 0.5, size: 0.3 };
 const TALL: BodyPlacement = { x: 0.5, y: 0.45, size: 0.2 };
 
+/**
+ * Home landing, desktop (>= LANDING_MIN_WIDTH): the words take the left
+ * quarter and the gravity map the right three quarters, so the hole moves to
+ * the map's centre. Horizontally that is 25% + 75% / 2; vertically it is the
+ * middle of the viewport below the sticky header (SITE_HEADER_PX).
+ */
+export const LANDING_MIN_WIDTH = 1024;
+export const LANDING_X = 0.625;
+/** Height of the sticky site header: `--site-header-h` in tokens.css (3.6rem). */
+export const SITE_HEADER_PX = 57.6;
+
+export function landingPlacement(viewportHeight: number): BodyPlacement {
+  const h = Math.max(viewportHeight, SITE_HEADER_PX + 1);
+  return { x: LANDING_X, y: (SITE_HEADER_PX + (h - SITE_HEADER_PX) / 2) / h, size: WIDE.size };
+}
+
 /** Portrait viewports get their own arrangement; everything else is "wide". */
 export function layoutVariant(width: number, height: number): LayoutVariant {
   return height > width * 1.05 ? "tall" : "wide";

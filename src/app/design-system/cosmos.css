@@ -12,6 +12,22 @@
   transition: opacity 900ms ease;
 }
 
+/* Static starfield: a pre-rendered SVG still (scripts/generate-starfield-still.mjs),
+   made by the same generator as the live WebGL stars. Wide for landscape,
+   tall for portrait; the same switch as the black hole's layout variants. */
+.cosmos-stars-still {
+  position: absolute;
+  inset: 0;
+  background: url("/brand/starfield-still-wide.svg") center / cover no-repeat;
+  pointer-events: none;
+}
+
+@container (max-aspect-ratio: 20/21) {
+  .cosmos-stars-still {
+    background-image: url("/brand/starfield-still-tall.svg");
+  }
+}
+
 /* Dim on purpose: the hole is atmosphere, the page's text is drawn over it
    (live scene light level: CosmosScene HOLE_LIGHT). */
 .cosmos-body--blackhole {
@@ -38,6 +54,17 @@
     left: calc(var(--xt) * 100%);
     top: calc(var(--yt) * 100%);
     width: max(calc(var(--st) * min(100cqw, 100cqh)), calc(100cqw * 1.12));
+  }
+}
+
+/* Home landing, desktop: the hole sits at the gravity map's centre, the
+   middle of the right three quarters below the header (cosmos-layout.ts landingPlacement). */
+@media (min-width: 1024px) {
+  @container (min-aspect-ratio: 20/21) {
+    .cosmic-bg[data-focus="landing"] .cosmos-body {
+      left: 62.5%;
+      top: calc(var(--site-header-h) + (100cqh - var(--site-header-h)) / 2);
+    }
   }
 }
 

@@ -25,10 +25,12 @@ export default function CosmosLive({
   onReadyChange,
   onTierChange,
   onGiveUp,
+  focus = "page",
 }: {
   onReadyChange: (ready: boolean) => void;
   onTierChange: (tier: CosmosTier) => void;
   onGiveUp: () => void;
+  focus?: "page" | "landing";
 }) {
   const [tier, setTier] = useState<CosmosTier>("full");
   // QA only: ?cosmos-tier=pin holds full quality and skips the monitor.
@@ -63,7 +65,7 @@ export default function CosmosLive({
           onDecline={(api) => decline(api.fps)}
         />
       )}
-      <CosmosScene tier={tier} />
+      <CosmosScene tier={tier} focus={focus} />
     </SceneFrame>
   );
 }

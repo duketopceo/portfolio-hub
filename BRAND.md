@@ -229,6 +229,7 @@ crisp at any DPR, same palette and same positions as the live version):
 
 | Piece | Component | Live (WebGL / canvas) | Static (reduced motion, no WebGL, software GL, Save-Data, failure) | Where |
 |---|---|---|---|---|
+| Starfield | `Starfield` (`lib/starfield.ts`) | Same canvas as the black hole: 3,200 round points at 1440 x 900 in three parallax layers (far, mid, near), a slow sideways drift, a very subtle twinkle on about 40% of them, a small scroll parallax; warm white and amber only (`STAR_COLORS`) | `starfield-still-{wide,tall}.svg` (`scripts/generate-starfield-still.mjs`, same generator), a pre-rendered SVG behind the plate | Site background, every page |
 | Black hole | `BlackHole` (ring glow ported from Rune, MIT: `THIRD_PARTY_NOTICES.md`) | R3F full-screen shader via `SceneFrame`, the whole background: black event horizon, soft white-hot photon ring with an analytic halo, smooth near-edge-on disk spanning the viewport width (wings bleed off both edges) that flows slowly (~75 s per revolution), far side lensed into a bright arc over the hole and a thinner one under it, Doppler-brighter on the left | `BlackHoleSvg`: the same composition as a full-screen still, nothing animates | Site background, every page |
 | Primary orbit | `OrbitalScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.01 (hero, beside the intro) |
 | Secondary belt | `BeltScene` | R3F via `SceneFrame` | Static survey plate | Home FIG.02 |
@@ -237,9 +238,17 @@ crisp at any DPR, same palette and same positions as the live version):
 | Hyperspace streaks | `WarpFieldLayer` | ThreeUI `warp-field/hyperspace` | Skips mounting | 404 plate |
 | Uplink loader | `UplinkLoader` | ThreeUI | Skips mounting | Route transitions (`loading.tsx`) |
 
-Background contract: the background IS one full-screen black hole and nothing
-else: no starfield, constellation lines, survey grid, mapped stars, stardust or
-streak rings, live or static; planets never appear in it. It is atmosphere
+Background contract (revised 2026-11-14, owner request: "all background be space
+and stars"): the background is deep black space with a layered starfield and
+one full-screen black hole. Still no constellation lines, survey grid, mapped
+stars, stardust clouds or streak rings, live or static; planets never appear in
+it. Stars are warm white (a fifth lean warm, a few amber), never tinted green,
+teal, blue or violet. Star counts per quality tier at 1440 x 900: full 3,200,
+high 2,200, low 1,000, scaled by viewport area (0.4x to 1.2x, so a phone gets
+about 1,300 at full); they drop with the rest of the ladder and the static plate
+shows a pre-rendered still of about 1,500 (wide) or 900 (tall) stars. On the home
+page at 1024 px and wider the hole sits at the centre of the gravity map (right
+three quarters) instead of the viewport centre. It is atmosphere
 behind content, not an object competing with it: centred horizontally and
 vertically on the first screen, the disk at least 1.1 viewport widths wide
 (`lib/cosmos-layout.ts` `shadowRadius`), fixed in place and easing down to 55%
@@ -289,8 +298,8 @@ paths work with every layer disabled.
 **Don't:**
 - Glassmorphism, backdrop-blur panels, soft glows on UI (the background black hole's ring is the one exception), or rounded "SaaS" cards
 - Orange outside classification/alert contexts and the black hole's heat
-- Teal, green, blue or violet anywhere (the black-hole scene is warm white, amber, ember only); amber or gold on controls or body text
-- Stars, constellation lines, grids, stardust or any second layer in the background
+- Teal, green, blue or violet anywhere (the black-hole scene and the stars are warm white, amber, ember only); amber or gold on controls or body text
+- Constellation lines, grids, nebula or stardust clouds, or any layer beyond the starfield and the black hole in the background
 - Pop violet on controls or body text; any fourth chromatic color
 - A second WebGL context for the background
 - Emoji in production UI

@@ -5,7 +5,8 @@
  * a visitor whose machine failed repeatedly keeps the calm plate rather than
  * flapping between renditions. The lensed arcs and flow detail go first
  * ("full" -> "high": the arcs collapse to a plain ring glow); "low" then
- * drops the ring glow and the flow octave, and renders fewer pixels.
+ * drops the ring glow and the flow octave, and renders fewer pixels. Every
+ * step also thins the starfield (3200 -> 2200 -> 1000 stars at 1440 x 900).
  */
 export type CosmosTier = "full" | "high" | "low" | "plate";
 
@@ -21,14 +22,32 @@ export interface TierSettings {
   glow: boolean;
   /** Extra noise octave in the disk shader: 1 = on, 0 = off. */
   detail: 0 | 1;
+  /** Stars drawn on a 1440 x 900 viewport; scaled by `starCount` for other sizes. */
+  stars: number;
 }
 
 const SETTINGS: Record<Exclude<CosmosTier, "plate">, TierSettings> = {
   // DPR capped at 1 even on full: the disk is soft light, not fine detail.
-  full: { dpr: [1, 1], lensing: true, glow: true, detail: 1 },
-  high: { dpr: [1, 1], lensing: false, glow: true, detail: 1 },
-  low: { dpr: [0.75, 0.75], lensing: false, glow: false, detail: 0 },
+  full: { dpr: [1, 1], lensing: true, glow: true, detail: 1, stars: 3200 },
+  high: { dpr: [1, 1], lensing: false, glow: true, detail: 1, stars: 2200 },
+  low: { dpr: [0.75, 0.75], lensing: false, glow: false, detail: 0, stars: 1000 },
 };
+
+/** Viewport area (px squared) the `stars` figures are quoted for. */
+export const STAR_REFERENCE_AREA = 1440 * 900;
+
+/**
+ * Stars to draw for a tier on a viewport: the tier's figure scaled by area,
+ * in steps of a tenth so a window resize does not rebuild the geometry on
+ * every pixel, and clamped so a phone still has a sky and a 4K display does
+ * not pay for one.
+ */
+export function starCount(tier: CosmosTier, width: number, height: number): number {
+  const base = tierSettings(tier).stars;
+  const ratio = (Math.max(width, 0) * Math.max(height, 0)) / STAR_REFERENCE_AREA;
+  const stepped = Math.round(Math.min(Math.max(ratio, 0.4), 1.2) * 10) / 10;
+  return Math.round(base * stepped);
+}
 
 /** Settings for a rung; the plate renders no scene so it reuses "low". */
 export function tierSettings(tier: CosmosTier): TierSettings {

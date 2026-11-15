@@ -14,3 +14,13 @@ export const HOLE_COLORS = {
   /** Deep ember: the faint outer disk. */
   deep: "#8A2A08",
 } as const;
+
+/**
+ * Starfield colours: white and the warmest hints of it, nothing cool. A star's
+ * `warmth` (0 to 1) blends from white to warm; a few go on to amber.
+ */
+export const STAR_COLORS = {
+  white: "#FFFFFF",
+  warm: "#FFE2BD",
+  amber: "#FFB46B",
+} as const;

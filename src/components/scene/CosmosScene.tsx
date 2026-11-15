@@ -1,25 +1,44 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { setUniform } from "@/components/scene/uniforms";
 import BlackHole, { createBlackHoleMaterial } from "@/components/scene/BlackHole";
-import { bodyPlacement, layoutVariant, scrollFade, shadowRadius } from "@/lib/cosmos-layout";
-import { tierSettings, type CosmosTier } from "@/lib/cosmos-quality";
+import Starfield from "@/components/scene/Starfield";
+import {
+  bodyPlacement,
+  landingPlacement,
+  LANDING_MIN_WIDTH,
+  layoutVariant,
+  scrollFade,
+  shadowRadius,
+} from "@/lib/cosmos-layout";
+import { starCount, tierSettings, type CosmosTier } from "@/lib/cosmos-quality";
 
 /** Scene light level: dim on purpose, the page's text is drawn over it (see BRAND.md contrast notes). */
 export const HOLE_LIGHT = 0.22;
 
 /**
- * The whole background in one canvas: a single full-screen black hole placed
- * from the shared layout table. It stays fixed behind the page and fades a
- * little as the page scrolls. `tier` is the current rung of the quality
+ * The whole background in one canvas: a layered starfield and a single
+ * full-screen black hole placed from the shared layout table. Both stay fixed
+ * behind the page; the hole fades a little as the page scrolls and the stars
+ * shift by depth. `tier` is the current rung of the quality
  * ladder (cosmos-quality.ts).
  */
-export default function CosmosScene({ tier = "full" }: { tier?: CosmosTier }) {
+export default function CosmosScene({
+  tier = "full",
+  focus = "page",
+}: {
+  tier?: CosmosTier;
+  /** "landing" puts the hole at the home map's centre on a wide desktop viewport. */
+  focus?: "page" | "landing";
+}) {
   const holeMaterial = useMemo(() => createBlackHoleMaterial(), []);
   const settings = tierSettings(tier);
+  const width = useThree((s) => s.size.width);
+  const height = useThree((s) => s.size.height);
+  const stars = starCount(tier, width, height);
 
   useEffect(() => () => holeMaterial.dispose(), [holeMaterial]);
   useEffect(() => {
@@ -30,7 +49,11 @@ export default function CosmosScene({ tier = "full" }: { tier?: CosmosTier }) {
 
   useFrame(({ clock, size }) => {
     const aspect = size.width / size.height;
-    const p = bodyPlacement(layoutVariant(size.width, size.height));
+    const variant = layoutVariant(size.width, size.height);
+    const p =
+      focus === "landing" && variant === "wide" && size.width >= LANDING_MIN_WIDTH
+        ? landingPlacement(size.height)
+        : bodyPlacement(variant);
     const sy = typeof window === "undefined" ? 0 : window.scrollY;
     const innerH = typeof window === "undefined" ? 1 : window.innerHeight;
     // Height units: y in [-1, 1], x in [-aspect, aspect].
@@ -41,5 +64,10 @@ export default function CosmosScene({ tier = "full" }: { tier?: CosmosTier }) {
     setUniform(holeMaterial, "uOpacity", HOLE_LIGHT * scrollFade(sy, innerH));
   });
 
-  return <BlackHole material={holeMaterial} />;
+  return (
+    <>
+      <Starfield count={stars} />
+      <BlackHole material={holeMaterial} />
+    </>
+  );
 }
