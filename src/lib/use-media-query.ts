@@ -11,11 +11,14 @@ import { useSyncExternalStore } from "react";
 export function useMediaQuery(query: string, serverValue = false): boolean {
   return useSyncExternalStore(
     (onChange) => {
+      // No matchMedia (older test DOMs): keep the server value.
+      if (typeof window.matchMedia !== "function") return () => {};
       const mq = window.matchMedia(query);
       mq.addEventListener("change", onChange);
       return () => mq.removeEventListener("change", onChange);
     },
-    () => window.matchMedia(query).matches,
+    () =>
+      typeof window.matchMedia === "function" ? window.matchMedia(query).matches : serverValue,
     () => serverValue
   );
 }

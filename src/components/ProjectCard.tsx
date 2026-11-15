@@ -7,16 +7,21 @@ import { isProjectLive } from "@/lib/deployments";
 import { getCategoryIcon } from "./Icons";
 import DemoLink from "./DemoLink";
 import GithubLink from "./GithubLink";
+import ShowcaseMedia from "./showcase/ShowcaseMedia";
+import { cardOf, isShowcaseEligible } from "@/lib/showcase";
 
 interface ProjectCardProps {
   project: EnrichedProject;
   /** Stable registry index — position in projects.ts source order. */
   registryIndex?: number;
+  /** Show the themed thumbnail above the card body. Off in full-width lists (About). */
+  media?: boolean;
 }
 
 export default function ProjectCard({
   project,
   registryIndex,
+  media = true,
 }: ProjectCardProps) {
   const meta = categoryMeta[project.category];
   const hasDemo = isProjectLive(project);
@@ -31,12 +36,35 @@ export default function ProjectCard({
   const release = project.private ? undefined : project.latestRelease;
   const releasedOn = release ? formatMonthYear(release.publishedAt) : "";
   const accentColor = capabilityAccent(project, catColors);
+  const showMedia = media && isShowcaseEligible(project.slug);
 
   return (
     <article
       className="cosmic-project-card group relative"
       style={{ "--card-accent": accentColor } as React.CSSProperties}
+      data-showcase-host
     >
+      {showMedia && (
+        <Link
+          href={`/projects/${project.slug}`}
+          className="cosmic-project-card__thumb"
+          prefetch={false}
+          tabIndex={-1}
+          aria-hidden="true"
+          data-umami-event="survey-file-open"
+          data-umami-event-slug={project.slug}
+          data-umami-event-source="project-card-thumb"
+        >
+          <ShowcaseMedia
+            slug={project.slug}
+            name={project.displayName}
+            capability={project.capability}
+            accent={accentColor}
+            card={cardOf(project)}
+            mode="hover"
+          />
+        </Link>
+      )}
       <Link
         href={`/projects/${project.slug}`}
         className="cosmic-project-card__main flex flex-col flex-1 text-left w-full"

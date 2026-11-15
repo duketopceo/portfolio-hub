@@ -9,6 +9,7 @@ import { DossierSection } from "./DossierSection";
 import { DossierServicesTable } from "./DossierServicesTable";
 import { DossierBackendSection } from "./DossierBackendSection";
 import { ShowcaseCard } from "./ShowcaseCard";
+import ShowcaseExplainer from "@/components/showcase/ShowcaseExplainer";
 
 function renderShowcaseMarkdown(text: string): string {
   const escaped = text
@@ -53,7 +54,7 @@ export function DossierBody({
           id={`dossier-about-${slug}`}
           surface="glass"
         >
-          <p className="cosmic-readable">{project.description}</p>
+          <ShowcaseExplainer project={project} accentColor={accentColor} />
         </DossierSection>
 
         <DossierSection
