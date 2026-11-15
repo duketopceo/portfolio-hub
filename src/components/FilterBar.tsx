@@ -1,5 +1,6 @@
 "use client";
 
+import { GROUP_EVENT } from "@/lib/gravity-map";
 import { useEffect, useState } from "react";
 import { EnrichedProject } from "@/lib/types";
 import {
@@ -38,6 +39,13 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
     const wanted = new URLSearchParams(window.location.search).get("group");
     // eslint-disable-next-line react-hooks/set-state-in-effect -- the query string only exists in the browser; reading it during render would mismatch the static HTML.
     if (isCapabilityId(wanted)) setActiveGroup(wanted);
+    // The gravity map (?map=gravity) asks for a group with this event.
+    const onGroup = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail;
+      if (isCapabilityId(id)) setActiveGroup(id);
+    };
+    window.addEventListener(GROUP_EVENT, onGroup);
+    return () => window.removeEventListener(GROUP_EVENT, onGroup);
   }, []);
 
   // `projects` arrives in ranking order; filtering keeps that order.
@@ -53,7 +61,7 @@ export default function FilterBar({ projects, registrySlugs }: FilterBarProps) {
       : null;
 
   return (
-    <div className="catalog-panel">
+    <div className="catalog-panel" id="project-catalog">
       <div className="catalog-toolbar catalog-toolbar--stacked">
         <div className="catalog-toolbar__row">
           <div

@@ -4,6 +4,7 @@ import { dropHttpsUpgradeFromDocuments, stubThirdParty } from "./stubs";
 const routes = [
   { path: "/", name: "home" },
   { path: "/projects", name: "projects" },
+  { path: "/projects/sphere", name: "projects-sphere" },
   { path: "/projects/khan", name: "project-dossier" },
   { path: "/projects/kate", name: "project-dossier-kate" },
   { path: "/projects/kurultai", name: "project-dossier-kurultai" },
@@ -408,7 +409,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 
-  test("home leads with the hero, five lead cards, the sphere, the signal, ranked groups and a closing row", async ({
+  test("home leads with the hero, five lead cards, the gravity map, the signal, ranked groups and a closing row", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
@@ -416,7 +417,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
     await expect(page.locator("h1")).toHaveText(/Luke\s*Kimball/i);
     await expect(page.locator(".solar-system")).toHaveCount(0);
     await expect(page.locator(".lead-card")).toHaveCount(5);
-    await expect(page.locator(".home-map svg.project-sphere__svg")).toHaveCount(1);
+    await expect(page.locator('.home-map svg[aria-label^="Lead projects"]')).toHaveCount(1);
     await expect(page.locator(".home-transmissions")).toHaveCount(1);
     await expect(page.locator(".category-group").first()).toBeAttached();
     await expect(page.locator(".home-close")).toHaveCount(1);

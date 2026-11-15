@@ -134,6 +134,16 @@
       }
     },
     {
+      "slug": "reactor-sim",
+      "score": 110,
+      "inputs": {
+        "stars": 1,
+        "commits": 65,
+        "lastPush": "2026-11-14T08:27:58Z",
+        "hasRelease": false
+      }
+    },
+    {
       "slug": "wordink",
       "score": 110,
       "inputs": {

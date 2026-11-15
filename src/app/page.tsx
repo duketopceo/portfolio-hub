@@ -6,8 +6,8 @@ import { buildSignalSummary } from "@/lib/signal-summary";
 import { SignalGlance } from "@/components/SignalGlance";
 import LeadProjectCard from "@/components/LeadProjectCard";
 import CapabilityGroups from "@/components/CapabilityGroups";
-import ProjectSphere from "@/components/sphere/ProjectSphere";
-import { toSphereProjects } from "@/lib/sphere-projects";
+import GravityMap from "@/components/GravityMap";
+import { toGravityInput } from "@/lib/gravity-map";
 import { ActionRow, PageShell, SectionHeading } from "@/components/design";
 
 export const revalidate = 3600;
@@ -85,14 +85,14 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* 2b — every project on one sphere, by capability */}
+        {/* 2b — every project on the gravity map, by capability */}
         <section className="home-map" aria-labelledby="home-map-heading">
           <SectionHeading
             eyebrow="Sector map"
             title={<span id="home-map-heading">Everything, by capability</span>}
-            description="One dot per project. Hover or focus a dot for its name; open it for the dossier."
+            description="Five lead projects. Open a group to see the rest."
           />
-          <ProjectSphere projects={toSphereProjects(ranked)} variant="compact" />
+          <GravityMap projects={toGravityInput(ranked)} variant="compact" />
           <Link
             href="/projects"
             className="detail-cta detail-cta--secondary"

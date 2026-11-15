@@ -1,0 +1,306 @@
+/*
+ * Gravity map. White on black, warm accents only through the capability
+ * colours. check-design-system.mjs forbids backdrop-filter and radii above 4px.
+ */
+
+.root {
+  display: grid;
+  gap: var(--space-control-2);
+  width: 100%;
+  margin: 0;
+  justify-items: center;
+}
+
+.copy {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.svg {
+  width: 100%;
+  max-width: 62rem;
+  height: auto;
+  overflow: visible;
+  touch-action: manipulation;
+}
+
+/* Dark backing keeps names and dots legible over the black-hole glow. */
+.backing {
+  fill: rgba(0, 0, 0, 0.78);
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+}
+
+.orbits ellipse {
+  fill: none;
+  stroke: var(--color-text-faint);
+  stroke-width: 0.6;
+  stroke-dasharray: 2 6;
+  opacity: 0.5;
+}
+
+.hit {
+  fill: transparent;
+}
+
+.dot {
+  cursor: pointer;
+  outline: none;
+}
+
+.point {
+  stroke: var(--color-bg);
+  stroke-width: 0.8;
+  opacity: 0.85;
+}
+
+.dot:hover .point {
+  stroke: var(--color-text);
+  stroke-width: 1.4;
+  opacity: 1;
+}
+
+.hover,
+.leadLabel,
+.groupLabel,
+.groupCount {
+  font-family: var(--font-mono);
+  paint-order: stroke;
+  stroke: var(--color-bg);
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.hover {
+  font-size: 11px;
+  fill: var(--color-text);
+  stroke-width: 4px;
+}
+
+.leadLabel {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--color-text);
+  stroke-width: 5px;
+}
+
+.groupLabel {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  stroke-width: 5px;
+}
+
+.groupCount {
+  font-size: 10.5px;
+  fill: var(--color-text-muted);
+  stroke-width: 4px;
+}
+
+.centre {
+  cursor: pointer;
+  outline: none;
+}
+
+.core {
+  stroke: var(--color-bg);
+  stroke-width: 1.5;
+}
+
+.leadRing {
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.leadCore {
+  fill: var(--color-text);
+}
+
+.lead {
+  cursor: pointer;
+  outline: none;
+}
+
+.centre:hover .core,
+.centre:focus-visible .core,
+.lead:hover .leadRing,
+.lead:focus-visible .leadRing {
+  stroke: var(--color-text);
+  stroke-width: 2.4;
+  opacity: 1;
+}
+
+.centre:focus-visible .hit,
+.lead:focus-visible .hit {
+  stroke: var(--color-text);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-micro-1) var(--space-micro-2);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legendButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-micro-2);
+  min-height: 2.75rem;
+  padding: 0 var(--space-micro-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.legendButton:hover,
+.legendButton[aria-pressed="true"] {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+.legendButton:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.swatch {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.85), 0 0 0 2px rgba(255, 255, 255, 0.22);
+}
+
+.legendCount {
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.leads {
+  display: grid;
+  gap: var(--space-micro-2);
+  width: 100%;
+  max-width: 52rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leads li {
+  display: grid;
+  gap: 2px;
+}
+
+.leadLink {
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.leadLink:focus-visible,
+.list a:focus-visible,
+.details summary:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.leadWhy {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.details {
+  width: 100%;
+  max-width: 52rem;
+}
+
+.details summary {
+  min-height: 2.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--space-component-1);
+  padding-top: var(--space-control-2);
+}
+
+.list h3 {
+  margin: 0 0 var(--space-micro-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list a {
+  display: inline-block;
+  padding: 0.25rem 0;
+  color: var(--color-text);
+}
+
+@media (forced-colors: active) {
+  .backing {
+    fill: Canvas;
+    stroke: CanvasText;
+  }
+  .core,
+  .point,
+  .leadCore {
+    fill: CanvasText;
+  }
+}
+
+.switch {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.switch:hover {
+  color: var(--color-text);
+}
+
+.switch:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}

@@ -7,7 +7,12 @@ import { isListedProject } from "@/lib/catalog-filter";
 import { rankProjects } from "@/lib/ranking";
 
 describe("frozen video queue", () => {
-  const ranked = rankProjects(projectConfigs).slice(0, 15).map((p) => p.slug);
+  // Entries added to the catalog after the queue was frozen. They rank, but the
+  // frozen production queue does not include them.
+  const ADDED_AFTER_FREEZE = new Set(["reactor-sim"]);
+  const ranked = rankProjects(projectConfigs.filter((p) => !ADDED_AFTER_FREEZE.has(p.slug)))
+    .slice(0, 15)
+    .map((p) => p.slug);
 
   it("holds the top 15 ranked projects, leads first", () => {
     expect(queue.slugs).toHaveLength(15);
