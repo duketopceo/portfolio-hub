@@ -28,15 +28,21 @@ export async function stubThirdParty(page: Page) {
 export async function dropHttpsUpgradeFromDocuments(page: Page) {
   await page.route("**/*", async (route) => {
     if (route.request().resourceType() !== "document") return route.fallback();
-    const response = await route.fetch();
-    const headers = response.headers();
-    const csp = headers["content-security-policy"];
-    if (csp) {
-      headers["content-security-policy"] = csp
-        .split(";")
-        .filter((part) => part.trim() !== "upgrade-insecure-requests")
-        .join(";");
+    try {
+      const response = await route.fetch();
+      const headers = response.headers();
+      const csp = headers["content-security-policy"];
+      if (csp) {
+        headers["content-security-policy"] = csp
+          .split(";")
+          .filter((part) => part.trim() !== "upgrade-insecure-requests")
+          .join(";");
+      }
+      await route.fulfill({ response, headers });
+    } catch {
+      // The test finished while a document request (a prefetch or iframe) was
+      // in flight: Playwright throws "Test ended", which otherwise surfaces as
+      // an unhandled error and drops a test from the run.
     }
-    await route.fulfill({ response, headers });
   });
 }
