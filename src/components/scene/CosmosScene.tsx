@@ -10,8 +10,8 @@ import { useThree } from "@react-three/fiber";
  * the current rung of the quality ladder (cosmos-quality.ts), which sets the
  * star count.
  */
-export default function CosmosScene({ tier = "full" }: { tier?: CosmosTier }) {
+export default function CosmosScene({ tier = "full", touch = false }: { tier?: CosmosTier; touch?: boolean }) {
   const width = useThree((s) => s.size.width);
   const height = useThree((s) => s.size.height);
-  return <Starfield count={starCount(tier, width, height)} />;
+  return <Starfield count={starCount(tier, width, height, touch)} />;
 }

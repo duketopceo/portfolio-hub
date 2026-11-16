@@ -46,7 +46,7 @@ export default function HireBackdrop() {
           streakOpacity={0.35}
           fov={70}
           brightness={0.6}
-          saturation={0.4}
+          saturation={0}
         />
       </div>
     </DecorativeEffectBoundary>

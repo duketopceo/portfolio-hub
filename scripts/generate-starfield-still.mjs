@@ -11,16 +11,11 @@ import { STAR_COLORS } from "../src/lib/cosmos-colors.ts";
 const out = fileURLToPath(new URL("../public/brand/", import.meta.url));
 mkdirSync(out, { recursive: true });
 
-const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
-const rgb = (c) => `#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
-const white = hex(STAR_COLORS.white);
-const warm = hex(STAR_COLORS.warm);
-const amber = hex(STAR_COLORS.amber);
-
+// Three exact colours only (white, the warm tint, the amber accent), so the stills
+// stay inside the palette; the live shader may blend between them.
 function colour(warmth) {
-  const c = mix(white, warm, Math.min(warmth / 0.5, 1));
-  return rgb(warmth > 0.85 ? mix(c, amber, (warmth - 0.85) / 0.15) : c);
+  if (warmth > 0.9) return STAR_COLORS.amber.toLowerCase();
+  return (warmth > 0.3 ? STAR_COLORS.warm : STAR_COLORS.white).toLowerCase();
 }
 
 /** One still: `w` x `h` user units drawn at 1 unit per CSS pixel when the viewport matches. */

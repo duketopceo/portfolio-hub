@@ -14,8 +14,7 @@ If anything here disagrees with `BRAND.md`, `BRAND.md` wins.
 
 ## Hard rules (summary; details in BRAND.md)
 
-- White on black, full contrast. No teal, green, blue or violet anywhere, in UI or scene code.
-- Warm accents only, used sparingly: ember for alerts and classification, amber for signal heat, soft gold for rare highlights.
+- Palette (2026-11-15): true black ground; white for primary text; a very slightly warm off-white (`--color-tint`, `#F2EFEA`) for secondary copy and lines; greys for muted. At most TWO accents, used sparingly where meaning needs them: amber (`--color-heat`, live, active and highlight) and ember (`--color-signal`, alert and failure). No purple, violet, blue, teal or green anywhere (UI, SVG, shaders, OG images, favicons). No per-group or per-category colour: groups are told apart by name and position. `npm run check:design` enforces this.
 - The background is deep space: a layered warm-white starfield and nothing else, no black hole or central object (one WebGL context, quality ladder with star-count tiers, pre-rendered static still for reduced motion and no-WebGL). No grid, constellation lines or stardust clouds.
 - Text stays legible over the background; `node scripts/check-contrast.mjs` must pass.
 - Canvas and WebGL never carry meaning; every visual has an accessible HTML equivalent.

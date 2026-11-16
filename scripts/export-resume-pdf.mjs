@@ -152,7 +152,7 @@ function buildHtml(data, { email, phone }) {
   }
   html, body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #111827;
+    color: #111111;
     background: #ffffff;
     font-size: 7.8pt;
     line-height: 1.22;
@@ -161,11 +161,11 @@ function buildHtml(data, { email, phone }) {
     -webkit-print-color-adjust: exact;
   }
   a {
-    color: #1d4ed8;
+    color: #111111;
     text-decoration: none;
   }
   header {
-    border-bottom: 1.5px solid #1e3a8a;
+    border-bottom: 1.5px solid #333333;
     padding-bottom: 4px;
     margin-bottom: 5px;
   }
@@ -173,25 +173,25 @@ function buildHtml(data, { email, phone }) {
     font-size: 16pt;
     font-weight: 800;
     letter-spacing: 0.02em;
-    color: #0f172a;
+    color: #111111;
     line-height: 1.05;
     text-transform: uppercase;
   }
   .headline {
     font-size: 8.4pt;
     font-weight: 700;
-    color: #1e293b;
+    color: #222222;
     margin-top: 1.5px;
   }
   .contact {
     font-size: 7.55pt;
-    color: #475569;
+    color: #555555;
     margin-top: 1.5px;
   }
   .summary {
     font-size: 7.75pt;
     line-height: 1.22;
-    color: #1f2937;
+    color: #222222;
     margin-bottom: 5px;
   }
   section {
@@ -202,8 +202,8 @@ function buildHtml(data, { email, phone }) {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: #1e40af;
-    border-bottom: 0.75px solid #cbd5e1;
+    color: #111111;
+    border-bottom: 0.75px solid #cccccc;
     padding-bottom: 1px;
     margin-bottom: 3px;
   }
@@ -228,15 +228,15 @@ function buildHtml(data, { email, phone }) {
   .proj-name {
     font-weight: 700;
     font-size: 8.0pt;
-    color: #0f172a;
+    color: #111111;
   }
   .proj-link {
-    color: #0f172a;
+    color: #111111;
     text-decoration: none;
   }
   .proj-stack {
     font-size: 7.25pt;
-    color: #475569;
+    color: #555555;
     white-space: nowrap;
   }
   .bullets {
@@ -247,7 +247,7 @@ function buildHtml(data, { email, phone }) {
   .bullets li {
     font-size: 7.6pt;
     line-height: 1.19;
-    color: #1f2937;
+    color: #222222;
     margin-bottom: 1px;
   }
   .role {
@@ -262,16 +262,16 @@ function buildHtml(data, { email, phone }) {
   .role-title {
     font-weight: 700;
     font-size: 7.95pt;
-    color: #0f172a;
+    color: #111111;
   }
   .role-company {
     font-weight: 600;
     font-size: 7.85pt;
-    color: #334155;
+    color: #333333;
   }
   .role-meta {
     font-size: 7.3pt;
-    color: #475569;
+    color: #555555;
     white-space: nowrap;
   }
   .edu-row {
@@ -279,7 +279,7 @@ function buildHtml(data, { email, phone }) {
     justify-content: space-between;
     align-items: baseline;
     font-size: 7.65pt;
-    color: #1f2937;
+    color: #222222;
     margin-bottom: 1px;
   }
 </style>

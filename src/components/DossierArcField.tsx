@@ -33,7 +33,7 @@ export default function DossierArcField() {
           archHeight={0.9}
           thickness={1.2}
           brightness={1.15}
-          saturation={0.8}
+          saturation={0}
         />
       </div>
     </DecorativeEffectBoundary>

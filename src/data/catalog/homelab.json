@@ -12,7 +12,7 @@
     "planetVisual": {
       "size": "md",
       "shape": "hex",
-      "color": "#9AA3AC",
+      "color": "#9A9A9A",
       "moons": [
         {
           "label": "Traefik",

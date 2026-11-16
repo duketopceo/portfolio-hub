@@ -13,8 +13,9 @@
   --color-border-glass: rgba(255, 255, 255, 0.12);
   --color-divider: rgba(255, 255, 255, 0.04);
 
-  /* ── Text — cool silver scale ──────────── */
+  /* ── Text — white, warm off-white tint, greys ─ */
   --color-text: #FFFFFF;
+  --color-tint: #F2EFEA;
   --color-text-muted: #B8B8B8;
   --color-text-faint: #9A9A9A;
 
@@ -24,24 +25,12 @@
   --color-accent-subtle: rgba(255, 255, 255, 0.06);
   --color-accent-glow: rgba(255, 255, 255, 0.15);
 
-  /* ── Nebula Colors ─────────────────────── */
-  --color-nebula-blue: rgba(255, 255, 255, 0.04);
-  --color-nebula-purple: rgba(255, 255, 255, 0.03);
-  --color-nebula-teal: rgba(255, 255, 255, 0.03);
-
-  /* ── Category Colors (folded into the 3-color palette) ── */
-  --color-signal: #FF5C1A;
+  /* ── The two accents: amber (highlight, live) and ember (alert) ── */
   --color-heat: #FF9F1C;
-  --color-pop: #F5D76E;
-  --color-cat-finance: #FFFFFF;
-  --color-cat-ai: #F5D76E;
-  --color-cat-osint: #FF5C1A;
-  --color-cat-data: #FFFFFF;
-  --color-cat-infra: #B3B3B3;
-  --color-cat-apps: #FFFFFF;
+  --color-signal: #FF5C1A;
 
   /* ── Status ────────────────────────────── */
-  --color-live: #FFFFFF;
+  --color-live: #FF9F1C;
 
   /* ── Glass ─────────────────────────────── */
   --glass-bg: rgba(7, 7, 7, 0.7);

@@ -25,6 +25,23 @@ const SETTINGS: Record<Exclude<CosmosTier, "plate">, TierSettings> = {
   low: { dpr: [0.75, 0.75], stars: 1000 },
 };
 
+/**
+ * Touch devices (phones, tablets: `(pointer: coarse)`) run on batteries and
+ * mobile GPUs, so every rung draws fewer stars and fewer pixels: at most 1,400
+ * stars (about 560 on a phone after the area scale) at 0.75 DPR, down to 600
+ * at 0.6 DPR. Same ladder, same static plate at the bottom.
+ */
+const TOUCH_SETTINGS: Record<Exclude<CosmosTier, "plate">, TierSettings> = {
+  full: { dpr: [0.75, 0.75], stars: 1400 },
+  high: { dpr: [0.75, 0.75], stars: 1000 },
+  low: { dpr: [0.6, 0.6], stars: 600 },
+};
+
+/** True on a touch-first device. Client only: false when matchMedia is missing. */
+export function isTouchDevice(): boolean {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
+}
+
 /** Viewport area (px squared) the `stars` figures are quoted for. */
 export const STAR_REFERENCE_AREA = 1440 * 900;
 
@@ -34,16 +51,16 @@ export const STAR_REFERENCE_AREA = 1440 * 900;
  * every pixel, and clamped so a phone still has a sky and a 4K display does
  * not pay for one.
  */
-export function starCount(tier: CosmosTier, width: number, height: number): number {
-  const base = tierSettings(tier).stars;
+export function starCount(tier: CosmosTier, width: number, height: number, touch = false): number {
+  const base = tierSettings(tier, touch).stars;
   const ratio = (Math.max(width, 0) * Math.max(height, 0)) / STAR_REFERENCE_AREA;
   const stepped = Math.round(Math.min(Math.max(ratio, 0.4), 1.2) * 10) / 10;
   return Math.round(base * stepped);
 }
 
 /** Settings for a rung; the plate renders no scene so it reuses "low". */
-export function tierSettings(tier: CosmosTier): TierSettings {
-  return SETTINGS[tier === "plate" ? "low" : tier];
+export function tierSettings(tier: CosmosTier, touch = false): TierSettings {
+  return (touch ? TOUCH_SETTINGS : SETTINGS)[tier === "plate" ? "low" : tier];
 }
 
 const NEXT: Record<CosmosTier, CosmosTier> = {

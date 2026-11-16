@@ -26,6 +26,15 @@ describe("cosmos quality ladder", () => {
     expect(starCount("full", 3840, 2160)).toBeLessThanOrEqual(Math.round(full * 1.2));
     expect(starCount("full", 1441, 900)).toBe(full);
   });
+  it("touch devices draw fewer stars and fewer pixels on every rung", () => {
+    for (const t of ["full", "high", "low"] as const) {
+      expect(tierSettings(t, true).stars, t).toBeLessThan(tierSettings(t).stars);
+      expect(tierSettings(t, true).dpr[1], t).toBeLessThan(tierSettings(t).dpr[1]);
+    }
+    expect(starCount("full", 390, 844, true)).toBeLessThanOrEqual(600);
+    expect(starCount("full", 820, 1180, true)).toBeLessThanOrEqual(1400);
+    expect(starCount("full", 1366, 1024, true)).toBeLessThan(starCount("full", 1366, 1024));
+  });
   it("declines below the 55 fps budget with margin for 60 Hz jitter", () => {
     expect(DECLINE_BELOW_FPS).toBeLessThan(55);
     expect(DECLINE_BELOW_FPS).toBeGreaterThan(30);

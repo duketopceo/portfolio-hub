@@ -29,6 +29,8 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--color-bg);
+  /* Third-party shader: force it to greys so no hue enters the palette. */
+  filter: grayscale(1);
 }
 
 .uplink-loader-label {
@@ -74,8 +76,9 @@
   max-width: var(--cosmic-page-max);
   margin-left: auto;
   margin-right: auto;
-  padding-left: var(--cosmic-page-pad-x);
-  padding-right: var(--cosmic-page-pad-x);
+  /* Safe-area insets keep text clear of the notch and rounded corners (iPhone landscape). */
+  padding-left: max(var(--cosmic-page-pad-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--cosmic-page-pad-x), env(safe-area-inset-right, 0px));
 }
 
 /* Standard vertical padding for /projects, /now, etc. */
@@ -316,7 +319,7 @@
 
 /* Corner registration ticks — plates read as surveyed artifacts */
 .corner-ticks {
-  --ct-color: rgba(228, 234, 240, 0.35);
+  --ct-color: rgba(242, 239, 234, 0.35);
   --ct-len: 9px;
   background-image:
     linear-gradient(to right, var(--ct-color) var(--ct-len), transparent var(--ct-len)),
@@ -417,7 +420,7 @@
 
 /* ── Selection ─────────────────────────────────────────── */
 ::selection {
-  background: var(--color-pop-muted);
+  background: var(--color-accent-glow);
   color: var(--color-text);
 }
 
@@ -498,8 +501,8 @@
 }
 
 @keyframes q-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4); }
-  50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(52, 211, 153, 0); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 159, 28, 0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(255, 159, 28, 0); }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1403,8 +1406,8 @@
 
 .dossier-page__pill--live {
   color: var(--color-live);
-  background: rgba(52, 211, 153, 0.06);
-  border-color: rgba(52, 211, 153, 0.3);
+  background: rgba(255, 159, 28, 0.06);
+  border-color: rgba(255, 159, 28, 0.3);
 }
 
 .dossier-page__pill--border {
@@ -2921,7 +2924,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #1DB954;
+  color: var(--color-heat);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -2931,8 +2934,8 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #1DB954;
-  box-shadow: 0 0 6px #1DB95488;
+  background: var(--color-heat);
+  box-shadow: 0 0 6px rgba(255, 159, 28, 0.53);
   animation: q-pulse 2.5s ease-in-out infinite;
 }
 
@@ -3108,9 +3111,9 @@
 }
 
 .openrouter-card__badge--live {
-  background: rgba(52, 211, 153, 0.12);
-  color: #34d399;
-  border-color: rgba(52, 211, 153, 0.3);
+  background: rgba(255, 159, 28, 0.12);
+  color: var(--color-heat);
+  border-color: rgba(255, 159, 28, 0.3);
 }
 
 .openrouter-card__footer {
@@ -3162,7 +3165,7 @@
   padding: 0.6rem 0.75rem;
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
-  background: #0a0f1a;
+  background: #070707;
   color: var(--color-text);
 }
 
@@ -3174,7 +3177,7 @@
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
   background: var(--color-accent);
-  color: #04211c;
+  color: #000000;
   cursor: pointer;
   transition: filter 200ms ease;
 }
@@ -3193,7 +3196,7 @@
   padding: 0.85rem 1rem;
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
-  background: #0a0f1a;
+  background: #070707;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   white-space: pre-wrap;
@@ -3209,7 +3212,7 @@
 }
 
 .openrouter-card--bakeoff {
-  background: #0a0f1a;
+  background: #070707;
 }
 
 .openrouter-gate-row {
@@ -3223,7 +3226,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: 1rem;
-  background: #0a0f1a;
+  background: #070707;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -3241,11 +3244,11 @@
   font-family: var(--font-display);
   font-size: 1.4rem;
   font-weight: 700;
-  color: #34d399;
+  color: var(--color-heat);
 }
 
 .openrouter-gate__value--warn {
-  color: #fbbf24;
+  color: var(--color-heat);
 }
 
 .openrouter-gate__meta {
@@ -3282,7 +3285,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: #0a0f1a;
+  background: #070707;
   border: none;
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text);
@@ -3301,7 +3304,7 @@
 
 .openrouter-full-model__body {
   padding: 0.75rem 1rem;
-  background: #0c121e;
+  background: #0E0E0E;
 }
 
 .openrouter-full-task {
@@ -3314,8 +3317,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  background: #0a0f1a;
-  border: 1px solid #2a3550;
+  background: #070707;
+  border: 1px solid #2A2A2A;
   border-radius: var(--radius-xl);
   color: var(--color-text);
   font-family: inherit;
@@ -3334,7 +3337,7 @@
 
 .openrouter-full-task__head:hover {
   border-color: var(--color-accent);
-  background: #0f172a;
+  background: #0E0E0E;
 }
 
 .openrouter-full-task__name {
@@ -3382,7 +3385,7 @@
 .openrouter-full-run__code {
   margin: 0.4rem 0 0;
   padding: 0.6rem 0.75rem;
-  background: #0a0f1a;
+  background: #070707;
   border-radius: var(--radius-xl);
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -3420,8 +3423,8 @@
 
 /* ── BDH research dossier ─────────────────────────────────────── */
 .openrouter-section--bdh {
-  border-color: rgba(148, 163, 184, 0.25);
-  background: linear-gradient(180deg, #0c121e 0%, #0a0f1a 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, #0E0E0E 0%, #070707 100%);
 }
 
 .openrouter-section--secondary {
@@ -3472,7 +3475,7 @@
 
 /* ── Fail-on-purpose: reliability & guardrails ────────────────── */
 .openrouter-section--fails {
-  border-color: rgba(248, 113, 113, 0.25);
+  border-color: rgba(255, 92, 26, 0.25);
 }
 
 .openrouter-fail-tabs {
@@ -3488,7 +3491,7 @@
   padding: 0.45rem 0.85rem;
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
-  background: #0a0f1a;
+  background: #070707;
   color: var(--color-text-muted);
   cursor: pointer;
   transition: border-color 200ms ease, color 200ms ease;
@@ -3496,13 +3499,13 @@
 
 .openrouter-fail-tab.is-active {
   color: var(--color-text);
-  background: #0f172a;
+  background: #0E0E0E;
 }
 
 .openrouter-fail-trace {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  background: #0a0f1a;
+  background: #070707;
   overflow: hidden;
 }
 
@@ -3581,12 +3584,12 @@
 
 .dossier-services__status--online {
   color: var(--color-live);
-  background: rgba(52, 211, 153, 0.12);
+  background: rgba(255, 159, 28, 0.12);
 }
 
 .dossier-services__status--offline {
   color: var(--color-text-faint);
-  background: rgba(82, 82, 91, 0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .dossier-services__health {
@@ -3637,13 +3640,13 @@
 }
 
 .dossier-activity__chip--ci-success {
-  border-color: rgba(52, 211, 153, 0.35);
+  border-color: rgba(255, 159, 28, 0.35);
   color: var(--color-live);
 }
 
 .dossier-activity__chip--ci-failure {
-  border-color: rgba(248, 113, 113, 0.35);
-  color: #f87171;
+  border-color: rgba(255, 92, 26, 0.35);
+  color: var(--color-signal);
 }
 
 .dossier-activity__muted {
@@ -3842,7 +3845,7 @@
   gap: 0.75rem;
   align-items: baseline;
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .dossier-timeline__time {
@@ -4552,17 +4555,17 @@ header[class*="sticky"],
 }
 
 .activity-chart__seg--opened {
-  background: #38bdf8;
+  background: var(--color-text-muted);
   opacity: 0.75;
 }
 
 .activity-chart__seg--review {
-  background: #F5D76E;
+  background: #F2EFEA;
   opacity: 0.65;
 }
 
 .activity-chart__seg--release {
-  background: #fbbf24;
+  background: var(--color-heat);
   opacity: 0.8;
 }
 
@@ -4604,15 +4607,15 @@ header[class*="sticky"],
 }
 
 .activity-chart__dot--opened {
-  background: #38bdf8;
+  background: var(--color-text-muted);
 }
 
 .activity-chart__dot--review {
-  background: #F5D76E;
+  background: #F2EFEA;
 }
 
 .activity-chart__dot--release {
-  background: #fbbf24;
+  background: var(--color-heat);
 }
 
 .activity-chart--compact {
@@ -4701,7 +4704,7 @@ header[class*="sticky"],
   margin-top: 0.75rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
-  background: rgba(12, 18, 30, 0.5);
+  background: rgba(14, 14, 14, 0.5);
 }
 
 .activity-condensed__more summary {
@@ -5767,7 +5770,7 @@ header[class*="sticky"],
 
 .solar-orbit-ring--a {
   --k: 1;
-  border-color: rgba(228, 234, 240, 0.2);
+  border-color: rgba(242, 239, 234, 0.2);
   border-style: dashed;
 }
 
@@ -5779,7 +5782,7 @@ header[class*="sticky"],
 
 .solar-orbit-ring--c {
   --k: 0.44;
-  border-color: rgba(228, 234, 240, 0.08);
+  border-color: rgba(242, 239, 234, 0.08);
 }
 
 .solar-plate:has(.planet-node--focused) .solar-orbit-ring--a {
@@ -5824,12 +5827,12 @@ header[class*="sticky"],
 
 .solar-sun--halo {
   inset: 12%;
-  border: 1px solid rgba(228, 234, 240, 0.14);
+  border: 1px solid rgba(242, 239, 234, 0.14);
 }
 
 .solar-sun--core {
   inset: 38%;
-  border: 1px solid rgba(228, 234, 240, 0.2);
+  border: 1px solid rgba(242, 239, 234, 0.2);
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -5842,8 +5845,8 @@ header[class*="sticky"],
   height: 260%;
   transform: translate(-50%, -50%);
   background:
-    linear-gradient(to bottom, transparent calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(to right, transparent calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% - 0.5px), rgba(228, 234, 240, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+    linear-gradient(to bottom, transparent calc(50% - 0.5px), rgba(242, 239, 234, 0.18) calc(50% - 0.5px), rgba(242, 239, 234, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to right, transparent calc(50% - 0.5px), rgba(242, 239, 234, 0.18) calc(50% - 0.5px), rgba(242, 239, 234, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px));
   pointer-events: none;
 }
 
@@ -6185,7 +6188,7 @@ header[class*="sticky"],
   position: absolute;
   left: 50%;
   top: 50%;
-  background: rgba(228, 234, 240, 0.22);
+  background: rgba(242, 239, 234, 0.22);
   transform: translate(-50%, -50%);
   transition: background var(--transition);
 }
@@ -6206,7 +6209,7 @@ header[class*="sticky"],
   width: var(--planet-size);
   height: var(--planet-size);
   background: var(--color-surface-2);
-  border: 1.5px solid color-mix(in srgb, var(--planet-color) 70%, #e4eaf0);
+  border: 1.5px solid color-mix(in srgb, var(--planet-color) 70%, #F2EFEA);
   box-shadow: none;
   transition:
     transform var(--transition),
@@ -6713,5 +6716,90 @@ header[class*="sticky"],
   .signal__counts,
   .signal__last {
     grid-column: 1 / -1;
+  }
+}
+
+/* ── Phones and tablets (2026-11-15) ─────────────────────────────────────────
+   Tap targets are at least 44 x 44 px on touch and below 1024px, and body copy
+   is at least 16px on phones. Mono labels, chips and eyebrows keep their 12px
+   (BRAND.md: marginalia and labels). Inline links inside running text keep
+   their line height (the WCAG inline exception). */
+@media (pointer: coarse), (max-width: 1023px) {
+  .site-header__brandwrap {
+    min-height: 2.75rem;
+  }
+
+  .site-header__menubtn {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .cosmic-footer__nav-link,
+  .site-header__link,
+  .site-header__gh,
+  .detail-cta,
+  .detail-nav-link,
+  .detail-breadcrumb__nav a,
+  .lead-card__title a,
+  .signal__name,
+  .activity-condensed__row-link,
+  .resume-doc__project-head a,
+  .resume-doc__formats a,
+  .dossier-page__nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .lead-card__link,
+  .activity-range__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .dossier-related-link,
+  .upstream__link,
+  .upstream__summary,
+  .activity-condensed__more summary {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .cosmic-footer__nav-link,
+  .site-header__gh,
+  .resume-doc__formats a,
+  .project-sphere__list a {
+    min-width: 2.75rem;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .cosmic-card-desc,
+  .dossier-page__tagline,
+  .cosmic-readable,
+  .showcase-roadmap__text,
+  .showcase-roadmap__list li,
+  .dossier-section__body,
+  .dossier-evidence__note,
+  .dossier-timeline__foot,
+  .signal__headline,
+  .resume-doc__prose,
+  .resume-doc__skill p,
+  .resume-doc__bullets li,
+  .cosmic-timeline__latest,
+  .cosmic-pr-panel__muted,
+  .upstream__title,
+  .upstream__link,
+  .hire-featured__tagline,
+  .demo-hit__summary,
+  .ds-feature-list__text,
+  main table td {
+    font-size: 1rem;
+    line-height: 1.55;
   }
 }

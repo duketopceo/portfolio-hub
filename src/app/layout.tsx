@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -49,6 +49,14 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+};
+
+/** Edge to edge on iPhone (safe-area insets in CSS keep content clear of the notch); true-black browser chrome. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({

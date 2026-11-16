@@ -28,8 +28,8 @@ export function Star({ children }: { children: ReactNode }) {
   return (
     <StarContext.Provider value={ref}>
       <group ref={ref} position={STAR_POSITION} />
-      <pointLight position={STAR_POSITION} intensity={3.2} decay={0} color="#F4F7FA" />
-      <ambientLight intensity={0.35} color="#C7D2DC" />
+      <pointLight position={STAR_POSITION} intensity={3.2} decay={0} color="#FFFFFF" />
+      <ambientLight intensity={0.35} color="#D0D0D0" />
       {children}
     </StarContext.Provider>
   );

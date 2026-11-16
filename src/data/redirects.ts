@@ -58,6 +58,7 @@ export const retiredSlugs: RetiredSlug[] = [
   { from: "server-cluster", to: "/projects", reason: "removed" },
   { from: "omarchy-neo", to: "/projects", reason: "removed" },
   { from: "bartlett-data-platform", to: "/projects", reason: "removed" },
+  { from: "bartlett-permits", to: "/projects", reason: "removed" },
   { from: "pace-grafana-dashboards", to: "/projects", reason: "removed" },
   { from: "luke-the-duke-show", to: "/projects", reason: "removed" },
   { from: "openclaw-macmini-hardened", to: "/projects", reason: "removed" },

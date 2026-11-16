@@ -20,7 +20,7 @@ export interface CapabilityMeta {
   /** Short label for phone widths, where the full one would not fit beside its dots. */
   short: string;
   description: string;
-  /** One of the COSMOS_PALETTE values (src/lib/palette.ts); a test enforces it. */
+  /** Always white: groups are told apart by name and position, never by colour (2026-11-15). */
   color: string;
 }
 
@@ -35,37 +35,37 @@ export const capabilityMeta: Record<CapabilityId, CapabilityMeta> = {
     label: "Retrieval & memory",
     short: "Memory",
     description: "Search, ranking, context and journals: what an agent can recall",
-    color: "#B3B3B3",
+    color: "#FFFFFF",
   },
   "agents-computer-use": {
     label: "Agents & computer use",
     short: "Agents",
     description: "Agent runtimes, harnesses and tools that act on a computer",
-    color: "#FF9F1C",
+    color: "#FFFFFF",
   },
   "desktop-devtools": {
     label: "Desktop & dev tools",
     short: "Dev tools",
     description: "Linux desktop software, CLIs and standards for building with agents",
-    color: "#E8DCC8",
+    color: "#FFFFFF",
   },
   "platforms-web": {
     label: "Platforms & web",
     short: "Platforms",
     description: "Hosted products, servers and sites that run in production",
-    color: "#F5D76E",
+    color: "#FFFFFF",
   },
   "mobile-apps": {
     label: "Mobile apps",
     short: "Mobile",
     description: "iPhone apps built, signed and shipped from Linux",
-    color: "#FF5C1A",
+    color: "#FFFFFF",
   },
   "hardware-sim": {
     label: "Hardware, sim & infra",
     short: "Hardware",
     description: "Firmware, simulators, installations and the home cluster",
-    color: "#A89C8A",
+    color: "#FFFFFF",
   },
 };
 

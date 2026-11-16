@@ -24,6 +24,39 @@
   min-height: 0;
 }
 
+/*
+ * Two renderings, one visible. The wide frame is the default; phones and any
+ * portrait window get the tall frame. Chosen here, not in script, so the first
+ * paint is already the right map (no wide-then-tall flash). The media query is
+ * mirrored in GravityMap.tsx (TALL_QUERY).
+ */
+.svgTall {
+  display: none;
+}
+
+@media (max-width: 640px), (orientation: portrait) {
+  .svgWide {
+    display: none;
+  }
+
+  .svgTall {
+    display: block;
+  }
+
+  /* Words are above the map here: the map keeps its shape and never fills more than the screen. */
+  .landing .svgTall {
+    height: auto;
+    max-height: calc(100svh - var(--site-header-h) - 2rem);
+    width: auto;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .legend {
+    display: grid;
+  }
+}
+
 .copy {
   margin: 0;
   font-family: var(--font-mono);
@@ -91,6 +124,13 @@
   stroke: var(--color-bg);
   stroke-width: 0.8;
   opacity: 0.7;
+}
+
+/* Touch: tapping a dot would leave the page; the lists and the filtered grid name every project. */
+@media (hover: none) {
+  .dot {
+    pointer-events: none;
+  }
 }
 
 .dot:hover .point {
@@ -189,7 +229,7 @@
 }
 
 .legend {
-  display: grid;
+  display: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-micro-1) var(--space-micro-2);
   width: 100%;
@@ -254,6 +294,9 @@
 }
 
 .leadLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   font-weight: 600;
   color: var(--color-text);
   text-decoration: underline;
@@ -270,6 +313,13 @@
 .leadWhy {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+@media (max-width: 640px) {
+  .leadWhy,
+  .switch {
+    font-size: var(--text-base);
+  }
 }
 
 .details {
@@ -313,7 +363,10 @@
 }
 
 .list a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
   padding: 0.25rem 0;
   color: var(--color-text);
 }

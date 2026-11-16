@@ -10,7 +10,7 @@ import { ringScale, type OrbitSlot } from "@/components/scene/orbit-layout";
 
 /** Focus/live highlight: white on the white-on-black palette. */
 export const FOCUS = new THREE.Color("#FFFFFF");
-export const HAIRLINE = new THREE.Color("#E9ECEF");
+export const HAIRLINE = new THREE.Color("#F2EFEA");
 const SIGNAL = new THREE.Color("#FF5C1A");
 
 export type Vec3 = [number, number, number];

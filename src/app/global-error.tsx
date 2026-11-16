@@ -22,8 +22,8 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#080C14",
-          color: "#E4E4E7",
+          background: "#000000",
+          color: "#FFFFFF",
           fontFamily:
             "'Space Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
         }}
@@ -35,7 +35,7 @@ export default function GlobalError({
               fontWeight: 600,
               textTransform: "uppercase",
               letterSpacing: "0.12em",
-              color: "#94A3B8",
+              color: "#B8B8B8",
               marginBottom: "0.5rem",
             }}
           >
@@ -47,7 +47,7 @@ export default function GlobalError({
           <p
             style={{
               fontSize: "0.875rem",
-              color: "#94A3B8",
+              color: "#B8B8B8",
               lineHeight: 1.6,
               marginBottom: "1.5rem",
             }}
@@ -66,8 +66,8 @@ export default function GlobalError({
               fontWeight: 600,
               letterSpacing: "0.04em",
               textTransform: "uppercase",
-              color: "#080C14",
-              background: "#14B8A6",
+              color: "#000000",
+              background: "#FFFFFF",
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",

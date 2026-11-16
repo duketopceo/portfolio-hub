@@ -12,7 +12,7 @@
     "planetVisual": {
       "size": "lg",
       "shape": "sphere",
-      "color": "#F5D76E",
+      "color": "#FFFFFF",
       "rings": [
         {
           "opacity": 0.28,
@@ -42,9 +42,9 @@
       "tilt": -9,
       "rotationSpeed": 0.07,
       "palette": [
-        "#1B1740",
-        "#6D5BD0",
-        "#DDD6FF"
+        "#161616",
+        "#8A8A8A",
+        "#EDEDED"
       ],
       "atmosphere": {
         "strength": 0.32

@@ -21,34 +21,37 @@ export function formatDate(dateStr: string): string {
 }
 
 /**
- * Language color mapping for badges.
+ * Language dot colours. The language is always named beside the dot, so the dot
+ * carries no hue: every language is the same neutral grey (2026-11-15 palette:
+ * no GitHub brand blues, greens or purples).
  */
+export const LANGUAGE_DOT = "#B8B8B8";
 export const languageColors: Record<string, string> = {
-  Python: "#3572A5",
-  TypeScript: "#3178C6",
-  JavaScript: "#F7DF1E",
-  Shell: "#89E051",
-  R: "#198CE7",
-  "Jupyter Notebook": "#DA5B0B",
-  GDScript: "#355570",
-  HTML: "#E34C26",
-  CSS: "#563D7C",
-  Rust: "#DEA584",
-  Go: "#00ADD8",
-  Java: "#B07219",
+  Python: LANGUAGE_DOT,
+  TypeScript: LANGUAGE_DOT,
+  JavaScript: LANGUAGE_DOT,
+  Shell: LANGUAGE_DOT,
+  R: LANGUAGE_DOT,
+  "Jupyter Notebook": LANGUAGE_DOT,
+  GDScript: LANGUAGE_DOT,
+  HTML: LANGUAGE_DOT,
+  CSS: LANGUAGE_DOT,
+  Rust: LANGUAGE_DOT,
+  Go: LANGUAGE_DOT,
+  Java: LANGUAGE_DOT,
 };
 
 /**
  * Category-to-accent-color mapping used across navigation, cards, and graphs.
- * Folded into white, ember, soft gold and a grey neutral;
- * mirrors COSMOS_PALETTE in palette.ts.
+ * Every category is white: groups and categories are told apart by name and
+ * position, never by colour (2026-11-15).
  */
 export const catColors: Record<string, string> = {
   finance: "#FFFFFF",
-  ai: "#F5D76E",
-  osint: "#FF5C1A",
+  ai: "#FFFFFF",
+  osint: "#FFFFFF",
   data: "#FFFFFF",
-  infra: "#B3B3B3",
+  infra: "#FFFFFF",
   apps: "#FFFFFF",
 };
 

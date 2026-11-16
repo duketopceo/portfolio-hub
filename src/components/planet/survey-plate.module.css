@@ -10,10 +10,10 @@
 .plate :global(.planet-node__core) {
   /* Hard terminator, no glow: the half facing the map centre is lit. */
   background:
-    linear-gradient(var(--light-angle, 180deg), #070a0d 0 47%, transparent 47%),
+    linear-gradient(var(--light-angle, 180deg), #070707 0 47%, transparent 47%),
     linear-gradient(
       var(--light-angle, 180deg),
-      var(--planet-low, #070a0d) 47%,
+      var(--planet-low, #070707) 47%,
       var(--planet-mid, var(--planet-color)) 72%,
       var(--planet-high, var(--planet-color)) 100%
     );

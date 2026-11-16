@@ -11,7 +11,7 @@ describe("check-contrast.mjs", () => {
     const out = execFileSync("node", [script], { encoding: "utf8" });
     expect(out).not.toContain("FAIL");
     for (const theme of ["default"]) {
-      for (const token of ["color-text ", "color-text-muted", "color-text-faint", "color-accent", "color-signal", "color-pop"]) {
+      for (const token of ["color-text ", "color-text-muted", "color-text-faint", "color-accent", "color-tint", "color-signal", "color-heat"]) {
         expect(out).toContain(`[${theme}] ${token}`);
       }
     }

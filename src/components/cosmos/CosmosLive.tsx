@@ -7,6 +7,7 @@ import SceneFrame from "@/components/scene/SceneFrame";
 import CosmosScene from "@/components/scene/CosmosScene";
 import {
   DECLINE_BELOW_FPS,
+  isTouchDevice,
   stepDown,
   tierSettings,
   type CosmosTier,
@@ -33,6 +34,8 @@ export default function CosmosLive({
   const [tier, setTier] = useState<CosmosTier>("full");
   // QA only: ?cosmos-tier=pin holds full quality and skips the monitor.
   const [pinned] = useState(() => parseTierPin(window.location.search));
+  // Touch devices get the lighter ladder (fewer stars, lower DPR) from the first frame.
+  const [touch] = useState(isTouchDevice);
   const tierRef = useRef<CosmosTier>("full");
 
   const decline = useCallback(
@@ -53,7 +56,7 @@ export default function CosmosLive({
     <SceneFrame
       className="cosmic-bg__field"
       camera={{ position: [0, 0, 1] }}
-      dpr={tierSettings(tier).dpr}
+      dpr={tierSettings(tier, touch).dpr}
       preserveDrawingBuffer={false}
       onReadyChange={onReadyChange}
     >
@@ -63,7 +66,7 @@ export default function CosmosLive({
           onDecline={(api) => decline(api.fps)}
         />
       )}
-      <CosmosScene tier={tier} />
+      <CosmosScene tier={tier} touch={touch} />
     </SceneFrame>
   );
 }

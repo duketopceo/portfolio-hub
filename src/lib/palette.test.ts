@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { COSMOS_PALETTE, PALETTE_TOKENS } from "./palette";
+import { ACCENTS, COSMOS_PALETTE, PALETTE_TOKENS } from "./palette";
 import { catColors } from "./utils";
 
 const tokens = readFileSync("src/app/design-system/tokens.css", "utf8");
@@ -43,55 +43,58 @@ describe("palette tokens", () => {
     expect(tokenHex("--color-bg")).toBe(COSMOS_PALETTE.night);
   });
 
-  it("uses exactly three chromatic colours in the token layer, all warm", () => {
+  it("uses exactly two chromatic colours in the token layer, both warm: amber and ember", () => {
     const hexes = [...tokens.matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0].toUpperCase());
     const chroma = new Set(hexes.filter(chromatic));
-    expect([...chroma].sort()).toEqual(
-      [COSMOS_PALETTE.ember, COSMOS_PALETTE.heat, COSMOS_PALETTE.pop].map((h) => h.toUpperCase()).sort()
-    );
-    for (const hex of chroma) expect(hue(hex), hex).toBeLessThanOrEqual(60);
+    expect([...chroma].sort()).toEqual([...ACCENTS].map((h) => h.toUpperCase()).sort());
+    for (const hex of chroma) expect(hue(hex), hex).toBeLessThanOrEqual(40);
   });
 
-  it("has no teal or green anywhere in the token layer, the palette or the shared theme", () => {
+  it("has no purple, blue, teal or green anywhere in the token layer, the palette or the shared theme", () => {
     const theme = readFileSync("public/cosmic-theme.css", "utf8");
     for (const css of [tokens, theme]) {
       const hexes = [...css.matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0]);
-      for (const hex of hexes.filter(chromatic)) expect(hue(hex) <= 70 || hue(hex) >= 330, hex).toBe(true);
+      for (const hex of hexes.filter(chromatic)) expect(hue(hex) <= 40 || hue(hex) >= 345, hex).toBe(true);
       expect(css).not.toMatch(/45,\s*212,\s*191/);
     }
     for (const hex of Object.values(COSMOS_PALETTE)) {
-      if (chromatic(hex)) expect(hue(hex), hex).toBeLessThanOrEqual(60);
+      if (chromatic(hex)) expect(hue(hex), hex).toBeLessThanOrEqual(40);
     }
   });
 
-  it("keeps the accent white and white text pure on black", () => {
+  it("keeps white primary, a barely warm tint, and a true black ground", () => {
     expect(COSMOS_PALETTE.accent).toBe("#FFFFFF");
     expect(tokenHex("--color-text")).toBe("#FFFFFF");
     expect(tokenHex("--color-bg")).toBe("#000000");
+    const [r, g, b] = rgb(COSMOS_PALETTE.tint);
+    // Subtle: warm (r >= g >= b), but within 12 of grey and brighter than 90% white.
+    expect(r).toBeGreaterThanOrEqual(g);
+    expect(g).toBeGreaterThanOrEqual(b);
+    expect(r - b).toBeLessThanOrEqual(12);
+    expect(luminance(COSMOS_PALETTE.tint)).toBeGreaterThan(0.85);
   });
 
-  it("keeps ember and amber and gold distinguishable by hue or lightness", () => {
+  it("keeps ember and amber distinguishable by hue", () => {
     expect(hueGap(COSMOS_PALETTE.ember, COSMOS_PALETTE.heat)).toBeGreaterThan(15);
-    expect(hueGap(COSMOS_PALETTE.heat, COSMOS_PALETTE.pop)).toBeGreaterThan(8);
-    expect(luminance(COSMOS_PALETTE.pop)).toBeGreaterThan(luminance(COSMOS_PALETTE.heat));
   });
 
   it("keeps every palette colour readable as text on every surface", () => {
     for (const surface of ["--color-bg", "--color-surface", "--color-surface-2", "--color-surface-3"]) {
       const bg = tokenHex(surface)!;
-      for (const c of [COSMOS_PALETTE.accent, COSMOS_PALETTE.ember, COSMOS_PALETTE.heat, COSMOS_PALETTE.pop]) {
+      for (const c of [COSMOS_PALETTE.accent, COSMOS_PALETTE.tint, COSMOS_PALETTE.ember, COSMOS_PALETTE.heat]) {
         expect(contrast(c, bg), `${c} on ${surface}`).toBeGreaterThanOrEqual(4.5);
       }
     }
   });
 
-  it("folds the live status into the accent and retires the old green", () => {
-    expect(tokens).toMatch(/--color-live:\s*var\(--color-accent\)/);
+  it("makes live status amber and retires the old green and gold", () => {
+    expect(tokens).toMatch(/--color-live:\s*var\(--color-heat\)/);
     expect(tokens.toUpperCase()).not.toContain("#34D399");
+    expect(tokens.toUpperCase()).not.toContain("#F5D76E");
+    expect(tokens).not.toMatch(/--color-(pop|group-sand|group-clay)/);
   });
 
-  it("folds category colours into white, ember, gold and one grey", () => {
-    const allowed = new Set([COSMOS_PALETTE.accent, COSMOS_PALETTE.ember, COSMOS_PALETTE.pop, COSMOS_PALETTE.slate]);
-    for (const [cat, hex] of Object.entries(catColors)) expect(allowed.has(hex as never), cat).toBe(true);
+  it("makes every category colour white: groups are told apart by name, not hue", () => {
+    for (const [cat, hex] of Object.entries(catColors)) expect(hex, cat).toBe("#FFFFFF");
   });
 });
