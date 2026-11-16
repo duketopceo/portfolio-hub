@@ -65,19 +65,10 @@ jobs:
           # Fail on high/critical; allow low/medium to pass as warnings
           npm audit --audit-level=high
 
-  # 4. Malware / unreliable-publisher scan — Socket — FLAGS risks
-  socket:
-    name: Socket (malware / publishers)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: socketdev/socket-action@v3
-        with:
-          content: true
-          license: true
-        env:
-          SOCKET_API_KEY: ${{ secrets.SOCKET_API_KEY }}
-        continue-on-error: true  # FLAG, don't block (set to false to block on malware)
+  # 4. Malware / unreliable-publisher scan: Socket runs as the Socket GitHub App
+  # ("Socket Security: Pull Request Alerts" and "Project Report" checks). The
+  # Socket Action job was removed by owner approval on 2026-11-15 because
+  # socketdev/socket-action no longer resolves (404).
 
   # 5. Secret scan — BLOCKS on leaked secrets
   gitleaks:
