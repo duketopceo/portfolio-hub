@@ -28,6 +28,8 @@
     },
     "showcaseCard": {
       "tier": "B",
+      "thumbnail": "/media/thumbs/open-computer.webp",
+      "thumbnailAlt": "The Open Computer console on the approvals page.",
       "skills": [
         "Python",
         "Sandboxing",

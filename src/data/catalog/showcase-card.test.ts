@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import queue from "@/data/video-queue.json";
@@ -118,5 +119,71 @@ describe("showcase card data", () => {
     );
     expect(rows.size).toBe(listed.length);
     for (const p of listed) expect(rows.get(p.slug), p.slug).toBe(p.capability);
+  });
+});
+
+describe("project thumbnails", () => {
+  const THUMB_CAP = 120 * 1024;
+  const dir = join(process.cwd(), "src/data/catalog");
+  const entries = readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")))
+    .filter((e) => e.curated?.showcaseCard && !e.archived && !SHOWCASE_EXCLUDED.has(e.slug));
+
+  it("covers every tiered entry", () => {
+    expect(entries.length).toBeGreaterThanOrEqual(35);
+  });
+
+  it.each(entries.map((e) => [e.slug, e.curated.showcaseCard] as const))(
+    "%s has a thumbnail file under the size cap",
+    (slug, card) => {
+      expect(card.thumbnail, "thumbnail path").toBe(`/media/thumbs/${slug}.webp`);
+      expect(card.thumbnailAlt, "thumbnailAlt").toBeTruthy();
+      const file = join(process.cwd(), "public", card.thumbnail);
+      expect(existsSync(file), `${file} exists`).toBe(true);
+      const size = statSync(file).size;
+      expect(size).toBeGreaterThan(2000);
+      expect(size).toBeLessThan(THUMB_CAP);
+    },
+  );
+});
+
+describe("thumbnail distinctness", () => {
+  const dir = join(process.cwd(), "public/media/thumbs");
+  const files = readdirSync(dir).filter((f) => f.endsWith(".webp"));
+
+  /** 9x8 difference hash: a small perceptual fingerprint. */
+  async function dhash(file: string): Promise<string> {
+    const sharp = (await import("sharp")).default;
+    const { data } = await sharp(join(dir, file))
+      .greyscale()
+      .resize(9, 8, { fit: "fill" })
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    let bits = "";
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) bits += data[y * 9 + x] > data[y * 9 + x + 1] ? "1" : "0";
+    }
+    return bits;
+  }
+  const distance = (a: string, b: string) => [...a].filter((c, i) => c !== b[i]).length;
+
+  it("has no byte-identical thumbnails", () => {
+    const seen = new Map<string, string>();
+    for (const f of files) {
+      const h = createHash("sha256").update(readFileSync(join(dir, f))).digest("hex");
+      expect(seen.get(h), `${f} duplicates ${seen.get(h)}`).toBeUndefined();
+      seen.set(h, f);
+    }
+  });
+
+  it("has no perceptual near-duplicates (for example one page captured for several slugs)", async () => {
+    const hashes = await Promise.all(files.map(async (f) => [f, await dhash(f)] as const));
+    for (let i = 0; i < hashes.length; i++) {
+      for (let j = i + 1; j < hashes.length; j++) {
+        const d = distance(hashes[i][1], hashes[j][1]);
+        expect(d, `${hashes[i][0]} vs ${hashes[j][0]}`).toBeGreaterThanOrEqual(3);
+      }
+    }
   });
 });

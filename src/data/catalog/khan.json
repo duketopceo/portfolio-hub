@@ -80,6 +80,8 @@
     },
     "showcaseCard": {
       "tier": "B",
+      "thumbnail": "/media/thumbs/khan.webp",
+      "thumbnailAlt": "Generated line-diagram poster for Khan; no public capture exists.",
       "skills": [
         "Python",
         "Temporal",

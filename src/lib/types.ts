@@ -151,6 +151,7 @@ export interface ShowcaseRoadmap {
 export interface ShowcaseCardData {
   tier: ShowcaseTier;
   thumbnail?: string;
+  thumbnailAlt?: string;
   gif?: ShowcaseLoop;
   video?: MediaAsset;
   skills?: string[];

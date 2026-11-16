@@ -31,6 +31,8 @@
     },
     "showcaseCard": {
       "tier": "B",
+      "thumbnail": "/media/thumbs/wisp.webp",
+      "thumbnailAlt": "The Wisp panel with its Now, Agents, Memory and Settings tabs.",
       "skills": [
         "Python",
         "Jev",

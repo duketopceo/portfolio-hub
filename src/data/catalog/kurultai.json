@@ -73,6 +73,8 @@
     "architecture": "Source connectors → SQLite (FTS5 + sqlite-vec) → axum API → MCP tools → Vite/React 3D brain + OpenRouter swarm",
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/kurultai.webp",
+      "thumbnailAlt": "Frame from the Kurultai launch film: coding agents around a shared memory hub.",
       "skills": [
         "Rust",
         "SQLite",

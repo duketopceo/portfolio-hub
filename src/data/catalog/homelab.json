@@ -49,7 +49,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "C"
+      "tier": "C",
+      "thumbnail": "/media/thumbs/homelab.webp",
+      "thumbnailAlt": "Generated line-diagram poster; the infrastructure is private."
     }
   },
   "github": {

@@ -28,7 +28,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "C"
+      "tier": "C",
+      "thumbnail": "/media/thumbs/pinetree-solari-demo.webp",
+      "thumbnailAlt": "The multi-URL pricing reporter's output summary."
     }
   },
   "github": {

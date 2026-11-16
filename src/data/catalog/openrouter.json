@@ -54,6 +54,8 @@
     "architecture": "OpenRouter routing → Role-specific eval harness → Guardrails / presets → Launch-gate scoring",
     "showcaseCard": {
       "tier": "B",
+      "thumbnail": "/media/thumbs/openrouter.webp",
+      "thumbnailAlt": "The OpenRouter bakeoff demo page on this site.",
       "skills": [
         "OpenRouter",
         "Guardrails",

@@ -27,7 +27,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "C"
+      "tier": "C",
+      "thumbnail": "/media/thumbs/fivebyfive.webp",
+      "thumbnailAlt": "Generated line-diagram poster; hardware only, no photo published."
     }
   },
   "github": {

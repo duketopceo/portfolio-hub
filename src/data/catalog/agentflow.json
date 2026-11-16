@@ -28,7 +28,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "B"
+      "tier": "B",
+      "thumbnail": "/media/thumbs/agentflow.webp",
+      "thumbnailAlt": "The Agentflow social card with an illustrative run ledger."
     }
   },
   "github": {

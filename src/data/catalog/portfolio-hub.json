@@ -32,6 +32,8 @@
     },
     "showcaseCard": {
       "tier": "B",
+      "thumbnail": "/media/thumbs/portfolio-hub.webp",
+      "thumbnailAlt": "The home page of this site, captured from the live site.",
       "skills": [
         "Next.js",
         "React",

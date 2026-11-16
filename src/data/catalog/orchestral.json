@@ -73,6 +73,8 @@
     "architecture": "Prompt bench → orchestrator → worker pool → scoring → report",
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/orchestral.webp",
+      "thumbnailAlt": "Generated line-diagram poster for Orchestral; a screenshot of the observatory follows with the v2 video.",
       "skills": [
         "Python",
         "OpenRouter",

@@ -27,7 +27,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "B"
+      "tier": "B",
+      "thumbnail": "/media/thumbs/omaseal.webp",
+      "thumbnailAlt": "Terminal output of omaseal --help."
     }
   },
   "github": {

@@ -54,6 +54,8 @@
     "architecture": "SwiftUI tabs → KateStore/KateCore client → Cloudflare Worker /api/v1 → D1 + R2 media → per-member sync",
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/kate.webp",
+      "thumbnailAlt": "The Kate home page, captured from the live site.",
       "skills": [
         "Swift",
         "SwiftUI",
