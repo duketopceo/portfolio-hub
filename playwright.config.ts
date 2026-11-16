@@ -27,7 +27,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `npm run build && PORT=${port} node scripts/start-standalone.mjs`,
+    command: `ACTIVITY_USE_FIXTURES=1 npm run build && ACTIVITY_USE_FIXTURES=1 PORT=${port} node scripts/start-standalone.mjs`,
     url: `http://127.0.0.1:${port}`,
     timeout: 180_000,
   },

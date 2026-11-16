@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { dropHttpsUpgradeFromDocuments, stubThirdParty } from "./stubs";
+import { stubLivePulls } from "./stubs-pulls";
 
 const routes = [
   { path: "/", name: "home" },
@@ -97,6 +98,7 @@ test.describe("Portfolio visual acceptance matrix", () => {
           width: viewport.width,
           height: viewport.height,
         });
+        if (route.name === "about") await stubLivePulls(page);
         const response = await page.goto(route.path, { waitUntil: "networkidle" });
         if (route.name === "not-found") {
           expect(response?.status()).toBe(404);
