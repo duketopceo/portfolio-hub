@@ -57,13 +57,19 @@
     ],
     "architecture": "Web UI, agents (MCP, CLI, REST), GitHub App and Slack → Hono API (state machine, auth, scopes) → Postgres (issues + event log) → signed webhooks and agent harness dispatch",
     "media": {
-      "release": "to-record",
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/tallyline-demo.mp4",
+        "poster": "https://media.luke-the-duke.com/demos/tallyline-demo-poster.jpg",
+        "captions": "/media/captions/tallyline-demo.vtt",
+        "transcript": "A narrated walkthrough of Tallyline: a person moves a ticket with the keyboard, an agent claims, comments on and moves a ticket through the MCP server with every action logged, then the roadmap and client overview. It closes on the licence (AGPL-3.0) and stack.",
+        "sanitized": true
+      },
       "demo": "to-record"
     },
     "showcaseCard": {
       "tier": "A",
       "thumbnail": "/media/thumbs/tallyline.webp",
-      "thumbnailAlt": "The Tallyline home page, captured from the live site.",
+      "thumbnailAlt": "Frame from the Tallyline explainer: the board with tickets in triage, backlog, todo and in progress.",
       "skills": [
         "TypeScript",
         "Next.js",
