@@ -1,0 +1,77 @@
+WEBVTT
+
+1
+00:00:00.600 --> 00:00:05.155
+Give a cheap model a job: read this invoice and return its fields.
+
+2
+00:00:05.155 --> 00:00:08.950
+The planner here is DeepSeek V4 Flash, priced per call.
+
+3
+00:00:09.450 --> 00:00:15.014
+It writes a plan, then asks six cheap workers to try it, one after another.
+
+4
+00:00:15.014 --> 00:00:17.240
+The workers are GLM 5.3 Flash.
+
+5
+00:00:17.240 --> 00:00:20.875
+Each one gets the task and returns a full answer.
+
+6
+00:00:21.375 --> 00:00:23.892
+Every call is recorded with its price.
+
+7
+00:00:23.892 --> 00:00:28.462
+The plan took about twenty seconds, and each worker call about three.
+
+8
+00:00:28.462 --> 00:00:31.375
+This whole run cost about a tenth of a cent.
+
+9
+00:00:31.875 --> 00:00:34.043
+The planner picks the best answer.
+
+10
+00:00:34.043 --> 00:00:35.382
+Here all six matched.
+
+11
+00:00:35.382 --> 00:00:39.525
+Then a plain check, with no model judging, marks it pass or fail.
+
+12
+00:00:40.025 --> 00:00:43.432
+Same task, two teams, the same cheap workers.
+
+13
+00:00:43.432 --> 00:00:47.975
+One planner is DeepSeek V4 Flash, the other DeepSeek V4 Pro.
+
+14
+00:00:47.975 --> 00:00:48.732
+Both pass.
+
+15
+00:00:48.732 --> 00:00:55.850
+One run cost zero point zero zero one nine dollars, the other zero point zero zero eight five.
+
+16
+00:00:56.350 --> 00:01:01.829
+Run the cheapest team sixteen times: fourteen passes, about a tenth of a cent each.
+
+17
+00:01:01.829 --> 00:01:07.375
+Four of those answered without delegating; of the twelve that delegated, ten passed.
+
+18
+00:01:07.875 --> 00:01:11.969
+Orchestral records every run, so the numbers can be checked.
+
+19
+00:01:11.969 --> 00:01:16.200
+Compare model teams on pass rate and cost per pass, then pick.

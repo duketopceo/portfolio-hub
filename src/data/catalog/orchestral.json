@@ -54,9 +54,11 @@
     "private": false,
     "media": {
       "release": {
-        "url": "https://media.luke-the-duke.com/launch/orchestral-16x9.mp4",
-        "poster": "https://media.luke-the-duke.com/launch/orchestral-poster.jpg",
-        "transcript": "A launch film for orchestral, the OpenRouter eval harness for cheap orchestrator and worker stacks."
+        "url": "https://media.luke-the-duke.com/demos/orchestral-explainer-2026-11-15.mp4",
+        "poster": "https://media.luke-the-duke.com/demos/orchestral-explainer-2026-11-15-poster.jpg",
+        "captions": "/media/captions/orchestral-demo.vtt",
+        "transcript": "A narrated walkthrough of Orchestral: a cheap planner and six cheap workers handle an invoice-extraction task, every call is priced, and a plain pass/fail check scores the run. It then compares two planner teams and shows sixteen runs of the cheapest team, 14 of 16 passed.",
+        "sanitized": true
       },
       "demo": {
         "url": "https://media.luke-the-duke.com/demos/orchestral-demo.mp4",
@@ -74,7 +76,7 @@
     "showcaseCard": {
       "tier": "A",
       "thumbnail": "/media/thumbs/orchestral.webp",
-      "thumbnailAlt": "Generated line-diagram poster for Orchestral; a screenshot of the observatory follows with the v2 video.",
+      "thumbnailAlt": "Frame from the Orchestral explainer: sixteen runs of the cheapest team, 14 of 16 passed.",
       "skills": [
         "Python",
         "OpenRouter",
