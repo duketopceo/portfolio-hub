@@ -1,0 +1,45 @@
+WEBVTT
+
+1
+00:00:00.600 --> 00:00:07.702
+Tallyline is a self-hostable, open-source issue tracker where people and AI agents work the same board.
+
+2
+00:00:07.702 --> 00:00:11.425
+Each project is a repo's worth of tickets and roadmap.
+
+3
+00:00:11.925 --> 00:00:15.754
+Tickets move through one state machine, from triage to done.
+
+4
+00:00:15.754 --> 00:00:18.625
+Here a person moves a card with the keyboard.
+
+5
+00:00:19.125 --> 00:00:23.460
+An agent uses the same board through the Model Context Protocol.
+
+6
+00:00:23.460 --> 00:00:28.405
+It asks what is ready, claims a ticket, comments, and moves it to review.
+
+7
+00:00:28.405 --> 00:00:33.350
+The same rules apply, and the activity log records that the agent did it.
+
+8
+00:00:33.850 --> 00:00:40.525
+The roadmap puts milestones and cycles on one timeline, with progress taken from the tickets themselves.
+
+9
+00:00:41.025 --> 00:00:49.025
+The client overview has one row per project: status, progress, ticket counts, the next milestone and recent activity.
+
+10
+00:00:49.525 --> 00:00:55.604
+Tallyline is AGPL-3.0, written in TypeScript, and runs on Docker and Postgres.
+
+11
+00:00:55.604 --> 00:00:57.475
+You can run it yourself.
