@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -145,4 +146,44 @@ describe("project thumbnails", () => {
       expect(size).toBeLessThan(THUMB_CAP);
     },
   );
+});
+
+describe("thumbnail distinctness", () => {
+  const dir = join(process.cwd(), "public/media/thumbs");
+  const files = readdirSync(dir).filter((f) => f.endsWith(".webp"));
+
+  /** 9x8 difference hash: a small perceptual fingerprint. */
+  async function dhash(file: string): Promise<string> {
+    const sharp = (await import("sharp")).default;
+    const { data } = await sharp(join(dir, file))
+      .greyscale()
+      .resize(9, 8, { fit: "fill" })
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    let bits = "";
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) bits += data[y * 9 + x] > data[y * 9 + x + 1] ? "1" : "0";
+    }
+    return bits;
+  }
+  const distance = (a: string, b: string) => [...a].filter((c, i) => c !== b[i]).length;
+
+  it("has no byte-identical thumbnails", () => {
+    const seen = new Map<string, string>();
+    for (const f of files) {
+      const h = createHash("sha256").update(readFileSync(join(dir, f))).digest("hex");
+      expect(seen.get(h), `${f} duplicates ${seen.get(h)}`).toBeUndefined();
+      seen.set(h, f);
+    }
+  });
+
+  it("has no perceptual near-duplicates (for example one page captured for several slugs)", async () => {
+    const hashes = await Promise.all(files.map(async (f) => [f, await dhash(f)] as const));
+    for (let i = 0; i < hashes.length; i++) {
+      for (let j = i + 1; j < hashes.length; j++) {
+        const d = distance(hashes[i][1], hashes[j][1]);
+        expect(d, `${hashes[i][0]} vs ${hashes[j][0]}`).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
 });

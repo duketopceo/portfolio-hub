@@ -74,7 +74,7 @@
     "showcaseCard": {
       "tier": "A",
       "thumbnail": "/media/thumbs/orchestral.webp",
-      "thumbnailAlt": "Poster of the Orchestral launch film: 85% pass rate at $0.0001 a run.",
+      "thumbnailAlt": "Generated line-diagram poster for Orchestral; a screenshot of the observatory follows with the v2 video.",
       "skills": [
         "Python",
         "OpenRouter",

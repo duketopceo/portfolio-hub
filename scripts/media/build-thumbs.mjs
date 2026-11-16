@@ -27,8 +27,8 @@ const SRC = process.env.THUMB_SRC ?? "/tmp/thumbwork/src";
 const SITE = process.env.THUMB_SITE ?? "https://luke-the-duke.com";
 const POSTER_SITE = process.env.THUMB_POSTER_SITE ?? SITE;
 
-/** Desaturation applied where the source carries purple, blue or teal. */
-const MUTE = "saturate(0.15) sepia(0.12)";
+/** Greyscale for every chromatic source: no purple, blue, teal or green in thumbnails. */
+const MUTE = "grayscale(1)";
 
 /**
  * kind: "img" (file under REPOS or SRC), "shot" (live page), "term" (captured
@@ -37,29 +37,29 @@ const MUTE = "saturate(0.15) sepia(0.12)";
 const SPECS = {
   kurultai: { kind: "img", file: "kurultai/launch/qc/explainer/e5.png", label: "launch film frame", filter: MUTE },
   argus: { kind: "img", file: "argus/docs/assets/hero-dark.png", label: "README image", fit: "contain", filter: MUTE },
-  "dayflow-linux": { kind: "img", file: "dayflow-linux/preview.png", label: "README image", fit: "contain", filter: "saturate(0.5)" },
-  kate: { kind: "shot", url: "https://kate.shippedit.dev", label: "live capture" },
-  orchestral: { kind: "img", file: `${SRC}/orchestral-poster.jpg`, label: "launch film poster" },
-  tallyline: { kind: "shot", url: "https://tallyline.app", label: "live capture" },
-  wordink: { kind: "img", file: "WordInk/docs/screenshots/docs-after-dark.png", label: "docs screenshot", filter: "saturate(0.35)" },
+  "dayflow-linux": { kind: "img", file: "dayflow-linux/preview.png", label: "README image", fit: "contain", filter: MUTE },
+  kate: { kind: "shot", url: "https://kate.shippedit.dev", label: "live capture", filter: "saturate(0.6)" },
+  orchestral: { kind: "poster", label: "generated poster" },
+  tallyline: { kind: "shot", url: "https://tallyline.app", label: "live capture", filter: MUTE },
+  wordink: { kind: "img", file: "WordInk/docs/screenshots/docs-after-dark.png", label: "docs screenshot", filter: MUTE },
   khan: { kind: "poster", label: "generated poster" },
-  "pace-server": { kind: "img", file: `${SRC}/pace-poster.jpg`, label: "launch film poster", filter: "saturate(0.4)" },
-  openrouter: { kind: "shot", url: `${SITE}/projects/openrouter`, label: "live capture" },
+  "pace-server": { kind: "img", file: `${SRC}/pace-poster.jpg`, label: "launch film poster", filter: MUTE },
+  openrouter: { kind: "shot", url: `${SITE}/projects/openrouter`, label: "live capture", filter: MUTE },
   "military-hardware-db": { kind: "poster", label: "generated poster" },
   dixi: { kind: "poster", label: "generated poster" },
   omaseal: { kind: "term", cmd: "omaseal --help", label: "terminal output" },
-  wisp: { kind: "img", file: "wisp/assets/readme/panel.png", label: "README image", fit: "contain", filter: "saturate(0.5)" },
-  "open-computer": { kind: "img", file: "open-computer/docs/screenshots/console/after-approvals-dark-1440.png", label: "console screenshot", filter: "saturate(0.3)" },
-  agentflow: { kind: "img", file: "agentflow/assets/brand/social-card.png", label: "README image", filter: "saturate(0.2)" },
+  wisp: { kind: "img", file: "wisp/assets/readme/panel.png", label: "README image", fit: "contain", filter: MUTE },
+  "open-computer": { kind: "img", file: "open-computer/docs/screenshots/console/after-approvals-dark-1440.png", label: "console screenshot", filter: MUTE },
+  agentflow: { kind: "img", file: "agentflow/assets/brand/social-card.png", label: "README image", filter: MUTE },
   cairn: { kind: "poster", label: "generated poster" },
-  "portfolio-hub": { kind: "shot", url: SITE, label: "live capture" },
-  "reactor-sim": { kind: "img", file: "reactor-sim/docs/media/control-room-standing.png", label: "README image", filter: "saturate(0.6)" },
+  "portfolio-hub": { kind: "shot", url: SITE, label: "live capture", filter: MUTE },
+  "reactor-sim": { kind: "img", file: "reactor-sim/docs/media/control-room-standing.png", label: "README image", filter: MUTE },
   homelab: { kind: "poster", label: "generated poster" },
   "luke-agents": { kind: "poster", label: "generated poster" },
   "personal-blog": { kind: "poster", label: "generated poster" },
-  "omarchy-plugins": { kind: "img", file: "omarchy-plugins/plugins/io.github.duketopceo.bumblebee/preview.png", label: "plugin preview", filter: "saturate(0.4)" },
+  "omarchy-plugins": { kind: "img", file: "omarchy-plugins/plugins/io.github.duketopceo.bumblebee/preview.png", label: "plugin preview", filter: MUTE },
   "openrouter-usage": { kind: "img", file: "openrouter_usage/docs/social.png", label: "README image", filter: MUTE },
-  "helm-qmk-macropad": { kind: "img", file: "helm-qmk-macropad/cad/preview_plate.png", label: "CAD render", filter: "brightness(0.8)" },
+  "helm-qmk-macropad": { kind: "img", file: "helm-qmk-macropad/cad/preview_plate.png", label: "CAD render", filter: "grayscale(1) brightness(0.75)" },
   "harbor-openrouter-ios-client": { kind: "poster", label: "generated poster" },
   "agent-zero-plugins": { kind: "poster", label: "generated poster" },
   "rts-skyrim": { kind: "poster", label: "generated poster" },
@@ -107,8 +107,13 @@ async function sourceImage(browser, slug, spec) {
   } else {
     // Generated poster: capture the card's own SVG from the site, scaled up.
     await page.goto(`${POSTER_SITE}/projects`, { waitUntil: "load", timeout: 45000 });
-    const el = page.locator(`article.cosmic-project-card:has(a[href="/projects/${slug}"]) .showcase-media`).first();
-    await el.waitFor({ timeout: 15000 });
+    let el = page.locator(`article.cosmic-project-card:has(a[href="/projects/${slug}"]) .showcase-media`).first();
+    // Lead projects are not in the card grid; use the dossier's media slot instead.
+    if (!(await el.count())) {
+      await page.goto(`${POSTER_SITE}/projects/${slug}`, { waitUntil: "load", timeout: 45000 });
+      el = page.locator(".showcase-media").first();
+    }
+    await el.waitFor({ state: "attached", timeout: 15000 });
     await el.evaluate((n) => {
       const wrap = document.createElement("div");
       wrap.style.cssText = "position:fixed;left:0;top:0;width:100vw;height:100vh;background:#000;z-index:2147483647";
