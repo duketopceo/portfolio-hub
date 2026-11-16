@@ -30,6 +30,8 @@
     },
     "showcaseCard": {
       "tier": "C",
+      "thumbnail": "/media/thumbs/omarchy-plugins.webp",
+      "thumbnailAlt": "The Bumblebee supply-chain exposure widget, one of the Omarchy bar plugins.",
       "skills": [
         "QML",
         "TypeScript",

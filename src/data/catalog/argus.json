@@ -99,6 +99,8 @@
     ],
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/argus.webp",
+      "thumbnailAlt": "Argus verdict comment on a pull request: findings, lanes and the metered spend.",
       "skills": [
         "TypeScript",
         "Playwright",

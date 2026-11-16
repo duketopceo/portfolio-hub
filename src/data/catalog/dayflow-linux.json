@@ -41,6 +41,8 @@
     ],
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/dayflow-linux.webp",
+      "thumbnailAlt": "The Dayflow panel on Linux listing a day's captured activity.",
       "skills": [
         "Go",
         "QML",

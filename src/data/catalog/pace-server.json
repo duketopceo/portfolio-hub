@@ -113,6 +113,8 @@
     "finishLine": "Gateway, auth, and Stripe billing are live (pacehq.io, app.pacehq.io). Remaining ~20%: real tool execution and Python reasoning service hardening — hire is for last-mile finishing.",
     "showcaseCard": {
       "tier": "B",
+      "thumbnail": "/media/thumbs/pace-server.webp",
+      "thumbnailAlt": "Poster of the Pace launch film: the approvals queue.",
       "skills": [
         "Rust",
         "Axum",

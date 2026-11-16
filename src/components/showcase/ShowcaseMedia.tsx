@@ -40,6 +40,7 @@ export default function ShowcaseMedia({
   const loop = card?.gif;
   const [active, setActive] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [stillFailed, setStillFailed] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -77,7 +78,9 @@ export default function ShowcaseMedia({
     }
   }, [playing, mode, reduceMotion]);
 
-  const still = loop?.poster ?? card?.thumbnail;
+  const stillSrc = loop?.poster ?? card?.thumbnail;
+  // A thumbnail that fails to load falls back to the generated poster.
+  const still = stillFailed ? undefined : stillSrc;
   const canLoop = Boolean(loop) && !reduceMotion;
   const style = { "--poster-accent": accent } as CSSProperties;
 
@@ -94,7 +97,8 @@ export default function ShowcaseMedia({
         <img
           className="showcase-media__still"
           src={still}
-          alt={loop ? "" : name}
+          alt={loop ? "" : (card?.thumbnailAlt ?? name)}
+          onError={() => setStillFailed(true)}
           loading="lazy"
           decoding="async"
         />

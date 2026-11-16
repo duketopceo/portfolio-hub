@@ -73,6 +73,8 @@
     "architecture": "Prompt bench → orchestrator → worker pool → scoring → report",
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/orchestral.webp",
+      "thumbnailAlt": "Poster of the Orchestral launch film: 85% pass rate at $0.0001 a run.",
       "skills": [
         "Python",
         "OpenRouter",

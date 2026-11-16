@@ -27,7 +27,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "C"
+      "tier": "C",
+      "thumbnail": "/media/thumbs/harbor-openrouter-ios-client.webp",
+      "thumbnailAlt": "Generated line-diagram poster; no screenshot is published."
     }
   },
   "github": {

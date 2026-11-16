@@ -77,7 +77,8 @@ All fields live under `curated.showcaseCard` (`src/data/catalog/schema.ts`). The
 | Field | Type | Notes |
 |---|---|---|
 | `tier` | `"A" \| "B" \| "C"` | Required once an entry is in the system. |
-| `thumbnail` | string | Static themed poster. Absent: the generated deterministic poster is used. |
+| `thumbnail` | string | 1280x720 WebP under `public/media/thumbs/<slug>.webp` (under 120 KB; a test enforces it): a real capture inset in a black frame, built by `scripts/media/build-thumbs.mjs`. Absent or failing to load: the generated deterministic poster is used. |
+| `thumbnailAlt` | string | What the thumbnail honestly shows (a live capture, a README image, terminal output, or the generated poster). |
 | `gif` | `{ url, poster, alt }` | Muted loop. Prefer MP4 or WebM over a real GIF for weight; `poster` is required and is what reduced-motion visitors see. |
 | `video` | media asset | Narrated video; same shape as `media.release` (transcript required). |
 | `skills` | string[] | Taken from the catalog `techStack`; a test checks each skill appears there. Filled for the 15 queue slugs only. |

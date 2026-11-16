@@ -62,6 +62,8 @@
     },
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/tallyline.webp",
+      "thumbnailAlt": "The Tallyline home page, captured from the live site.",
       "skills": [
         "TypeScript",
         "Next.js",

@@ -27,7 +27,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "C"
+      "tier": "C",
+      "thumbnail": "/media/thumbs/agent-zero-plugins.webp",
+      "thumbnailAlt": "Generated line-diagram poster; the plugins have no standalone surface."
     }
   },
   "github": {

@@ -29,7 +29,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "B"
+      "tier": "B",
+      "thumbnail": "/media/thumbs/reactor-sim.webp",
+      "thumbnailAlt": "The simulated reactor control room, seen standing at the console."
     }
   },
   "github": {

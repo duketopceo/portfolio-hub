@@ -27,7 +27,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "C"
+      "tier": "C",
+      "thumbnail": "/media/thumbs/helm-qmk-macropad.webp",
+      "thumbnailAlt": "CAD render of the macropad's top plate."
     }
   },
   "github": {

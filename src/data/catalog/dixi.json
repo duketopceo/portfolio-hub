@@ -31,7 +31,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "B"
+      "tier": "B",
+      "thumbnail": "/media/thumbs/dixi.webp",
+      "thumbnailAlt": "Generated line-diagram poster; the live site does not resolve."
     }
   },
   "github": {

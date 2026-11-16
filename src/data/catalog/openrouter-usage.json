@@ -27,7 +27,9 @@
       "demo": "to-record"
     },
     "showcaseCard": {
-      "tier": "C"
+      "tier": "C",
+      "thumbnail": "/media/thumbs/openrouter-usage.webp",
+      "thumbnailAlt": "The openrouter_usage social card: spend, keys and workspace analytics."
     }
   },
   "github": {

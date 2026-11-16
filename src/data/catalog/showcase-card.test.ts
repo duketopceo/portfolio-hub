@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import queue from "@/data/video-queue.json";
@@ -119,4 +119,30 @@ describe("showcase card data", () => {
     expect(rows.size).toBe(listed.length);
     for (const p of listed) expect(rows.get(p.slug), p.slug).toBe(p.capability);
   });
+});
+
+describe("project thumbnails", () => {
+  const THUMB_CAP = 120 * 1024;
+  const dir = join(process.cwd(), "src/data/catalog");
+  const entries = readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")))
+    .filter((e) => e.curated?.showcaseCard && !e.archived && !SHOWCASE_EXCLUDED.has(e.slug));
+
+  it("covers every tiered entry", () => {
+    expect(entries.length).toBeGreaterThanOrEqual(35);
+  });
+
+  it.each(entries.map((e) => [e.slug, e.curated.showcaseCard] as const))(
+    "%s has a thumbnail file under the size cap",
+    (slug, card) => {
+      expect(card.thumbnail, "thumbnail path").toBe(`/media/thumbs/${slug}.webp`);
+      expect(card.thumbnailAlt, "thumbnailAlt").toBeTruthy();
+      const file = join(process.cwd(), "public", card.thumbnail);
+      expect(existsSync(file), `${file} exists`).toBe(true);
+      const size = statSync(file).size;
+      expect(size).toBeGreaterThan(2000);
+      expect(size).toBeLessThan(THUMB_CAP);
+    },
+  );
 });

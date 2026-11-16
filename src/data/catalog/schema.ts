@@ -108,6 +108,8 @@ const showcaseCard = z.strictObject({
   tier: z.enum(SHOWCASE_TIERS),
   /** Static themed poster; absent means the generated deterministic poster. */
   thumbnail: z.string().min(1).optional(),
+  /** Honest description of the thumbnail image (what it actually shows). */
+  thumbnailAlt: z.string().min(1).optional(),
   gif: showcaseLoop.optional(),
   /** Narrated video; reuses the media-asset shape (transcript required). */
   video: mediaAsset.optional(),

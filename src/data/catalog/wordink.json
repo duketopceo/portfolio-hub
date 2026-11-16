@@ -27,6 +27,8 @@
     },
     "showcaseCard": {
       "tier": "A",
+      "thumbnail": "/media/thumbs/wordink.webp",
+      "thumbnailAlt": "The WordInk documentation page with its in-browser dictation demo.",
       "skills": [
         "TypeScript",
         "Python",
