@@ -59,8 +59,11 @@
     "private": false,
     "media": {
       "release": {
-        "url": "https://media.luke-the-duke.com/demos/kurultai-launch.mp4",
-        "transcript": "A launch film for Kurultai, the Rust knowledge brain with MCP retrieval and a 3D graph view."
+        "url": "https://media.luke-the-duke.com/demos/kurultai-demo.mp4",
+        "poster": "https://media.luke-the-duke.com/demos/kurultai-demo-poster.jpg",
+        "captions": "/media/captions/kurultai-demo.vtt",
+        "transcript": "A narrated walkthrough of Kurultai: a question flies the 3D graph to the matching document, search merges keyword and vector rankings, an agent connects over MCP, and the same tools work from a terminal. Everything is stored in one local SQLite file.",
+        "sanitized": true
       },
       "demo": "to-record"
     },
@@ -74,7 +77,7 @@
     "showcaseCard": {
       "tier": "A",
       "thumbnail": "/media/thumbs/kurultai.webp",
-      "thumbnailAlt": "Frame from the Kurultai launch film: coding agents around a shared memory hub.",
+      "thumbnailAlt": "Frame from the Kurultai explainer: a search for hybrid retrieval over the 3D brain graph.",
       "skills": [
         "Rust",
         "SQLite",

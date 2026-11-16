@@ -23,13 +23,19 @@
     ],
     "architecture": "Task intake → model routing → disposable sandbox → execution → result capture",
     "media": {
-      "release": "to-record",
+      "release": {
+        "url": "https://media.luke-the-duke.com/demos/open-computer-demo.mp4",
+        "poster": "https://media.luke-the-duke.com/demos/open-computer-demo-poster.jpg",
+        "captions": "/media/captions/open-computer-demo.vtt",
+        "transcript": "A narrated walkthrough of Open Computer: a goal becomes a plan of steps, each routed to a fitting model and run in its own sandbox, with an approval gate for sensitive steps and a cost cap per run. It says plainly that a full run from goal to artifact is not proven yet.",
+        "sanitized": true
+      },
       "demo": "to-record"
     },
     "showcaseCard": {
       "tier": "B",
       "thumbnail": "/media/thumbs/open-computer.webp",
-      "thumbnailAlt": "The Open Computer console on the approvals page.",
+      "thumbnailAlt": "Frame from the Open Computer explainer: where it is going, today versus the planned v1 on Cloudflare.",
       "skills": [
         "Python",
         "Sandboxing",
